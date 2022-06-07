@@ -1,0 +1,210 @@
+---
+title: "shapviz"
+bibliography: "biblio.bib"
+link-citations: true
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using 'shapviz'}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE,
+  fig.width = 6, 
+  fig.height = 4,
+  fig.align = "center"
+)
+
+library(shapviz)
+```
+
+## Introduction
+
+SHAP values [@lundberg2017] are an ingenious way to study black box models. They decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. The package `shapviz` offers the latter:
+
+- `sv_dependence()`: Dependence plots to study feature effects (optionally colored by heuristically strongest interacting feature).
+- `sv_importance()`: Importance plots (bar and/or beeswarm plots) to study variable importance.
+- `sv_waterfall()`: Waterfall plots to study single predictions.
+- `sv_force()`: Force plots as an alternative to waterfall plots.
+
+These plots require a `shapviz` object, which is built from two things only:
+
+1. `S`: Matrix of SHAP values
+2. `X`: Dataset with corresponding feature values
+
+Furthermore, a `baseline` can be passed to represent an average prediction on the scale of the SHAP values.
+
+A key feature of the `shapviz` package is that `X` is used for visualization only. Thus it is perfectly fine to use factor variables, even if the underlying model would not accept these.
+
+To further simplify the use of `shapviz`, we added direct connectors to
+
+- [`XGBoost`](https://CRAN.R-project.org/package=xgboost),
+- [`LightGBM`](https://CRAN.R-project.org/package=lightgbm),
+- [`fastshap`](https://CRAN.R-project.org/package=fastshap), and
+- [`treeshap`](https://github.com/ModelOriented/treeshap).
+
+## Installation
+
+``` r
+# From CRAN
+install.packages("shapviz")
+
+# Or the newest version from GitHub:
+# install.packages("devtools")
+devtools::install_github("shapviz")
+```
+
+## Example: Diamond prices
+
+### Fit model
+
+We start by fitting an XGBoost model to predict diamond prices based on the four "C" features.
+
+```{r}
+library(shapviz)
+library(ggplot2)
+library(xgboost)
+
+set.seed(3653)
+
+X <- diamonds[c("carat", "cut", "color", "clarity")]
+dtrain <- xgb.DMatrix(data.matrix(X), label = diamonds$price)
+
+fit <- xgb.train(
+  params = list(learning_rate = 0.1, objective = "reg:squarederror"), 
+  data = dtrain,
+  nrounds = 65L
+)
+```
+
+### Create "shapviz" object
+
+One line of code creates a `shapviz` object. It contains SHAP values and feature values for the set of observations we are interested in. Note again that `X` is solely used as explanation dataset, not for calculating SHAP values. 
+
+In this example we construct the `shapviz` object directly from the fitted XGBoost model. Thus we also need to pass a corresponding prediction dataset `X_pred` used for calculating SHAP values by XGBoost.
+
+```{r}
+X_small <- X[sample(nrow(X), 2000L), ]
+
+# X is the "explanation" dataset using the original factors
+shp <- shapviz(fit, X_pred = data.matrix(X_small), X = X_small)
+```
+
+### Decompose single prediction
+
+The main idea behind SHAP values is to decompose, in a fair way, a prediction into additive contributions of each feature. Typical visualizations include waterfall plots and force plots:
+
+```{r, dev = 'svg'}
+sv_waterfall(shp, row_id = 1L) +
+  theme(axis.text = element_text(size = 11))
+```
+Works pretty sweet, and factor input is respected!
+
+Alternatively, we can study a force plot:
+
+```{r, fig.asp = .5, dev = 'svg'}
+sv_force(shp, row_id = 1L)
+```
+
+### SHAP importance
+
+Studying SHAP decompositions of many observations allows to gain an impression on variable importance. As simple descriptive measure, the mean absolute SHAP value of each feature is considered. These values can be plotted as a simple bar plot, or, to add information on the sign of the feature effects, as a beeswarm plot sorted by the mean absolute SHAP values. 
+
+```{r}
+# A beeswarm plot
+sv_importance(shp)
+
+# Or much simpler: a bar plot of mean absolute SHAP values
+sv_importance(shp, kind = "bar")
+
+# Or both!
+sv_importance(shp, kind = "both", alpha = 0.2, width = 0.2)
+```
+
+### SHAP dependence plots
+
+A SHAP beeswarm importance plot gives first hints on whether high feature values tend to high or low predictions. This impression can be substantiated by studying simple scatterplots of SHAP values of a feature against its feature values. A second feature can be added as color information to see whether the feature effect depends on the feature on the color scale or not. The stronger the vertical scatter for similar values on the x axis, the stronger the interactions.
+
+```{r}
+sv_dependence(shp, v = "color", color_var = "auto")
+
+sv_dependence(shp, v = "carat", color_var = "auto", alpha = 0.2, size = 1) +
+  guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2)))
+```
+
+## Interface to other packages
+
+The above example uses XGBoost to calculate SHAP values. In the following sections, we show (without running the code), how other packages work together with `shapviz`.
+
+### LightGBM
+
+``` r
+library(lightgbm)
+dtrain <- lgb.Dataset(data.matrix(X), label = diamonds$price)
+
+fit <- lgb.train(
+  params = list(learning_rate = 0.1, objective = "regression"), 
+  data = dtrain,
+  nrounds = 65L
+)
+
+shp <- shapviz(fit, X_pred = data.matrix(X_small), X = X_small)
+```
+### fastshap
+
+``` r
+library(fastshap)
+
+fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
+explainer <- explain(fit, newdata = X_small, exact = TRUE)
+shp <- shapviz(explainer, X = X_small)
+sv_dependence(shp, "carat")
+```
+
+### treeshap with catboost
+
+``` r
+library(treeshap)
+library(catboost)
+
+f <- function(X) data.frame(data.matrix(X))
+
+X_cat <- catboost.load_pool(data = f(X), label = diamonds$price)
+fit <- catboost.train(
+  X_cat, 
+  params = list(
+    loss_function = "RMSE", 
+    iterations = 165, 
+    logging_level = "Silent", 
+    allow_writing_files = FALSE
+  )
+)
+unified_catboost <- catboost.unify(fit, f(X))
+shaps <- treeshap(unified_catboost, f(X_small))
+shp <- shapviz(shaps, X = X_small)
+sv_dependence(shp, "clarity", color_var = "auto", alpha = 0.2, size = 1)
+```
+
+### Any other package
+
+The most general interface is to provide a matrix of SHAP values and corresponding
+feature values:
+
+``` r
+S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+X <- data.frame(x = c("a", "b"), y = c(100, 10))
+shp <- shapviz(S, X, baseline = 4)
+```
+
+## Classification models
+
+The plot functions work with one-dimensional model predictions only. However, the wrappers
+for XGBoost and LightGBM allows to select the categery of interest and work with its predicted (logit) probabilities, simply by passing `which_class` in the constructor.
+
+## References
+

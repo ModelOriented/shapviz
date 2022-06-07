@@ -1,0 +1,11 @@
+^LICENSE\.md$
+^.*\.Rproj$
+^\.Rproj\.user$
+^cran-comments\.md$
+^packaging.R$
+[.]Rproj$
+^backlog$
+examples.R
+^cran-comments.md$
+^logo.png$
+^CRAN-SUBMISSION$

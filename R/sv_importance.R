@@ -60,7 +60,7 @@ sv_importance.shapviz <- function(object, kind = c("beeswarm", "bar", "both", "n
   }
   X_scaled <- as.data.frame(apply(data.matrix(X), 2L, .min_max_scale))
 
-  # Collapse unimportant features
+  # Collapse unimportant features (here, it is important that 'imp' is sorted)
   ok <- utils::head(names(imp), max_display - 1L)
   if (length(ok) < ncol(X) - 1L) {
     bad <- setdiff(names(X), ok)
@@ -72,9 +72,10 @@ sv_importance.shapviz <- function(object, kind = c("beeswarm", "bar", "both", "n
 
     S <- cbind(S[, ok, drop = FALSE], rowSums(S[, bad, drop = FALSE]))
     colnames(S) <- c(ok, nn)
-    imp <- .get_imp(S, sort_results = FALSE)
+    imp <- .get_imp(S)
   }
 
+  # Here, sort order of imp is irrelevant. stats::reorder will care about the ordering
   imp_df <- data.frame(ind = names(imp), values = imp)
 
   if (kind == "bar") {
@@ -131,11 +132,7 @@ sv_importance.shapviz <- function(object, kind = c("beeswarm", "bar", "both", "n
   return((z - r[1L]) /(r[2L] - r[1L]))
 }
 
-.get_imp <- function(z, sort_results = TRUE) {
-  out <- colMeans(abs(z))
-  if (sort_results) {
-    out <- sort(out, decreasing = TRUE)
-  }
-  out
+.get_imp <- function(z) {
+  sort(colMeans(abs(z)), decreasing = TRUE)
 }
 

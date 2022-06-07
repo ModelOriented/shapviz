@@ -48,12 +48,12 @@ sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b"
     v %in% colnames(S),
     is.null(color_var) || (color_var %in% c("auto", colnames(S)))
   )
+
   # Set jitter value
-  if (is.null(jitter_width) && .is_discrete(X[[v]])) {
-    jitter_width <- 0.1
-  } else {
-    jitter_width <- 0
+  if (is.null(jitter_width)) {
+    jitter_width <- 0.1 * .is_discrete(X[[v]])
   }
+
   # Set color value
   if (!is.null(color_var) && color_var == "auto" && !("auto" %in% colnames(S))) {
     scores <- potential_interactions(object, v)

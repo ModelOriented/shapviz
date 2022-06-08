@@ -2,11 +2,11 @@
 #'
 #' This function creates an object of class "shapviz" from one of the following inputs:
 #' \itemize{
+#'   \item A matrix of SHAP values.
 #'   \item A fitted XGBoost model.
 #'   \item A fitted LightGBM model.
 #'   \item An "explain" object from the package "fastshap".
 #'   \item The result of calling \code{treeshap()} from the "treeshap" package.
-#'   \item A matrix of SHAP values.
 #' }
 #' Along with the main input, a dataset \code{X} of feature values is required that
 #' is used for visualization only.

@@ -25,8 +25,9 @@ sv_importance(object, ...)
 
 \item{...}{Arguments passed to \code{geom_bar()} (if \code{kind = "bar"}) or
 to \code{ggbeeswarm::geom_quasirandom()} otherwise.
-For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms, or
-setting \code{size = 3} will produce larger beeswarm dots.}
+For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms,
+setting \code{size = 3} will produce larger dots, or \code{width = 0.2} will
+produce less wide swarms.}
 
 \item{kind}{Should a "beeswarm" plot (the default), a "bar" plot or "both" be shown?
 Set to "no" in order to suppress plotting. In that case, the sorted

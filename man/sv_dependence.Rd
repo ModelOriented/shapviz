@@ -33,7 +33,7 @@ which selects - by a simple heuristic - a variable with seemingly strongest inte
 \item{color}{Color to be used if \code{color_var = NULL}.}
 
 \item{jitter_width}{The amount of horizontal jitter. The default (\code{NULL}) will
-use a value of 0.1 in case \code{v} is a factor, logical, or character variable, and
+use a value of 0.2 in case \code{v} is a factor, logical, or character variable, and
 no jitter otherwise.}
 }
 \value{

@@ -21,8 +21,9 @@
 #' @param number_size Text size of the formatted numbers (only if \code{kind = "bar"}).
 #' @param ... Arguments passed to \code{geom_bar()} (if \code{kind = "bar"}) or
 #' to \code{ggbeeswarm::geom_quasirandom()} otherwise.
-#' For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms, or
-#' setting \code{size = 3} will produce larger beeswarm dots.
+#' For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms,
+#' setting \code{size = 3} will produce larger dots, or \code{width = 0.2} will
+#' produce less wide swarms.
 #' @return A \code{ggplot} object or - if \code{kind = "no"} a named vector.
 #' @export
 #' @examples

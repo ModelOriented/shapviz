@@ -15,7 +15,7 @@
 #' which selects - by a simple heuristic - a variable with seemingly strongest interaction.
 #' @param color Color to be used if \code{color_var = NULL}.
 #' @param jitter_width The amount of horizontal jitter. The default (\code{NULL}) will
-#' use a value of 0.1 in case \code{v} is a factor, logical, or character variable, and
+#' use a value of 0.2 in case \code{v} is a factor, logical, or character variable, and
 #' no jitter otherwise.
 #' @param ... Arguments passed to \code{geom_jitter()}.
 #' @return An object of class \code{ggplot}.
@@ -51,7 +51,7 @@ sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b"
 
   # Set jitter value
   if (is.null(jitter_width)) {
-    jitter_width <- 0.1 * .is_discrete(X[[v]])
+    jitter_width <- 0.2 * .is_discrete(X[[v]])
   }
 
   # Set color value
@@ -63,7 +63,7 @@ sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b"
   colnames(dat) <- c("shap", v)
   if (is.null(color_var)) {
     p <- ggplot(dat, aes(x = .data[[v]], y = shap)) +
-      geom_jitter(color = color, width = jitter_width, ...) +
+      geom_jitter(color = color, width = jitter_width, height = 0, ...) +
       ylab(paste("SHAP value of", v))
     return(p)
   }
@@ -74,7 +74,7 @@ sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b"
     vir <- scale_color_viridis_c
   }
   ggplot(dat, aes(x = .data[[v]], y = shap, color = .data[[color_var]])) +
-    geom_jitter(width = jitter_width, ...) +
+    geom_jitter(width = jitter_width, height = 0, ...) +
     ylab(paste("SHAP value of", v)) +
     do.call(vir, getOption("shapviz.viridis_args"))
 }

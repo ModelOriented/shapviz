@@ -24,7 +24,7 @@
 #' For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms,
 #' setting \code{size = 3} will produce larger dots, or \code{width = 0.2} will
 #' produce less wide swarms.
-#' @return A \code{ggplot} object or - if \code{kind = "no"} a named vector.
+#' @return A \code{ggplot} object representing an importance plot or - if \code{kind = "no"} a named numeric vector of mean absolute SHAP values sorted in decreasing order.
 #' @export
 #' @examples
 #' X_train <- data.matrix(iris[, -1])

@@ -21,7 +21,7 @@
 #' @param ... Arguments passed to \code{ggfittext::geom_fit_text()}.
 #' For example, \code{size = 9} will use fixed text size in the bars and \code{size = 0}
 #' will altogether suppress adding text to the bars.
-#' @return An object of class \code{ggplot}.
+#' @return An object of class \code{ggplot} representing a force plot.
 #' @export
 #' @seealso \code{\link{sv_waterfall}}.
 #' @examples

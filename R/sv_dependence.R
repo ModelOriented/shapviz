@@ -18,7 +18,7 @@
 #' use a value of 0.2 in case \code{v} is a factor, logical, or character variable, and
 #' no jitter otherwise.
 #' @param ... Arguments passed to \code{geom_jitter()}.
-#' @return An object of class \code{ggplot}.
+#' @return An object of class \code{ggplot} representing a dependence plot.
 #' @export
 #' @seealso \code{\link{potential_interactions}}.
 #' @examples

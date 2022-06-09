@@ -9,6 +9,9 @@ is.shapviz(object)
 \arguments{
 \item{object}{An R object.}
 }
+\value{
+Returns \code{TRUE} if \code{object} has "\code{shapviz}" among its classes, and \code{FALSE} otherwise.
+}
 \description{
 Is object of class "shapviz"?
 }

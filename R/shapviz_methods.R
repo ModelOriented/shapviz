@@ -33,6 +33,7 @@ print.shapviz <- function(x, n = 2L, ...) {
 #' Is object of class "shapviz"?
 #'
 #' @param object An R object.
+#' @return Returns \code{TRUE} if \code{object} has "\code{shapviz}" among its classes, and \code{FALSE} otherwise.
 #' @export
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
@@ -52,6 +53,7 @@ is.shapviz <- function(object){
 #' @name extractors
 #' @param object Object to extract something.
 #' @param ... Currently unused.
+#' @return `get_shap_values()` returns the matrix of SHAP values, `get_feature_values()` the \code{data.frame} of feature values, and `get_baseline()` the numeric baseline value of the input.
 NULL
 
 #' @rdname extractors

@@ -36,6 +36,9 @@ get_baseline(object, ...)
 
 \item{...}{Currently unused.}
 }
+\value{
+\code{get_shap_values()} returns the matrix of SHAP values, \code{get_feature_values()} the \code{data.frame} of feature values, and \code{get_baseline()} the numeric baseline value of the input.
+}
 \description{
 Functions to extract SHAP values, feature values, or the baseline from a "shapviz" object.
 }

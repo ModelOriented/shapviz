@@ -37,7 +37,7 @@ use a value of 0.2 in case \code{v} is a factor, logical, or character variable,
 no jitter otherwise.}
 }
 \value{
-An object of class \code{ggplot}.
+An object of class \code{ggplot} representing a dependence plot.
 }
 \description{
 Creates a scatterplot of SHAP values of feature \code{v} against values of \code{v}.

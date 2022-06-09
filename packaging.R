@@ -16,8 +16,9 @@ use_description(
   fields = list(
     Title = "SHAP Visualizations",
     Version = "0.1.0",
-    Description = "Visualizations for SHAP values, such as waterfall plots,
-    force plots, various types of importance plots, and dependence plots.
+    Description = "Visualizations for SHAP (SHapley Additive exPlanations),
+    such as waterfall plots, force plots, various types of importance plots,
+    and dependence plots.
     These plots act on a 'shapviz' object created from a matrix of SHAP
     values and a corresponding feature dataset. Wrappers for the R packages
     'xgboost', 'lightgbm', 'fastshap', and 'treeshap' are added for convenience.

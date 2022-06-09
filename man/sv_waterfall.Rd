@@ -59,7 +59,7 @@ Default is \code{TRUE}.}
 \item{annotation_size}{Size of the annotation text (f(x)=... and E(f(x))=...).}
 }
 \value{
-An object of class \code{ggplot}.
+An object of class \code{ggplot} representing a waterfall plot.
 }
 \description{
 Creates a waterfall plot of SHAP values of one single observation. The value of

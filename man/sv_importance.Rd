@@ -47,7 +47,7 @@ bar plot. Use \code{format_fun = function(z) = ""} to suppress printing.}
 \item{number_size}{Text size of the formatted numbers (only if \code{kind = "bar"}).}
 }
 \value{
-A \code{ggplot} object or - if \code{kind = "no"} a named vector.
+A \code{ggplot} object representing an importance plot or - if \code{kind = "no"} a named numeric vector of mean absolute SHAP values sorted in decreasing order.
 }
 \description{
 This function provides two types of SHAP importance plots: a beeswarm plot (the default)

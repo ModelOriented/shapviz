@@ -8,6 +8,13 @@ test_that("get_* functions work", {
   expect_equal(X, get_feature_values(shp))
 })
 
+test_that("dim, nrow, ncol, and colnames work", {
+  expect_equal(dim(shp), c(2L, 2L))
+  expect_equal(nrow(shp), 2L)
+  expect_equal(ncol(shp), 2L)
+  expect_equal(colnames(shp), c("x", "y"))
+})
+
 test_that("column order of S does no matter", {
   expect_equal(shp, shapviz(S[, 2:1], X, baseline = 4))
 })

@@ -59,6 +59,9 @@ sv_importance.shapviz <- function(object, kind = c("beeswarm", "bar", "both", "n
   if (kind == "no") {
     return(imp)
   }
+  if (kind != "bar") {
+    stopifnot("Need at least two rows for beeswarm plot" = nrow(X) >= 2L)
+  }
   X_scaled <- as.data.frame(apply(data.matrix(X), 2L, .min_max_scale))
 
   # Collapse unimportant features (here, it is important that 'imp' is sorted)

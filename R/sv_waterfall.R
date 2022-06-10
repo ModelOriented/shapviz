@@ -13,7 +13,8 @@
 #' @param sort_fun Function used to sort the SHAP values for plotting.
 #' By default, the values are sorted by absolute SHAP values, i.e., the default
 #' is \code{function(shap) = abs(shap)}. The result of the function is passed to
-#' \code{order()}.
+#' \code{order()}. To plot the SHAP values in an unsorted way, you can use
+#' \code{function(x) = seq_along(x)} or \code{function(x) = rev(seq_along(x))}.
 #' @param fill_colors A vector of exactly two fill colors: the first for positive
 #' SHAP values, the other for negative ones.
 #' @param format_fun Function used to format numeric feature values and SHAP values.

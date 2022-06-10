@@ -43,22 +43,6 @@ dim.shapviz <- function(x) {
   dim(get_shap_values(x))
 }
 
-#' Dimnames of "shapviz" Object
-#'
-#' @param x A on object of class "shapviz".
-#' @return A list of length two with the row- and column names
-#' of the SHAP matrix (or the feature dataset) stored in \code{x}.
-#' @export
-#' @examples
-#' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-#' X <- data.frame(x = c("a", "b"), y = c(100, 10))
-#' dimnames(shapviz(S, X))
-#' colnames(shapviz(S, X))
-#' @seealso \code{\link{shapviz}}.
-dimnames.shapviz <- function(x) {
-  dimnames(get_shap_values(x))
-}
-
 #' Check for shapviz
 #'
 #' Is object of class "shapviz"?

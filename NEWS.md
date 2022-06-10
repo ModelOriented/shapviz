@@ -1,6 +1,6 @@
 # shapviz 0.1.1
 
-- Added `dim()` and `dimnames()` methods for "shapviz" object, implying `nrow()`, `ncol()`, and `colnames()`.
+- Added `dim()` method for "shapviz" object, implying `nrow()` and `ncol()`.
 - More unit tests.
 
 # shapviz 0.1.0

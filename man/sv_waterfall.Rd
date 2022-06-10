@@ -46,8 +46,7 @@ is \code{function(shap) = abs(shap)}. The result of the function is passed to
 \item{fill_colors}{A vector of exactly two fill colors: the first for positive
 SHAP values, the other for negative ones.}
 
-\item{format_fun}{Function used to (A) format numeric feature values shown on the
-axis labels, and (B) to format SHAP values shown in the arrow bars.}
+\item{format_fun}{Function used to format numeric feature values and SHAP values.}
 
 \item{contrast}{Logical flag that detemines whether to use white text in dark arrows.
 Default is \code{TRUE}.}

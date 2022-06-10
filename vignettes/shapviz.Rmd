@@ -56,7 +56,7 @@ install.packages("shapviz")
 
 # Or the newest version from GitHub:
 # install.packages("devtools")
-devtools::install_github("shapviz")
+devtools::install_github("mayer79/shapviz")
 ```
 
 ## Example: Diamond prices

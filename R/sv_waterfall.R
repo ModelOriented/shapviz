@@ -16,8 +16,7 @@
 #' \code{order()}.
 #' @param fill_colors A vector of exactly two fill colors: the first for positive
 #' SHAP values, the other for negative ones.
-#' @param format_fun Function used to (A) format numeric feature values shown on the
-#' axis labels, and (B) to format SHAP values shown in the arrow bars.
+#' @param format_fun Function used to format numeric feature values and SHAP values.
 #' @param contrast Logical flag that detemines whether to use white text in dark arrows.
 #' Default is \code{TRUE}.
 #' @param show_connection Should connecting lines be shown? Default is \code{TRUE}.

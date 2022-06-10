@@ -2,6 +2,8 @@
 
 - Added `dim()` method for "shapviz" object, implying `nrow()` and `ncol()`.
 - More unit tests.
+- Improved documentation.
+- Fixed installation instructions.
 
 # shapviz 0.1.0
 

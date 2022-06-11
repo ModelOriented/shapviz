@@ -204,7 +204,7 @@ shp <- shapviz(S, X, baseline = 4)
 ## Classification models
 
 The plot functions work with one-dimensional model predictions only. However, the wrappers
-for XGBoost and LightGBM allows to select the categery of interest and work with its predicted (logit) probabilities, simply by passing `which_class` in the constructor.
+for XGBoost and LightGBM allow to select the category of interest and work with its predicted (logit) probabilities, simply by providing `which_class` in the constructor.
 
 ## References
 

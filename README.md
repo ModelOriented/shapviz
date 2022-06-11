@@ -114,7 +114,7 @@ sv_importance(shp, kind = "bar")
 #### Or both combined
 
 ``` r
-sv_importance(shp, kind = "bar", alpha = 0.2, width = 0.2)
+sv_importance(shp, kind = "both", alpha = 0.2, width = 0.2)
 ```
 ![](man/figures/README-imp3.png)
 

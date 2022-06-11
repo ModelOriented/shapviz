@@ -14,7 +14,7 @@ sv_waterfall(object, ...)
   object,
   row_id = 1L,
   max_display = 10L,
-  sort_fun = function(shap) abs(shap),
+  order_fun = function(s) order(abs(s)),
   fill_colors = c("#f7d13d", "#a52c60"),
   format_fun = function(z) prettyNum(z, digits = 3, scientific = FALSE),
   contrast = TRUE,
@@ -38,11 +38,11 @@ should be plotted? If there are more features, they will be collapsed to one fea
 The default is ten in order to not overload the plot. Set to \code{Inf} to show
 all features.}
 
-\item{sort_fun}{Function used to sort the SHAP values for plotting.
-By default, the values are sorted by absolute SHAP values, i.e., the default
-is \code{function(shap) = abs(shap)}. The result of the function is passed to
-\code{order()}. To plot the SHAP values in an unsorted way, you can use
-\code{function(x) = seq_along(x)} or \code{function(x) = rev(seq_along(x))}.}
+\item{order_fun}{Function specifying the order of the variables/SHAP values.
+It maps the vector s of SHAP values to sort indices from 1 to \code{length(s)}.
+The default is \code{function(s) order(abs(s))}.
+To plot without sorting, use \code{function(s) 1:length(s)} or
+\code{function(s) length(s):1}.}
 
 \item{fill_colors}{A vector of exactly two fill colors: the first for positive
 SHAP values, the other for negative ones.}

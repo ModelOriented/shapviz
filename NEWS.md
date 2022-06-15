@@ -2,6 +2,7 @@
 
 ## Major changes
 
+- Added "shapr" wrapper.
 - `sv_waterfall()` now uses a more stringend argument `order_fun = function(s) order(abs(s))` instead of the original `sort_fun = function(shap) abs(shap)` that was then passed to `order()`.
 
 ## Minor changes

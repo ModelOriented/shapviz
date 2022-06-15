@@ -157,6 +157,18 @@ shapviz.treeshap <- function(object, X = object[["observations"]], baseline = 0,
   )
 }
 
+#' @describeIn shapviz Creates a "shapviz" object from shapr's "explain()" method.
+#' @export
+shapviz.shapr <- function(object, X = object[["x_test"]],
+                          baseline = object[["dt"]][["none"]][1L], ...) {
+  shapviz.matrix(
+    object = as.matrix(object[["dt"]])[, colnames(X), drop = FALSE],
+    X = X,
+    baseline = baseline,
+    ...
+  )
+}
+
 #' Initialize "shapviz" Object from XGBoost/LightGBM Predict
 #'
 #' These functions create an object of class "shapviz" by taking the output of

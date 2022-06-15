@@ -45,7 +45,8 @@ To further simplify the use of `shapviz`, we added direct connectors to
 
 - [`XGBoost`](https://CRAN.R-project.org/package=xgboost),
 - [`LightGBM`](https://CRAN.R-project.org/package=lightgbm),
-- [`fastshap`](https://CRAN.R-project.org/package=fastshap), and
+- [`fastshap`](https://CRAN.R-project.org/package=fastshap), 
+- [`shapr`](https://CRAN.R-project.org/package=shapr), and
 - [`treeshap`](https://github.com/ModelOriented/treeshap).
 
 ## Installation
@@ -164,6 +165,24 @@ fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
 explainer <- explain(fit, newdata = X_small, exact = TRUE)
 shp <- shapviz(explainer, X = X_small)
 sv_dependence(shp, "carat")
+```
+### shapr
+
+``` r
+library(shapr)
+
+fit <- lm(Sepal.Length ~ ., data = iris)
+explainer <- shapr(iris[, -1L], fit)
+
+explanation <- explain(
+  iris,
+  approach = "ctree",
+  explainer = explainer,
+  prediction_zero = mean(iris[[1L]])
+)
+
+shp <- shapviz(explanation)
+sv_dependence(shp, "Species")
 ```
 
 ### treeshap with catboost

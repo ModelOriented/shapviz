@@ -22,7 +22,8 @@ To further simplify the use of `shapviz`, we added direct connectors to
 
 - [`XGBoost`](https://CRAN.R-project.org/package=xgboost),
 - [`LightGBM`](https://CRAN.R-project.org/package=lightgbm),
-- [`fastshap`](https://CRAN.R-project.org/package=fastshap), and
+- [`fastshap`](https://CRAN.R-project.org/package=fastshap),
+- [`shapr`](https://CRAN.R-project.org/package=shapr), and
 - [`treeshap`](https://github.com/ModelOriented/treeshap).
 
 ## Installation

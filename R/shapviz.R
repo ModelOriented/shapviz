@@ -161,8 +161,9 @@ shapviz.treeshap <- function(object, X = object[["observations"]], baseline = 0,
 #' @export
 shapviz.shapr <- function(object, X = object[["x_test"]],
                           baseline = object[["dt"]][["none"]][1L], ...) {
+  keep <- setdiff(colnames(object[["dt"]]), "none")
   shapviz.matrix(
-    object = as.matrix(object[["dt"]])[, colnames(X), drop = FALSE],
+    object = as.matrix(object[["dt"]])[, keep, drop = FALSE],
     X = X,
     baseline = baseline,
     ...

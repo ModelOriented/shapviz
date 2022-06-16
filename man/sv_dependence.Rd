@@ -28,7 +28,8 @@ sv_dependence(object, ...)
 
 \item{color_var}{Feature name to be used on the color scale to investigate interactions.
 The default is \code{NULL} (no color feature). An experimental option is "auto",
-which selects - by a simple heuristic - a variable with seemingly strongest interaction.}
+which selects - by a simple heuristic - a variable with seemingly strongest interaction.
+Check details for how to change the color scale.}
 
 \item{color}{Color to be used if \code{color_var = NULL}.}
 
@@ -46,6 +47,17 @@ This allows to gain an impression of possible interaction effects.
 Set \code{color_var} to \code{"auto"} in order to select
 the color feature with seemingly strongest interaction based on a simple heuristic.
 For discrete \code{v}, horizontal scatter is added by default.
+}
+\details{
+The color scale of \code{color_var} is determined by the
+\code{shapviz.viridis_args} option with default
+\code{list(begin = 0.25, end = 0.85, option = "inferno")}.
+These values are passed to \code{ggplot2::scale_color_viridis_*()}.
+To switch to a reverted standard viridis scale, you would run
+\code{options(shapviz.viridis_args = list(option = "viridis", direction = -1))}.
+Check \code{?ggplot2::scale_color_viridis_c()} for all possible arguments.
+Since a "ggplot" object is returned, you can also overwrite the default color scale
+by adding another one.
 }
 \section{Methods (by class)}{
 \itemize{

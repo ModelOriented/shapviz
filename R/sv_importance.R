@@ -9,7 +9,7 @@
 #' The continuous viridis color scale of the beeswarm plot is determined by the
 #' \code{shapviz.viridis_args} option with default
 #' \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
-#' These values are passed to \code{ggplot2::scale_color_viridis_c()}}.
+#' These values are passed to \code{ggplot2::scale_color_viridis_c()}.
 #' To switch to a reverted standard viridis scale, you would run
 #' \code{options(shapviz.viridis_args = list(option = "viridis", direction = -1))}.
 #' Check \code{?ggplot2::scale_color_viridis_c()} for all possible arguments.

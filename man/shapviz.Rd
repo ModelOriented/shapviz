@@ -8,6 +8,7 @@
 \alias{shapviz.lgb.Booster}
 \alias{shapviz.explain}
 \alias{shapviz.treeshap}
+\alias{shapviz.shapr}
 \title{Initialize "shapviz" Object}
 \usage{
 shapviz(object, ...)
@@ -23,6 +24,13 @@ shapviz(object, ...)
 \method{shapviz}{explain}(object, X, baseline = 0, ...)
 
 \method{shapviz}{treeshap}(object, X = object[["observations"]], baseline = 0, ...)
+
+\method{shapviz}{shapr}(
+  object,
+  X = object[["x_test"]],
+  baseline = object[["dt"]][["none"]][1L],
+  ...
+)
 }
 \arguments{
 \item{object}{Object to be converted to an object of type "shapviz".}
@@ -78,6 +86,8 @@ the SHAP values were calculated from a purely numeric feature matrix.
 \item \code{explain}: Creates a "shapviz" object from fastshap's "explain()" method.
 
 \item \code{treeshap}: Creates a "shapviz" object from treeshap's "treeshap()" method.
+
+\item \code{shapr}: Creates a "shapviz" object from shapr's "explain()" method.
 }}
 
 \examples{

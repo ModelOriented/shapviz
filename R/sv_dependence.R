@@ -10,7 +10,7 @@
 #' The color scale of \code{color_var} is determined by the
 #' \code{shapviz.viridis_args} option with default
 #' \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
-#' These values are passed to \code{ggplot2::scale_color_viridis_*()}}.
+#' These values are passed to \code{ggplot2::scale_color_viridis_*()}.
 #' To switch to a reverted standard viridis scale, you would run
 #' \code{options(shapviz.viridis_args = list(option = "viridis", direction = -1))}.
 #' Check \code{?ggplot2::scale_color_viridis_c()} for all possible arguments.

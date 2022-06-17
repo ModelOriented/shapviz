@@ -69,9 +69,11 @@ This function creates an object of class "shapviz" from one of the following inp
 \item The result of calling \code{treeshap()} from the "treeshap" package.
 }
 Along with the main input, a dataset \code{X} of feature values is required that
-is used for visualization only.
-It can thus contain character or factor variables even if
-the SHAP values were calculated from a purely numeric feature matrix.
+is used for visualization only. It can thus contain character or factor variables
+even if the SHAP values were calculated from a purely numeric feature matrix.
+Furthermore, in order to improve visualization, it can sometimes make sense
+to clip gross outliers, take logarithms for certain columns, or replace missing
+values by some explicit value.
 }
 \section{Methods (by class)}{
 \itemize{

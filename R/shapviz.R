@@ -161,13 +161,12 @@ shapviz.treeshap <- function(object, X = object[["observations"]], baseline = 0,
 
 #' @describeIn shapviz Creates a "shapviz" object from shapr's "explain()" method.
 #' @export
-shapviz.shapr <- function(object, X = object[["x_test"]],
-                          baseline = object[["dt"]][["none"]][1L], ...) {
+shapviz.shapr <- function(object, X = object[["x_test"]], ...) {
   keep <- setdiff(colnames(object[["dt"]]), "none")
   shapviz.matrix(
     object = as.matrix(object[["dt"]])[, keep, drop = FALSE],
     X = X,
-    baseline = baseline,
+    baseline = object[["dt"]][["none"]][1L],
     ...
   )
 }

@@ -10,6 +10,7 @@
 - Added `dim()` method for "shapviz" object, implying `nrow()` and `ncol()`.
 - More unit tests.
 - Improved documentation.
+- Added H2O section to vignette.
 - Fixed github installation instruction in README and vignette.
 
 # shapviz 0.1.0

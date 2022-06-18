@@ -25,12 +25,7 @@ shapviz(object, ...)
 
 \method{shapviz}{treeshap}(object, X = object[["observations"]], baseline = 0, ...)
 
-\method{shapviz}{shapr}(
-  object,
-  X = object[["x_test"]],
-  baseline = object[["dt"]][["none"]][1L],
-  ...
-)
+\method{shapviz}{shapr}(object, X = object[["x_test"]], ...)
 }
 \arguments{
 \item{object}{Object to be converted to an object of type "shapviz".}

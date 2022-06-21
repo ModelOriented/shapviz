@@ -8,6 +8,7 @@
 \alias{shapviz.lgb.Booster}
 \alias{shapviz.explain}
 \alias{shapviz.treeshap}
+\alias{shapviz.shapr}
 \title{Initialize "shapviz" Object}
 \usage{
 shapviz(object, ...)
@@ -23,6 +24,8 @@ shapviz(object, ...)
 \method{shapviz}{explain}(object, X, baseline = 0, ...)
 
 \method{shapviz}{treeshap}(object, X = object[["observations"]], baseline = 0, ...)
+
+\method{shapviz}{shapr}(object, X = object[["x_test"]], ...)
 }
 \arguments{
 \item{object}{Object to be converted to an object of type "shapviz".}
@@ -61,9 +64,11 @@ This function creates an object of class "shapviz" from one of the following inp
 \item The result of calling \code{treeshap()} from the "treeshap" package.
 }
 Along with the main input, a dataset \code{X} of feature values is required that
-is used for visualization only.
-It can thus contain character or factor variables even if
-the SHAP values were calculated from a purely numeric feature matrix.
+is used for visualization only. It can thus contain character or factor variables
+even if the SHAP values were calculated from a purely numeric feature matrix.
+Furthermore, in order to improve visualization, it can sometimes make sense
+to clip gross outliers, take logarithms for certain columns, or replace missing
+values by some explicit value.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -78,6 +83,8 @@ the SHAP values were calculated from a purely numeric feature matrix.
 \item \code{explain}: Creates a "shapviz" object from fastshap's "explain()" method.
 
 \item \code{treeshap}: Creates a "shapviz" object from treeshap's "treeshap()" method.
+
+\item \code{shapr}: Creates a "shapviz" object from shapr's "explain()" method.
 }}
 
 \examples{

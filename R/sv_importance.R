@@ -6,6 +6,16 @@
 #' to numeric by calling \code{data.matrix()} first).
 #' The bar plot shows average absolute SHAP values. Both types can be combined.
 #'
+#' The continuous viridis color scale of the beeswarm plot is determined by the
+#' \code{shapviz.viridis_args} option with default
+#' \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
+#' These values are passed to \code{ggplot2::scale_color_viridis_c()}.
+#' To switch to a reverted standard viridis scale, you would run
+#' \code{options(shapviz.viridis_args = list(option = "viridis", direction = -1))}.
+#' Check \code{?ggplot2::scale_color_viridis_c()} for all possible arguments.
+#' Since a "ggplot" object is returned, you can also overwrite the default color scale
+#' by adding another one.
+#'
 #' @param object An object of class "shapviz".
 #' @param kind Should a "beeswarm" plot (the default), a "bar" plot or "both" be shown?
 #' Set to "no" in order to suppress plotting. In that case, the sorted
@@ -54,17 +64,17 @@ sv_importance.shapviz <- function(object, kind = c("beeswarm", "bar", "both", "n
                                   number_size = 3.2, ...) {
   kind <- match.arg(kind)
   S <- get_shap_values(object)
-  X <- get_feature_values(object)
+  X_scaled <- X <- get_feature_values(object)
   imp <- .get_imp(S)
   if (kind == "no") {
     return(imp)
   }
-  X_scaled <- as.data.frame(apply(data.matrix(X), 2L, .min_max_scale))
+  X_scaled[] <- apply(data.matrix(X), 2L, FUN = .min_max_scale, simplify = FALSE)
 
   # Collapse unimportant features (here, it is important that 'imp' is sorted)
   ok <- utils::head(names(imp), max_display - 1L)
   if (length(ok) < ncol(X) - 1L) {
-    bad <- setdiff(names(X), ok)
+    bad <- setdiff(colnames(X), ok)
     nn <- paste("Sum of", length(bad), "other")
 
     X_scaled_bad <- rowSums(X_scaled[bad])
@@ -96,11 +106,13 @@ sv_importance.shapviz <- function(object, kind = c("beeswarm", "bar", "both", "n
   shap_long <- utils::stack(S)
   shap_long$v <- utils::stack(X_scaled)$values
 
+  # Put together color scale and deal with special case of only one unique v value
+  nv <- length(unique(shap_long$v))
   viridis_args <- c(
     getOption("shapviz.viridis_args"),
     list(
-      breaks = 0:1,
-      labels = c("Low", "High"),
+      breaks = if (nv >= 2L) 0:1 else 0.5,
+      labels = if (nv >= 2L) c("Low", "High") else "Avg",
       guide = guide_colorbar(
         barwidth = 0.4,
         barheight = 8,

@@ -9,9 +9,11 @@
 #'   \item The result of calling \code{treeshap()} from the "treeshap" package.
 #' }
 #' Along with the main input, a dataset \code{X} of feature values is required that
-#' is used for visualization only.
-#' It can thus contain character or factor variables even if
-#' the SHAP values were calculated from a purely numeric feature matrix.
+#' is used for visualization only. It can thus contain character or factor variables
+#' even if the SHAP values were calculated from a purely numeric feature matrix.
+#' Furthermore, in order to improve visualization, it can sometimes make sense
+#' to clip gross outliers, take logarithms for certain columns, or replace missing
+#' values by some explicit value.
 #' @param object Object to be converted to an object of type "shapviz".
 #' @param X Corresponding matrix or data.frame of feature values used for visualization.
 #' @param X_pred Feature matrix as expected by the \code{predict} function of
@@ -153,6 +155,18 @@ shapviz.treeshap <- function(object, X = object[["observations"]], baseline = 0,
     object = as.matrix(object[["shaps"]]),
     X = X,
     baseline = baseline,
+    ...
+  )
+}
+
+#' @describeIn shapviz Creates a "shapviz" object from shapr's "explain()" method.
+#' @export
+shapviz.shapr <- function(object, X = object[["x_test"]], ...) {
+  keep <- setdiff(colnames(object[["dt"]]), "none")
+  shapviz.matrix(
+    object = as.matrix(object[["dt"]])[, keep, drop = FALSE],
+    X = X,
+    baseline = object[["dt"]][["none"]][1L],
     ...
   )
 }

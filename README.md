@@ -17,12 +17,14 @@ These plots require a `shapviz` object, which is built from two things only:
 Furthermore, a `baseline` can be passed to represent an average prediction on the scale of the SHAP values.
 
 A key feature of the `shapviz` package is that `X` is used for visualization only. Thus it is perfectly fine to use factor variables, even if the underlying model would not accept these.
+Additionally, in order to improve visualization, it can sometimes make sense to clip gross outliers, take logarithms for certain columns, or replace missing values by some explicit value.
 
 To further simplify the use of `shapviz`, we added direct connectors to
 
 - [`XGBoost`](https://CRAN.R-project.org/package=xgboost),
 - [`LightGBM`](https://CRAN.R-project.org/package=lightgbm),
-- [`fastshap`](https://CRAN.R-project.org/package=fastshap), and
+- [`fastshap`](https://CRAN.R-project.org/package=fastshap),
+- [`shapr`](https://CRAN.R-project.org/package=shapr), and
 - [`treeshap`](https://github.com/ModelOriented/treeshap).
 
 ## Installation
@@ -114,7 +116,7 @@ sv_importance(shp, kind = "bar")
 #### Or both combined
 
 ``` r
-sv_importance(shp, kind = "bar", alpha = 0.2, width = 0.2)
+sv_importance(shp, kind = "both", alpha = 0.2, width = 0.2)
 ```
 ![](man/figures/README-imp3.png)
 

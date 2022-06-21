@@ -10,14 +10,14 @@
 #' should be plotted? If there are more features, they will be collapsed to one feature.
 #' The default is ten in order to not overload the plot. Set to \code{Inf} to show
 #' all features.
-#' @param sort_fun Function used to sort the SHAP values for plotting.
-#' By default, the values are sorted by absolute SHAP values, i.e., the default
-#' is \code{function(shap) = abs(shap)}. The result of the function is passed to
-#' \code{order()}.
+#' @param order_fun Function specifying the order of the variables/SHAP values.
+#' It maps the vector s of SHAP values to sort indices from 1 to \code{length(s)}.
+#' The default is \code{function(s) order(abs(s))}.
+#' To plot without sorting, use \code{function(s) 1:length(s)} or
+#' \code{function(s) length(s):1}.
 #' @param fill_colors A vector of exactly two fill colors: the first for positive
 #' SHAP values, the other for negative ones.
-#' @param format_fun Function used to (A) format numeric feature values shown on the
-#' axis labels, and (B) to format SHAP values shown in the arrow bars.
+#' @param format_fun Function used to format numeric feature values and SHAP values.
 #' @param contrast Logical flag that detemines whether to use white text in dark arrows.
 #' Default is \code{TRUE}.
 #' @param show_connection Should connecting lines be shown? Default is \code{TRUE}.
@@ -53,7 +53,7 @@ sv_waterfall.default <- function(object, ...) {
 #' @describeIn sv_waterfall SHAP waterfall plot for an object of class "shapviz".
 #' @export
 sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
-                                 sort_fun = function(shap) abs(shap),
+                                 order_fun = function(s) order(abs(s)),
                                  fill_colors = c("#f7d13d", "#a52c60"),
                                  format_fun = function(z)
                                    prettyNum(z, digits = 3, scientific = FALSE),
@@ -63,7 +63,7 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
     "Only one row number can be passed" = length(row_id) == 1L,
     "Exactly two fill colors must be passed" = length(fill_colors) == 2L,
     "Not a function" = is.function(format_fun),
-    "Not a function" = is.function(sort_fun)
+    "Not a function" = is.function(order_fun)
   )
   X <- get_feature_values(object)[row_id, ]
   S <- get_shap_values(object)[row_id, ]
@@ -75,7 +75,7 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
   m <- nrow(dat)
 
   # Add order dependent columns
-  dat <- dat[order(sort_fun(dat$S)), ]
+  dat <- dat[order_fun(dat$S), ]
   dat$i <- seq_len(m)
   dat$to <- cumsum(dat$S) + b
   dat$from <- .lag(dat$to, default = b)

@@ -15,13 +15,13 @@ library(usethis)
 use_description(
   fields = list(
     Title = "SHAP Visualizations",
-    Version = "0.1.0",
+    Version = "0.1.1",
     Description = "Visualizations for SHAP (SHapley Additive exPlanations),
     such as waterfall plots, force plots, various types of importance plots,
     and dependence plots.
     These plots act on a 'shapviz' object created from a matrix of SHAP
     values and a corresponding feature dataset. Wrappers for the R packages
-    'xgboost', 'lightgbm', 'fastshap', and 'treeshap' are added for convenience.
+    'xgboost', 'lightgbm', 'fastshap', 'shapr', and 'treeshap' are added for convenience.
     By separating visualization and computation, it is possible to display
     factor variables in graphs, even if the SHAP values are calculated by a model
     that requires numerical features. The plots are inspired by those provided by
@@ -49,8 +49,6 @@ use_package("xgboost", "Imports")
 
 use_gpl_license(2)
 
-use_github_links() # use this if this project is on github
-
 # Your files that do not belong to the package itself (others are added by "use_* function")
 use_build_ignore(c("^packaging.R$", "[.]Rproj$", "^backlog$", "examples.R",
                    "^cran-comments.md$", "^logo.png$"), escape = FALSE)
@@ -69,8 +67,8 @@ use_vignette("shapviz")
 
 # If you want to add unit tests
 use_testthat()
-use_test("plots.R")
-use_test("interface.R")
+# use_test("plots.R")
+# use_test("interface.R")
 
 # On top of NEWS.md, describe changes made to the package
 use_news_md()
@@ -81,6 +79,7 @@ use_logo("logo.png")
 # If package goes to CRAN: infos (check results etc.) for CRAN
 use_cran_comments()
 
+use_github_links() # use this if this project is on github
 
 #=============================================================================
 # Finish package building (can use fresh session)

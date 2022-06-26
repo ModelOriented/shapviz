@@ -15,6 +15,7 @@ sv_importance(object, ...)
   kind = c("beeswarm", "bar", "both", "no"),
   max_display = 10L,
   fill = "#fca50a",
+  viridis_args = getOption("shapviz.viridis_args"),
   format_fun = function(z) prettyNum(z, digits = 3, scientific = FALSE),
   number_size = 3.2,
   ...
@@ -41,13 +42,23 @@ all features.}
 
 \item{fill}{Color used to fill the bars (only used if \code{kind = "bar"}).}
 
+\item{viridis_args}{List of viridis color scale arguments used to control the
+coloring of the beeswarm plot, see \code{?ggplot2::scale_color_viridis_c()}.
+The default points to the global option \code{shapviz.viridis_args}, which
+corresponds to \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
+These values are passed to \code{ggplot2::scale_color_viridis_c()}.
+For example, to switch to a reverted standard viridis scale, you can change the
+global option or set \code{viridis_args = list(option = "viridis", direction = -1)}.}
+
 \item{format_fun}{Function used to format mean absolute SHAP values shown on the
 bar plot. Use \code{format_fun = function(z) = ""} to suppress printing.}
 
 \item{number_size}{Text size of the formatted numbers (only if \code{kind = "bar"}).}
 }
 \value{
-A \code{ggplot} object representing an importance plot or - if \code{kind = "no"} a named numeric vector of mean absolute SHAP values sorted in decreasing order.
+A \code{ggplot} object representing an importance plot,
+or - if \code{kind = "no"} - a named numeric vector of mean absolute SHAP values
+sorted in decreasing order.
 }
 \description{
 This function provides two types of SHAP importance plots: a beeswarm plot (the default)
@@ -55,17 +66,6 @@ and a bar plot. The beeswarm plot displays SHAP values per feature, using min-ma
 scaled feature values on the color scale (non-numeric features are transformed
 to numeric by calling \code{data.matrix()} first).
 The bar plot shows average absolute SHAP values. Both types can be combined.
-}
-\details{
-The continuous viridis color scale of the beeswarm plot is determined by the
-\code{shapviz.viridis_args} option with default
-\code{list(begin = 0.25, end = 0.85, option = "inferno")}.
-These values are passed to \code{ggplot2::scale_color_viridis_c()}.
-To switch to a reverted standard viridis scale, you would run
-\code{options(shapviz.viridis_args = list(option = "viridis", direction = -1))}.
-Check \code{?ggplot2::scale_color_viridis_c()} for all possible arguments.
-Since a "ggplot" object is returned, you can also overwrite the default color scale
-by adding another one.
 }
 \section{Methods (by class)}{
 \itemize{

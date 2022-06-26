@@ -15,6 +15,7 @@ sv_dependence(object, ...)
   v,
   color_var = NULL,
   color = "#3b528b",
+  viridis_args = getOption("shapviz.viridis_args"),
   jitter_width = NULL,
   ...
 )
@@ -33,6 +34,15 @@ Check details for how to change the color scale.}
 
 \item{color}{Color to be used if \code{color_var = NULL}.}
 
+\item{viridis_args}{List of viridis color scale arguments, see
+\code{?ggplot2::scale_color_viridis_c()}. The default points to the global
+option \code{shapviz.viridis_args}, which corresponds to
+\code{list(begin = 0.25, end = 0.85, option = "inferno")}.
+These values are passed to \code{ggplot2::scale_color_viridis_*()}.
+For example, to switch to a reverted standard viridis scale, you can change the
+global option or set \code{viridis_args = list(option = "viridis", direction = -1)}.
+Only relevant if \code{color_var} is not \code{NULL}.}
+
 \item{jitter_width}{The amount of horizontal jitter. The default (\code{NULL}) will
 use a value of 0.2 in case \code{v} is a factor, logical, or character variable, and
 no jitter otherwise.}
@@ -47,17 +57,6 @@ This allows to gain an impression of possible interaction effects.
 Set \code{color_var} to \code{"auto"} in order to select
 the color feature with seemingly strongest interaction based on a simple heuristic.
 For discrete \code{v}, horizontal scatter is added by default.
-}
-\details{
-The color scale of \code{color_var} is determined by the
-\code{shapviz.viridis_args} option with default
-\code{list(begin = 0.25, end = 0.85, option = "inferno")}.
-These values are passed to \code{ggplot2::scale_color_viridis_*()}.
-To switch to a reverted standard viridis scale, you would run
-\code{options(shapviz.viridis_args = list(option = "viridis", direction = -1))}.
-Check \code{?ggplot2::scale_color_viridis_c()} for all possible arguments.
-Since a "ggplot" object is returned, you can also overwrite the default color scale
-by adding another one.
 }
 \section{Methods (by class)}{
 \itemize{

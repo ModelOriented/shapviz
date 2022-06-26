@@ -6,16 +6,6 @@
 #' to numeric by calling \code{data.matrix()} first).
 #' The bar plot shows average absolute SHAP values. Both types can be combined.
 #'
-#' The continuous viridis color scale of the beeswarm plot is determined by the
-#' \code{shapviz.viridis_args} option with default
-#' \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
-#' These values are passed to \code{ggplot2::scale_color_viridis_c()}.
-#' To switch to a reverted standard viridis scale, you would run
-#' \code{options(shapviz.viridis_args = list(option = "viridis", direction = -1))}.
-#' Check \code{?ggplot2::scale_color_viridis_c()} for all possible arguments.
-#' Since a "ggplot" object is returned, you can also overwrite the default color scale
-#' by adding another one.
-#'
 #' @param object An object of class "shapviz".
 #' @param kind Should a "beeswarm" plot (the default), a "bar" plot or "both" be shown?
 #' Set to "no" in order to suppress plotting. In that case, the sorted
@@ -26,6 +16,13 @@
 #' well (and the resulting vector is min-max-scaled again). Set to \code{Inf} to show
 #' all features.
 #' @param fill Color used to fill the bars (only used if \code{kind = "bar"}).
+#' @param viridis_args List of viridis color scale arguments used to control the
+#' coloring of the beeswarm plot, see \code{?ggplot2::scale_color_viridis_c()}.
+#' The default points to the global option \code{shapviz.viridis_args}, which
+#' corresponds to \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
+#' These values are passed to \code{ggplot2::scale_color_viridis_c()}.
+#' For example, to switch to a reverted standard viridis scale, you can change the
+#' global option or set \code{viridis_args = list(option = "viridis", direction = -1)}.
 #' @param format_fun Function used to format mean absolute SHAP values shown on the
 #' bar plot. Use \code{format_fun = function(z) = ""} to suppress printing.
 #' @param number_size Text size of the formatted numbers (only if \code{kind = "bar"}).
@@ -34,7 +31,9 @@
 #' For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms,
 #' setting \code{size = 3} will produce larger dots, or \code{width = 0.2} will
 #' produce less wide swarms.
-#' @return A \code{ggplot} object representing an importance plot or - if \code{kind = "no"} a named numeric vector of mean absolute SHAP values sorted in decreasing order.
+#' @return A \code{ggplot} object representing an importance plot,
+#' or - if \code{kind = "no"} - a named numeric vector of mean absolute SHAP values
+#' sorted in decreasing order.
 #' @export
 #' @examples
 #' X_train <- data.matrix(iris[, -1])
@@ -59,6 +58,7 @@ sv_importance.default <- function(object, ...) {
 #' @export
 sv_importance.shapviz <- function(object, kind = c("beeswarm", "bar", "both", "no"),
                                   max_display = 10L, fill = "#fca50a",
+                                  viridis_args = getOption("shapviz.viridis_args"),
                                   format_fun = function(z)
                                     prettyNum(z, digits = 3, scientific = FALSE),
                                   number_size = 3.2, ...) {
@@ -109,7 +109,7 @@ sv_importance.shapviz <- function(object, kind = c("beeswarm", "bar", "both", "n
   # Put together color scale and deal with special case of only one unique v value
   nv <- length(unique(shap_long$v))
   viridis_args <- c(
-    getOption("shapviz.viridis_args"),
+    viridis_args,
     list(
       breaks = if (nv >= 2L) 0:1 else 0.5,
       labels = if (nv >= 2L) c("Low", "High") else "Avg",

@@ -7,16 +7,6 @@
 #' the color feature with seemingly strongest interaction based on a simple heuristic.
 #' For discrete \code{v}, horizontal scatter is added by default.
 #'
-#' The color scale of \code{color_var} is determined by the
-#' \code{shapviz.viridis_args} option with default
-#' \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
-#' These values are passed to \code{ggplot2::scale_color_viridis_*()}.
-#' To switch to a reverted standard viridis scale, you would run
-#' \code{options(shapviz.viridis_args = list(option = "viridis", direction = -1))}.
-#' Check \code{?ggplot2::scale_color_viridis_c()} for all possible arguments.
-#' Since a "ggplot" object is returned, you can also overwrite the default color scale
-#' by adding another one.
-#'
 #' @importFrom rlang .data
 #' @param object An object of class "shapviz".
 #' @param v Column name of feature to be plotted.
@@ -25,6 +15,14 @@
 #' which selects - by a simple heuristic - a variable with seemingly strongest interaction.
 #' Check details for how to change the color scale.
 #' @param color Color to be used if \code{color_var = NULL}.
+#' @param viridis_args List of viridis color scale arguments, see
+#' \code{?ggplot2::scale_color_viridis_c()}. The default points to the global
+#' option \code{shapviz.viridis_args}, which corresponds to
+#' \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
+#' These values are passed to \code{ggplot2::scale_color_viridis_*()}.
+#' For example, to switch to a reverted standard viridis scale, you can change the
+#' global option or set \code{viridis_args = list(option = "viridis", direction = -1)}.
+#' Only relevant if \code{color_var} is not \code{NULL}.
 #' @param jitter_width The amount of horizontal jitter. The default (\code{NULL}) will
 #' use a value of 0.2 in case \code{v} is a factor, logical, or character variable, and
 #' no jitter otherwise.
@@ -52,6 +50,7 @@ sv_dependence.default <- function(object, ...) {
 #' @describeIn sv_dependence SHAP dependence plot for shp object.
 #' @export
 sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b",
+                                  viridis_args = getOption("shapviz.viridis_args"),
                                   jitter_width = NULL, ...) {
   S <- get_shap_values(object)
   X <- get_feature_values(object)
@@ -87,7 +86,7 @@ sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b"
   ggplot(dat, aes(x = .data[[v]], y = shap, color = .data[[color_var]])) +
     geom_jitter(width = jitter_width, height = 0, ...) +
     ylab(paste("SHAP value of", v)) +
-    do.call(vir, getOption("shapviz.viridis_args"))
+    do.call(vir, viridis_args)
 }
 
 

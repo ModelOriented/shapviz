@@ -16,7 +16,8 @@ sv_importance(object, ...)
   max_display = 10L,
   fill = "#fca50a",
   viridis_args = getOption("shapviz.viridis_args"),
-  format_fun = function(z) prettyNum(z, digits = 3, scientific = FALSE),
+  format_shap = getOption("shapviz.format_shap"),
+  format_fun = NULL,
   number_size = 3.2,
   ...
 )
@@ -50,8 +51,12 @@ These values are passed to \code{ggplot2::scale_color_viridis_c()}.
 For example, to switch to a reverted standard viridis scale, you can change the
 global option or set \code{viridis_args = list(option = "viridis", direction = -1)}.}
 
-\item{format_fun}{Function used to format mean absolute SHAP values shown on the
-bar plot. Use \code{format_fun = function(z) = ""} to suppress printing.}
+\item{format_shap}{Function used to format mean absolute SHAP values shown on the
+bar plot. The default uses the global option \code{shapviz.format_shap}, which equals
+to \code{function(z) prettyNum(z, digits = 3, scientific = FALSE)} by default.
+Use \code{format_shap = function(z) = ""} to suppress printing.}
+
+\item{format_fun}{Deprecated. Use \code{format_shap} instead.}
 
 \item{number_size}{Text size of the formatted numbers (only if \code{kind = "bar"}).}
 }

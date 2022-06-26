@@ -15,9 +15,16 @@
 #' The default is \code{function(s) order(abs(s))}.
 #' To plot without sorting, use \code{function(s) 1:length(s)} or
 #' \code{function(s) length(s):1}.
+#' @param sort_fun Deprecated in favour of \code{order_fun}.
 #' @param fill_colors A vector of exactly two fill colors: the first for positive
 #' SHAP values, the other for negative ones.
-#' @param format_fun Function used to format numeric feature values and SHAP values.
+#' @param format_shap Function used to format SHAP values. The default uses the
+#' global option \code{shapviz.format_shap}, which equals to
+#' \code{function(z) prettyNum(z, digits = 3, scientific = FALSE)} by default.
+#' @param format_feat Function used to format numeric feature values. The default uses
+#' the global option \code{shapviz.format_feat}, which equals to
+#' \code{function(z) prettyNum(z, digits = 3, scientific = FALSE)} by default.
+#' @param format_fun Deprecated. Use \code{format_shap} and/or \code{format_feat} instead.
 #' @param contrast Logical flag that detemines whether to use white text in dark arrows.
 #' Default is \code{TRUE}.
 #' @param show_connection Should connecting lines be shown? Default is \code{TRUE}.
@@ -54,21 +61,31 @@ sv_waterfall.default <- function(object, ...) {
 #' @export
 sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
                                  order_fun = function(s) order(abs(s)),
+                                 sort_fun = NULL,
                                  fill_colors = c("#f7d13d", "#a52c60"),
-                                 format_fun = function(z)
-                                   prettyNum(z, digits = 3, scientific = FALSE),
+                                 format_shap = getOption("shapviz.format_shap"),
+                                 format_feat = getOption("shapviz.format_feat"),
+                                 format_fun = NULL,
                                  contrast = TRUE, show_connection = TRUE,
                                  show_annotation = TRUE, annotation_size = 3.2, ...) {
   stopifnot(
     "Only one row number can be passed" = length(row_id) == 1L,
     "Exactly two fill colors must be passed" = length(fill_colors) == 2L,
-    "Not a function" = is.function(format_fun),
-    "Not a function" = is.function(order_fun)
+    "format_shap must be a function" = is.function(format_shap),
+    "format_feat must be a function" = is.function(format_feat),
+    "order_fun must be a function" = is.function(order_fun)
   )
+  if (!is.null(sort_fun)) {
+    warning("sort_fun is deprecated. Use order_fun instead.")
+  }
+  if (!is.null(format_fun)) {
+    warning("format_fun is deprecated. Use format_shap and/or format_feat instead.")
+  }
+
   X <- get_feature_values(object)[row_id, ]
   S <- get_shap_values(object)[row_id, ]
   b <- get_baseline(object)
-  dat <- data.frame(S = S, label = paste(names(X), format_fun(X), sep = " = "))
+  dat <- data.frame(S = S, label = paste(names(X), format_feat(X), sep = " = "))
 
   # Collapse unimportant features
   dat <- .collapse(dat, S, max_display = max_display)
@@ -99,7 +116,7 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
       arrow_body_height = height
     ) +
     ggfittext::geom_fit_text(
-      aes(label = paste0(ifelse(S > 0, "+", ""), format_fun(S))),
+      aes(label = paste0(ifelse(S > 0, "+", ""), format_shap(S))),
       show.legend = FALSE,
       contrast = contrast,
       ...
@@ -140,7 +157,7 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
         "text",
         x = full_range,
         y = c(m, 1) + m * c(0.1, -0.1) + 0.15 * c(1, -1),
-        label = paste0(c("f(x)=", "E[f(x)]="), format_fun(full_range)),
+        label = paste0(c("f(x)=", "E[f(x)]="), format_shap(full_range)),
         size = annotation_size
       ) +
       scale_x_continuous(expand = expansion(mult = c(0.05, 0.12))) +

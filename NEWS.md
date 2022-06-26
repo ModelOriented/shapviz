@@ -1,8 +1,10 @@
-# shapviz 0.1.1
+# shapviz 0.2.0
 
 ## Major changes
 
 - Added "shapr" wrapper.
+- To allow more flexible formatting, the `format_fun` argument of `sv_waterfall()` and `sv_force()` has been replaced by `format_shap` to format SHAP values and `format_feat` to format numeric feature values. By default, they use the new global options "shapviz.format_shap" and "shapviz.format_feat", both with default `function(z) prettyNum(z, digits = 3, scientific = FALSE)`.
+- To be consistent with above change, the argument `format_fun` in `sv_importance()` was renamed to `format_shap` and the default also points to the global option `shapviz.format_shap`.
 - `sv_waterfall()` now uses a more stringend argument `order_fun = function(s) order(abs(s))` instead of the original `sort_fun = function(shap) abs(shap)` that was then passed to `order()`.
 
 ## Minor changes

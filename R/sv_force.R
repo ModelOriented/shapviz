@@ -11,7 +11,13 @@
 #' Set to \code{Inf} to show all features.
 #' @param fill_colors A vector of exactly two fill colors: the first for positive
 #' SHAP values, the other for negative ones.
-#' @param format_fun Function used to format numeric feature values and SHAP values.
+#' @param format_shap Function used to format SHAP values. The default uses the
+#' global option \code{shapviz.format_shap}, which equals to
+#' \code{function(z) prettyNum(z, digits = 3, scientific = FALSE)} by default.
+#' @param format_feat Function used to format numeric feature values. The default uses
+#' the global option \code{shapviz.format_feat}, which equals to
+#' \code{function(z) prettyNum(z, digits = 3, scientific = FALSE)} by default.
+#' @param format_fun Deprecated. Use \code{format_shap} and/or \code{format_feat} instead.
 #' @param contrast Logical flag that detemines whether to use white text in dark arrows.
 #' Default is \code{TRUE}.
 #' @param bar_label_size Size of text used to describe bars.
@@ -44,19 +50,25 @@ sv_force.default <- function(object, ...) {
 #' @export
 sv_force.shapviz <- function(object, row_id = 1L, max_display = 6L,
                              fill_colors = c("#f7d13d", "#a52c60"),
-                             format_fun = function(z)
-                               prettyNum(z, digits = 3, scientific = FALSE),
+                             format_shap = getOption("shapviz.format_shap"),
+                             format_feat = getOption("shapviz.format_feat"),
+                             format_fun = NULL,
                              contrast = TRUE, bar_label_size = 3.2,
                              show_annotation = TRUE, annotation_size = 3.2, ...) {
   stopifnot(
     "Only one row number can be passed" = length(row_id) == 1L,
     "Exactly two fill colors must be passed" = length(fill_colors) == 2L,
-    "Not a function" = is.function(format_fun)
+    "format_shap must be a function" = is.function(format_shap),
+    "format_feat must be a function" = is.function(format_feat)
   )
+  if (!is.null(format_fun)) {
+    warning("format_fun is deprecated. Use format_shap and/or format_feat instead.")
+  }
+
   X <- get_feature_values(object)[row_id, ]
   S <- get_shap_values(object)[row_id, ]
   b <- get_baseline(object)
-  dat <- data.frame(S = S, label = paste(names(X), format_fun(X), sep = "="))
+  dat <- data.frame(S = S, label = paste(names(X), format_feat(X), sep = "="))
 
   # Collapse unimportant features
   dat <- .collapse(dat, S, max_display = max_display)
@@ -98,7 +110,7 @@ sv_force.shapviz <- function(object, row_id = 1L, max_display = 6L,
       direction = "both"
     ) +
     ggfittext::geom_fit_text(
-      aes(label = paste0(ifelse(S > 0, "+", ""), format_fun(S))),
+      aes(label = paste0(ifelse(S > 0, "+", ""), format_shap(S))),
       show.legend = FALSE,
       contrast = contrast,
       ...
@@ -134,7 +146,7 @@ sv_force.shapviz <- function(object, row_id = 1L, max_display = 6L,
         "text",
         x = b_pred,
         y = c(0.4, 0.65),
-        label = paste0(c("E[f(x)]=", "f(x)="), format_fun(b_pred)),
+        label = paste0(c("E[f(x)]=", "f(x)="), format_shap(b_pred)),
         size = annotation_size
       )
   }

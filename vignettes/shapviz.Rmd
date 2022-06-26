@@ -19,8 +19,6 @@ knitr::opts_chunk$set(
   fig.height = 4,
   fig.align = "center"
 )
-
-library(shapviz)
 ```
 
 ## Introduction

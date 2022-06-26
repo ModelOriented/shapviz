@@ -21,10 +21,13 @@
 #' The default points to the global option \code{shapviz.viridis_args}, which
 #' corresponds to \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
 #' These values are passed to \code{ggplot2::scale_color_viridis_c()}.
-#' For example, to switch to a reverted standard viridis scale, you can change the
-#' global option or set \code{viridis_args = list(option = "viridis", direction = -1)}.
-#' @param format_fun Function used to format mean absolute SHAP values shown on the
-#' bar plot. Use \code{format_fun = function(z) = ""} to suppress printing.
+#' For example, to switch to a standard viridis scale, you can either change the default
+#' with \code{options(shapviz.viridis_args = NULL)} or set \code{viridis_args = NULL}.
+#' @param format_shap Function used to format mean absolute SHAP values shown on the
+#' bar plot. The default uses the global option \code{shapviz.format_shap}, which equals
+#' to \code{function(z) prettyNum(z, digits = 3, scientific = FALSE)} by default.
+#' Use \code{format_shap = function(z) = ""} to suppress printing.
+#' @param format_fun Deprecated. Use \code{format_shap} instead.
 #' @param number_size Text size of the formatted numbers (only if \code{kind = "bar"}).
 #' @param ... Arguments passed to \code{geom_bar()} (if \code{kind = "bar"}) or
 #' to \code{ggbeeswarm::geom_quasirandom()} otherwise.
@@ -59,9 +62,14 @@ sv_importance.default <- function(object, ...) {
 sv_importance.shapviz <- function(object, kind = c("beeswarm", "bar", "both", "no"),
                                   max_display = 10L, fill = "#fca50a",
                                   viridis_args = getOption("shapviz.viridis_args"),
-                                  format_fun = function(z)
-                                    prettyNum(z, digits = 3, scientific = FALSE),
+                                  format_shap = getOption("shapviz.format_shap"),
+                                  format_fun = NULL,
                                   number_size = 3.2, ...) {
+  stopifnot("format_shap must be a function" = is.function(format_shap))
+  if (!is.null(format_fun)) {
+    warning("format_fun is deprecated. Use format_shap instead.")
+  }
+
   kind <- match.arg(kind)
   S <- get_shap_values(object)
   X_scaled <- X <- get_feature_values(object)
@@ -93,7 +101,7 @@ sv_importance.shapviz <- function(object, kind = c("beeswarm", "bar", "both", "n
     p <- ggplot(imp_df, aes(x = stats::reorder(ind, values), y = values)) +
       geom_bar(fill = fill, stat = "identity", ...) +
       geom_text(
-        aes(y = 0, label = format_fun(values)), hjust = -0.2, size = number_size
+        aes(y = 0, label = format_shap(values)), hjust = -0.2, size = number_size
       ) +
       coord_flip() +
       labs(x = element_blank(), y = "mean(|SHAP value|)")

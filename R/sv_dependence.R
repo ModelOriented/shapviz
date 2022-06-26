@@ -20,8 +20,8 @@
 #' option \code{shapviz.viridis_args}, which corresponds to
 #' \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
 #' These values are passed to \code{ggplot2::scale_color_viridis_*()}.
-#' For example, to switch to a reverted standard viridis scale, you can change the
-#' global option or set \code{viridis_args = list(option = "viridis", direction = -1)}.
+#' For example, to switch to a standard viridis scale, you can either change the default
+#' with \code{options(shapviz.viridis_args = NULL)} or set \code{viridis_args = NULL}.
 #' Only relevant if \code{color_var} is not \code{NULL}.
 #' @param jitter_width The amount of horizontal jitter. The default (\code{NULL}) will
 #' use a value of 0.2 in case \code{v} is a factor, logical, or character variable, and

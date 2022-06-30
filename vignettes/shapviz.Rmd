@@ -95,6 +95,8 @@ X_small <- X[sample(nrow(X), 2000L), ]
 shp <- shapviz(fit, X_pred = data.matrix(X_small), X = X_small)
 ```
 
+Note: If `X_pred` would contain one-hot-encoded dummy variables, their SHAP values could be collapsed by the `collapse` argument of `shapviz()`.
+
 ### Decompose single prediction
 
 The main idea behind SHAP values is to decompose, in a fair way, a prediction into additive contributions of each feature. Typical visualizations include waterfall plots and force plots:

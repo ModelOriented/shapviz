@@ -171,7 +171,7 @@ shapviz.shapr <- function(object, X = object[["x_test"]], ...) {
   )
 }
 
-#' Initialize "shapviz" Object from XGBoost/LightGBM Predict
+#' Initialize "shapviz" Object from XGBoost/LightGBM Predict (Deprecated)
 #'
 #' These functions create an object of class "shapviz" by taking the output of
 #' \code{predict(..., predcontrib = TRUE)} of an XGBoost or LightGBM model,
@@ -199,6 +199,7 @@ NULL
 #' shap_values <- predict(fit, dtrain, predcontrib = TRUE)
 #' x <- shapviz_from_xgb_predict(shap_values, iris[, -1])
 shapviz_from_xgb_predict <- function(S, X, which_class = NULL, ...) {
+  warning("This function is deprecated and will be removed in version 0.3.0")
   # Reduce multiclass setting
   if (is.list(S)) {
     m <- length(S)
@@ -227,6 +228,7 @@ shapviz_from_xgb_predict <- function(S, X, which_class = NULL, ...) {
 #' @rdname from_xgb_or_lgb
 #' @export
 shapviz_from_lgb_predict <- function(S, X, which_class = NULL, ...) {
+  warning("This function is deprecated and will be removed in version 0.3.0")
   pp <- ncol(X) + 1L
   stopifnot(
     is.matrix(S),

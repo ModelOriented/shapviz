@@ -8,22 +8,25 @@
 #'   \item An "explain" object from the package "fastshap".
 #'   \item The result of calling \code{treeshap()} from the "treeshap" package.
 #' }
-#' Along with the main input, a dataset \code{X} of feature values is required that
-#' is used for visualization only. It can thus contain character or factor variables
-#' even if the SHAP values were calculated from a purely numeric feature matrix.
-#' Furthermore, in order to improve visualization, it can sometimes make sense
-#' to clip gross outliers, take logarithms for certain columns, or replace missing
-#' values by some explicit value.
+#' Together with the main input, a data set \code{X} of feature values is required,
+#' which is used only for visualization. It can therefore contain character or factor
+#' variables, even if the SHAP values were calculated from a purely numerical feature
+#' matrix. In addition, to improve visualization, it can sometimes be useful to truncate
+#' gross outliers, logarithmize certain columns, or replace missing values with an
+#' explicit value.
 #' @param object Object to be converted to an object of type "shapviz".
 #' @param X Corresponding matrix or data.frame of feature values used for visualization.
 #' @param X_pred Feature matrix as expected by the \code{predict} function of
-#' XGBoost/LightGBM. In case \code{object} is an XGBoost model, it can also be
+#' XGBoost or LightGBM. In case \code{object} is an XGBoost model, it can also be
 #' an \code{xgb.DMatrix}.
 #' @param baseline Optional baseline value, representing the average response at the
 #' scale of the SHAP values. It will be used for plot methods that explain single
 #' predictions.
 #' @param which_class In case of a multiclass setting, which class
 #' to explain (an integer between 1 and the \code{num_class} parameter of the model).
+#' @param collapse A named list of character vectors. Each vector specifies a group of
+#' column names in the SHAP matrix that should be collapsed to a single column by summation.
+#' The name of the new column equals the name of the vector in \code{collapse}.
 #' @param ... Parameters passed to other methods (currently only used by
 #' the \code{predict} functions of XGBoost and LightGBM).
 #' @return An object of class "shapviz" with the following three elements:
@@ -33,6 +36,7 @@
 #'   \item \code{baseline}: Baseline value, representing the average prediction at the scale of the SHAP values.
 #' }
 #' @export
+#' @seealso \code{\link{collapse_shap}}.
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
@@ -52,7 +56,8 @@ shapviz.default = function(object, ...) {
 
 #' @describeIn shapviz Creates a "shapviz" object from a matrix of SHAP values.
 #' @export
-shapviz.matrix = function(object, X, baseline = 0, ...) {
+shapviz.matrix = function(object, X, baseline = 0, collapse = NULL, ...) {
+  object <- collapse_shap(object, collapse = collapse)
   stopifnot(
     "X must be a matrix or data.frame" = is.matrix(X) || is.data.frame(X),
     "Dimensions of object and X are incompatible" = dim(object) == dim(X),
@@ -100,75 +105,93 @@ shapviz.matrix = function(object, X, baseline = 0, ...) {
 #' fit <- xgboost::xgb.train(params = params, data = dtrain, nrounds = 50)
 #' x <- shapviz(fit, X_pred = X_pred, which_class = 3)
 #' x
-shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL, ...) {
+#'
+#' # What if we would have one-hot-encoded values and want to explain the original column?
+#' X_pred <- stats::model.matrix(~ . -1, iris[, -1])
+#' dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 1]))
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
+#' x <- shapviz(
+#'   fit,
+#'   X_pred = X_pred,
+#'   X = iris[, -1],
+#'   collapse = list(Species = c("Speciessetosa", "Speciesversicolor", "Speciesvirginica"))
+#' )
+#' x
+shapviz.xgb.Booster = function(object, X_pred, X = X_pred,
+                               which_class = NULL, collapse = NULL, ...) {
   stopifnot(
+    "X must be a matrix or data.frame. It can't be an object of class xgb.DMatrix" =
+      is.matrix(X) || is.data.frame(X),
     "X_pred must be a matrix or a xgb.DMatrix" =
       is.matrix(X_pred) || inherits(X_pred, "xgb.DMatrix"),
-    "X must be a matrix or data.frame" = is.matrix(X) || is.data.frame(X),
-    "Dimensions of X_pred and X are incompatible" = dim(X_pred) == dim(X),
-    "X_pred must have column names" = !is.null(colnames(X_pred)),
-    "X must have column names" = !is.null(colnames(X)),
-    "X_pred and X should have the same column names" =
-      sort(colnames(X_pred)) == sort(colnames(X))
+    "X_pred must have column names" = !is.null(colnames(X_pred))
   )
   if (!inherits(X_pred, "xgb.DMatrix")) {
     X_pred <- xgboost::xgb.DMatrix(X_pred)
   }
   S <- stats::predict(object, newdata = X_pred, predcontrib = TRUE, ...)
-  shapviz_from_xgb_predict(S, X = X, which_class = which_class)
+
+  # Multiclass
+  if (is.list(S)) {
+    stopifnot(!is.null(which_class), which_class <= length(S))
+    S <- S[[which_class]]
+  }
+
+  # Call matrix method
+  shapviz.matrix(
+    S[, setdiff(colnames(S), "BIAS"), drop = FALSE],
+    X = X,
+    baseline = unname(S[1L, "BIAS"]),
+    collapse = collapse
+  )
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from a LightGBM model.
 #' @export
-shapviz.lgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL, ...) {
+shapviz.lgb.Booster = function(object, X_pred, X = X_pred,
+                               which_class = NULL, collapse = NULL, ...) {
   stopifnot(
     "X_pred must be a matrix" = is.matrix(X_pred),
-    "X must be a matrix or data.frame" = is.matrix(X) || is.data.frame(X),
-    "Dimensions of X_pred and X are incompatible" = dim(X_pred) == dim(X),
-    "X_pred must have column names" = !is.null(colnames(X_pred)),
-    "X must have column names" = !is.null(colnames(X)),
-    "X_pred and X should have the same column names" =
-      sort(colnames(X_pred)) == sort(colnames(X))
+    "X_pred must have column names" = !is.null(colnames(X_pred))
   )
   S <- stats::predict(object, data = X_pred, predcontrib = TRUE, ...)
+  pp <- ncol(X) + 1L
 
-  # We need to be cautious here: S has no column names and can represent SHAP values
-  # for more than one category. In order to not mess up the column order in the next
-  # function call, we sort X in the same order as X_pred.
-  shapviz_from_lgb_predict(
-    S,
-    X = X[, colnames(X_pred), drop = FALSE],
-    which_class = which_class
-  )
+  # Reduce multiclass setting
+  m <- ncol(S) %/% pp
+  if (m >= 2L) {
+    stopifnot(!is.null(which_class), which_class <= m)
+    S <- S[, 1:pp + pp * (which_class - 1), drop = FALSE]
+  }
+
+  # Call matrix method
+  baseline <- S[1L, pp]
+  S <- S[, -pp, drop = FALSE]
+  colnames(S) <- colnames(X_pred)
+  shapviz.matrix(S, X = X, baseline = baseline, collapse = collapse)
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from fastshap's "explain()" method.
 #' @export
-shapviz.explain <- function(object, X, baseline = 0, ...) {
-  shapviz.matrix(as.matrix(object), X = X, baseline = baseline, ...)
+shapviz.explain <- function(object, X, baseline = 0, collapse = NULL, ...) {
+  shapviz.matrix(as.matrix(object), X = X, baseline = baseline, collapse = collapse)
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from treeshap's "treeshap()" method.
 #' @export
-shapviz.treeshap <- function(object, X = object[["observations"]], baseline = 0, ...) {
-  shapviz.matrix(
-    object = as.matrix(object[["shaps"]]),
-    X = X,
-    baseline = baseline,
-    ...
-  )
+shapviz.treeshap <- function(object, X = object[["observations"]],
+                             baseline = 0, collapse = NULL, ...) {
+  S <- as.matrix(object[["shaps"]])
+  shapviz.matrix(S, X = X, baseline = baseline, collapse = collapse)
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from shapr's "explain()" method.
 #' @export
-shapviz.shapr <- function(object, X = object[["x_test"]], ...) {
-  keep <- setdiff(colnames(object[["dt"]]), "none")
-  shapviz.matrix(
-    object = as.matrix(object[["dt"]])[, keep, drop = FALSE],
-    X = X,
-    baseline = object[["dt"]][["none"]][1L],
-    ...
-  )
+shapviz.shapr <- function(object, X = object[["x_test"]], collapse = NULL, ...) {
+  dt <- as.matrix(object[["dt"]])
+  baseline <- dt[1L, "none"]
+  S <- dt[, setdiff(colnames(dt), "none"), drop = FALSE]
+  shapviz.matrix(S, X = X, baseline = baseline, collapse = collapse)
 }
 
 #' Initialize "shapviz" Object from XGBoost/LightGBM Predict (Deprecated)

@@ -172,7 +172,8 @@ collapse_shap.matrix <- function(object, collapse = NULL, ...) {
   }
   stopifnot(
     "'object' must have column names" = !is.null(colnames(object)),
-    "'collapse' must be a named list" = is.list(collapse) && !is.null(names(collapse))
+    "'collapse' must be a named list" = is.list(collapse) && !is.null(names(collapse)),
+    "'collapse' can't have duplicated names" = !anyDuplicated(names(collapse))
   )
   u <- unlist(collapse, use.names = FALSE, recursive = FALSE)
   keep <- setdiff(colnames(object), u)

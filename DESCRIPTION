@@ -8,12 +8,12 @@ Description: Visualizations for SHAP (SHapley Additive exPlanations), such
     and dependence plots.  These plots act on a 'shapviz' object created
     from a matrix of SHAP values and a corresponding feature dataset.
     Wrappers for the R packages 'xgboost', 'lightgbm', 'fastshap',
-    'shapr', and 'treeshap' are added for convenience.  By separating
-    visualization and computation, it is possible to display factor
-    variables in graphs, even if the SHAP values are calculated by a model
-    that requires numerical features. The plots are inspired by those
-    provided by the 'shap' package in Python, but there is no dependency
-    on it.
+    'shapr', 'h2o', and 'treeshap' are added for convenience.  By
+    separating visualization and computation, it is possible to display
+    factor variables in graphs, even if the SHAP values are calculated by
+    a model that requires numerical features. The plots are inspired by
+    those provided by the 'shap' package in Python, but there is no
+    dependency on it.
 License: GPL (>= 2)
 Depends: 
     R (>= 3.6.0)
@@ -31,6 +31,9 @@ Imports:
     stats,
     utils,
     xgboost
+Enhances: 
+    h2o,
+    lightgbm
 Suggests: 
     knitr,
     rmarkdown,
@@ -39,5 +42,3 @@ VignetteBuilder: knitr
 Config/testthat/edition: 3
 URL: https://github.com/mayer79/shapviz
 BugReports: https://github.com/mayer79/shapviz/issues
-Enhances: 
-    lightgbm

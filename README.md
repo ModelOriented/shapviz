@@ -19,12 +19,13 @@ Furthermore, a `baseline` can be passed to represent an average prediction on th
 A key feature of the `shapviz` package is that `X` is used for visualization only. Thus it is perfectly fine to use factor variables, even if the underlying model would not accept these.
 Additionally, in order to improve visualization, it can sometimes make sense to clip gross outliers, take logarithms for certain columns, or replace missing values by some explicit value.
 
-To further simplify the use of `shapviz`, we added direct connectors to
+To further simplify the use of `shapviz`, we added direct connectors to the R packages
 
 - [`XGBoost`](https://CRAN.R-project.org/package=xgboost),
 - [`LightGBM`](https://CRAN.R-project.org/package=lightgbm),
 - [`fastshap`](https://CRAN.R-project.org/package=fastshap),
-- [`shapr`](https://CRAN.R-project.org/package=shapr), and
+- [`shapr`](https://CRAN.R-project.org/package=shapr), 
+- [`h2o`](https://CRAN.R-project.org/package=h2o), and
 - [`treeshap`](https://github.com/ModelOriented/treeshap).
 
 ## Installation

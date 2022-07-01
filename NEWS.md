@@ -2,7 +2,8 @@
 
 ## Major changes
 
-- Added "shapr" wrapper.
+- Added H2O wrapper.
+- Added shapr wrapper.
 - Added an optional `collapse` argument in `shapviz()`. This is named list specifying which columns in the SHAP matrix are to be collapsed by rowwise summation. A typical application will be to combine the SHAP values of one-hot-encoded dummies and explain them together.
 
 ## Minor changes
@@ -15,9 +16,9 @@
 or set `viridis_args = NULL`.
 - Deprecated helper functions `shapviz_from_lgb_predict()` and `shapviz_from_xgb_predict` in favour of the collapsing logic (see above). The functions will be removed in version 0.3.0.
 - Added 'lightgbm' as "Enhances" dependency.
+- Added 'h2o' as "Enhances" dependency.
 - More unit tests.
 - Improved documentation.
-- Added H2O section to vignette.
 - Fixed github installation instruction in README and vignette.
 
 # shapviz 0.1.0

@@ -2,33 +2,38 @@
 #'
 #' This function creates an object of class "shapviz" from one of the following inputs:
 #' \itemize{
-#'   \item A matrix of SHAP values.
-#'   \item A fitted XGBoost model.
-#'   \item A fitted LightGBM model.
-#'   \item An "explain" object from the package "fastshap".
-#'   \item The result of calling \code{treeshap()} from the "treeshap" package.
+#'   \item Matrix with SHAP values
+#'   \item XGBoost model
+#'   \item LightGBM model
+#'   \item "explain" object from the package "fastshap"
+#'   \item H2O model (tree-based regression or binary classification model)
+#'   \item "shapr" object from the package "shapr"
+#'   \item The result of calling \code{treeshap()} from the "treeshap" package
 #' }
+#' The "shapviz" vignette explains how to use each of them.
 #' Together with the main input, a data set \code{X} of feature values is required,
 #' which is used only for visualization. It can therefore contain character or factor
 #' variables, even if the SHAP values were calculated from a purely numerical feature
 #' matrix. In addition, to improve visualization, it can sometimes be useful to truncate
 #' gross outliers, logarithmize certain columns, or replace missing values with an
-#' explicit value.
+#' explicit value. SHAP values of dummy variables can be combined using the convenient
+#' \code{collapse} argument.
 #' @param object Object to be converted to an object of type "shapviz".
 #' @param X Corresponding matrix or data.frame of feature values used for visualization.
-#' @param X_pred Feature matrix as expected by the \code{predict} function of
-#' XGBoost or LightGBM. In case \code{object} is an XGBoost model, it can also be
-#' an \code{xgb.DMatrix}.
+#' @param X_pred Data set as expected by the \code{predict} function of
+#' XGBoost, LightGBM, or H2O. For XGBoost, a matrix or \code{xgb.DMatrix},
+#' for LightGBM a matrix, and for H2O a \code{data.frame} or an \code{H2OFrame}.
 #' @param baseline Optional baseline value, representing the average response at the
 #' scale of the SHAP values. It will be used for plot methods that explain single
 #' predictions.
 #' @param which_class In case of a multiclass setting, which class
 #' to explain (an integer between 1 and the \code{num_class} parameter of the model).
+#' Currently relevant for XGBoost or LightGBM models only.
 #' @param collapse A named list of character vectors. Each vector specifies a group of
 #' column names in the SHAP matrix that should be collapsed to a single column by summation.
 #' The name of the new column equals the name of the vector in \code{collapse}.
 #' @param ... Parameters passed to other methods (currently only used by
-#' the \code{predict} functions of XGBoost and LightGBM).
+#' the \code{predict} functions of XGBoost, LightGBM, and H2O).
 #' @return An object of class "shapviz" with the following three elements:
 #' \itemize{
 #'   \item \code{S}: A numeric \code{matrix} of SHAP values.
@@ -51,7 +56,7 @@ shapviz <- function(object, ...){
 shapviz.default = function(object, ...) {
   stop("No default method available. shapviz() is available for objects
        of class 'matrix', 'xgb.Booster', 'lgb.Booster', 'treeshap',
-       'shapr', and 'explain' (from fastshap package).")
+       'shapr', 'H2OModel', and 'explain' (from fastshap package).")
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from a matrix of SHAP values.
@@ -99,6 +104,17 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL, ...) {
 #'
 #' # "X_pred" can also be passed as xgb.DMatrix, but only if X is passed as well!
 #' shapviz(fit, X_pred = dtrain, X = iris[, -1])
+#'
+#' if (requireNamespace("lightgbm", quietly = TRUE)) {
+#'   fit <- lightgbm::lgb.train(
+#'     params = list(objective = "regression"),
+#'     data = lightgbm::lgb.Dataset(X_pred, label = iris[, 1]),
+#'     nrounds = 50,
+#'     verbose = -2
+#'   )
+#'   x <- shapviz(fit, X_pred = X_pred)
+#'   sv_force(x, row_id = 1)
+#' }
 #'
 #' # In multiclass setting, we need to specify which_class (integer starting at 1)
 #' # should be explained.
@@ -155,8 +171,10 @@ shapviz.xgb.Booster = function(object, X_pred, X = X_pred,
 #' @export
 shapviz.lgb.Booster = function(object, X_pred, X = X_pred,
                                which_class = NULL, collapse = NULL, ...) {
+  if (!requireNamespace("lightgbm", quietly = TRUE)) {
+    stop("Package 'lightgbm' not installed")
+  }
   stopifnot(
-    "'lightgbm' not installed" = requireNamespace("lightgbm", quietly = TRUE),
     "X_pred must be a matrix" = is.matrix(X_pred),
     "X_pred must have column names" = !is.null(colnames(X_pred))
   )
@@ -193,17 +211,65 @@ shapviz.explain <- function(object, X, baseline = 0, collapse = NULL, ...) {
 #' @export
 shapviz.treeshap <- function(object, X = object[["observations"]],
                              baseline = 0, collapse = NULL, ...) {
-  S <- as.matrix(object[["shaps"]])
-  shapviz.matrix(S, X = X, baseline = baseline, collapse = collapse)
+  shapviz.matrix(
+    as.matrix(object[["shaps"]]),
+    X = X,
+    baseline = baseline,
+    collapse = collapse
+  )
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from shapr's "explain()" method.
 #' @export
 shapviz.shapr <- function(object, X = object[["x_test"]], collapse = NULL, ...) {
   dt <- as.matrix(object[["dt"]])
-  baseline <- dt[1L, "none"]
-  S <- dt[, setdiff(colnames(dt), "none"), drop = FALSE]
-  shapviz.matrix(S, X = X, baseline = baseline, collapse = collapse)
+  shapviz.matrix(
+    dt[, setdiff(colnames(dt), "none"), drop = FALSE],
+    X = X,
+    baseline = dt[1L, "none"],
+    collapse = collapse
+  )
+}
+
+#' @describeIn shapviz Creates a "shapviz" object from a (tree-based) H2O regression model.
+#' @export
+shapviz.H2ORegressionModel = function(object, X_pred,
+                                      X = as.data.frame(X_pred)[object@parameters[["x"]]],
+                                      collapse = NULL, ...) {
+  shapviz.H2OModel(object = object, X_pred = X_pred, X = X, collapse = collapse, ...)
+}
+
+#' @describeIn shapviz Creates a "shapviz" object from a (tree-based) H2O binary classification model.
+#' @export
+shapviz.H2OBinomialModel = function(object, X_pred,
+                                    X = as.data.frame(X_pred)[object@parameters[["x"]]],
+                                    collapse = NULL, ...) {
+  shapviz.H2OModel(object = object, X_pred = X_pred, X = X, collapse = collapse, ...)
+}
+
+#' @describeIn shapviz Creates a "shapviz" object from a (tree-based) H2O model (base class).
+#' @export
+shapviz.H2OModel = function(object, X_pred,
+                            X = as.data.frame(X_pred)[object@parameters[["x"]]],
+                            collapse = NULL, ...) {
+  if (!requireNamespace("h2o", quietly = TRUE)) {
+    stop("Package 'h2o' not installed")
+  }
+  stopifnot(
+    "X_pred must be a data.frame or an H2OFrame" =
+      is.data.frame(X_pred) || inherits(X_pred, "H2OFrame"),
+    "X_pred must have column names" = !is.null(colnames(X_pred))
+  )
+  if (!inherits(X_pred, "H2OFrame")) {
+    X_pred <- h2o::as.h2o(X_pred)
+  }
+  S <- as.matrix(h2o::h2o.predict_contributions(object, newdata = X_pred, ...))
+  shapviz.matrix(
+    S[, setdiff(colnames(S), "BiasTerm"), drop = FALSE],
+    X = X,
+    baseline = unname(S[1L, "BiasTerm"]),
+    collapse = collapse
+  )
 }
 
 #' Initialize "shapviz" Object from XGBoost/LightGBM Predict (Deprecated)

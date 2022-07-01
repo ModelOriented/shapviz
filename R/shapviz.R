@@ -230,7 +230,23 @@ shapviz.shapr <- function(object, X = object[["x_test"]], collapse = NULL, ...) 
   )
 }
 
-#' @describeIn shapviz Creates a "shapviz" object from a (tree-based) H2O model.
+#' @describeIn shapviz Creates a "shapviz" object from a (tree-based) H2O regression model.
+#' @export
+shapviz.H2ORegressionModel = function(object, X_pred,
+                                      X = as.data.frame(X_pred)[object@parameters[["x"]]],
+                                      collapse = NULL, ...) {
+  shapviz.H2OModel(object = object, X_pred = X_pred, X = X, collapse = collapse, ...)
+}
+
+#' @describeIn shapviz Creates a "shapviz" object from a (tree-based) H2O binary classification model.
+#' @export
+shapviz.H2OBinomialModel = function(object, X_pred,
+                                    X = as.data.frame(X_pred)[object@parameters[["x"]]],
+                                    collapse = NULL, ...) {
+  shapviz.H2OModel(object = object, X_pred = X_pred, X = X, collapse = collapse, ...)
+}
+
+#' @describeIn shapviz Creates a "shapviz" object from a (tree-based) H2O model (base class).
 #' @export
 shapviz.H2OModel = function(object, X_pred,
                             X = as.data.frame(X_pred)[object@parameters[["x"]]],

@@ -9,6 +9,9 @@
 \alias{shapviz.explain}
 \alias{shapviz.treeshap}
 \alias{shapviz.shapr}
+\alias{shapviz.H2ORegressionModel}
+\alias{shapviz.H2OBinomialModel}
+\alias{shapviz.H2OModel}
 \title{Initialize "shapviz" Object}
 \usage{
 shapviz(object, ...)
@@ -32,12 +35,36 @@ shapviz(object, ...)
 )
 
 \method{shapviz}{shapr}(object, X = object[["x_test"]], collapse = NULL, ...)
+
+\method{shapviz}{H2ORegressionModel}(
+  object,
+  X_pred,
+  X = as.data.frame(X_pred)[object@parameters[["x"]]],
+  collapse = NULL,
+  ...
+)
+
+\method{shapviz}{H2OBinomialModel}(
+  object,
+  X_pred,
+  X = as.data.frame(X_pred)[object@parameters[["x"]]],
+  collapse = NULL,
+  ...
+)
+
+\method{shapviz}{H2OModel}(
+  object,
+  X_pred,
+  X = as.data.frame(X_pred)[object@parameters[["x"]]],
+  collapse = NULL,
+  ...
+)
 }
 \arguments{
 \item{object}{Object to be converted to an object of type "shapviz".}
 
 \item{...}{Parameters passed to other methods (currently only used by
-the \code{predict} functions of XGBoost and LightGBM).}
+the \code{predict} functions of XGBoost, LightGBM, and H2O).}
 
 \item{X}{Corresponding matrix or data.frame of feature values used for visualization.}
 
@@ -49,9 +76,9 @@ predictions.}
 column names in the SHAP matrix that should be collapsed to a single column by summation.
 The name of the new column equals the name of the vector in \code{collapse}.}
 
-\item{X_pred}{Feature matrix as expected by the \code{predict} function of
-XGBoost or LightGBM. In case \code{object} is an XGBoost model, it can also be
-an \code{xgb.DMatrix}.}
+\item{X_pred}{Data set as expected by the \code{predict} function of
+XGBoost, LightGBM, or H2O. For XGBoost, a matrix or \code{xgb.DMatrix},
+for LightGBM a matrix, and for H2O a \code{data.frame} or an \code{H2OFrame}.}
 
 \item{which_class}{In case of a multiclass setting, which class
 to explain (an integer between 1 and the \code{num_class} parameter of the model).}
@@ -71,14 +98,18 @@ This function creates an object of class "shapviz" from one of the following inp
 \item A fitted XGBoost model.
 \item A fitted LightGBM model.
 \item An "explain" object from the package "fastshap".
-\item The result of calling \code{treeshap()} from the "treeshap" package.
+\item A fitted tree-based H2O model.
+\item A "shapr" object from the package "shapr".
+\item The result of calling \code{treeshap()} from the "treeshap" package,
 }
+see the "shapviz" vignette for details on how to use each of them.
 Together with the main input, a data set \code{X} of feature values is required,
 which is used only for visualization. It can therefore contain character or factor
 variables, even if the SHAP values were calculated from a purely numerical feature
 matrix. In addition, to improve visualization, it can sometimes be useful to truncate
 gross outliers, logarithmize certain columns, or replace missing values with an
-explicit value.
+explicit value. SHAP values of dummy variables can be combined using the convenient
+\code{collapse} argument.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -95,6 +126,12 @@ explicit value.
 \item \code{treeshap}: Creates a "shapviz" object from treeshap's "treeshap()" method.
 
 \item \code{shapr}: Creates a "shapviz" object from shapr's "explain()" method.
+
+\item \code{H2ORegressionModel}: Creates a "shapviz" object from a (tree-based) H2O regression model.
+
+\item \code{H2OBinomialModel}: Creates a "shapviz" object from a (tree-based) H2O binary classification model.
+
+\item \code{H2OModel}: Creates a "shapviz" object from a (tree-based) H2O model (base class).
 }}
 
 \examples{
@@ -118,6 +155,17 @@ sv_dependence(x, "Petal.Length", color_var = "auto")
 
 # "X_pred" can also be passed as xgb.DMatrix, but only if X is passed as well!
 shapviz(fit, X_pred = dtrain, X = iris[, -1])
+
+if (requireNamespace("lightgbm", quietly = TRUE)) {
+  fit <- lightgbm::lgb.train(
+    params = list(objective = "regression"),
+    data = lightgbm::lgb.Dataset(X_pred, label = iris[, 1]),
+    nrounds = 50,
+    verbose = -2
+  )
+  x <- shapviz(fit, X_pred = X_pred)
+  sv_force(x, row_id = 1)
+}
 
 # In multiclass setting, we need to specify which_class (integer starting at 1)
 # should be explained.

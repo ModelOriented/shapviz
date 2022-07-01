@@ -47,9 +47,6 @@ use_package("xgboost", "Imports")
 use_package("lightgbm", "Enhances")
 use_package("h2o", "Enhances")
 
-# use_package("lightgbm", "suggests")
-# use_package("fastshap", "suggests")
-
 use_gpl_license(2)
 
 # Your files that do not belong to the package itself (others are added by "use_* function")

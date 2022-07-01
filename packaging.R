@@ -21,7 +21,7 @@ use_description(
     and dependence plots.
     These plots act on a 'shapviz' object created from a matrix of SHAP
     values and a corresponding feature dataset. Wrappers for the R packages
-    'xgboost', 'lightgbm', 'fastshap', 'shapr', and 'treeshap' are added for convenience.
+    'xgboost', 'lightgbm', 'fastshap', 'shapr', 'h2o', and 'treeshap' are added for convenience.
     By separating visualization and computation, it is possible to display
     factor variables in graphs, even if the SHAP values are calculated by a model
     that requires numerical features. The plots are inspired by those provided by
@@ -45,6 +45,7 @@ use_package("ggrepel", "Imports")
 use_package("xgboost", "Imports")
 
 use_package("lightgbm", "Enhances")
+use_package("h2o", "Enhances")
 
 # use_package("lightgbm", "suggests")
 # use_package("fastshap", "suggests")

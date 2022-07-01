@@ -40,12 +40,13 @@ Furthermore, a `baseline` can be passed to represent an average prediction on th
 A key feature of the `shapviz` package is that `X` is used for visualization only. Thus it is perfectly fine to use factor variables, even if the underlying model would not accept these.
 Additionally, in order to improve visualization, it can sometimes make sense to clip gross outliers, take logarithms for certain columns, or replace missing values by some explicit value.
 
-To further simplify the use of `shapviz`, we added direct connectors to
+To further simplify the use of `shapviz`, we added direct connectors to the R packages
 
 - [`XGBoost`](https://CRAN.R-project.org/package=xgboost),
 - [`LightGBM`](https://CRAN.R-project.org/package=lightgbm),
 - [`fastshap`](https://CRAN.R-project.org/package=fastshap), 
-- [`shapr`](https://CRAN.R-project.org/package=shapr), and
+- [`shapr`](https://CRAN.R-project.org/package=shapr),
+- [`h2o`](https://CRAN.R-project.org/package=h2o), and
 - [`treeshap`](https://github.com/ModelOriented/treeshap).
 
 ## Installation
@@ -187,6 +188,21 @@ shp <- shapviz(explanation)
 sv_dependence(shp, "Species")
 ```
 
+### H2O
+
+If you work with a tree-based H2O model:
+
+``` r
+library(h2o)
+
+h2o.init()
+
+iris2 <- as.h2o(iris)
+fit <- h2o.gbm(colnames(iris)[-1], "Sepal.Length", training_frame = iris2)
+x <- shapviz(fit, iris2)
+sv_force(x, row_id = 1)
+```
+
 ### treeshap
 
 ``` r
@@ -220,45 +236,6 @@ feature values:
 S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 X <- data.frame(x = c("a", "b"), y = c(100, 10))
 shp <- shapviz(S, X, baseline = 4)
-```
-
-For instance, if you work with H2O, you can simply wrap `h2o.predict_contribution()`:
-
-``` r
-#' Initialize "shapviz" Object from H2OModel
-#'
-#' This function creates an object of class "shapviz" from an H2OModel.
-#' @param object H2O model.
-#' @param X_pred data.frame or H2OFrame used for predicting sHAP values.
-#' @param X Corresponding data.frame of feature values used for visualization.
-#' @examples
-#' library(h2o)
-#'
-#' h2o.init()
-#' iris_h2o <- as.h2o(iris)
-#' gbm <- h2o.gbm(y = "Sepal.Length", training_frame = iris_h2o)
-#'
-#' shp <- shapviz(gbm, iris_h2o[-1L], X = iris[-1L])
-#' sv_force(shp)
-#' sv_dependence(shp, "Species", "auto")
-shapviz.H2OModel = function(object, X_pred, X = as.data.frame(X_pred), 
-                            collapse = NULL, ...) {
-  stopifnot(
-    "X_pred must be a data.frame or an H2OFrame" =
-      is.data.frame(X_pred) || inherits(X_pred, "H2OFrame"),
-    "X_pred must have column names" = !is.null(colnames(X_pred))
-  )
-  if (!inherits(X_pred, "H2OFrame")) {
-    X_pred <- h2o::as.h2o(X_pred)
-  }
-  S <- as.matrix(h2o::h2o.predict_contributions(object, newdata = X_pred, ...))
-  shapviz.matrix(
-    S[, setdiff(colnames(S), "BiasTerm"), drop = FALSE],
-    X = X,
-    baseline = unname(S[1L, "BiasTerm"]),
-    collapse = collapse
-  )
-}
 ```
 
 ## Classification models

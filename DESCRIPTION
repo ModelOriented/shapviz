@@ -40,4 +40,5 @@ Config/testthat/edition: 3
 URL: https://github.com/mayer79/shapviz
 BugReports: https://github.com/mayer79/shapviz/issues
 Enhances: 
+    h2o,
     lightgbm

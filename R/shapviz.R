@@ -156,6 +156,7 @@ shapviz.xgb.Booster = function(object, X_pred, X = X_pred,
 shapviz.lgb.Booster = function(object, X_pred, X = X_pred,
                                which_class = NULL, collapse = NULL, ...) {
   stopifnot(
+    "'lightgbm' not installed" = requireNamespace("lightgbm", quietly = TRUE),
     "X_pred must be a matrix" = is.matrix(X_pred),
     "X_pred must have column names" = !is.null(colnames(X_pred))
   )

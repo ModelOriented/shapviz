@@ -83,6 +83,9 @@ sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b"
   } else {
     vir <- scale_color_viridis_c
   }
+  if (is.null(viridis_args)) {
+    viridis_args <- list(NULL)
+  }
   ggplot(dat, aes(x = .data[[v]], y = shap, color = .data[[color_var]])) +
     geom_jitter(width = jitter_width, height = 0, ...) +
     ylab(paste("SHAP value of", v)) +

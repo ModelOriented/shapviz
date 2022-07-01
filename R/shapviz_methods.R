@@ -161,7 +161,8 @@ collapse_shap <- function(object, ...) {
 #' @describeIn collapse_shap Default method.
 #' @export
 collapse_shap.default <- function(object, ...) {
-  stop("No default method available.")
+  stop("No default method available. collapse_shap() is available for objects
+       of class 'matrix' only.")
 }
 
 #' @describeIn collapse_shap Collapse method for object of class "matrix".

@@ -62,7 +62,8 @@ sv_force.shapviz <- function(object, row_id = 1L, max_display = 6L,
     "format_feat must be a function" = is.function(format_feat)
   )
   if (!is.null(format_fun)) {
-    warning("format_fun is deprecated. Use format_shap and/or format_feat instead.")
+    warning("format_fun is deprecated and will be removed in version 0.3.0.
+            Use format_shap and/or format_feat instead.")
   }
 
   X <- get_feature_values(object)[row_id, ]

@@ -51,7 +51,7 @@ shapviz <- function(object, ...){
 shapviz.default = function(object, ...) {
   stop("No default method available. shapviz() is available for objects
        of class 'matrix', 'xgb.Booster', 'lgb.Booster', 'treeshap',
-       and 'explain' (from fastshap package).")
+       'shapr', and 'explain' (from fastshap package).")
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from a matrix of SHAP values.
@@ -108,7 +108,7 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL, ...) {
 #' fit <- xgboost::xgb.train(params = params, data = dtrain, nrounds = 50)
 #' x <- shapviz(fit, X_pred = X_pred, which_class = 3)
 #' x
-#' sv_waterfall(x)
+#' sv_waterfall(x, row_id = 1)
 #'
 #' # What if we would have one-hot-encoded values and want to explain the original column?
 #' X_pred <- stats::model.matrix(~ . -1, iris[, -1])
@@ -121,7 +121,7 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL, ...) {
 #'   collapse = list(Species = c("Speciessetosa", "Speciesversicolor", "Speciesvirginica"))
 #' )
 #' x
-#' sv_force(x)
+#' sv_force(x, row_id = 1)
 shapviz.xgb.Booster = function(object, X_pred, X = X_pred,
                                which_class = NULL, collapse = NULL, ...) {
   stopifnot(
@@ -227,7 +227,7 @@ NULL
 #' shap_values <- predict(fit, dtrain, predcontrib = TRUE)
 #' x <- shapviz_from_xgb_predict(shap_values, iris[, -1])
 shapviz_from_xgb_predict <- function(S, X, which_class = NULL, ...) {
-  warning("This function is deprecated and will be removed in version 0.3.0")
+  warning("This function is deprecated and will be removed in version 0.3.0.")
   # Reduce multiclass setting
   if (is.list(S)) {
     m <- length(S)
@@ -256,7 +256,7 @@ shapviz_from_xgb_predict <- function(S, X, which_class = NULL, ...) {
 #' @rdname from_xgb_or_lgb
 #' @export
 shapviz_from_lgb_predict <- function(S, X, which_class = NULL, ...) {
-  warning("This function is deprecated and will be removed in version 0.3.0")
+  warning("This function is deprecated and will be removed in version 0.3.0.")
   pp <- ncol(X) + 1L
   stopifnot(
     is.matrix(S),

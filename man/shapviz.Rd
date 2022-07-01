@@ -15,17 +15,23 @@ shapviz(object, ...)
 
 \method{shapviz}{default}(object, ...)
 
-\method{shapviz}{matrix}(object, X, baseline = 0, ...)
+\method{shapviz}{matrix}(object, X, baseline = 0, collapse = NULL, ...)
 
-\method{shapviz}{xgb.Booster}(object, X_pred, X = X_pred, which_class = NULL, ...)
+\method{shapviz}{xgb.Booster}(object, X_pred, X = X_pred, which_class = NULL, collapse = NULL, ...)
 
-\method{shapviz}{lgb.Booster}(object, X_pred, X = X_pred, which_class = NULL, ...)
+\method{shapviz}{lgb.Booster}(object, X_pred, X = X_pred, which_class = NULL, collapse = NULL, ...)
 
-\method{shapviz}{explain}(object, X, baseline = 0, ...)
+\method{shapviz}{explain}(object, X, baseline = 0, collapse = NULL, ...)
 
-\method{shapviz}{treeshap}(object, X = object[["observations"]], baseline = 0, ...)
+\method{shapviz}{treeshap}(
+  object,
+  X = object[["observations"]],
+  baseline = 0,
+  collapse = NULL,
+  ...
+)
 
-\method{shapviz}{shapr}(object, X = object[["x_test"]], ...)
+\method{shapviz}{shapr}(object, X = object[["x_test"]], collapse = NULL, ...)
 }
 \arguments{
 \item{object}{Object to be converted to an object of type "shapviz".}
@@ -39,8 +45,12 @@ the \code{predict} functions of XGBoost and LightGBM).}
 scale of the SHAP values. It will be used for plot methods that explain single
 predictions.}
 
+\item{collapse}{A named list of character vectors. Each vector specifies a group of
+column names in the SHAP matrix that should be collapsed to a single column by summation.
+The name of the new column equals the name of the vector in \code{collapse}.}
+
 \item{X_pred}{Feature matrix as expected by the \code{predict} function of
-XGBoost/LightGBM. In case \code{object} is an XGBoost model, it can also be
+XGBoost or LightGBM. In case \code{object} is an XGBoost model, it can also be
 an \code{xgb.DMatrix}.}
 
 \item{which_class}{In case of a multiclass setting, which class
@@ -63,12 +73,12 @@ This function creates an object of class "shapviz" from one of the following inp
 \item An "explain" object from the package "fastshap".
 \item The result of calling \code{treeshap()} from the "treeshap" package.
 }
-Along with the main input, a dataset \code{X} of feature values is required that
-is used for visualization only. It can thus contain character or factor variables
-even if the SHAP values were calculated from a purely numeric feature matrix.
-Furthermore, in order to improve visualization, it can sometimes make sense
-to clip gross outliers, take logarithms for certain columns, or replace missing
-values by some explicit value.
+Together with the main input, a data set \code{X} of feature values is required,
+which is used only for visualization. It can therefore contain character or factor
+variables, even if the SHAP values were calculated from a purely numerical feature
+matrix. In addition, to improve visualization, it can sometimes be useful to truncate
+gross outliers, logarithmize certain columns, or replace missing values with an
+explicit value.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -97,11 +107,14 @@ dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1])
 fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
 
 # Will use numeric matrix "X_pred" as feature matrix
-shapviz(fit, X_pred = X_pred)
+x <- shapviz(fit, X_pred = X_pred)
+x
+sv_importance(x)
 
 # Will use original values as feature matrix
 x <- shapviz(fit, X_pred = X_pred, X = iris[, -1])
 x
+sv_dependence(x, "Petal.Length", color_var = "auto")
 
 # "X_pred" can also be passed as xgb.DMatrix, but only if X is passed as well!
 shapviz(fit, X_pred = dtrain, X = iris[, -1])
@@ -114,4 +127,21 @@ dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5]) - 1L)
 fit <- xgboost::xgb.train(params = params, data = dtrain, nrounds = 50)
 x <- shapviz(fit, X_pred = X_pred, which_class = 3)
 x
+sv_waterfall(x, row_id = 1)
+
+# What if we would have one-hot-encoded values and want to explain the original column?
+X_pred <- stats::model.matrix(~ . -1, iris[, -1])
+dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 1]))
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
+x <- shapviz(
+  fit,
+  X_pred = X_pred,
+  X = iris[, -1],
+  collapse = list(Species = c("Speciessetosa", "Speciesversicolor", "Speciesvirginica"))
+)
+x
+sv_force(x, row_id = 1)
+}
+\seealso{
+\code{\link{collapse_shap}}.
 }

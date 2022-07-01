@@ -67,7 +67,8 @@ sv_importance.shapviz <- function(object, kind = c("beeswarm", "bar", "both", "n
                                   number_size = 3.2, ...) {
   stopifnot("format_shap must be a function" = is.function(format_shap))
   if (!is.null(format_fun)) {
-    warning("format_fun is deprecated. Use format_shap instead.")
+    warning("format_fun is deprecated and will be removed in version 0.3.0.
+            Use format_shap instead.")
   }
 
   kind <- match.arg(kind)

@@ -65,13 +65,15 @@ fit <- xgb.train(
 
 One line of code creates a `shapviz` object. It contains SHAP values and feature values for the set of observations we are interested in. Note again that `X` is solely used as explanation dataset, not for calculating SHAP values. 
 
-In this example we construct the `shapviz` object directly from the fitted XGBoost model. Thus we also need to pass a corresponding prediction dataset `X_pred` used for calculating SHAP values by XGBoost.
+In this example, we construct the `shapviz` object directly from the fitted XGBoost model. Thus we also need to pass a corresponding prediction dataset `X_pred` used for calculating SHAP values by XGBoost.
 
 ``` r
 X_small <- X[sample(nrow(X), 2000L), ]
 
 shp <- shapviz(fit, X_pred = data.matrix(X_small), X = X_small)
 ```
+
+Note: If `X_pred` would contain one-hot-encoded dummy variables, their SHAP values could be collapsed by the `collapse` argument of `shapviz()`.
 
 ### Waterfall plot
 

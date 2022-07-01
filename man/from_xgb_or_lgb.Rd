@@ -4,7 +4,7 @@
 \alias{from_xgb_or_lgb}
 \alias{shapviz_from_xgb_predict}
 \alias{shapviz_from_lgb_predict}
-\title{Initialize "shapviz" Object from XGBoost/LightGBM Predict}
+\title{Initialize "shapviz" Object from XGBoost/LightGBM Predict (Deprecated)}
 \usage{
 shapviz_from_xgb_predict(S, X, which_class = NULL, ...)
 

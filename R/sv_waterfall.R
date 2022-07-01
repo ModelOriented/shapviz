@@ -76,10 +76,12 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
     "order_fun must be a function" = is.function(order_fun)
   )
   if (!is.null(sort_fun)) {
-    warning("sort_fun is deprecated. Use order_fun instead.")
+    warning("sort_fun is deprecated and will be removed in version 0.3.0.
+            Use order_fun instead.")
   }
   if (!is.null(format_fun)) {
-    warning("format_fun is deprecated. Use format_shap and/or format_feat instead.")
+    warning("format_fun is deprecated and will be removed in version 0.3.0.
+            Use format_shap and/or format_feat instead.")
   }
 
   X <- get_feature_values(object)[row_id, ]

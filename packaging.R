@@ -44,6 +44,8 @@ use_package("ggfittext", "Imports", min_version = "0.8.0")
 use_package("ggrepel", "Imports")
 use_package("xgboost", "Imports")
 
+use_package("lightgbm", "Enhances")
+
 # use_package("lightgbm", "suggests")
 # use_package("fastshap", "suggests")
 

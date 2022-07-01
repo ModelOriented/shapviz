@@ -107,11 +107,14 @@ dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1])
 fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
 
 # Will use numeric matrix "X_pred" as feature matrix
-shapviz(fit, X_pred = X_pred)
+x <- shapviz(fit, X_pred = X_pred)
+x
+sv_importance(x)
 
 # Will use original values as feature matrix
 x <- shapviz(fit, X_pred = X_pred, X = iris[, -1])
 x
+sv_dependence(x, "Petal.Length", color_var = "auto")
 
 # "X_pred" can also be passed as xgb.DMatrix, but only if X is passed as well!
 shapviz(fit, X_pred = dtrain, X = iris[, -1])
@@ -124,6 +127,20 @@ dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5]) - 1L)
 fit <- xgboost::xgb.train(params = params, data = dtrain, nrounds = 50)
 x <- shapviz(fit, X_pred = X_pred, which_class = 3)
 x
+sv_waterfall(x, row_id = 1)
+
+# What if we would have one-hot-encoded values and want to explain the original column?
+X_pred <- stats::model.matrix(~ . -1, iris[, -1])
+dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 1]))
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
+x <- shapviz(
+  fit,
+  X_pred = X_pred,
+  X = iris[, -1],
+  collapse = list(Species = c("Speciessetosa", "Speciesversicolor", "Speciesvirginica"))
+)
+x
+sv_force(x, row_id = 1)
 }
 \seealso{
 \code{\link{collapse_shap}}.

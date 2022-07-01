@@ -2,15 +2,15 @@
 #'
 #' This function creates an object of class "shapviz" from one of the following inputs:
 #' \itemize{
-#'   \item A matrix of SHAP values.
-#'   \item A fitted XGBoost model.
-#'   \item A fitted LightGBM model.
-#'   \item An "explain" object from the package "fastshap".
-#'   \item A fitted tree-based H2O model.
-#'   \item A "shapr" object from the package "shapr".
-#'   \item The result of calling \code{treeshap()} from the "treeshap" package,
+#'   \item Matrix with SHAP values
+#'   \item XGBoost model
+#'   \item LightGBM model
+#'   \item "explain" object from the package "fastshap"
+#'   \item H2O model (tree-based regression or binary classification model)
+#'   \item "shapr" object from the package "shapr"
+#'   \item The result of calling \code{treeshap()} from the "treeshap" package
 #' }
-#' see the "shapviz" vignette for details on how to use each of them.
+#' The "shapviz" vignette explains how to use each of them.
 #' Together with the main input, a data set \code{X} of feature values is required,
 #' which is used only for visualization. It can therefore contain character or factor
 #' variables, even if the SHAP values were calculated from a purely numerical feature
@@ -28,6 +28,7 @@
 #' predictions.
 #' @param which_class In case of a multiclass setting, which class
 #' to explain (an integer between 1 and the \code{num_class} parameter of the model).
+#' Currently relevant for XGBoost or LightGBM models only.
 #' @param collapse A named list of character vectors. Each vector specifies a group of
 #' column names in the SHAP matrix that should be collapsed to a single column by summation.
 #' The name of the new column equals the name of the vector in \code{collapse}.

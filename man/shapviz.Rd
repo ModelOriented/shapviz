@@ -81,7 +81,8 @@ XGBoost, LightGBM, or H2O. For XGBoost, a matrix or \code{xgb.DMatrix},
 for LightGBM a matrix, and for H2O a \code{data.frame} or an \code{H2OFrame}.}
 
 \item{which_class}{In case of a multiclass setting, which class
-to explain (an integer between 1 and the \code{num_class} parameter of the model).}
+to explain (an integer between 1 and the \code{num_class} parameter of the model).
+Currently relevant for XGBoost or LightGBM models only.}
 }
 \value{
 An object of class "shapviz" with the following three elements:
@@ -94,15 +95,15 @@ An object of class "shapviz" with the following three elements:
 \description{
 This function creates an object of class "shapviz" from one of the following inputs:
 \itemize{
-\item A matrix of SHAP values.
-\item A fitted XGBoost model.
-\item A fitted LightGBM model.
-\item An "explain" object from the package "fastshap".
-\item A fitted tree-based H2O model.
-\item A "shapr" object from the package "shapr".
-\item The result of calling \code{treeshap()} from the "treeshap" package,
+\item Matrix with SHAP values
+\item XGBoost model
+\item LightGBM model
+\item "explain" object from the package "fastshap"
+\item H2O model (tree-based regression or binary classification model)
+\item "shapr" object from the package "shapr"
+\item The result of calling \code{treeshap()} from the "treeshap" package
 }
-see the "shapviz" vignette for details on how to use each of them.
+The "shapviz" vignette provivdes an example for each of them.
 Together with the main input, a data set \code{X} of feature values is required,
 which is used only for visualization. It can therefore contain character or factor
 variables, even if the SHAP values were calculated from a purely numerical feature

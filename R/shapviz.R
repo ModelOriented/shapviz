@@ -160,7 +160,12 @@ shapviz.lgb.Booster = function(object, X_pred, X = X_pred,
     "X_pred must be a matrix" = is.matrix(X_pred),
     "X_pred must have column names" = !is.null(colnames(X_pred))
   )
-  S <- stats::predict(object, data = X_pred, predcontrib = TRUE, ...)
+  if (utils::packageVersion("lightgbm") >= 4) {
+    S <- stats::predict(object, data = X_pred, type = "contrib", ...)
+  } else {
+    S <- stats::predict(object, data = X_pred, predcontrib = TRUE, ...)
+  }
+
   pp <- ncol(X_pred) + 1L
   stopifnot(ncol(S) %% pp == 0)
 

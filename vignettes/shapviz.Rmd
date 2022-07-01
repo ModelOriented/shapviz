@@ -73,6 +73,9 @@ library(xgboost)
 
 set.seed(3653)
 
+ord <- c("clarity", "cut", "color")
+diamonds[, ord] <- lapply(diamonds[, ord], factor, ordered = FALSE)
+
 X <- diamonds[c("carat", "cut", "color", "clarity")]
 dtrain <- xgb.DMatrix(data.matrix(X), label = diamonds$price)
 
@@ -157,6 +160,7 @@ fit <- lgb.train(
 )
 
 shp <- shapviz(fit, X_pred = data.matrix(X_small), X = X_small)
+sv_importance(shp)
 ```
 ### fastshap
 
@@ -173,19 +177,21 @@ sv_dependence(shp, "carat")
 ``` r
 library(shapr)
 
-fit <- lm(Sepal.Length ~ ., data = iris)
-explainer <- shapr(iris[, -1L], fit)
+fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
+explainer <- shapr(X_small, fit)
 
-# Takes long
-explanation <- explain(
-  iris,
-  approach = "ctree",
-  explainer = explainer,
-  prediction_zero = mean(iris[[1L]])
+# Takes about three minutes(!)
+system.time(
+  explanation <- explain(
+    X_small,
+    approach = "ctree",
+    explainer = explainer,
+    prediction_zero = mean(diamonds$price)
+  )
 )
 
 shp <- shapviz(explanation)
-sv_dependence(shp, "Species")
+sv_dependence(shp, "carat", "auto")
 ```
 
 ### H2O
@@ -197,10 +203,12 @@ library(h2o)
 
 h2o.init()
 
-iris2 <- as.h2o(iris)
-fit <- h2o.gbm(colnames(iris)[-1], "Sepal.Length", training_frame = iris2)
-x <- shapviz(fit, iris2)
+dia_h2o <- as.h2o(diamonds)
+
+fit <- h2o.gbm(c("carat", "clarity", "color", "cut"), "price", training_frame = dia_h2o)
+x <- shapviz(fit, X_pred = X_small)
 sv_force(x, row_id = 1)
+sv_dependence(x, "carat", "auto")
 ```
 
 ### treeshap

@@ -103,7 +103,7 @@ This function creates an object of class "shapviz" from one of the following inp
 \item "shapr" object from the package "shapr"
 \item The result of calling \code{treeshap()} from the "treeshap" package
 }
-The "shapviz" vignette provivdes an example for each of them.
+The "shapviz" vignette explains how to use each of them.
 Together with the main input, a data set \code{X} of feature values is required,
 which is used only for visualization. It can therefore contain character or factor
 variables, even if the SHAP values were calculated from a purely numerical feature
@@ -146,17 +146,16 @@ fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
 
 # Will use numeric matrix "X_pred" as feature matrix
 x <- shapviz(fit, X_pred = X_pred)
-x
-sv_importance(x)
+sv_importance(x, kind = "bar")
 
 # Will use original values as feature matrix
 x <- shapviz(fit, X_pred = X_pred, X = iris[, -1])
-x
 sv_dependence(x, "Petal.Length", color_var = "auto")
 
 # "X_pred" can also be passed as xgb.DMatrix, but only if X is passed as well!
-shapviz(fit, X_pred = dtrain, X = iris[, -1])
+x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
 
+# Similarly with LightGBM
 if (requireNamespace("lightgbm", quietly = TRUE)) {
   fit <- lightgbm::lgb.train(
     params = list(objective = "regression"),
@@ -165,18 +164,14 @@ if (requireNamespace("lightgbm", quietly = TRUE)) {
     verbose = -2
   )
   x <- shapviz(fit, X_pred = X_pred)
-  sv_force(x, row_id = 1)
 }
 
 # In multiclass setting, we need to specify which_class (integer starting at 1)
-# should be explained.
-params <- list(objective="multi:softprob", num_class = 3)
+params <- list(objective = "multi:softprob", num_class = 3)
 X_pred <- data.matrix(iris[, -5])
 dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5]) - 1L)
 fit <- xgboost::xgb.train(params = params, data = dtrain, nrounds = 50)
 x <- shapviz(fit, X_pred = X_pred, which_class = 3)
-x
-sv_waterfall(x, row_id = 1)
 
 # What if we would have one-hot-encoded values and want to explain the original column?
 X_pred <- stats::model.matrix(~ . -1, iris[, -1])
@@ -188,8 +183,6 @@ x <- shapviz(
   X = iris[, -1],
   collapse = list(Species = c("Speciessetosa", "Speciesversicolor", "Speciesvirginica"))
 )
-x
-sv_force(x, row_id = 1)
 }
 \seealso{
 \code{\link{collapse_shap}}.

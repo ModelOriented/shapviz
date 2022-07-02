@@ -17,6 +17,7 @@ or set `viridis_args = NULL`.
 - Deprecated helper functions `shapviz_from_lgb_predict()` and `shapviz_from_xgb_predict` in favour of the collapsing logic (see above). The functions will be removed in version 0.3.0.
 - Added 'lightgbm' as "Enhances" dependency.
 - Added 'h2o' as "Enhances" dependency.
+- Anticipated changes in `predict()` arguments of LightGBM (data -> newdata, predcontrib = TRUE -> type = "contrib").
 - More unit tests.
 - Improved documentation.
 - Fixed github installation instruction in README and vignette.

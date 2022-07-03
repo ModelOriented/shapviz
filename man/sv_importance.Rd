@@ -66,8 +66,9 @@ or - if \code{kind = "no"} - a named numeric vector of mean absolute SHAP values
 sorted in decreasing order.
 }
 \description{
-This function provides two types of SHAP importance plots: a beeswarm plot (the default)
-and a bar plot. The beeswarm plot displays SHAP values per feature, using min-max
+This function provides two types of SHAP importance plots: a beeswarm plot
+(sometimes called "summary plot") and a bar plot.
+The beeswarm plot displays SHAP values per feature, using min-max
 scaled feature values on the color scale (non-numeric features are transformed
 to numeric by calling \code{data.matrix()} first).
 The bar plot shows average absolute SHAP values. Both types can be combined.

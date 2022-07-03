@@ -3,20 +3,22 @@
 #' This function provides two types of SHAP importance plots: a beeswarm plot
 #' (sometimes called "summary plot") and a bar plot.
 #' The beeswarm plot displays SHAP values per feature, using min-max
-#' scaled feature values on the color scale (non-numeric features are transformed
+#' scaled feature values on the color axis (non-numeric features are transformed
 #' to numeric by calling \code{data.matrix()} first).
-#' The bar plot shows average absolute SHAP values. Both types can be combined.
+#' The bar plot shows SHAP feature importances, calculated as the average absolute SHAP
+#' value per feature. For both types of plots, the features are sorted in decreasing
+#' order of importance. The two types of plots can also be combined.
 #'
 #' @param object An object of class "shapviz".
 #' @param kind Should a "beeswarm" plot (the default), a "bar" plot or "both" be shown?
 #' Set to "no" in order to suppress plotting. In that case, the sorted
-#' average absolute SHAP values of all variables are returned.
-#' @param max_display Maximum number of features (with largest mean absolute SHAP value)
-#' should be plotted? If there are more, the most unimportant variables are collapsed:
+#' SHAP feature importances of all variables are returned.
+#' @param max_display Maximum number of features (with highest importance)
+#' should be plotted? If there are more, the least important variables are collapsed:
 #' their SHAP values are added and their min-max-scaled feature values are added as
 #' well (and the resulting vector is min-max-scaled again). Set to \code{Inf} to show
-#' all features.
-#' @param fill Color used to fill the bars (only used if \code{kind = "bar"}).
+#' all features. Has no effect if \code{kind = "no"}.
+#' @param fill Color used to fill the bars (only used if bar plots are shown).
 #' @param viridis_args List of viridis color scale arguments used to control the
 #' coloring of the beeswarm plot, see \code{?ggplot2::scale_color_viridis_c()}.
 #' The default points to the global option \code{shapviz.viridis_args}, which
@@ -24,7 +26,7 @@
 #' These values are passed to \code{ggplot2::scale_color_viridis_c()}.
 #' For example, to switch to a standard viridis scale, you can either change the default
 #' with \code{options(shapviz.viridis_args = NULL)} or set \code{viridis_args = NULL}.
-#' @param format_shap Function used to format mean absolute SHAP values shown on the
+#' @param format_shap Function used to format SHAP feature importances shown on the
 #' bar plot. The default uses the global option \code{shapviz.format_shap}, which equals
 #' to \code{function(z) prettyNum(z, digits = 3, scientific = FALSE)} by default.
 #' Use \code{format_shap = function(z) = ""} to suppress printing.
@@ -35,9 +37,8 @@
 #' For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms,
 #' setting \code{size = 3} will produce larger dots, or \code{width = 0.2} will
 #' produce less wide swarms.
-#' @return A \code{ggplot} object representing an importance plot,
-#' or - if \code{kind = "no"} - a named numeric vector of mean absolute SHAP values
-#' sorted in decreasing order.
+#' @return A \code{ggplot} object representing an importance plot, or - if
+#' \code{kind = "no"} - a named numeric vector of sorted SHAP feature importances.
 #' @export
 #' @examples
 #' X_train <- data.matrix(iris[, -1])
@@ -46,7 +47,6 @@
 #' x <- shapviz(fit, X_pred = X_train)
 #' sv_importance(x)
 #' sv_importance(x, kind = "bar")
-#' sv_importance(x, kind = "both")
 #' sv_importance(x, kind = "no")
 sv_importance <- function(object, ...) {
   UseMethod("sv_importance")

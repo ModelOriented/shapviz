@@ -1,16 +1,17 @@
 #' SHAP Importance Plots
 #'
-#' This function provides two types of SHAP importance plots: a beeswarm plot
-#' (sometimes called "summary plot") and a bar plot.
-#' The beeswarm plot displays SHAP values per feature, using min-max
-#' scaled feature values on the color axis (non-numeric features are transformed
-#' to numeric by calling \code{data.matrix()} first).
+#' This function provides two types of SHAP importance plots: a bar plot
+#' and a beeswarm plot (sometimes called "SHAP summary plot").
 #' The bar plot shows SHAP feature importances, calculated as the average absolute SHAP
-#' value per feature. For both types of plots, the features are sorted in decreasing
+#' value per feature.
+#' The beeswarm plot displays SHAP values per feature, using min-max
+#' scaled feature values on the color axis. Non-numeric features are transformed
+#' to numeric by calling \code{data.matrix()} first.
+#' For both types of plots, the features are sorted in decreasing
 #' order of importance. The two types of plots can also be combined.
 #'
 #' @param object An object of class "shapviz".
-#' @param kind Should a "beeswarm" plot (the default), a "bar" plot or "both" be shown?
+#' @param kind Should a "bar" plot (the default), a "beeswarm" plot, or "both" be shown?
 #' Set to "no" in order to suppress plotting. In that case, the sorted
 #' SHAP feature importances of all variables are returned.
 #' @param max_display Maximum number of features (with highest importance)
@@ -46,7 +47,7 @@
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
 #' x <- shapviz(fit, X_pred = X_train)
 #' sv_importance(x)
-#' sv_importance(x, kind = "bar")
+#' sv_importance(x, kind = "beeswarm")
 #' sv_importance(x, kind = "no")
 sv_importance <- function(object, ...) {
   UseMethod("sv_importance")
@@ -60,7 +61,7 @@ sv_importance.default <- function(object, ...) {
 
 #' @describeIn sv_importance SHAP importance plot for an object of class "shapviz".
 #' @export
-sv_importance.shapviz <- function(object, kind = c("beeswarm", "bar", "both", "no"),
+sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "no"),
                                   max_display = 10L, fill = "#fca50a",
                                   viridis_args = getOption("shapviz.viridis_args"),
                                   format_shap = getOption("shapviz.format_shap"),

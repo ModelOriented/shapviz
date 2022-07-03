@@ -122,11 +122,11 @@ sv_force(shp, row_id = 1L)
 Studying SHAP decompositions of many observations allows to gain an impression on variable importance. As simple descriptive measure, the mean absolute SHAP value of each feature is considered. These values can be plotted as a simple bar plot, or, to add information on the sign of the feature effects, as a beeswarm plot sorted by the mean absolute SHAP values. Such beeswarm plots are often called "summary plots".
 
 ```{r}
-# A beeswarm plot
+# A bar plot of mean absolute SHAP values
 sv_importance(shp)
 
-# Or much simpler: a bar plot of mean absolute SHAP values
-sv_importance(shp, kind = "bar")
+# A beeswarm plot
+sv_importance(shp, kind = "beeswarm")
 
 # Or both!
 sv_importance(shp, kind = "both", alpha = 0.2, width = 0.2)

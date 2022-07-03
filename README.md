@@ -100,21 +100,21 @@ sv_force(shp, row_id = 1)
 
 We have decomposed 2000 predictions, not just one. This allows us to study variable importance at a global model level by studying average absolute SHAP values or by looking at beeswarm "summary" plots of SHAP values.
 
-#### Beeswarm plot
+#### Bar plot
 
 ``` r
 sv_importance(shp)
 ```
 
-![](man/figures/README-imp1.png)
+![](man/figures/README-imp2.svg)
 
-#### Bar plot
+#### Beeswarm plot
 
 ``` r
-sv_importance(shp, kind = "bar")
+sv_importance(shp, kind = "beeswarm")
 ```
 
-![](man/figures/README-imp2.svg)
+![](man/figures/README-imp1.png)
 
 #### Or both combined
 

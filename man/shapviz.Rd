@@ -146,7 +146,7 @@ fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
 
 # Will use numeric matrix "X_pred" as feature matrix
 x <- shapviz(fit, X_pred = X_pred)
-sv_importance(x, kind = "bar")
+sv_importance(x)
 
 # Will use original values as feature matrix
 x <- shapviz(fit, X_pred = X_pred, X = iris[, -1])

@@ -6,7 +6,7 @@ test_that("plots work for basic example", {
   expect_s3_class(sv_waterfall(x, 2), "ggplot")
   expect_s3_class(sv_force(x, 2), "ggplot")
   expect_s3_class(sv_importance(x), "ggplot")
-  expect_s3_class(sv_importance(x, kind = "bar"), "ggplot")
+  expect_s3_class(sv_importance(x, kind = "beeswarm"), "ggplot")
   expect_s3_class(sv_dependence(x, "Petal.Length", color_var = "auto"), "ggplot")
 })
 
@@ -27,7 +27,7 @@ test_that("plots work for non-syntactic column names", {
   expect_s3_class(sv_waterfall(x, 2), "ggplot")
   expect_s3_class(sv_force(x, 2), "ggplot")
   expect_s3_class(sv_importance(x), "ggplot")
-  expect_s3_class(sv_importance(x, kind = "bar"), "ggplot")
+  expect_s3_class(sv_importance(x, kind = "beeswarm"), "ggplot")
   expect_s3_class(sv_dependence(x, "strange name", color_var = "auto"), "ggplot")
   expect_s3_class(
     sv_dependence(x, "Petal.Length", color_var = "strange name"), "ggplot"

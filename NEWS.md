@@ -1,6 +1,10 @@
 # shapviz 0.2.0
 
-## Major changes
+## Major change: new default
+
+- `sv_importance()` now shows a bar plot by default, not a beeswarm plot. Use `kind = "beeswarm"` to get a beeswarm plot.
+
+## Other major changes
 
 - Added H2O wrapper.
 - Added shapr wrapper.

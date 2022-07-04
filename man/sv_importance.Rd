@@ -16,8 +16,8 @@ sv_importance(object, ...)
   max_display = 10L,
   fill = "#fca50a",
   viridis_args = getOption("shapviz.viridis_args"),
-  format_shap = getOption("shapviz.format_shap"),
-  format_fun = NULL,
+  show_numbers = kind == "bar",
+  format_fun = format_aligned,
   number_size = 3.2,
   ...
 )
@@ -51,14 +51,13 @@ These values are passed to \code{ggplot2::scale_color_viridis_c()}.
 For example, to switch to a standard viridis scale, you can either change the default
 with \code{options(shapviz.viridis_args = NULL)} or set \code{viridis_args = NULL}.}
 
-\item{format_shap}{Function used to format SHAP feature importances shown on the
-bar plot. The default uses the global option \code{shapviz.format_shap}, which equals
-to \code{function(z) prettyNum(z, digits = 3, scientific = FALSE)} by default.
-Use \code{format_shap = function(z) = ""} to suppress printing.}
+\item{show_numbers}{Should SHAP feature importances be printed?
+Default is \code{TRUE} for \code{kind = "bar"} and \code{FALSE} otherwise.}
 
-\item{format_fun}{Deprecated. Use \code{format_shap} instead.}
+\item{format_fun}{Function used to format SHAP feature importances
+if \code{show_numbers = TRUE}.}
 
-\item{number_size}{Text size of the formatted numbers (only if \code{kind = "bar"}).}
+\item{number_size}{Text size of the formatted numbers.}
 }
 \value{
 A \code{ggplot} object representing an importance plot, or - if
@@ -88,6 +87,6 @@ dtrain <- xgboost::xgb.DMatrix(X_train, label = iris[, 1])
 fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
 x <- shapviz(fit, X_pred = X_train)
 sv_importance(x)
-sv_importance(x, kind = "beeswarm")
+sv_importance(x, kind = "beeswarm", show_numbers = TRUE)
 sv_importance(x, kind = "no")
 }

@@ -27,12 +27,11 @@
 #' These values are passed to \code{ggplot2::scale_color_viridis_c()}.
 #' For example, to switch to a standard viridis scale, you can either change the default
 #' with \code{options(shapviz.viridis_args = NULL)} or set \code{viridis_args = NULL}.
-#' @param format_shap Function used to format SHAP feature importances shown on the
-#' bar plot. The default uses the global option \code{shapviz.format_shap}, which equals
-#' to \code{function(z) prettyNum(z, digits = 3, scientific = FALSE)} by default.
-#' Use \code{format_shap = function(z) = ""} to suppress printing.
-#' @param format_fun Deprecated. Use \code{format_shap} instead.
-#' @param number_size Text size of the formatted numbers (only if \code{kind = "bar"}).
+#' @param show_numbers Should SHAP feature importances be printed?
+#' Default is \code{TRUE} for \code{kind = "bar"} and \code{FALSE} otherwise.
+#' @param format_fun Function used to format SHAP feature importances
+#' if \code{show_numbers = TRUE}.
+#' @param number_size Text size of the formatted numbers.
 #' @param ... Arguments passed to \code{geom_bar()} (if \code{kind = "bar"}) or
 #' to \code{ggbeeswarm::geom_quasirandom()} otherwise.
 #' For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms,
@@ -47,7 +46,7 @@
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
 #' x <- shapviz(fit, X_pred = X_train)
 #' sv_importance(x)
-#' sv_importance(x, kind = "beeswarm")
+#' sv_importance(x, kind = "beeswarm", show_numbers = TRUE)
 #' sv_importance(x, kind = "no")
 sv_importance <- function(object, ...) {
   UseMethod("sv_importance")
@@ -64,15 +63,9 @@ sv_importance.default <- function(object, ...) {
 sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "no"),
                                   max_display = 10L, fill = "#fca50a",
                                   viridis_args = getOption("shapviz.viridis_args"),
-                                  format_shap = getOption("shapviz.format_shap"),
-                                  format_fun = NULL,
-                                  number_size = 3.2, ...) {
-  stopifnot("format_shap must be a function" = is.function(format_shap))
-  if (!is.null(format_fun)) {
-    warning("format_fun is deprecated and will be removed in version 0.3.0.
-            Use format_shap instead.")
-  }
-
+                                  show_numbers = kind == "bar",
+                                  format_fun = format_aligned, number_size = 3.2, ...) {
+  stopifnot("format_fun must be a function" = is.function(format_fun))
   kind <- match.arg(kind)
   S <- get_shap_values(object)
   X_scaled <- X <- get_feature_values(object)
@@ -103,46 +96,53 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
   if (kind == "bar") {
     p <- ggplot(imp_df, aes(x = stats::reorder(ind, values), y = values)) +
       geom_bar(fill = fill, stat = "identity", ...) +
-      geom_text(
-        aes(y = 0, label = format_shap(values)), hjust = -0.2, size = number_size
-      ) +
-      coord_flip() +
-      labs(x = element_blank(), y = "mean(|SHAP value|)")
-    return(p)
-  }
+      ylab("mean(|SHAP value|)")
+  } else {
+    # Transpose S and X_scaled
+    S <- as.data.frame(S)
+    stopifnot(colnames(S) == colnames(X_scaled)) # to be absolutely sure...
+    shap_long <- utils::stack(S)
+    shap_long$v <- utils::stack(X_scaled)$values
 
-  # Transpose S and X_scaled
-  S <- as.data.frame(S)
-  stopifnot(colnames(S) == colnames(X_scaled)) # to be absolutely sure...
-  shap_long <- utils::stack(S)
-  shap_long$v <- utils::stack(X_scaled)$values
-
-  # Put together color scale and deal with special case of only one unique v value
-  nv <- length(unique(shap_long$v))
-  viridis_args <- c(
-    viridis_args,
-    list(
-      breaks = if (nv >= 2L) 0:1 else 0.5,
-      labels = if (nv >= 2L) c("Low", "High") else "Avg",
-      guide = guide_colorbar(
-        barwidth = 0.4,
-        barheight = 8,
-        title.theme = element_text(angle = 90, hjust = 0.5, vjust = 0),
-        title.position = "left"
+    # Put together color scale and deal with special case of only one unique v value
+    nv <- length(unique(shap_long$v))
+    viridis_args <- c(
+      viridis_args,
+      list(
+        breaks = if (nv >= 2L) 0:1 else 0.5,
+        labels = if (nv >= 2L) c("Low", "High") else "Avg",
+        guide = guide_colorbar(
+          barwidth = 0.4,
+          barheight = 8,
+          title.theme = element_text(angle = 90, hjust = 0.5, vjust = 0),
+          title.position = "left"
+        )
       )
     )
-  )
-
-  p <- ggplot(shap_long, aes(x = stats::reorder(ind, abs(values)), y = values))
-  if (kind == "both") {
-    p <- p + geom_bar(data = imp_df, fill = fill, stat = "identity")
+    p <- ggplot(shap_long, aes(x = stats::reorder(ind, abs(values)), y = values))
+    if (kind == "both") {
+      p <- p + geom_bar(data = imp_df, fill = fill, stat = "identity")
+    }
+    p <- p +
+      geom_hline(yintercept = 0, color = "darkgray") +
+      ggbeeswarm::geom_quasirandom(aes(color = v), ...) +
+      scale_y_continuous(expand = expansion(mult = c(0.05 + 0.1 * show_numbers, 0.05))) +
+      do.call(scale_color_viridis_c, viridis_args) +
+      labs(y = "SHAP value", color = "Feature value")
+  }
+  if (show_numbers) {
+    p <- p +
+      geom_text(
+        data = imp_df,
+        aes(y = if (kind == "bar") 0 else -Inf, label = format_fun(values)),
+        hjust = -0.2,
+        size = number_size
+      )
   }
   p +
-    geom_hline(yintercept = 0, color = "darkgray") +
-    ggbeeswarm::geom_quasirandom(aes(color = v), ...) +
-    coord_flip(clip = "off") +
-    do.call(scale_color_viridis_c, viridis_args) +
-    labs(x = element_blank(), y = "SHAP value", color = "Feature value")
+    theme(axis.ticks.y = element_blank()) +
+    xlab(element_blank()) +
+    coord_flip(clip = "off")
 }
 
 # Helper functions
@@ -160,3 +160,22 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
   sort(colMeans(abs(z)), decreasing = TRUE)
 }
 
+#' Aligned Number Formatter
+#'
+#' Formats a vector of positive numbers in a way that the resulting strings are
+#' all of the same length and the decimal points (if there are any) are aligned.
+#'
+#' @param x A numeric vector to be formatted.
+#' @param digits Number of digits to be shown, including the zero in front of the decimal dot.
+#' @param scientific Should scientific formatting be applied? Default is \code{FALSE}.
+#' @param ... Further arguments passed to \code{format()}.
+#' @return A character vector of formatted numbers.
+#' @export
+#' @examples
+#' x <- c(10, 1, 0.1)
+#' format_aligned(x)
+format_aligned <- function(x, digits = 4, scientific = FALSE, ...) {
+  stopifnot(all(x >= 0))
+  mx <- trunc(log10(max(x))) + 1L
+  format(round(x, pmax(0L, digits - mx)), scientific = scientific, ...)
+}

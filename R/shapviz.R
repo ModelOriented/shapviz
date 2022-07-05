@@ -36,12 +36,13 @@
 #' the \code{predict} functions of XGBoost, LightGBM, and H2O).
 #' @return An object of class "shapviz" with the following three elements:
 #' \itemize{
-#'   \item \code{S}: A numeric \code{matrix} of SHAP values.
+#'   \item \code{S}: A numeric matrix of SHAP values.
 #'   \item \code{X}: A \code{data.frame} containing the feature values corresponding to \code{S}.
 #'   \item \code{baseline}: Baseline value, representing the average prediction at the scale of the SHAP values.
 #' }
 #' @export
-#' @seealso \code{\link{collapse_shap}}.
+#' @seealso \code{\link{sv_importance}}, \code{\link{sv_dependence}},
+#' \code{\link{sv_waterfall}}, \code{\link{sv_force}}, \code{\link{collapse_shap}}
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
@@ -64,17 +65,18 @@ shapviz.default = function(object, ...) {
 shapviz.matrix = function(object, X, baseline = 0, collapse = NULL, ...) {
   object <- collapse_shap(object, collapse = collapse)
   stopifnot(
-    "X must be a matrix or data.frame" = is.matrix(X) || is.data.frame(X),
-    "Dimensions of object and X are incompatible" = dim(object) == dim(X),
-    "X and object need at least one row and one column" = dim(X) >= 1L,
-    "SHAP matrix ('object') must have column names" = !is.null(colnames(object)),
-    "X must have column names" = !is.null(colnames(X)),
-    "object and X must have the same column names" =
+    "'X' must be a matrix or data.frame" = is.matrix(X) || is.data.frame(X),
+    "The number of rows of 'object' and 'X' differ" = nrow(object) == nrow(X),
+    "The number of columns of 'object' and 'X' differ" = ncol(object) == ncol(X),
+    "'X' and 'object' need at least one row and one column" = dim(X) >= 1L,
+    "SHAP matrix must have column names" = !is.null(colnames(object)),
+    "'X' must have column names" = !is.null(colnames(X)),
+    "'object' and 'X' must have the same column names" =
       sort(colnames(object)) == sort(colnames(X)),
     "No missing SHAP values allowed" = !anyNA(object),
-    "baseline has to be a single number" =
+    "'baseline' has to be a single number" =
       length(baseline) == 1L && is.numeric(baseline),
-    "baseline cannot be NA" = !is.na(baseline)
+    "'baseline' cannot be NA" = !is.na(baseline)
   )
   out <- list(
     S = object[, colnames(X), drop = FALSE],

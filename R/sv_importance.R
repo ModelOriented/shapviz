@@ -96,8 +96,8 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
   if (kind == "bar") {
     p <- ggplot(imp_df, aes(x = feature, y = value)) +
       geom_bar(fill = fill, stat = "identity", ...) +
-      scale_y_continuous(expand = expansion(mult = c(0.05, 0.05 + 0.1*show_numbers))) +
-      ylab("mean(|SHAP value|)")
+      scale_y_continuous(expand = expansion(mult = c(0.05, 0.05 + 0.12*show_numbers))) +
+      labs(x = element_blank(), y = "mean(|SHAP value|)")
   } else {
     # Transpose S and X_scaled
     S <- as.data.frame(S)
@@ -132,7 +132,7 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
       geom_hline(yintercept = 0, color = "darkgray") +
       ggbeeswarm::geom_quasirandom(aes(color = color), ...) +
       do.call(scale_color_viridis_c, viridis_args) +
-      labs(y = "SHAP value", color = "Feature value")
+      labs(x = element_blank(), y = "SHAP value", color = "Feature value")
   }
   if (show_numbers) {
     p <- p +
@@ -146,10 +146,7 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
         size = number_size
       )
   }
-  p +
-    theme(axis.ticks.y = element_blank()) +
-    xlab(element_blank()) +
-    coord_flip(clip = "off")
+  p + coord_flip()
 }
 
 # Helper functions

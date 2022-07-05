@@ -51,12 +51,12 @@ no jitter otherwise.}
 An object of class \code{ggplot} representing a dependence plot.
 }
 \description{
-Creates a scatterplot of SHAP values of feature \code{v} against values of \code{v}.
-A second variable, \code{color_var}, can be selected to be used on the color scale.
-This allows to gain an impression of possible interaction effects.
-Set \code{color_var} to \code{"auto"} in order to select
-the color feature with seemingly strongest interaction based on a simple heuristic.
-For discrete \code{v}, horizontal scatter is added by default.
+Creates a scatter plot of the SHAP values of a feature against its feature values.
+A second variable, \code{color_var}, can be selected to be used on the color axis.
+In this way, one can get a sense of possible interaction effects.
+Set \code{color_var = "auto"} to use a simple heuristic to select the color
+feature with the strongest apparent interaction.
+With discrete \code{v}, horizontal jitter is added by default.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -74,5 +74,5 @@ sv_dependence(x, "Petal.Length", color_var = "Species")
 sv_dependence(x, "Species", color_var = "auto")
 }
 \seealso{
-\code{\link{potential_interactions}}.
+\code{\link{potential_interactions}}
 }

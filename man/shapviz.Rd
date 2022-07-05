@@ -87,7 +87,7 @@ Currently relevant for XGBoost or LightGBM models only.}
 \value{
 An object of class "shapviz" with the following three elements:
 \itemize{
-\item \code{S}: A numeric \code{matrix} of SHAP values.
+\item \code{S}: A numeric matrix of SHAP values.
 \item \code{X}: A \code{data.frame} containing the feature values corresponding to \code{S}.
 \item \code{baseline}: Baseline value, representing the average prediction at the scale of the SHAP values.
 }
@@ -185,5 +185,6 @@ x <- shapviz(
 )
 }
 \seealso{
-\code{\link{collapse_shap}}.
+\code{\link{sv_importance}}, \code{\link{sv_dependence}},
+\code{\link{sv_waterfall}}, \code{\link{sv_force}}, \code{\link{collapse_shap}}
 }

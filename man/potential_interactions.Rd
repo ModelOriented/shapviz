@@ -27,5 +27,5 @@ values in the bin. Note that non-numeric color features are turned to numeric
 by calling \code{data.matrix}, which does not necessarily make sense.
 }
 \seealso{
-\code{\link{sv_dependence}}.
+\code{\link{sv_dependence}}
 }

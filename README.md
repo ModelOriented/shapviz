@@ -106,7 +106,7 @@ We have decomposed 2000 predictions, not just one. This allows us to study varia
 sv_importance(shp)
 ```
 
-![](man/figures/README-imp2.svg)
+![](man/figures/README-imp1.svg)
 
 #### Beeswarm plot
 
@@ -114,12 +114,12 @@ sv_importance(shp)
 sv_importance(shp, kind = "beeswarm")
 ```
 
-![](man/figures/README-imp1.png)
+![](man/figures/README-imp2.png)
 
 #### Or both combined
 
 ``` r
-sv_importance(shp, kind = "both", alpha = 0.2, width = 0.2)
+sv_importance(shp, kind = "both", show_numbers = TRUE, width = 0.2)
 ```
 ![](man/figures/README-imp3.png)
 

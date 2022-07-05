@@ -16,8 +16,8 @@ sv_importance(object, ...)
   max_display = 10L,
   fill = "#fca50a",
   viridis_args = getOption("shapviz.viridis_args"),
-  show_numbers = kind == "bar",
-  format_fun = format_aligned,
+  show_numbers = FALSE,
+  format_fun = format_max,
   number_size = 3.2,
   ...
 )
@@ -52,15 +52,16 @@ For example, to switch to a standard viridis scale, you can either change the de
 with \code{options(shapviz.viridis_args = NULL)} or set \code{viridis_args = NULL}.}
 
 \item{show_numbers}{Should SHAP feature importances be printed?
-Default is \code{TRUE} for \code{kind = "bar"} and \code{FALSE} otherwise.}
+Default is \code{FALSE}.}
 
 \item{format_fun}{Function used to format SHAP feature importances
-if \code{show_numbers = TRUE}.}
+(only if \code{show_numbers = TRUE}).}
 
-\item{number_size}{Text size of the formatted numbers.}
+\item{number_size}{Text size of the formatted numbers
+(only if \code{show_numbers = TRUE}).}
 }
 \value{
-A \code{ggplot} object representing an importance plot, or - if
+A "ggplot" object representing an importance plot, or - if
 \code{kind = "no"} - a named numeric vector of sorted SHAP feature importances.
 }
 \description{

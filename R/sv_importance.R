@@ -28,16 +28,17 @@
 #' For example, to switch to a standard viridis scale, you can either change the default
 #' with \code{options(shapviz.viridis_args = NULL)} or set \code{viridis_args = NULL}.
 #' @param show_numbers Should SHAP feature importances be printed?
-#' Default is \code{TRUE} for \code{kind = "bar"} and \code{FALSE} otherwise.
+#' Default is \code{FALSE}.
 #' @param format_fun Function used to format SHAP feature importances
-#' if \code{show_numbers = TRUE}.
-#' @param number_size Text size of the formatted numbers.
+#' (only if \code{show_numbers = TRUE}).
+#' @param number_size Text size of the formatted numbers
+#' (only if \code{show_numbers = TRUE}).
 #' @param ... Arguments passed to \code{geom_bar()} (if \code{kind = "bar"}) or
 #' to \code{ggbeeswarm::geom_quasirandom()} otherwise.
 #' For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms,
 #' setting \code{size = 3} will produce larger dots, or \code{width = 0.2} will
 #' produce less wide swarms.
-#' @return A \code{ggplot} object representing an importance plot, or - if
+#' @return A "ggplot" object representing an importance plot, or - if
 #' \code{kind = "no"} - a named numeric vector of sorted SHAP feature importances.
 #' @export
 #' @examples
@@ -63,8 +64,8 @@ sv_importance.default <- function(object, ...) {
 sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "no"),
                                   max_display = 10L, fill = "#fca50a",
                                   viridis_args = getOption("shapviz.viridis_args"),
-                                  show_numbers = kind == "bar",
-                                  format_fun = format_aligned, number_size = 3.2, ...) {
+                                  show_numbers = FALSE, format_fun = format_max,
+                                  number_size = 3.2, ...) {
   stopifnot("format_fun must be a function" = is.function(format_fun))
   kind <- match.arg(kind)
   S <- get_shap_values(object)
@@ -90,22 +91,26 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
     imp <- .get_imp(S)
   }
 
-  # Here, sort order of imp is irrelevant. stats::reorder will care about the ordering
-  imp_df <- data.frame(ind = names(imp), values = imp)
+  imp_df <- data.frame(feature = stats::reorder(names(imp), imp), value = imp)
 
   if (kind == "bar") {
-    p <- ggplot(imp_df, aes(x = stats::reorder(ind, values), y = values)) +
+    p <- ggplot(imp_df, aes(x = feature, y = value)) +
       geom_bar(fill = fill, stat = "identity", ...) +
-      ylab("mean(|SHAP value|)")
+      scale_y_continuous(expand = expansion(mult = c(0.05, 0.05 + 0.12*show_numbers))) +
+      labs(x = element_blank(), y = "mean(|SHAP value|)")
   } else {
     # Transpose S and X_scaled
     S <- as.data.frame(S)
     stopifnot(colnames(S) == colnames(X_scaled)) # to be absolutely sure...
-    shap_long <- utils::stack(S)
-    shap_long$v <- utils::stack(X_scaled)$values
+    S_long <- utils::stack(S)
+    df <- data.frame(
+      feature = stats::reorder(S_long$ind, abs(S_long$values)),
+      value = S_long$values,
+      color = utils::stack(X_scaled)$values
+    )
 
     # Put together color scale and deal with special case of only one unique v value
-    nv <- length(unique(shap_long$v))
+    nv <- length(unique(df$color))
     viridis_args <- c(
       viridis_args,
       list(
@@ -119,30 +124,30 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
         )
       )
     )
-    p <- ggplot(shap_long, aes(x = stats::reorder(ind, abs(values)), y = values))
+    p <- ggplot(df, aes(x = feature, y = value))
     if (kind == "both") {
       p <- p + geom_bar(data = imp_df, fill = fill, stat = "identity")
     }
     p <- p +
       geom_hline(yintercept = 0, color = "darkgray") +
-      ggbeeswarm::geom_quasirandom(aes(color = v), ...) +
-      scale_y_continuous(expand = expansion(mult = c(0.05 + 0.1 * show_numbers, 0.05))) +
+      ggbeeswarm::geom_quasirandom(aes(color = color), ...) +
       do.call(scale_color_viridis_c, viridis_args) +
-      labs(y = "SHAP value", color = "Feature value")
+      labs(x = element_blank(), y = "SHAP value", color = "Feature value")
   }
   if (show_numbers) {
     p <- p +
       geom_text(
         data = imp_df,
-        aes(y = if (kind == "bar") 0 else -Inf, label = format_fun(values)),
-        hjust = -0.2,
+        aes(
+          y = if (kind == "bar") value + max(value) / 60 else
+            min(df$value) + 1.22 * diff(range(df$value)),
+          label = format_fun(value)
+        ),
+        hjust = if (kind == "bar") 0 else 1,
         size = number_size
       )
   }
-  p +
-    theme(axis.ticks.y = element_blank()) +
-    xlab(element_blank()) +
-    coord_flip(clip = "off")
+  p + coord_flip()
 }
 
 # Helper functions
@@ -160,22 +165,22 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
   sort(colMeans(abs(z)), decreasing = TRUE)
 }
 
-#' Aligned Number Formatter
+#' Number Formatter
 #'
-#' Formats a vector of positive numbers in a way that the resulting strings are
-#' all of the same length and the decimal points (if there are any) are aligned.
+#' Formats a vector of positive numbers in a way that the largest value determines the
+#' number of digits.
 #'
 #' @param x A numeric vector to be formatted.
-#' @param digits Number of digits to be shown, including the zero in front of the decimal dot.
+#' @param digits Number of digits before and after the decimal separator to be shown.
 #' @param scientific Should scientific formatting be applied? Default is \code{FALSE}.
-#' @param ... Further arguments passed to \code{format()}.
+#' @param ... Further arguments passed to \code{prettyNum()}, e.g., \code{big.mark = "'"}.
 #' @return A character vector of formatted numbers.
 #' @export
 #' @examples
 #' x <- c(10, 1, 0.1)
-#' format_aligned(x)
-format_aligned <- function(x, digits = 4, scientific = FALSE, ...) {
+#' format_max(x)
+format_max <- function(x, digits = 4, scientific = FALSE, ...) {
   stopifnot(all(x >= 0))
   mx <- trunc(log10(max(x))) + 1L
-  format(round(x, pmax(0L, digits - mx)), scientific = scientific, ...)
+  prettyNum(round(x, pmax(0L, digits - mx)), scientific = scientific, ...)
 }

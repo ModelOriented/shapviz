@@ -4,7 +4,8 @@
 #' @import ggplot2
 NULL
 
-globalVariables(c("from", "i", "id", "ind", "label", "to", "v", "values", "x", "shap"))
+globalVariables(c("from", "i", "id", "label", "to", "x", "shap",
+                  "feature", "value", "color"))
 
 .onLoad <- function(libname, pkgname) {
   op <- options()

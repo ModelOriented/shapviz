@@ -42,7 +42,7 @@ The default is ten in order to not overload the plot. Set to \code{Inf} to show
 all features.}
 
 \item{order_fun}{Function specifying the order of the variables/SHAP values.
-It maps the vector s of SHAP values to sort indices from 1 to \code{length(s)}.
+It maps the vector \code{s} of SHAP values to sort indices from 1 to \code{length(s)}.
 The default is \code{function(s) order(abs(s))}.
 To plot without sorting, use \code{function(s) 1:length(s)} or
 \code{function(s) length(s):1}.}
@@ -72,7 +72,7 @@ Default is \code{TRUE}.}
 \item{annotation_size}{Size of the annotation text (f(x)=... and E(f(x))=...).}
 }
 \value{
-An object of class \code{ggplot} representing a waterfall plot.
+An object of class "ggplot" representing a waterfall plot.
 }
 \description{
 Creates a waterfall plot of SHAP values of one single observation. The value of
@@ -99,5 +99,5 @@ shp <- shapviz(S, X)
 sv_waterfall(shp)
 }
 \seealso{
-\code{\link{sv_force}}.
+\code{\link{sv_force}}
 }

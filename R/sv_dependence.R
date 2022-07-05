@@ -1,11 +1,11 @@
 #' SHAP Dependence Plot
 #'
-#' Creates a scatterplot of SHAP values of feature \code{v} against values of \code{v}.
-#' A second variable, \code{color_var}, can be selected to be used on the color scale.
-#' This allows to gain an impression of possible interaction effects.
-#' Set \code{color_var} to \code{"auto"} in order to select
-#' the color feature with seemingly strongest interaction based on a simple heuristic.
-#' For discrete \code{v}, horizontal scatter is added by default.
+#' Creates a scatter plot of the SHAP values of a feature against its feature values.
+#' A second variable, \code{color_var}, can be selected to be used on the color axis.
+#' In this way, one can get a sense of possible interaction effects.
+#' Set \code{color_var = "auto"} to use a simple heuristic to select the color
+#' feature with the strongest apparent interaction.
+#' With discrete \code{v}, horizontal jitter is added by default.
 #'
 #' @importFrom rlang .data
 #' @param object An object of class "shapviz".
@@ -29,7 +29,7 @@
 #' @param ... Arguments passed to \code{geom_jitter()}.
 #' @return An object of class \code{ggplot} representing a dependence plot.
 #' @export
-#' @seealso \code{\link{potential_interactions}}.
+#' @seealso \code{\link{potential_interactions}}
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
@@ -110,7 +110,7 @@ sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b"
 #' @param v Variable name.
 #' @return A named vector of average squared correlations, sorted in decreasing order.
 #' @export
-#' @seealso \code{\link{sv_dependence}}.
+#' @seealso \code{\link{sv_dependence}}
 potential_interactions <- function(obj, v) {
   stopifnot(is.shapviz(obj))
   S <- get_shap_values(obj)

@@ -11,7 +11,7 @@
 #' The default is ten in order to not overload the plot. Set to \code{Inf} to show
 #' all features.
 #' @param order_fun Function specifying the order of the variables/SHAP values.
-#' It maps the vector s of SHAP values to sort indices from 1 to \code{length(s)}.
+#' It maps the vector \code{s} of SHAP values to sort indices from 1 to \code{length(s)}.
 #' The default is \code{function(s) order(abs(s))}.
 #' To plot without sorting, use \code{function(s) 1:length(s)} or
 #' \code{function(s) length(s):1}.
@@ -33,9 +33,9 @@
 #' @param ... Arguments passed to \code{ggfittext::geom_fit_text()}.
 #' For example, \code{size = 9} will use fixed text size in the bars and \code{size = 0}
 #' will altogether suppress adding text to the bars.
-#' @return An object of class \code{ggplot} representing a waterfall plot.
+#' @return An object of class "ggplot" representing a waterfall plot.
 #' @export
-#' @seealso \code{\link{sv_force}}.
+#' @seealso \code{\link{sv_force}}
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)

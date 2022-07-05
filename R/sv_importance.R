@@ -139,7 +139,8 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
       geom_text(
         data = imp_df,
         aes(
-          y = if (kind == "bar") value + max(value) / 60 else 1.25 * max(df$value),
+          y = if (kind == "bar") value + max(value) / 60 else
+            min(df$value) + 1.22 * diff(range(df$value)),
           label = format_fun(value)
         ),
         hjust = if (kind == "bar") 0 else 1,

@@ -19,7 +19,8 @@
 #' their SHAP values are added and their min-max-scaled feature values are added as
 #' well (and the resulting vector is min-max-scaled again). Set to \code{Inf} to show
 #' all features. Has no effect if \code{kind = "no"}.
-#' @param fill Color used to fill the bars (only used if bar plots are shown).
+#' @param fill Color used to fill the bars (only used if bars are shown).
+#' @param bar_width Relative width of the bars (only used if bars are shown).
 #' @param viridis_args List of viridis color scale arguments used to control the
 #' coloring of the beeswarm plot, see \code{?ggplot2::scale_color_viridis_c()}.
 #' The default points to the global option \code{shapviz.viridis_args}, which
@@ -27,12 +28,14 @@
 #' These values are passed to \code{ggplot2::scale_color_viridis_c()}.
 #' For example, to switch to a standard viridis scale, you can either change the default
 #' with \code{options(shapviz.viridis_args = NULL)} or set \code{viridis_args = NULL}.
+#' @param color_bar_title Title of color bar of the beeswarm plot.
+#' Set to \code{NULL} to hide the color bar altogether.
 #' @param show_numbers Should SHAP feature importances be printed?
 #' Default is \code{FALSE}.
 #' @param format_fun Function used to format SHAP feature importances
-#' (only if \code{show_numbers = TRUE}).
-#' @param number_size Text size of the formatted numbers
-#' (only if \code{show_numbers = TRUE}).
+#' (only if \code{show_numbers = TRUE}). To change to scientific notation, use e.g.
+#' \code{function(x) = prettyNum(x, scientific = TRUE)}.
+#' @param number_size Text size of the numbers (if \code{show_numbers = TRUE}).
 #' @param ... Arguments passed to \code{geom_bar()} (if \code{kind = "bar"}) or
 #' to \code{ggbeeswarm::geom_quasirandom()} otherwise.
 #' For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms,
@@ -49,6 +52,11 @@
 #' sv_importance(x)
 #' sv_importance(x, kind = "beeswarm", show_numbers = TRUE)
 #' sv_importance(x, kind = "no")
+#'
+#' X <- data.frame(matrix(rnorm(1000), ncol = 20))
+#' S <- as.matrix(X)
+#' x2 <- shapviz(S, X)
+#' sv_importance(x2)
 sv_importance <- function(object, ...) {
   UseMethod("sv_importance")
 }
@@ -62,8 +70,9 @@ sv_importance.default <- function(object, ...) {
 #' @describeIn sv_importance SHAP importance plot for an object of class "shapviz".
 #' @export
 sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "no"),
-                                  max_display = 10L, fill = "#fca50a",
+                                  max_display = 15L, fill = "#fca50a", bar_width = 2/3,
                                   viridis_args = getOption("shapviz.viridis_args"),
+                                  color_bar_title = "Feature value",
                                   show_numbers = FALSE, format_fun = format_max,
                                   number_size = 3.2, ...) {
   stopifnot("format_fun must be a function" = is.function(format_fun))
@@ -93,10 +102,10 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
 
   imp_df <- data.frame(feature = stats::reorder(names(imp), imp), value = imp)
 
-  if (kind == "bar") {
+  is_bar <- kind == "bar"
+  if (is_bar) {
     p <- ggplot(imp_df, aes(x = feature, y = value)) +
-      geom_bar(fill = fill, stat = "identity", ...) +
-      scale_y_continuous(expand = expansion(mult = c(0.05, 0.05 + 0.12*show_numbers))) +
+      geom_bar(fill = fill, width = bar_width, stat = "identity", ...) +
       labs(x = element_blank(), y = "mean(|SHAP value|)")
   } else {
     # Transpose S and X_scaled
@@ -110,44 +119,51 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
     )
 
     # Put together color scale and deal with special case of only one unique v value
-    nv <- length(unique(df$color))
-    viridis_args <- c(
-      viridis_args,
-      list(
-        breaks = if (nv >= 2L) 0:1 else 0.5,
-        labels = if (nv >= 2L) c("Low", "High") else "Avg",
-        guide = guide_colorbar(
-          barwidth = 0.4,
-          barheight = 8,
-          title.theme = element_text(angle = 90, hjust = 0.5, vjust = 0),
-          title.position = "left"
+    if (!is.null(color_bar_title)) {
+      nv <- length(unique(df$color))
+      viridis_args_plus <-
+        list(
+          breaks = if (nv >= 2L) 0:1 else 0.5,
+          labels = if (nv >= 2L) c("Low", "High") else "Avg",
+          guide = guide_colorbar(
+            barwidth = 0.4,
+            barheight = 8,
+            title.theme = element_text(angle = 90, hjust = 0.5, vjust = 0),
+            title.position = "left"
+          )
         )
-      )
-    )
+    } else {
+      viridis_args_plus <- list(guide = "none")
+    }
+
     p <- ggplot(df, aes(x = feature, y = value))
     if (kind == "both") {
-      p <- p + geom_bar(data = imp_df, fill = fill, stat = "identity")
+      p <- p +
+        geom_bar(data = imp_df, fill = fill, width = bar_width, stat = "identity")
     }
     p <- p +
       geom_hline(yintercept = 0, color = "darkgray") +
       ggbeeswarm::geom_quasirandom(aes(color = color), ...) +
-      do.call(scale_color_viridis_c, viridis_args) +
-      labs(x = element_blank(), y = "SHAP value", color = "Feature value")
+      do.call(scale_color_viridis_c, c(viridis_args, viridis_args_plus)) +
+      labs(x = element_blank(), y = "SHAP value", color = color_bar_title)
   }
   if (show_numbers) {
     p <- p +
       geom_text(
         data = imp_df,
         aes(
-          y = if (kind == "bar") value + max(value) / 60 else
-            min(df$value) + 1.22 * diff(range(df$value)),
+          y = if (is_bar) value + max(value) / 60 else
+            min(df$value) - diff(range(df$value)) / 20,
           label = format_fun(value)
         ),
-        hjust = if (kind == "bar") 0 else 1,
+        hjust = !is_bar,
         size = number_size
+      ) +
+      scale_y_continuous(
+        expand = expansion(mult = 0.05 + c(0.12 *!is_bar, 0.09 * is_bar))
       )
   }
-  p + coord_flip()
+  p + coord_flip(clip = "off")
 }
 
 # Helper functions
@@ -167,20 +183,24 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
 
 #' Number Formatter
 #'
-#' Formats a vector of positive numbers in a way that the largest value determines the
-#' number of digits.
+#' Formats a numeric vector in a way that its largest absolute value determines
+#' the number of digits after the decimal separator. This function is helpful in
+#' perfectly aligning numbers on plots. Does not use scientific formatting.
 #'
 #' @param x A numeric vector to be formatted.
-#' @param digits Number of digits before and after the decimal separator to be shown.
-#' @param scientific Should scientific formatting be applied? Default is \code{FALSE}.
-#' @param ... Further arguments passed to \code{prettyNum()}, e.g., \code{big.mark = "'"}.
+#' @param digits Number of significant digits of the largest absolute value.
+#' @param ... Further arguments passed to \code{format()}, e.g., \code{big.mark = "'"}.
 #' @return A character vector of formatted numbers.
 #' @export
 #' @examples
-#' x <- c(10, 1, 0.1)
+#' x <- c(100, 1, 0.1)
 #' format_max(x)
-format_max <- function(x, digits = 4, scientific = FALSE, ...) {
-  stopifnot(all(x >= 0))
-  mx <- trunc(log10(max(x))) + 1L
-  prettyNum(round(x, pmax(0L, digits - mx)), scientific = scientific, ...)
+#'
+#' y <- c(100, 1.01)
+#' format_max(y)
+#' format_max(y, digits = 5)
+format_max <- function(x, digits = 4L, ...) {
+  mx <- trunc(log10(max(abs(x)))) + 1L
+  x_rounded <- round(x, pmax(0L, digits - mx))
+  format(x_rounded, scientific = FALSE, trim = TRUE, ...)
 }

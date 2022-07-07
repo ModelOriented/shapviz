@@ -13,9 +13,11 @@ sv_importance(object, ...)
 \method{sv_importance}{shapviz}(
   object,
   kind = c("bar", "beeswarm", "both", "no"),
-  max_display = 10L,
+  max_display = 15L,
   fill = "#fca50a",
+  bar_width = 2/3,
   viridis_args = getOption("shapviz.viridis_args"),
+  color_bar_title = "Feature value",
   show_numbers = FALSE,
   format_fun = format_max,
   number_size = 3.2,
@@ -41,7 +43,9 @@ their SHAP values are added and their min-max-scaled feature values are added as
 well (and the resulting vector is min-max-scaled again). Set to \code{Inf} to show
 all features. Has no effect if \code{kind = "no"}.}
 
-\item{fill}{Color used to fill the bars (only used if bar plots are shown).}
+\item{fill}{Color used to fill the bars (only used if bars are shown).}
+
+\item{bar_width}{Relative width of the bars (only used if bars are shown).}
 
 \item{viridis_args}{List of viridis color scale arguments used to control the
 coloring of the beeswarm plot, see \code{?ggplot2::scale_color_viridis_c()}.
@@ -51,14 +55,17 @@ These values are passed to \code{ggplot2::scale_color_viridis_c()}.
 For example, to switch to a standard viridis scale, you can either change the default
 with \code{options(shapviz.viridis_args = NULL)} or set \code{viridis_args = NULL}.}
 
+\item{color_bar_title}{Title of color bar of the beeswarm plot.
+Set to \code{NULL} to hide the color bar altogether.}
+
 \item{show_numbers}{Should SHAP feature importances be printed?
 Default is \code{FALSE}.}
 
 \item{format_fun}{Function used to format SHAP feature importances
-(only if \code{show_numbers = TRUE}).}
+(only if \code{show_numbers = TRUE}). To change to scientific notation, use e.g.
+\code{function(x) = prettyNum(x, scientific = TRUE)}.}
 
-\item{number_size}{Text size of the formatted numbers
-(only if \code{show_numbers = TRUE}).}
+\item{number_size}{Text size of the numbers (if \code{show_numbers = TRUE}).}
 }
 \value{
 A "ggplot" object representing an importance plot, or - if
@@ -90,4 +97,9 @@ x <- shapviz(fit, X_pred = X_train)
 sv_importance(x)
 sv_importance(x, kind = "beeswarm", show_numbers = TRUE)
 sv_importance(x, kind = "no")
+
+X <- data.frame(matrix(rnorm(1000), ncol = 20))
+S <- as.matrix(X)
+x2 <- shapviz(S, X)
+sv_importance(x2)
 }

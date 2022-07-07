@@ -4,25 +4,28 @@
 \alias{format_max}
 \title{Number Formatter}
 \usage{
-format_max(x, digits = 4, scientific = FALSE, ...)
+format_max(x, digits = 4L, ...)
 }
 \arguments{
 \item{x}{A numeric vector to be formatted.}
 
-\item{digits}{Number of digits before and after the decimal separator to be shown.}
+\item{digits}{Number of significant digits of the largest absolute value.}
 
-\item{scientific}{Should scientific formatting be applied? Default is \code{FALSE}.}
-
-\item{...}{Further arguments passed to \code{prettyNum()}, e.g., \code{big.mark = "'"}.}
+\item{...}{Further arguments passed to \code{format()}, e.g., \code{big.mark = "'"}.}
 }
 \value{
 A character vector of formatted numbers.
 }
 \description{
-Formats a vector of positive numbers in a way that the largest value determines the
-number of digits.
+Formats a numeric vector in a way that its largest absolute value determines
+the number of digits after the decimal separator. This function is helpful in
+perfectly aligning numbers on plots. Does not use scientific formatting.
 }
 \examples{
-x <- c(10, 1, 0.1)
+x <- c(100, 1, 0.1)
 format_max(x)
+
+y <- c(100, 1.01)
+format_max(y)
+format_max(y, digits = 5)
 }

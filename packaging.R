@@ -97,7 +97,10 @@ install()
 # Run only if package is public(!) and should go to CRAN
 if (FALSE) {
   check_win_devel()
-  check_rhub()
+  # check_rhub()
+  check_mac_release()
+  check_win_release()
+  check_win_oldrelease()
 
   # Wait until above checks are passed without relevant notes/warnings
   # then submit to CRAN

@@ -1,3 +1,9 @@
+# shapviz 0.2.1 DEVEL
+
+## Minor changes
+
+- Removed unnecessary conversion of `X_pred` from matrix to xgb.DMatrix in `shapviz.xgb.Booster()`.
+
 # shapviz 0.2.0
 
 ## Major improvements

@@ -18,6 +18,7 @@
 #' gross outliers, logarithmize certain columns, or replace missing values with an
 #' explicit value. SHAP values of dummy variables can be combined using the convenient
 #' \code{collapse} argument.
+#' @importFrom xgboost xgb.train
 #' @param object Object to be converted to an object of type "shapviz".
 #' @param X Corresponding matrix or data.frame of feature values used for visualization.
 #' @param X_pred Data set as expected by the \code{predict} function of
@@ -142,9 +143,7 @@ shapviz.xgb.Booster = function(object, X_pred, X = X_pred,
       is.matrix(X_pred) || inherits(X_pred, "xgb.DMatrix"),
     "X_pred must have column names" = !is.null(colnames(X_pred))
   )
-  if (!inherits(X_pred, "xgb.DMatrix")) {
-    X_pred <- xgboost::xgb.DMatrix(X_pred)
-  }
+
   S <- stats::predict(object, newdata = X_pred, predcontrib = TRUE, ...)
 
   # Multiclass

@@ -5,7 +5,7 @@
 SHAP (SHapley Additive exPlanations, [1]) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. The package `shapviz` offers the latter: 
 
 - `sv_dependence()`: Dependence plots to study feature effects (optionally colored by heuristically strongest interacting feature).
-- `sv_importance()`: Importance plots (bar plots and/or beeswarm plots) to study variable importance.
+- `sv_importance()`: Importance plots (bar plots and/or beeswarm "summary" plots) to study variable importance.
 - `sv_waterfall()`: Waterfall plots to study single predictions.
 - `sv_force()`: Force plots as an alternative to waterfall plots.
 
@@ -123,7 +123,7 @@ sv_importance(shp, kind = "both", show_numbers = TRUE, width = 0.2)
 ```
 ![](man/figures/README-imp3.png)
 
-### Depencence plot
+### Dependence plot
 
 A scatterplot of SHAP values of a feature like `color` against its observed values gives a great impression on the feature effect on the response. Vertical scatter gives additional info on interaction effects. `shapviz` offers a heuristic to pick another feature on the color scale with potential strongest interaction.
 

@@ -243,18 +243,6 @@ An example is CatBoost: it is not on CRAN and requires `catboost.*()` functions 
 ``` r
 library(catboost)
 
-X_pool <- catboost.load_pool(diamonds[colnames(X)], label = diamonds$price)
-
-fit <- catboost.train(
-  X_pool, 
-  params = list(
-    loss_function = "RMSE", 
-    iterations = 165, 
-    logging_level = "Silent", 
-    allow_writing_files = FALSE
-  )
-)
-
 shapviz.catboost.Model <- function(object, X_pred, X = X_pred, collapse = NULL, ...) {
   if (!requireNamespace("catboost", quietly = TRUE)) {
     stop("Package 'catboost' not installed")
@@ -280,6 +268,20 @@ shapviz.catboost.Model <- function(object, X_pred, X = X_pred, collapse = NULL, 
   colnames(S) <- colnames(X_pred)
   shapviz(S, X = X, baseline = baseline, collapse = collapse)
 }
+
+# Example
+
+X_pool <- catboost.load_pool(diamonds[colnames(X)], label = diamonds$price)
+
+fit <- catboost.train(
+  X_pool, 
+  params = list(
+    loss_function = "RMSE", 
+    iterations = 165, 
+    logging_level = "Silent", 
+    allow_writing_files = FALSE
+  )
+)
 
 shp <- shapviz(fit, X_small)
 sv_importance(shp)

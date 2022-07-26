@@ -23,24 +23,24 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-SHAP (SHapley Additive exPlanations, see @lundberg2017) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. The package `shapviz` offers the latter:
+SHAP (SHapley Additive exPlanations, see @lundberg2017) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. The "shapviz" package offers the latter:
 
 - `sv_dependence()`: Dependence plots to study feature effects (optionally colored by heuristically strongest interacting feature).
 - `sv_importance()`: Importance plots (bar plots and/or beeswarm plots) to study variable importance.
 - `sv_waterfall()`: Waterfall plots to study single predictions.
 - `sv_force()`: Force plots as an alternative to waterfall plots.
 
-These plots require a `shapviz` object, which is built from two things only:
+These plots require a "shapviz" object, which is built from two things only:
 
 1. `S`: Matrix of SHAP values
 2. `X`: Dataset with corresponding feature values
 
 Furthermore, a `baseline` can be passed to represent an average prediction on the scale of the SHAP values.
 
-A key feature of the `shapviz` package is that `X` is used for visualization only. Thus it is perfectly fine to use factor variables, even if the underlying model would not accept these.
+A key feature of "shapviz" is that `X` is used for visualization only. Thus it is perfectly fine to use factor variables, even if the underlying model would not accept these.
 Additionally, in order to improve visualization, it can sometimes make sense to clip gross outliers, take logarithms for certain columns, or replace missing values by some explicit value.
 
-To further simplify the use of `shapviz`, we added direct connectors to the R packages
+To further simplify the use of "shapviz", we added direct connectors to the R packages
 
 - [`XGBoost`](https://CRAN.R-project.org/package=xgboost),
 - [`LightGBM`](https://CRAN.R-project.org/package=lightgbm),
@@ -48,6 +48,8 @@ To further simplify the use of `shapviz`, we added direct connectors to the R pa
 - [`shapr`](https://CRAN.R-project.org/package=shapr),
 - [`h2o`](https://CRAN.R-project.org/package=h2o), and
 - [`treeshap`](https://github.com/ModelOriented/treeshap).
+
+[`CatBoost`](https://github.com/catboost) is not included, but see Section "Any other package" how to use its SHAP calculation backend with "shapviz".
 
 ## Installation
 
@@ -88,9 +90,9 @@ fit <- xgb.train(
 
 ### Create "shapviz" object
 
-One line of code creates a `shapviz` object. It contains SHAP values and feature values for the set of observations we are interested in. Note again that `X` is solely used as explanation dataset, not for calculating SHAP values. 
+One line of code creates a "shapviz" object. It contains SHAP values and feature values for the set of observations we are interested in. Note again that `X` is solely used as explanation dataset, not for calculating SHAP values. 
 
-In this example we construct the `shapviz` object directly from the fitted XGBoost model. Thus we also need to pass a corresponding prediction dataset `X_pred` used for calculating SHAP values by XGBoost.
+In this example we construct the "shapviz" object directly from the fitted XGBoost model. Thus we also need to pass a corresponding prediction dataset `X_pred` used for calculating SHAP values by XGBoost.
 
 ```{r}
 X_small <- X[sample(nrow(X), 2000L), ]
@@ -145,11 +147,11 @@ sv_dependence(shp, v = "carat", color_var = "auto", alpha = 0.2, size = 1) +
 
 ## Interface to other packages
 
-The above example uses XGBoost to calculate SHAP values. In the following sections, we show (without running the code), how other packages work together with `shapviz`.
+The above example uses XGBoost to calculate SHAP values. In the following sections, we show (without running the code), how other packages work together with "shapviz".
 
 ### LightGBM
 
-``` r
+```r
 library(lightgbm)
 dtrain <- lgb.Dataset(data.matrix(X), label = diamonds$price)
 
@@ -164,7 +166,7 @@ sv_importance(shp)
 ```
 ### fastshap
 
-``` r
+```r
 library(fastshap)
 
 fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
@@ -174,7 +176,7 @@ sv_dependence(shp, "carat")
 ```
 ### shapr
 
-``` r
+```r
 library(shapr)
 
 fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
@@ -198,7 +200,7 @@ sv_dependence(shp, "carat", "auto")
 
 If you work with a tree-based H2O model:
 
-``` r
+```r
 library(h2o)
 
 h2o.init()
@@ -213,15 +215,66 @@ sv_dependence(x, "carat", "auto")
 
 ### treeshap
 
-``` r
+```r
 library(treeshap)
+library(ranger)
+
+fit <- ranger(y = diamonds$price, x = data.matrix(X), max.depth = 6, num.trees = 100)
+unified_model <- ranger.unify(fit, data.matrix(X))
+shaps <- treeshap(unified_model, data.matrix(X_small))
+shp <- shapviz(shaps, X = X_small)
+sv_importance(shp)
+sv_dependence(shp, "clarity", color_var = "auto", alpha = 0.2, size = 1)
+```
+
+### Any other package
+
+The most general interface is to provide a matrix of SHAP values and corresponding
+feature values (and optionally, a baseline value):
+
+``` r
+S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+X <- data.frame(x = c("a", "b"), y = c(100, 10))
+shp <- shapviz(S, X, baseline = 4)
+```
+
+An example is CatBoost: it is not on CRAN and requires `catboost.*()` functions to calculate SHAP values, so we cannot directly add it to "shapviz" for now. Just use a wrapper like this:
+
+``` r
 library(catboost)
 
-f <- function(X) data.frame(data.matrix(X))
+shapviz.catboost.Model <- function(object, X_pred, X = X_pred, collapse = NULL, ...) {
+  if (!requireNamespace("catboost", quietly = TRUE)) {
+    stop("Package 'catboost' not installed")
+  }
+  stopifnot(
+    "X must be a matrix or data.frame. It can't be an object of class catboost.Pool" =
+      is.matrix(X) || is.data.frame(X),
+    "X_pred must be a matrix, a data.frame, or a catboost.Pool" =
+      is.matrix(X_pred) || is.data.frame(X_pred) || inherits(X_pred, "catboost.Pool"),
+    "X_pred must have column names" = !is.null(colnames(X_pred))
+  )
+  
+  if (!inherits(X_pred, "catboost.Pool")) {
+    X_pred <- catboost.load_pool(X_pred)
+  }
 
-X_cat <- catboost.load_pool(data = f(X), label = diamonds$price)
+  S <- catboost.get_feature_importance(object, X_pred, type = "ShapValues", ...)
+
+  # Call matrix method
+  pp <- ncol(X_pred) + 1L
+  baseline <- S[1L, pp]
+  S <- S[, -pp, drop = FALSE]
+  colnames(S) <- colnames(X_pred)
+  shapviz(S, X = X, baseline = baseline, collapse = collapse)
+}
+
+# Example
+
+X_pool <- catboost.load_pool(diamonds[colnames(X)], label = diamonds$price)
+
 fit <- catboost.train(
-  X_cat, 
+  X_pool, 
   params = list(
     loss_function = "RMSE", 
     iterations = 165, 
@@ -229,21 +282,10 @@ fit <- catboost.train(
     allow_writing_files = FALSE
   )
 )
-unified_catboost <- catboost.unify(fit, f(X))
-shaps <- treeshap(unified_catboost, f(X_small))
-shp <- shapviz(shaps, X = X_small)
+
+shp <- shapviz(fit, X_small)
+sv_importance(shp)
 sv_dependence(shp, "clarity", color_var = "auto", alpha = 0.2, size = 1)
-```
-
-### Any other package
-
-The most general interface is to provide a matrix of SHAP values and corresponding
-feature values:
-
-``` r
-S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-X <- data.frame(x = c("a", "b"), y = c(100, 10))
-shp <- shapviz(S, X, baseline = 4)
 ```
 
 ## Classification models

@@ -2,24 +2,24 @@
 
 ## Introduction
 
-SHAP (SHapley Additive exPlanations, [1]) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. The package `shapviz` offers the latter: 
+SHAP (SHapley Additive exPlanations, [1]) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. The "shapviz" package offers the latter: 
 
 - `sv_dependence()`: Dependence plots to study feature effects (optionally colored by heuristically strongest interacting feature).
 - `sv_importance()`: Importance plots (bar plots and/or beeswarm "summary" plots) to study variable importance.
 - `sv_waterfall()`: Waterfall plots to study single predictions.
 - `sv_force()`: Force plots as an alternative to waterfall plots.
 
-These plots require a `shapviz` object, which is built from two things only:
+These plots require a "shapviz" object, which is built from two things only:
 
 1. `S`: Matrix of SHAP values
 2. `X`: Dataset with corresponding feature values
 
 Furthermore, a `baseline` can be passed to represent an average prediction on the scale of the SHAP values.
 
-A key feature of the `shapviz` package is that `X` is used for visualization only. Thus it is perfectly fine to use factor variables, even if the underlying model would not accept these.
+A key feature of "shapviz" is that `X` is used for visualization only. Thus it is perfectly fine to use factor variables, even if the underlying model would not accept these.
 Additionally, in order to improve visualization, it can sometimes make sense to clip gross outliers, take logarithms for certain columns, or replace missing values by some explicit value.
 
-To further simplify the use of `shapviz`, we added direct connectors to the R packages
+To further simplify the use of "shapviz", we added direct connectors to the R packages
 
 - [`XGBoost`](https://CRAN.R-project.org/package=xgboost),
 - [`LightGBM`](https://CRAN.R-project.org/package=lightgbm),
@@ -27,6 +27,8 @@ To further simplify the use of `shapviz`, we added direct connectors to the R pa
 - [`shapr`](https://CRAN.R-project.org/package=shapr), 
 - [`h2o`](https://CRAN.R-project.org/package=h2o), and
 - [`treeshap`](https://github.com/ModelOriented/treeshap).
+
+[`CatBoost`](https://github.com/catboost) is not included, but see the vignette how to use its SHAP calculation backend with "shapviz".
 
 ## Installation
 
@@ -62,11 +64,11 @@ fit <- xgb.train(
 )
 ```
 
-### Create `shapviz` object
+### Create "shapviz" object
 
-One line of code creates a `shapviz` object. It contains SHAP values and feature values for the set of observations we are interested in. Note again that `X` is solely used as explanation dataset, not for calculating SHAP values. 
+One line of code creates a "shapviz" object. It contains SHAP values and feature values for the set of observations we are interested in. Note again that `X` is solely used as explanation dataset, not for calculating SHAP values. 
 
-In this example, we construct the `shapviz` object directly from the fitted XGBoost model. Thus we also need to pass a corresponding prediction dataset `X_pred` used for calculating SHAP values by XGBoost.
+In this example, we construct the "shapviz" object directly from the fitted XGBoost model. Thus we also need to pass a corresponding prediction dataset `X_pred` used for calculating SHAP values by XGBoost.
 
 ``` r
 X_small <- X[sample(nrow(X), 2000L), ]
@@ -125,7 +127,7 @@ sv_importance(shp, kind = "both", show_numbers = TRUE, width = 0.2)
 
 ### Dependence plot
 
-A scatterplot of SHAP values of a feature like `color` against its observed values gives a great impression on the feature effect on the response. Vertical scatter gives additional info on interaction effects. `shapviz` offers a heuristic to pick another feature on the color scale with potential strongest interaction.
+A scatterplot of SHAP values of a feature like `color` against its observed values gives a great impression on the feature effect on the response. Vertical scatter gives additional info on interaction effects. "shapviz" offers a heuristic to pick another feature on the color scale with potential strongest interaction.
 
 ``` r
 sv_dependence(shp, v = "color", "auto")

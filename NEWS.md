@@ -2,7 +2,8 @@
 
 ## Minor changes
 
-- Removed unnecessary conversion of `X_pred` from matrix to xgb.DMatrix in `shapviz.xgb.Booster()`.
+- Removed unnecessary conversion of `X_pred` from `matrix` to `xgb.DMatrix` in `shapviz.xgb.Booster()`.
+- Vignette: Added a CatBoost wrapper to the vignette and changed the `treeshap()` example to a `ranger()` model.
 
 # shapviz 0.2.0
 

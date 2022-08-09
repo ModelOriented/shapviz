@@ -25,8 +25,9 @@ To further simplify the use of "shapviz", we added direct connectors to the R pa
 - [`LightGBM`](https://CRAN.R-project.org/package=lightgbm),
 - [`fastshap`](https://CRAN.R-project.org/package=fastshap),
 - [`shapr`](https://CRAN.R-project.org/package=shapr), 
-- [`h2o`](https://CRAN.R-project.org/package=h2o), and
-- [`treeshap`](https://github.com/ModelOriented/treeshap).
+- [`h2o`](https://CRAN.R-project.org/package=h2o),
+- [`treeshap`](https://github.com/ModelOriented/treeshap), and
+- [`kernelshap`](https://github.com/mayer79/kernelshap)
 
 [`CatBoost`](https://github.com/catboost) is not included, but see the vignette how to use its SHAP calculation backend with "shapviz".
 

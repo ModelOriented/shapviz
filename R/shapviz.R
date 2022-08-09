@@ -9,6 +9,7 @@
 #'   \item H2O model (tree-based regression or binary classification model)
 #'   \item "shapr" object from the package "shapr"
 #'   \item The result of calling \code{treeshap()} from the "treeshap" package
+#'   \item "kernelshap" object from the "kernelshap" package
 #' }
 #' The "shapviz" vignette explains how to use each of them.
 #' Together with the main input, a data set \code{X} of feature values is required,
@@ -58,7 +59,7 @@ shapviz <- function(object, ...){
 shapviz.default = function(object, ...) {
   stop("No default method available. shapviz() is available for objects
        of class 'matrix', 'xgb.Booster', 'lgb.Booster', 'treeshap',
-       'shapr', 'H2OModel', and 'explain' (from fastshap package).")
+       'shapr', 'H2OModel', 'explain' (from fastshap package), and 'kernelshap'.")
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from a matrix of SHAP values.
@@ -225,6 +226,17 @@ shapviz.shapr <- function(object, X = object[["x_test"]], collapse = NULL, ...) 
     dt[, setdiff(colnames(dt), "none"), drop = FALSE],
     X = X,
     baseline = dt[1L, "none"],
+    collapse = collapse
+  )
+}
+
+#' @describeIn shapviz Creates a "shapviz" object from kernelshap's "kernelshap()" method.
+#' @export
+shapviz.kernelshap <- function(object, X = object[["X"]], collapse = NULL, ...) {
+  shapviz.matrix(
+    object[["S"]],
+    X = X,
+    baseline = object[["baseline"]],
     collapse = collapse
   )
 }

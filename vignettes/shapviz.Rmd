@@ -46,8 +46,9 @@ To further simplify the use of "shapviz", we added direct connectors to the R pa
 - [`LightGBM`](https://CRAN.R-project.org/package=lightgbm),
 - [`fastshap`](https://CRAN.R-project.org/package=fastshap), 
 - [`shapr`](https://CRAN.R-project.org/package=shapr),
-- [`h2o`](https://CRAN.R-project.org/package=h2o), and
-- [`treeshap`](https://github.com/ModelOriented/treeshap).
+- [`h2o`](https://CRAN.R-project.org/package=h2o),
+- [`treeshap`](https://github.com/ModelOriented/treeshap), and
+- [`kernelshap`](https://github.com/mayer79/kernelshap)
 
 [`CatBoost`](https://github.com/catboost) is not included, but see Section "Any other package" how to use its SHAP calculation backend with "shapviz".
 
@@ -180,16 +181,16 @@ sv_dependence(shp, "carat")
 library(shapr)
 
 fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
-explainer <- shapr(X_small, fit)
+X_smaller <- X[sample(nrow(X), 200L), ]
 
-# Takes about three minutes(!)
-system.time(
-  explanation <- explain(
-    X_small,
-    approach = "ctree",
-    explainer = explainer,
-    prediction_zero = mean(diamonds$price)
-  )
+explainer <- shapr(X_smaller, fit,)
+
+# Takes about 15 seconds
+explanation <- explain(
+  X_smaller,
+  approach = "ctree",
+  explainer = explainer,
+  prediction_zero = mean(diamonds$price)
 )
 
 shp <- shapviz(explanation)
@@ -225,6 +226,24 @@ shaps <- treeshap(unified_model, data.matrix(X_small))
 shp <- shapviz(shaps, X = X_small)
 sv_importance(shp)
 sv_dependence(shp, "clarity", color_var = "auto", alpha = 0.2, size = 1)
+```
+
+### kernelshap
+
+```r
+library(kernelshap)
+
+X_smaller <- X[sample(nrow(X), 200L), ]
+fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
+
+# Takes about 30 seconds
+system.time(
+  ks <- kernelshap(X_smaller, function(X) predict(fit, X), X_smaller)
+)
+
+shp <- shapviz(ks)
+sv_importance(shp)
+sv_dependence(shp, "carat")
 ```
 
 ### Any other package

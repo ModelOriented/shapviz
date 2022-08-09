@@ -9,6 +9,7 @@
 \alias{shapviz.explain}
 \alias{shapviz.treeshap}
 \alias{shapviz.shapr}
+\alias{shapviz.kernelshap}
 \alias{shapviz.H2ORegressionModel}
 \alias{shapviz.H2OBinomialModel}
 \alias{shapviz.H2OModel}
@@ -35,6 +36,8 @@ shapviz(object, ...)
 )
 
 \method{shapviz}{shapr}(object, X = object[["x_test"]], collapse = NULL, ...)
+
+\method{shapviz}{kernelshap}(object, X = object[["X"]], collapse = NULL, ...)
 
 \method{shapviz}{H2ORegressionModel}(
   object,
@@ -102,6 +105,7 @@ This function creates an object of class "shapviz" from one of the following inp
 \item H2O model (tree-based regression or binary classification model)
 \item "shapr" object from the package "shapr"
 \item The result of calling \code{treeshap()} from the "treeshap" package
+\item "kernelshap" object from the "kernelshap" package
 }
 The "shapviz" vignette explains how to use each of them.
 Together with the main input, a data set \code{X} of feature values is required,
@@ -127,6 +131,8 @@ explicit value. SHAP values of dummy variables can be combined using the conveni
 \item \code{treeshap}: Creates a "shapviz" object from treeshap's "treeshap()" method.
 
 \item \code{shapr}: Creates a "shapviz" object from shapr's "explain()" method.
+
+\item \code{kernelshap}: Creates a "shapviz" object from kernelshap's "kernelshap()" method.
 
 \item \code{H2ORegressionModel}: Creates a "shapviz" object from a (tree-based) H2O regression model.
 

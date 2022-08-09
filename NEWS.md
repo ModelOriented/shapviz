@@ -1,5 +1,9 @@
 # shapviz 0.2.1 DEVEL
 
+## Major improvements
+
+- Added kernelshap wrapper.
+
 ## Minor changes
 
 - Removed unnecessary conversion of `X_pred` from `matrix` to `xgb.DMatrix` in `shapviz.xgb.Booster()`.

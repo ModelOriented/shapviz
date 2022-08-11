@@ -81,11 +81,11 @@ SHAP value. The plot has to be read from bottom to top.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method.
+\item \code{sv_waterfall(default)}: Default method.
 
-\item \code{shapviz}: SHAP waterfall plot for an object of class "shapviz".
+\item \code{sv_waterfall(shapviz)}: SHAP waterfall plot for an object of class "shapviz".
+
 }}
-
 \examples{
 dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
 fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)

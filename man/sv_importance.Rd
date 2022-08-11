@@ -84,11 +84,11 @@ order of importance. The two types of plots can also be combined.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method.
+\item \code{sv_importance(default)}: Default method.
 
-\item \code{shapviz}: SHAP importance plot for an object of class "shapviz".
+\item \code{sv_importance(shapviz)}: SHAP importance plot for an object of class "shapviz".
+
 }}
-
 \examples{
 X_train <- data.matrix(iris[, -1])
 dtrain <- xgboost::xgb.DMatrix(X_train, label = iris[, 1])

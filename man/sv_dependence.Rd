@@ -60,11 +60,11 @@ With discrete \code{v}, horizontal jitter is added by default.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method.
+\item \code{sv_dependence(default)}: Default method.
 
-\item \code{shapviz}: SHAP dependence plot for shp object.
+\item \code{sv_dependence(shapviz)}: SHAP dependence plot for shp object.
+
 }}
-
 \examples{
 dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
 fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)

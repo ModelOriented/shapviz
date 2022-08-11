@@ -71,11 +71,11 @@ SHAP value.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method.
+\item \code{sv_force(default)}: Default method.
 
-\item \code{shapviz}: SHAP force plot for object of class "shapviz".
+\item \code{sv_force(shapviz)}: SHAP force plot for object of class "shapviz".
+
 }}
-
 \examples{
 dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
 fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)

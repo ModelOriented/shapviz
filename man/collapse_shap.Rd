@@ -32,11 +32,11 @@ the original variables.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method.
+\item \code{collapse_shap(default)}: Default method.
 
-\item \code{matrix}: Collapse method for object of class "matrix".
+\item \code{collapse_shap(matrix)}: Collapse method for object of class "matrix".
+
 }}
-
 \examples{
 S <- cbind(
   x = c(0.1, 0.1, 0.1),

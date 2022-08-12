@@ -1,4 +1,4 @@
-# shapviz 0.2.1 DEVEL
+# shapviz 0.2.1
 
 ## Major improvements
 
@@ -8,6 +8,10 @@
 
 - Removed unnecessary conversion of `X_pred` from `matrix` to `xgb.DMatrix` in `shapviz.xgb.Booster()`.
 - Vignette: Added a CatBoost wrapper to the vignette and changed the `treeshap()` example to a `ranger()` model.
+
+## Maintainance
+
+- Fixed CRAN notes on html5.
 
 # shapviz 0.2.0
 

@@ -118,29 +118,29 @@ explicit value. SHAP values of dummy variables can be combined using the conveni
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method to initialize a "shapviz" object.
+\item \code{shapviz(default)}: Default method to initialize a "shapviz" object.
 
-\item \code{matrix}: Creates a "shapviz" object from a matrix of SHAP values.
+\item \code{shapviz(matrix)}: Creates a "shapviz" object from a matrix of SHAP values.
 
-\item \code{xgb.Booster}: Creates a "shapviz" object from an XGBoost model.
+\item \code{shapviz(xgb.Booster)}: Creates a "shapviz" object from an XGBoost model.
 
-\item \code{lgb.Booster}: Creates a "shapviz" object from a LightGBM model.
+\item \code{shapviz(lgb.Booster)}: Creates a "shapviz" object from a LightGBM model.
 
-\item \code{explain}: Creates a "shapviz" object from fastshap's "explain()" method.
+\item \code{shapviz(explain)}: Creates a "shapviz" object from fastshap's "explain()" method.
 
-\item \code{treeshap}: Creates a "shapviz" object from treeshap's "treeshap()" method.
+\item \code{shapviz(treeshap)}: Creates a "shapviz" object from treeshap's "treeshap()" method.
 
-\item \code{shapr}: Creates a "shapviz" object from shapr's "explain()" method.
+\item \code{shapviz(shapr)}: Creates a "shapviz" object from shapr's "explain()" method.
 
-\item \code{kernelshap}: Creates a "shapviz" object from kernelshap's "kernelshap()" method.
+\item \code{shapviz(kernelshap)}: Creates a "shapviz" object from kernelshap's "kernelshap()" method.
 
-\item \code{H2ORegressionModel}: Creates a "shapviz" object from a (tree-based) H2O regression model.
+\item \code{shapviz(H2ORegressionModel)}: Creates a "shapviz" object from a (tree-based) H2O regression model.
 
-\item \code{H2OBinomialModel}: Creates a "shapviz" object from a (tree-based) H2O binary classification model.
+\item \code{shapviz(H2OBinomialModel)}: Creates a "shapviz" object from a (tree-based) H2O binary classification model.
 
-\item \code{H2OModel}: Creates a "shapviz" object from a (tree-based) H2O model (base class).
+\item \code{shapviz(H2OModel)}: Creates a "shapviz" object from a (tree-based) H2O model (base class).
+
 }}
-
 \examples{
 S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 X <- data.frame(x = c("a", "b"), y = c(100, 10))

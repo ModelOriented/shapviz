@@ -93,15 +93,12 @@ test()
 check(manual = TRUE, cran = TRUE)
 build()
 # build(binary = TRUE)
-install()
+install(upgrade = FALSE)
 
 # Run only if package is public(!) and should go to CRAN
 if (FALSE) {
   check_win_devel()
-  # check_rhub()
-  check_mac_release()
-  check_win_release()
-  check_win_oldrelease()
+  check_rhub()
 
   # Wait until above checks are passed without relevant notes/warnings
   # then submit to CRAN

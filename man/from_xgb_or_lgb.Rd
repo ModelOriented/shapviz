@@ -15,7 +15,7 @@ shapviz_from_lgb_predict(S, X, which_class = NULL, ...)
 
 \item{X}{Matrix or data.frame of feature values corresponding to \code{S}.}
 
-\item{which_class}{In case of a multiclass setting, which class >= 1 to be explained.}
+\item{which_class}{In case of a multiclass setting, which class >= 1 to explain.}
 
 \item{...}{Other parameters passed (currently unused).}
 }

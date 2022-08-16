@@ -37,7 +37,7 @@ shapviz(object, ...)
 
 \method{shapviz}{shapr}(object, X = object[["x_test"]], collapse = NULL, ...)
 
-\method{shapviz}{kernelshap}(object, X = object[["X"]], collapse = NULL, ...)
+\method{shapviz}{kernelshap}(object, X = object[["X"]], which_class = NULL, collapse = NULL, ...)
 
 \method{shapviz}{H2ORegressionModel}(
   object,
@@ -83,9 +83,9 @@ The name of the new column equals the name of the vector in \code{collapse}.}
 XGBoost, LightGBM, or H2O. For XGBoost, a matrix or \code{xgb.DMatrix},
 for LightGBM a matrix, and for H2O a \code{data.frame} or an \code{H2OFrame}.}
 
-\item{which_class}{In case of a multiclass setting, which class
-to explain (an integer between 1 and the \code{num_class} parameter of the model).
-Currently relevant for XGBoost or LightGBM models only.}
+\item{which_class}{In case of a multiclass or multioutput setting,
+which class/output (>= 1) to explain. Currently relevant for XGBoost, LightGBM,
+or kernelshap.}
 }
 \value{
 An object of class "shapviz" with the following three elements:

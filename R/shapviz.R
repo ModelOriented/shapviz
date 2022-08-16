@@ -28,9 +28,9 @@
 #' @param baseline Optional baseline value, representing the average response at the
 #' scale of the SHAP values. It will be used for plot methods that explain single
 #' predictions.
-#' @param which_class In case of a multiclass setting, which class
-#' to explain (an integer between 1 and the \code{num_class} parameter of the model).
-#' Currently relevant for XGBoost or LightGBM models only.
+#' @param which_class In case of a multiclass or multioutput setting,
+#' which class/output (>= 1) to explain. Currently relevant for XGBoost, LightGBM,
+#' or kernelshap.
 #' @param collapse A named list of character vectors. Each vector specifies a group of
 #' column names in the SHAP matrix that should be collapsed to a single column by summation.
 #' The name of the new column equals the name of the vector in \code{collapse}.
@@ -232,13 +232,19 @@ shapviz.shapr <- function(object, X = object[["x_test"]], collapse = NULL, ...) 
 
 #' @describeIn shapviz Creates a "shapviz" object from kernelshap's "kernelshap()" method.
 #' @export
-shapviz.kernelshap <- function(object, X = object[["X"]], collapse = NULL, ...) {
-  shapviz.matrix(
-    object[["S"]],
-    X = X,
-    baseline = object[["baseline"]],
-    collapse = collapse
-  )
+shapviz.kernelshap <- function(object, X = object[["X"]],
+                               which_class = NULL, collapse = NULL, ...) {
+  S <- object[["S"]]
+  b <- object[["baseline"]]
+
+  # Multiclass/multioutput
+  if (is.list(S)) {
+    stopifnot(!is.null(which_class), which_class <= length(S))
+    S <- S[[which_class]]
+    b <- b[which_class]
+  }
+
+  shapviz.matrix(S, X = X, baseline = b, collapse = collapse)
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from a (tree-based) H2O regression model.
@@ -295,7 +301,7 @@ shapviz.H2OModel = function(object, X_pred,
 #'
 #' @param S Output of calling \code{predict(..., predcontrib = TRUE)}.
 #' @param X Matrix or data.frame of feature values corresponding to \code{S}.
-#' @param which_class In case of a multiclass setting, which class >= 1 to be explained.
+#' @param which_class In case of a multiclass setting, which class >= 1 to explain.
 #' @param ... Other parameters passed (currently unused).
 #' @return An object of class "shapviz".
 #' @name from_xgb_or_lgb

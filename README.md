@@ -1,5 +1,7 @@
 # shapviz <a href='https://github.com/mayer79/shapviz'><img src='man/figures/logo.png' align="right" height="138.5" /></a>
 
+[![CRAN version](http://www.r-pkg.org/badges/version/shapviz)](https://cran.r-project.org/package=shapviz) [![](https://cranlogs.r-pkg.org/badges/shapviz)](https://cran.r-project.org/package=shapviz) [![](https://cranlogs.r-pkg.org/badges/grand-total/shapviz?color=orange)](https://cran.r-project.org/package=shapviz)
+
 ## Introduction
 
 SHAP (SHapley Additive exPlanations, [1]) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. The "shapviz" package offers the latter: 

@@ -1,3 +1,9 @@
+# shapviz 0.2.2 DEVEL
+
+## Minor improvements
+
+- kernelshap wrapper now also can deal with multioutput models.
+
 # shapviz 0.2.1
 
 ## Major improvements

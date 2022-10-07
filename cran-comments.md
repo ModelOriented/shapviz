@@ -12,15 +12,12 @@ I was using `apply(, ..., simplify = FALSE)`, which would fail for earlier R ver
 
 -> warning on pdf compression.
 
-### check_rhub()
+### check_rhub() and check_win_devel()
 
 * checking package dependencies ... NOTE
   'h2o', 'lightgbm'
+  
 Packages which this enhances but not available for checking:
 * checking for detritus in the temp directory ... NOTE
 Found the following files/directories:
   'lastMiKTeXException'
-
-### check_win_devel()
-
-OK

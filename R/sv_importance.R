@@ -78,12 +78,17 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
   stopifnot("format_fun must be a function" = is.function(format_fun))
   kind <- match.arg(kind)
   S <- get_shap_values(object)
-  X_scaled <- X <- get_feature_values(object)
+  X <- get_feature_values(object)
   imp <- .get_imp(S)
   if (kind == "no") {
     return(imp)
   }
-  X_scaled[] <- apply(data.matrix(X), 2L, FUN = .min_max_scale, simplify = FALSE)
+
+  # The next two lines would be more elegant, but require R >= 4.1
+  # X_scaled <- X
+  # X_scaled[] <- apply(data.matrix(X), 2L, FUN = .min_max_scale, simplify = FALSE)
+  X_tmp <- apply(data.matrix(X), 2L, FUN = .min_max_scale)
+  X_scaled <- as.data.frame(if (nrow(X) >= 2L) X_tmp else t(X_tmp))
 
   # Collapse unimportant features (here, it is important that 'imp' is sorted)
   ok <- utils::head(names(imp), max_display - 1L)

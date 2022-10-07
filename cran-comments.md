@@ -1,20 +1,26 @@
-# shapviz 0.2.1
+# shapviz 0.2.2
 
-Hi CRAN team
+Dear CRAN team
 
-I received this info about a note on html5 and fixed one problem by rerunning "document()".
+This small update fixes a problem that occur with R versions < 4.1:
 
-"Dear maintainer,
-
-Please see the problems shown on
-<https://cran.r-project.org/web/checks/check_results_shapviz.html>.
-
-In particular, please see the "Found the following HTML validation
-problems" NOTEs in the "HTML version of manual" check for the r-devel
-debian checks results.[...]"
+I was using `apply(, ..., simplify = FALSE)`, which would fail for earlier R version. I was not aware of this.
 
 ## Checks
 
-- check_win_devel() -> Status: OK
-- check_rhub(): Okay, until a message that h2o and lightgbm ("Enhances") are not available.
-- check(manual = TRUE, cran = TRUE) -> warning on pdf compression.
+### check(manual = TRUE, cran = TRUE) 
+
+-> warning on pdf compression.
+
+### check_rhub()
+
+* checking package dependencies ... NOTE
+  'h2o', 'lightgbm'
+Packages which this enhances but not available for checking:
+* checking for detritus in the temp directory ... NOTE
+Found the following files/directories:
+  'lastMiKTeXException'
+
+### check_win_devel()
+
+OK

@@ -1,4 +1,4 @@
-# shapviz 0.2.2 DEVEL
+# shapviz 0.2.2
 
 ## Bug fix
 

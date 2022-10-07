@@ -235,11 +235,7 @@ library(kernelshap)
 
 X_smaller <- X[sample(nrow(X), 200L), ]
 fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
-
-# Takes about 30 seconds
-system.time(
-  ks <- kernelshap(X_smaller, function(X) predict(fit, X), X_smaller)
-)
+ks <- kernelshap(fit, X_small, bg_X = X_smaller)
 
 shp <- shapviz(ks)
 sv_importance(shp)
@@ -290,6 +286,7 @@ shapviz.catboost.Model <- function(object, X_pred, X = X_pred, collapse = NULL, 
 
 # Example
 
+X <- diamonds[c("carat", "cut", "color", "clarity")]
 X_pool <- catboost.load_pool(diamonds[colnames(X)], label = diamonds$price)
 
 fit <- catboost.train(
@@ -310,7 +307,7 @@ sv_dependence(shp, "clarity", color_var = "auto", alpha = 0.2, size = 1)
 ## Classification models
 
 The plot functions work with one-dimensional model predictions only. However, the wrappers
-for XGBoost and LightGBM allow to select the category of interest and work with its predicted (logit) probabilities, simply by providing `which_class` in the constructor.
+for XGBoost, LightGBM, and kernelshap allow to select the category of interest.
 
 ## References
 

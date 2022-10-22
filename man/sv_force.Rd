@@ -17,7 +17,6 @@ sv_force(object, ...)
   fill_colors = c("#f7d13d", "#a52c60"),
   format_shap = getOption("shapviz.format_shap"),
   format_feat = getOption("shapviz.format_feat"),
-  format_fun = NULL,
   contrast = TRUE,
   bar_label_size = 3.2,
   show_annotation = TRUE,
@@ -48,8 +47,6 @@ global option \code{shapviz.format_shap}, which equals to
 \item{format_feat}{Function used to format numeric feature values. The default uses
 the global option \code{shapviz.format_feat}, which equals to
 \code{function(z) prettyNum(z, digits = 3, scientific = FALSE)} by default.}
-
-\item{format_fun}{Deprecated. Use \code{format_shap} and/or \code{format_feat} instead.}
 
 \item{contrast}{Logical flag that detemines whether to use white text in dark arrows.
 Default is \code{TRUE}.}

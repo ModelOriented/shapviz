@@ -7,7 +7,7 @@
 \method{dim}{shapviz}(x)
 }
 \arguments{
-\item{x}{A on object of class "shapviz".}
+\item{x}{An object of class "shapviz".}
 }
 \value{
 A numeric vector of length two providing the number of rows and columns

@@ -15,7 +15,6 @@
 #' The default is \code{function(s) order(abs(s))}.
 #' To plot without sorting, use \code{function(s) 1:length(s)} or
 #' \code{function(s) length(s):1}.
-#' @param sort_fun Deprecated in favour of \code{order_fun}.
 #' @param fill_colors A vector of exactly two fill colors: the first for positive
 #' SHAP values, the other for negative ones.
 #' @param format_shap Function used to format SHAP values. The default uses the
@@ -24,7 +23,6 @@
 #' @param format_feat Function used to format numeric feature values. The default uses
 #' the global option \code{shapviz.format_feat}, which equals to
 #' \code{function(z) prettyNum(z, digits = 3, scientific = FALSE)} by default.
-#' @param format_fun Deprecated. Use \code{format_shap} and/or \code{format_feat} instead.
 #' @param contrast Logical flag that detemines whether to use white text in dark arrows.
 #' Default is \code{TRUE}.
 #' @param show_connection Should connecting lines be shown? Default is \code{TRUE}.
@@ -61,11 +59,9 @@ sv_waterfall.default <- function(object, ...) {
 #' @export
 sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
                                  order_fun = function(s) order(abs(s)),
-                                 sort_fun = NULL,
                                  fill_colors = c("#f7d13d", "#a52c60"),
                                  format_shap = getOption("shapviz.format_shap"),
                                  format_feat = getOption("shapviz.format_feat"),
-                                 format_fun = NULL,
                                  contrast = TRUE, show_connection = TRUE,
                                  show_annotation = TRUE, annotation_size = 3.2, ...) {
   stopifnot(
@@ -75,14 +71,6 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
     "format_feat must be a function" = is.function(format_feat),
     "order_fun must be a function" = is.function(order_fun)
   )
-  if (!is.null(sort_fun)) {
-    warning("sort_fun is deprecated and will be removed in version 0.3.0.
-            Use order_fun instead.")
-  }
-  if (!is.null(format_fun)) {
-    warning("format_fun is deprecated and will be removed in version 0.3.0.
-            Use format_shap and/or format_feat instead.")
-  }
 
   X <- get_feature_values(object)[row_id, ]
   S <- get_shap_values(object)[row_id, ]

@@ -1,3 +1,11 @@
+# shapviz 0.3.0
+
+## Removed as announced
+
+- Functions `shapviz_from_lgb_predict()` and `shapviz_from_xgb_predict`
+- `format_fun` argument in `sv_force()` and `sv_waterfall()`
+- `sort_fun` argument in `sv_waterfall()`
+
 # shapviz 0.2.2
 
 ## Bug fix

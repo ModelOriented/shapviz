@@ -6,6 +6,10 @@
 - `format_fun` argument in `sv_force()` and `sv_waterfall()`
 - `sort_fun` argument in `sv_waterfall()`
 
+## Minor changes
+
+- `collapse_shap()` is not anymore an S3 method. It is just a normal function that can be applied to a matrix.
+
 # shapviz 0.2.2
 
 ## Bug fix

@@ -181,11 +181,10 @@ sv_dependence(shp, "carat")
 library(shapr)
 
 fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
-dia_smaller <- diamonds[sample(nrow(X), 20L), ]
+dia_smaller <- diamonds[sample(nrow(diamonds), 20L), ]
 
 explainer <- shapr(dia_smaller, fit)
 
-# Takes about 15 seconds
 explanation <- explain(
   dia_smaller,
   approach = "ctree",
@@ -220,10 +219,12 @@ sv_dependence(shp, "carat", "auto")
 library(treeshap)
 library(ranger)
 
-fit <- ranger(y = diamonds$price, x = data.matrix(X), max.depth = 4, num.trees = 100)
-unified_model <- ranger.unify(fit, data.matrix(X))
-shaps <- treeshap(unified_model, data.matrix(X_small))
-shp <- shapviz(shaps, X = X_small)
+fit <- ranger(
+  y = diamonds$price, x = data.matrix(diamonds[x]), max.depth = 4, num.trees = 100
+)
+unified_model <- ranger.unify(fit, data.matrix(diamonds[x]))
+shaps <- treeshap(unified_model, data.matrix(dia_small[x]))
+shp <- shapviz(shaps, X = dia_small)
 sv_importance(shp)
 sv_dependence(shp, "clarity", color_var = "auto", alpha = 0.2, size = 1)
 ```

@@ -1,6 +1,6 @@
 #' Prints "shapviz" Object
 #'
-#' @param x A on object of class "shapviz".
+#' @param x An object of class "shapviz".
 #' @param n Maximum number of rows of SHAP values and feature values to show.
 #' @param ... Further arguments passed from other methods.
 #' @return Invisibly, the input is returned.
@@ -30,7 +30,7 @@ print.shapviz <- function(x, n = 2L, ...) {
 
 #' Dimensions of "shapviz" Object
 #'
-#' @param x A on object of class "shapviz".
+#' @param x An object of class "shapviz".
 #' @return A numeric vector of length two providing the number of rows and columns
 #' of the SHAP matrix (or the feature dataset) stored in \code{x}.
 #' @export
@@ -59,7 +59,6 @@ dim.shapviz <- function(x) {
 is.shapviz <- function(object){
   inherits(object, "shapviz")
 }
-
 
 #' Extractor Functions
 #'

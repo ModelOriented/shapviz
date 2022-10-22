@@ -7,7 +7,7 @@
 \method{print}{shapviz}(x, n = 2L, ...)
 }
 \arguments{
-\item{x}{A on object of class "shapviz".}
+\item{x}{An object of class "shapviz".}
 
 \item{n}{Maximum number of rows of SHAP values and feature values to show.}
 

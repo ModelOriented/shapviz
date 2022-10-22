@@ -1,6 +1,10 @@
 # shapviz 0.3.0
 
-## Removed as announced
+#  Major improvement
+
+- The argument `X` of the constructor of `shapviz()` is now less picky. If it contains columns not present in the SHAP matrix, they are silently dropped. Furthermore, the column order of the SHAP matrix and `X` is determined by the SHAP matrix.
+
+## Removed
 
 - Functions `shapviz_from_lgb_predict()` and `shapviz_from_xgb_predict`
 - `format_fun` argument in `sv_force()` and `sv_waterfall()`

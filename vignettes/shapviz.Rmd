@@ -79,8 +79,8 @@ set.seed(3653)
 ord <- c("clarity", "cut", "color")
 diamonds[, ord] <- lapply(diamonds[, ord], factor, ordered = FALSE)
 
-X <- diamonds[c("carat", "cut", "color", "clarity")]
-dtrain <- xgb.DMatrix(data.matrix(X), label = diamonds$price)
+x <- c("carat", ord)
+dtrain <- xgb.DMatrix(data.matrix(diamonds[x]), label = diamonds$price)
 
 fit <- xgb.train(
   params = list(learning_rate = 0.1, objective = "reg:squarederror"), 
@@ -96,10 +96,10 @@ One line of code creates a "shapviz" object. It contains SHAP values and feature
 In this example we construct the "shapviz" object directly from the fitted XGBoost model. Thus we also need to pass a corresponding prediction dataset `X_pred` used for calculating SHAP values by XGBoost.
 
 ```{r}
-X_small <- X[sample(nrow(X), 2000L), ]
+dia_small <- diamonds[sample(nrow(diamonds), 2000L), ]
 
 # X is the "explanation" dataset using the original factors
-shp <- shapviz(fit, X_pred = data.matrix(X_small), X = X_small)
+shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
 ```
 
 Note: If `X_pred` would contain one-hot-encoded dummy variables, their SHAP values could be collapsed by the `collapse` argument of `shapviz()`.
@@ -154,7 +154,7 @@ The above example uses XGBoost to calculate SHAP values. In the following sectio
 
 ```r
 library(lightgbm)
-dtrain <- lgb.Dataset(data.matrix(X), label = diamonds$price)
+dtrain <- lgb.Dataset(data.matrix(diamonds[x]), label = diamonds$price)
 
 fit <- lgb.train(
   params = list(learning_rate = 0.1, objective = "regression"), 
@@ -162,7 +162,7 @@ fit <- lgb.train(
   nrounds = 65L
 )
 
-shp <- shapviz(fit, X_pred = data.matrix(X_small), X = X_small)
+shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
 sv_importance(shp)
 ```
 ### fastshap
@@ -171,8 +171,8 @@ sv_importance(shp)
 library(fastshap)
 
 fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
-explainer <- explain(fit, newdata = X_small, exact = TRUE)
-shp <- shapviz(explainer, X = X_small)
+explainer <- explain(fit, newdata = dia_small, exact = TRUE)
+shp <- shapviz(explainer, X = dia_small)
 sv_dependence(shp, "carat")
 ```
 ### shapr
@@ -181,13 +181,13 @@ sv_dependence(shp, "carat")
 library(shapr)
 
 fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
-X_smaller <- X[sample(nrow(X), 200L), ]
+dia_smaller <- diamonds[sample(nrow(X), 20L), ]
 
-explainer <- shapr(X_smaller, fit,)
+explainer <- shapr(dia_smaller, fit)
 
 # Takes about 15 seconds
 explanation <- explain(
-  X_smaller,
+  dia_smaller,
   approach = "ctree",
   explainer = explainer,
   prediction_zero = mean(diamonds$price)
@@ -208,10 +208,10 @@ h2o.init()
 
 dia_h2o <- as.h2o(diamonds)
 
-fit <- h2o.gbm(c("carat", "clarity", "color", "cut"), "price", training_frame = dia_h2o)
-x <- shapviz(fit, X_pred = X_small)
-sv_force(x, row_id = 1)
-sv_dependence(x, "carat", "auto")
+fit <- h2o.gbm(x, "price", training_frame = dia_h2o)
+shp <- shapviz(fit, X_pred = dia_small)
+sv_force(shp, row_id = 1)
+sv_dependence(shp, "carat", "auto")
 ```
 
 ### treeshap
@@ -220,7 +220,7 @@ sv_dependence(x, "carat", "auto")
 library(treeshap)
 library(ranger)
 
-fit <- ranger(y = diamonds$price, x = data.matrix(X), max.depth = 6, num.trees = 100)
+fit <- ranger(y = diamonds$price, x = data.matrix(X), max.depth = 4, num.trees = 100)
 unified_model <- ranger.unify(fit, data.matrix(X))
 shaps <- treeshap(unified_model, data.matrix(X_small))
 shp <- shapviz(shaps, X = X_small)
@@ -233,9 +233,9 @@ sv_dependence(shp, "clarity", color_var = "auto", alpha = 0.2, size = 1)
 ```r
 library(kernelshap)
 
-X_smaller <- X[sample(nrow(X), 200L), ]
+dia_smaller <- diamonds[sample(nrow(X), 100L), ]
 fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
-ks <- kernelshap(fit, X_small, bg_X = X_smaller)
+ks <- kernelshap(fit, dia_small[x], bg_X = dia_smaller)
 
 shp <- shapviz(ks)
 sv_importance(shp)
@@ -286,8 +286,8 @@ shapviz.catboost.Model <- function(object, X_pred, X = X_pred, collapse = NULL, 
 
 # Example
 
-X <- diamonds[c("carat", "cut", "color", "clarity")]
-X_pool <- catboost.load_pool(diamonds[colnames(X)], label = diamonds$price)
+X <- diamonds[x]
+X_pool <- catboost.load_pool(X, label = diamonds$price)
 
 fit <- catboost.train(
   X_pool, 
@@ -299,7 +299,7 @@ fit <- catboost.train(
   )
 )
 
-shp <- shapviz(fit, X_small)
+shp <- shapviz(fit, X_pred = dia_small[x])
 sv_importance(shp)
 sv_dependence(shp, "clarity", color_var = "auto", alpha = 0.2, size = 1)
 ```

@@ -39,37 +39,23 @@ shapviz(object, ...)
 
 \method{shapviz}{kernelshap}(object, X = object[["X"]], which_class = NULL, collapse = NULL, ...)
 
-\method{shapviz}{H2ORegressionModel}(
-  object,
-  X_pred,
-  X = as.data.frame(X_pred)[object@parameters[["x"]]],
-  collapse = NULL,
-  ...
-)
+\method{shapviz}{H2ORegressionModel}(object, X_pred, X = as.data.frame(X_pred), collapse = NULL, ...)
 
-\method{shapviz}{H2OBinomialModel}(
-  object,
-  X_pred,
-  X = as.data.frame(X_pred)[object@parameters[["x"]]],
-  collapse = NULL,
-  ...
-)
+\method{shapviz}{H2OBinomialModel}(object, X_pred, X = as.data.frame(X_pred), collapse = NULL, ...)
 
-\method{shapviz}{H2OModel}(
-  object,
-  X_pred,
-  X = as.data.frame(X_pred)[object@parameters[["x"]]],
-  collapse = NULL,
-  ...
-)
+\method{shapviz}{H2OModel}(object, X_pred, X = as.data.frame(X_pred), collapse = NULL, ...)
 }
 \arguments{
-\item{object}{Object to be converted to an object of type "shapviz".}
+\item{object}{For XGBoost, LightGBM, and H2O, this is the fitted model used to
+calculate SHAP values from \code{X_pred}.
+In the other cases, it is the object containing the SHAP values.}
 
 \item{...}{Parameters passed to other methods (currently only used by
 the \code{predict} functions of XGBoost, LightGBM, and H2O).}
 
-\item{X}{Corresponding matrix or data.frame of feature values used for visualization.}
+\item{X}{Matrix or data.frame of feature values used for visualization.
+It must contain at least the same column names as the SHAP matrix represented by
+\code{object}/\code{X_pred} (after collapsing some of the SHAP columns).}
 
 \item{baseline}{Optional baseline value, representing the average response at the
 scale of the SHAP values. It will be used for plot methods that explain single
@@ -81,11 +67,12 @@ The name of the new column equals the name of the vector in \code{collapse}.}
 
 \item{X_pred}{Data set as expected by the \code{predict} function of
 XGBoost, LightGBM, or H2O. For XGBoost, a matrix or \code{xgb.DMatrix},
-for LightGBM a matrix, and for H2O a \code{data.frame} or an \code{H2OFrame}.}
+for LightGBM a matrix, and for H2O a \code{data.frame} or an \code{H2OFrame}.
+Only used for XGBoost, LightGBM, or H2O objects.}
 
 \item{which_class}{In case of a multiclass or multioutput setting,
 which class/output (>= 1) to explain. Currently relevant for XGBoost, LightGBM,
-or kernelshap.}
+and kernelshap.}
 }
 \value{
 An object of class "shapviz" with the following three elements:
@@ -152,14 +139,15 @@ fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
 
 # Will use numeric matrix "X_pred" as feature matrix
 x <- shapviz(fit, X_pred = X_pred)
-sv_importance(x)
+x
+sv_dependence(x, "Species")
 
 # Will use original values as feature matrix
-x <- shapviz(fit, X_pred = X_pred, X = iris[, -1])
-sv_dependence(x, "Petal.Length", color_var = "auto")
+x <- shapviz(fit, X_pred = X_pred, X = iris)
+sv_dependence(x, "Species", color_var = "auto")
 
 # "X_pred" can also be passed as xgb.DMatrix, but only if X is passed as well!
-x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
+x <- shapviz(fit, X_pred = dtrain, X = iris)
 
 # Similarly with LightGBM
 if (requireNamespace("lightgbm", quietly = TRUE)) {
@@ -186,9 +174,10 @@ fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
 x <- shapviz(
   fit,
   X_pred = X_pred,
-  X = iris[, -1],
+  X = iris,
   collapse = list(Species = c("Speciessetosa", "Speciesversicolor", "Speciesvirginica"))
 )
+x
 }
 \seealso{
 \code{\link{sv_importance}}, \code{\link{sv_dependence}},

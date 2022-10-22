@@ -14,14 +14,17 @@ test_that("dim, nrow, ncol work", {
   expect_equal(ncol(shp), 2L)
 })
 
-test_that("column order of S does no matter", {
-  expect_equal(shp, shapviz(S[, 2:1], X, baseline = 4))
+test_that("column order of X does no matter", {
+  expect_equal(shp, shapviz(S, X[, 2:1], baseline = 4))
+})
+
+test_that("X can contain additional columns", {
+  expect_equal(shp, shapviz(S, X = cbind(X, z = 1:2), baseline = 4))
 })
 
 test_that("some input checks fire", {
   expect_error(shapviz(S[1, , drop = FALSE], X))
   expect_error(shapviz(S, X[1, ]))
-  expect_error(shapviz(S[, 1, drop = FALSE], X))
   expect_error(shapviz(S, X[, 1]))
   expect_error(shapviz(matrix(S, ncol = 2, dimnames = list(NULL, c("d", "e"))), X))
   expect_error(shapviz(matrix(S, ncol = 2, dimnames = list(NULL, NULL)), X))

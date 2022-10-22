@@ -14,7 +14,7 @@ SHAP (SHapley Additive exPlanations, [1]) is an ingenious way to study black box
 These plots require a "shapviz" object, which is built from two things only:
 
 1. `S`: Matrix of SHAP values
-2. `X`: Dataset with corresponding feature values
+2. `X`: Dataset that includes the corresponding feature values
 
 Furthermore, a `baseline` can be passed to represent an average prediction on the scale of the SHAP values.
 

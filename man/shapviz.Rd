@@ -55,7 +55,7 @@ the \code{predict} functions of XGBoost, LightGBM, and H2O).}
 
 \item{X}{Matrix or data.frame of feature values used for visualization.
 It must contain at least the same column names as the SHAP matrix represented by
-\code{object}/\code{X_pred} (after collapsing some of the SHAP columns).}
+\code{object}/\code{X_pred} (after optionally collapsing some of the SHAP columns).}
 
 \item{baseline}{Optional baseline value, representing the average response at the
 scale of the SHAP values. It will be used for plot methods that explain single

@@ -25,7 +25,7 @@
 #' In the other cases, it is the object containing the SHAP values.
 #' @param X Matrix or data.frame of feature values used for visualization.
 #' It must contain at least the same column names as the SHAP matrix represented by
-#' \code{object}/\code{X_pred} (after collapsing some of the SHAP columns).
+#' \code{object}/\code{X_pred} (after optionally collapsing some of the SHAP columns).
 #' @param X_pred Data set as expected by the \code{predict} function of
 #' XGBoost, LightGBM, or H2O. For XGBoost, a matrix or \code{xgb.DMatrix},
 #' for LightGBM a matrix, and for H2O a \code{data.frame} or an \code{H2OFrame}.

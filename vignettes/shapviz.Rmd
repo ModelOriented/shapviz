@@ -33,7 +33,7 @@ SHAP (SHapley Additive exPlanations, see @lundberg2017) is an ingenious way to s
 These plots require a "shapviz" object, which is built from two things only:
 
 1. `S`: Matrix of SHAP values
-2. `X`: Dataset with corresponding feature values
+2. `X`: Dataset that includes the corresponding feature values
 
 Furthermore, a `baseline` can be passed to represent an average prediction on the scale of the SHAP values.
 
@@ -49,6 +49,8 @@ To further simplify the use of "shapviz", we added direct connectors to the R pa
 - [`h2o`](https://CRAN.R-project.org/package=h2o),
 - [`treeshap`](https://github.com/ModelOriented/treeshap), and
 - [`kernelshap`](https://github.com/mayer79/kernelshap)
+
+For XGBoost, LightGBM, and H2O, the SHAP values are directly calculated from the fitted model.
 
 [`CatBoost`](https://github.com/catboost) is not included, but see Section "Any other package" how to use its SHAP calculation backend with "shapviz".
 
@@ -76,10 +78,12 @@ library(xgboost)
 
 set.seed(3653)
 
+# Turn ordinal factors into normal ones
 ord <- c("clarity", "cut", "color")
 diamonds[, ord] <- lapply(diamonds[, ord], factor, ordered = FALSE)
 
-x <- c("carat", ord)
+# Fit XGBoost model
+x <- c("carat", "clarity", "cut", "color")
 dtrain <- xgb.DMatrix(data.matrix(diamonds[x]), label = diamonds$price)
 
 fit <- xgb.train(
@@ -96,9 +100,10 @@ One line of code creates a "shapviz" object. It contains SHAP values and feature
 In this example we construct the "shapviz" object directly from the fitted XGBoost model. Thus we also need to pass a corresponding prediction dataset `X_pred` used for calculating SHAP values by XGBoost.
 
 ```{r}
+# Pick explanation data
 dia_small <- diamonds[sample(nrow(diamonds), 2000L), ]
 
-# X is the "explanation" dataset using the original factors
+# We also pass feature data X with originally encoded values
 shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
 ```
 
@@ -170,10 +175,19 @@ sv_importance(shp)
 ```r
 library(fastshap)
 
-fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
-explainer <- explain(fit, newdata = dia_small, exact = TRUE)
-shp <- shapviz(explainer, X = dia_small)
-sv_dependence(shp, "carat")
+# SHAP sampling values using iris data
+fit <- lm(Sepal.Length ~ Sepal.Width + Petal.Length, data = iris)
+
+shap <- explain(
+  fit, 
+  X = iris[c("Sepal.Width", "Petal.Length")], 
+  newdata = iris[c("Sepal.Width", "Petal.Length")], 
+  nsim = 100, 
+  pred_wrapper = predict
+)
+
+sv <- shapviz(shap, X = iris)
+sv_dependence(sv, "Sepal.Width")
 ```
 ### shapr
 
@@ -234,7 +248,7 @@ sv_dependence(shp, "clarity", color_var = "auto", alpha = 0.2, size = 1)
 ```r
 library(kernelshap)
 
-dia_smaller <- diamonds[sample(nrow(X), 100L), ]
+dia_smaller <- diamonds[sample(nrow(diamonds), 100L), ]
 fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
 ks <- kernelshap(fit, dia_small[x], bg_X = dia_smaller)
 
@@ -286,9 +300,7 @@ shapviz.catboost.Model <- function(object, X_pred, X = X_pred, collapse = NULL, 
 }
 
 # Example
-
-X <- diamonds[x]
-X_pool <- catboost.load_pool(X, label = diamonds$price)
+X_pool <- catboost.load_pool(diamonds[x], label = diamonds$price)
 
 fit <- catboost.train(
   X_pool, 

@@ -31,6 +31,8 @@ To further simplify the use of "shapviz", we added direct connectors to the R pa
 - [`treeshap`](https://github.com/ModelOriented/treeshap), and
 - [`kernelshap`](https://github.com/mayer79/kernelshap)
 
+For XGBoost, LightGBM, and H2O, the SHAP values are directly calculated from the fitted model.
+
 [`CatBoost`](https://github.com/catboost) is not included, but see the vignette how to use its SHAP calculation backend with "shapviz".
 
 ## Installation
@@ -57,8 +59,8 @@ library(xgboost)
 
 set.seed(3653)
 
-X <- diamonds[c("carat", "cut", "color", "clarity")]
-dtrain <- xgb.DMatrix(data.matrix(X), label = diamonds$price)
+x <- c("carat", "cut", "color", "clarity")
+dtrain <- xgb.DMatrix(data.matrix(diamonds[x]), label = diamonds$price)
 
 fit <- xgb.train(
   params = list(learning_rate = 0.1, objective = "reg:squarederror"), 
@@ -74,9 +76,9 @@ One line of code creates a "shapviz" object. It contains SHAP values and feature
 In this example, we construct the "shapviz" object directly from the fitted XGBoost model. Thus we also need to pass a corresponding prediction dataset `X_pred` used for calculating SHAP values by XGBoost.
 
 ``` r
-X_small <- X[sample(nrow(X), 2000L), ]
+dia_small <- diamonds[sample(nrow(X), 2000L), ]
 
-shp <- shapviz(fit, X_pred = data.matrix(X_small), X = X_small)
+shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
 ```
 
 Note: If `X_pred` would contain one-hot-encoded dummy variables, their SHAP values could be collapsed by the `collapse` argument of `shapviz()`.

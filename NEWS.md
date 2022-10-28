@@ -12,6 +12,7 @@
 
 ## Minor changes
 
+- For (upcoming) versions of the "fastshap" package, the `shapviz.fastshap()` method now automatically extracts the `baseline` from the output of fastshap's explain object.
 - `collapse_shap()` is not anymore an S3 method. It is just a normal function that can be applied to a matrix.
 
 # shapviz 0.2.2

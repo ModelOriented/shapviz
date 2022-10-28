@@ -25,7 +25,7 @@ shapviz(object, ...)
 
 \method{shapviz}{lgb.Booster}(object, X_pred, X = X_pred, which_class = NULL, collapse = NULL, ...)
 
-\method{shapviz}{explain}(object, X, baseline = 0, collapse = NULL, ...)
+\method{shapviz}{explain}(object, X, baseline = attr(object, "baseline"), collapse = NULL, ...)
 
 \method{shapviz}{treeshap}(
   object,

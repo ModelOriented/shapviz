@@ -209,7 +209,11 @@ shapviz.lgb.Booster = function(object, X_pred, X = X_pred,
 
 #' @describeIn shapviz Creates a "shapviz" object from fastshap's "explain()" method.
 #' @export
-shapviz.explain <- function(object, X, baseline = 0, collapse = NULL, ...) {
+shapviz.explain <- function(object, X, baseline = attr(object, "baseline"),
+                            collapse = NULL, ...) {
+  if (is.null(baseline)) {
+    baseline <- 0
+  }
   shapviz.matrix(as.matrix(object), X = X, baseline = baseline, collapse = collapse)
 }
 

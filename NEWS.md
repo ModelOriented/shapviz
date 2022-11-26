@@ -1,4 +1,4 @@
-# shapviz 0.3.0 DEVEL
+# shapviz 0.3.0
 
 #  Major improvement
 

@@ -1,4 +1,8 @@
-# shapviz 0.3.0
+# Resubmission of shapviz 0.3.0
+
+This is a resubmission after fixing a missing "#" in the News file. Thanks for your patience and the check!
+
+## Original submission
 
 Dear CRAN team. This update makes the user API less picky. Furthermore, following our depreciation cycle, some old functionalities have been removed.
 

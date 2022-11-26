@@ -1,6 +1,6 @@
-# shapviz 0.3.0 DEVEL
+# shapviz 0.3.0
 
-#  Major improvement
+## Less picky interface
 
 - The argument `X` of the constructor of `shapviz()` is now less picky. If it contains columns not present in the SHAP matrix, they are silently dropped. Furthermore, the column order of the SHAP matrix and `X` is now determined by the SHAP matrix.
 

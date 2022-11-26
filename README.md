@@ -76,7 +76,7 @@ One line of code creates a "shapviz" object. It contains SHAP values and feature
 In this example, we construct the "shapviz" object directly from the fitted XGBoost model. Thus we also need to pass a corresponding prediction dataset `X_pred` used for calculating SHAP values by XGBoost.
 
 ``` r
-dia_small <- diamonds[sample(nrow(X), 2000L), ]
+dia_small <- diamonds[sample(nrow(diamonds), 2000L), ]
 
 shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
 ```

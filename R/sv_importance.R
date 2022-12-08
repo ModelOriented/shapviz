@@ -21,6 +21,10 @@
 #' all features. Has no effect if \code{kind = "no"}.
 #' @param fill Color used to fill the bars (only used if bars are shown).
 #' @param bar_width Relative width of the bars (only used if bars are shown).
+#' @param width Deprecated, use \code{bee_width} instead.
+#' @param bee_width Relative width of the beeswarms (only used if beeswarm shown).
+#' @param bee_adjust Relative bandwidth adjustment of the bandwidth used in
+#' estimating the density of the beeswarms (only used if beeswarm shown).
 #' @param viridis_args List of viridis color scale arguments used to control the
 #' coloring of the beeswarm plot, see \code{?ggplot2::scale_color_viridis_c()}.
 #' The default points to the global option \code{shapviz.viridis_args}, which
@@ -37,10 +41,9 @@
 #' \code{function(x) = prettyNum(x, scientific = TRUE)}.
 #' @param number_size Text size of the numbers (if \code{show_numbers = TRUE}).
 #' @param ... Arguments passed to \code{geom_bar()} (if \code{kind = "bar"}) or
-#' to \code{ggbeeswarm::geom_quasirandom()} otherwise.
+#' to \code{geom_point()} otherwise.
 #' For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms,
-#' setting \code{size = 3} will produce larger dots, or \code{width = 0.2} will
-#' produce less wide swarms.
+#' and setting \code{size = 3} will produce larger dots.
 #' @return A "ggplot" object representing an importance plot, or - if
 #' \code{kind = "no"} - a named numeric vector of sorted SHAP feature importances.
 #' @export
@@ -71,12 +74,18 @@ sv_importance.default <- function(object, ...) {
 #' @export
 sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "no"),
                                   max_display = 15L, fill = "#fca50a", bar_width = 2/3,
+                                  bee_width = 0.4, width = NULL, bee_adjust = 0.5,
                                   viridis_args = getOption("shapviz.viridis_args"),
                                   color_bar_title = "Feature value",
                                   show_numbers = FALSE, format_fun = format_max,
                                   number_size = 3.2, ...) {
   stopifnot("format_fun must be a function" = is.function(format_fun))
   kind <- match.arg(kind)
+  if (!is.null(width)) {
+    warning("'width' is deprecated, use 'bee_width' instead. The 'width' argument
+            will be removed in version 0.5.0.")
+  }
+
   S <- get_shap_values(object)
   X <- get_feature_values(object)
   imp <- .get_imp(S)
@@ -148,7 +157,11 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
     }
     p <- p +
       geom_hline(yintercept = 0, color = "darkgray") +
-      ggbeeswarm::geom_quasirandom(aes(color = color), ...) +
+      geom_point(
+        aes(color = color),
+        position = position_bee(width = bee_width, adjust = bee_adjust),
+        ...
+      ) +
       do.call(scale_color_viridis_c, c(viridis_args, viridis_args_plus)) +
       labs(x = element_blank(), y = "SHAP value", color = color_bar_title)
   }

@@ -1,3 +1,22 @@
+# shapviz 0.4.0
+
+## Removed dependencies
+
+The following dependencies have been removed:
+
+- "ggbeeswarm"
+- "vipor"
+- "beeswarm"
+
+## Changes in parameters
+
+`sv_importance()` has received two additional parameters to control the beeswarm plot:
+
+- `bee_width`: Relative width of the beeswarms. The default is 0.4.
+- `bee_adjust`: Relative bandwidth adjustment of the bandwidth used in estimating the density of the beeswarms. Default is 0.5
+
+Furthermore, the `width` argument has been temporarily added to produce a depreciation warning telling that one should use `bee_width` instead.
+
 # shapviz 0.3.0
 
 ## Less picky interface

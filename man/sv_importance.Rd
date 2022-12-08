@@ -16,6 +16,9 @@ sv_importance(object, ...)
   max_display = 15L,
   fill = "#fca50a",
   bar_width = 2/3,
+  bee_width = 0.4,
+  width = NULL,
+  bee_adjust = 0.5,
   viridis_args = getOption("shapviz.viridis_args"),
   color_bar_title = "Feature value",
   show_numbers = FALSE,
@@ -28,10 +31,9 @@ sv_importance(object, ...)
 \item{object}{An object of class "shapviz".}
 
 \item{...}{Arguments passed to \code{geom_bar()} (if \code{kind = "bar"}) or
-to \code{ggbeeswarm::geom_quasirandom()} otherwise.
+to \code{geom_point()} otherwise.
 For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms,
-setting \code{size = 3} will produce larger dots, or \code{width = 0.2} will
-produce less wide swarms.}
+and setting \code{size = 3} will produce larger dots.}
 
 \item{kind}{Should a "bar" plot (the default), a "beeswarm" plot, or "both" be shown?
 Set to "no" in order to suppress plotting. In that case, the sorted
@@ -46,6 +48,13 @@ all features. Has no effect if \code{kind = "no"}.}
 \item{fill}{Color used to fill the bars (only used if bars are shown).}
 
 \item{bar_width}{Relative width of the bars (only used if bars are shown).}
+
+\item{bee_width}{Relative width of the beeswarms (only used if beeswarm shown).}
+
+\item{width}{Deprecated, use \code{bee_width} instead.}
+
+\item{bee_adjust}{Relative bandwidth adjustment of the bandwidth used in
+estimating the density of the beeswarms (only used if beeswarm shown).}
 
 \item{viridis_args}{List of viridis color scale arguments used to control the
 coloring of the beeswarm plot, see \code{?ggplot2::scale_color_viridis_c()}.

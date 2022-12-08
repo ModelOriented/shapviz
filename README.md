@@ -126,7 +126,7 @@ sv_importance(shp, kind = "beeswarm")
 #### Or both combined
 
 ``` r
-sv_importance(shp, kind = "both", show_numbers = TRUE, width = 0.2)
+sv_importance(shp, kind = "both", show_numbers = TRUE, bee_width = 0.2)
 ```
 ![](man/figures/README-imp3.png)
 

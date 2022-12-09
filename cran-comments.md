@@ -1,10 +1,8 @@
-# Resubmission of shapviz 0.3.0
+# Early submission of shapviz 0.4.0
 
-This is a resubmission after fixing a missing "#" in the News file. Thanks for your patience and the check!
+Hello CRAN team. I am aware that the latest release of this package is not too long ago. 
 
-## Original submission
-
-Dear CRAN team. This update makes the user API less picky. Furthermore, following our depreciation cycle, some old functionalities have been removed.
+Still, I have received an email of CRAN, warning about the possible removal of one of its dependencies ("ggbeeswarm"). Even if the ggbeeswarm author has now promised to fix the problem, I took the opportunity to remove ggbeeswarm and all its dependencies from my package.
 
 ## Checks
 
@@ -15,6 +13,6 @@ Dear CRAN team. This update makes the user API less picky. Furthermore, followin
 
 ### check_rhub() and check_win_devel()
 
-Winbuilder: 1 NOTE: R Under development (unstable) (2022-11-24 r83383 ucrt)
+Winbuilder: Status: OK
 
-rhub: ok
+rhub: 0 errors ✔ | 0 warnings ✔ | 0 notes ✔

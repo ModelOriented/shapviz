@@ -8,14 +8,15 @@ The following dependencies have been removed:
 - "vipor"
 - "beeswarm"
 
-## Changes in parameters
+## Changes in `sv_importance()`
 
-`sv_importance()` has received two additional parameters to control the beeswarm plot:
+- New argument `bee_width`: Relative width of the beeswarms. The default is 0.4. It replaces the `width` argument passed via `...`.
+- New argument `bee_adjust`: Relative adjustment factor of the bandwidth used in estimating the density of the beeswarms. Default is 0.5.
+- In case a beeswarm is shown: the `...` arguments are now passed to `geom_point()`.
 
-- `bee_width`: Relative width of the beeswarms. The default is 0.4.
-- `bee_adjust`: Relative bandwidth adjustment of the bandwidth used in estimating the density of the beeswarms. Default is 0.5
+## Improvement with Plotly
 
-Furthermore, the `width` argument has been temporarily added to produce a depreciation warning telling that one should use `bee_width` instead.
+- `plotly::ggplotly()` now works for most functionalities of `sv_importance()`, including beeswarms.
 
 # shapviz 0.3.0
 

@@ -17,7 +17,6 @@ sv_importance(object, ...)
   fill = "#fca50a",
   bar_width = 2/3,
   bee_width = 0.4,
-  width = NULL,
   bee_adjust = 0.5,
   viridis_args = getOption("shapviz.viridis_args"),
   color_bar_title = "Feature value",
@@ -51,9 +50,7 @@ all features. Has no effect if \code{kind = "no"}.}
 
 \item{bee_width}{Relative width of the beeswarms (only used if beeswarm shown).}
 
-\item{width}{Deprecated, use \code{bee_width} instead.}
-
-\item{bee_adjust}{Relative bandwidth adjustment of the bandwidth used in
+\item{bee_adjust}{Relative bandwidth adjustment factor used in
 estimating the density of the beeswarms (only used if beeswarm shown).}
 
 \item{viridis_args}{List of viridis color scale arguments used to control the

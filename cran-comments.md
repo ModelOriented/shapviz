@@ -2,7 +2,7 @@
 
 Hello CRAN team. I am aware that the latest release of this package is not too long ago. 
 
-Still, I have received an email of CRAN, warning about the possible removal of one of its dependencies ("ggbeeswarm"). Even if the ggbeeswarm author has promised to fix the problem, I took the opportunity to remove ggbeeswarm and all its dependencies from my package.
+Still, I have received an email of CRAN, warning about the possible removal of one of its dependencies ("ggbeeswarm"). Even if the ggbeeswarm author has now promised to fix the problem, I took the opportunity to remove ggbeeswarm and all its dependencies from my package.
 
 ## Checks
 
@@ -13,6 +13,6 @@ Still, I have received an email of CRAN, warning about the possible removal of o
 
 ### check_rhub() and check_win_devel()
 
-Winbuilder: 1 NOTE: R Under development (unstable) (2022-11-24 r83383 ucrt)
+Winbuilder: Status: OK
 
 rhub: 0 errors ✔ | 0 warnings ✔ | 0 notes ✔

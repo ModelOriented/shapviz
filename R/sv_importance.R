@@ -21,9 +21,8 @@
 #' all features. Has no effect if \code{kind = "no"}.
 #' @param fill Color used to fill the bars (only used if bars are shown).
 #' @param bar_width Relative width of the bars (only used if bars are shown).
-#' @param width Deprecated, use \code{bee_width} instead.
 #' @param bee_width Relative width of the beeswarms (only used if beeswarm shown).
-#' @param bee_adjust Relative bandwidth adjustment of the bandwidth used in
+#' @param bee_adjust Relative bandwidth adjustment factor used in
 #' estimating the density of the beeswarms (only used if beeswarm shown).
 #' @param viridis_args List of viridis color scale arguments used to control the
 #' coloring of the beeswarm plot, see \code{?ggplot2::scale_color_viridis_c()}.
@@ -74,16 +73,16 @@ sv_importance.default <- function(object, ...) {
 #' @export
 sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "no"),
                                   max_display = 15L, fill = "#fca50a", bar_width = 2/3,
-                                  bee_width = 0.4, width = NULL, bee_adjust = 0.5,
+                                  bee_width = 0.4, bee_adjust = 0.5,
                                   viridis_args = getOption("shapviz.viridis_args"),
                                   color_bar_title = "Feature value",
                                   show_numbers = FALSE, format_fun = format_max,
                                   number_size = 3.2, ...) {
   stopifnot("format_fun must be a function" = is.function(format_fun))
   kind <- match.arg(kind)
-  if (!is.null(width)) {
-    warning("'width' is deprecated, use 'bee_width' instead. The 'width' argument
-            will be removed in version 0.5.0.")
+  if ("width" %in% names(list(...))) {
+    # To be removed in 0.5.0
+    warning("Passing 'width' via ... is deprecated. Use 'bar_width' or 'bee_width'.")
   }
 
   S <- get_shap_values(object)

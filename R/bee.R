@@ -50,13 +50,13 @@ ave2 <- function(x, g = NULL, FUN = mean, ...) {
   x
 }
 
-# First n values of the Halton sequence
+# First n values of the 1-dimensional Halton sequence (= van der Corput sequence)
+# https://en.wikipedia.org/wiki/Halton_sequence
 halton_sequence <- function(n, b = 2) {
   vapply(seq_len(n), halton, FUN.VALUE = 0.0)
 }
 
-# i-th element of Holton sequence
-# https://en.wikipedia.org/wiki/Halton_sequence
+# i-th element of above sequence
 halton <- function(i, b = 2) {
   f <- 1
   r <- 0

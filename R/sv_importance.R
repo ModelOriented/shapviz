@@ -15,10 +15,13 @@
 #' Set to "no" in order to suppress plotting. In that case, the sorted
 #' SHAP feature importances of all variables are returned.
 #' @param max_display Maximum number of features (with highest importance)
-#' should be plotted? If there are more, the least important variables are collapsed:
+#' should be plotted? If there are more and \code{show_other = TRUE},
+#' the least important variables are collapsed:
 #' their SHAP values are added and their min-max-scaled feature values are added as
 #' well (and the resulting vector is min-max-scaled again). Set to \code{Inf} to show
 #' all features. Has no effect if \code{kind = "no"}.
+#' @param show_other If the number of features is larger than \code{max_display}:
+#' Should the "other" group be shown (default) or not?
 #' @param fill Color used to fill the bars (only used if bars are shown).
 #' @param bar_width Relative width of the bars (only used if bars are shown).
 #' @param bee_width Relative width of the beeswarms (only used if beeswarm shown).
@@ -72,7 +75,8 @@ sv_importance.default <- function(object, ...) {
 #' @describeIn sv_importance SHAP importance plot for an object of class "shapviz".
 #' @export
 sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "no"),
-                                  max_display = 15L, fill = "#fca50a", bar_width = 2/3,
+                                  max_display = 15L, show_other = TRUE,
+                                  fill = "#fca50a", bar_width = 2/3,
                                   bee_width = 0.4, bee_adjust = 0.5,
                                   viridis_args = getOption("shapviz.viridis_args"),
                                   color_bar_title = "Feature value",

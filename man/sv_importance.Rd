@@ -113,4 +113,6 @@ X <- data.frame(matrix(rnorm(1000), ncol = 20))
 S <- as.matrix(X)
 x2 <- shapviz(S, X)
 sv_importance(x2)
+sv_importance(x2, max_display = 5)
+sv_importance(x2, max_display = 5, show_other = FALSE)
 }

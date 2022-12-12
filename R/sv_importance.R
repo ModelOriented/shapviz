@@ -62,6 +62,8 @@
 #' S <- as.matrix(X)
 #' x2 <- shapviz(S, X)
 #' sv_importance(x2)
+#' sv_importance(x2, max_display = 5)
+#' sv_importance(x2, max_display = 5, show_other = FALSE)
 sv_importance <- function(object, ...) {
   UseMethod("sv_importance")
 }

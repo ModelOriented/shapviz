@@ -25,11 +25,11 @@ To further simplify the use of "shapviz", we added direct connectors to the R pa
 
 - [`XGBoost`](https://CRAN.R-project.org/package=xgboost),
 - [`LightGBM`](https://CRAN.R-project.org/package=lightgbm),
+- [`h2o`](https://CRAN.R-project.org/package=h2o),
+- [`kernelshap`](https://CRAN.R-project.org/package=kernelshap)
 - [`fastshap`](https://CRAN.R-project.org/package=fastshap),
 - [`shapr`](https://CRAN.R-project.org/package=shapr), 
-- [`h2o`](https://CRAN.R-project.org/package=h2o),
 - [`treeshap`](https://github.com/ModelOriented/treeshap), and
-- [`kernelshap`](https://github.com/mayer79/kernelshap)
 
 For XGBoost, LightGBM, and H2O, the SHAP values are directly calculated from the fitted model.
 

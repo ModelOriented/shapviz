@@ -14,11 +14,14 @@
 #' @param kind Should a "bar" plot (the default), a "beeswarm" plot, or "both" be shown?
 #' Set to "no" in order to suppress plotting. In that case, the sorted
 #' SHAP feature importances of all variables are returned.
-#' @param max_display Maximum number of features (with highest importance)
-#' should be plotted? If there are more, the least important variables are collapsed:
+#' @param max_display Maximum number of features (with highest importance) to plot.
+#' If there are more, the least important variables are collapsed to an "other" group:
 #' their SHAP values are added and their min-max-scaled feature values are added as
-#' well (and the resulting vector is min-max-scaled again). Set to \code{Inf} to show
-#' all features. Has no effect if \code{kind = "no"}.
+#' well (and the resulting vector is min-max-scaled again).
+#' Set to \code{Inf} to show all features.
+#' Has no effect if \code{kind = "no"} or if \code{show_other = FALSE}.
+#' @param show_other If the number of features is larger than \code{max_display}:
+#' Should the "other" group be shown (default) or not?
 #' @param fill Color used to fill the bars (only used if bars are shown).
 #' @param bar_width Relative width of the bars (only used if bars are shown).
 #' @param bee_width Relative width of the beeswarms (only used if beeswarm shown).
@@ -59,6 +62,8 @@
 #' S <- as.matrix(X)
 #' x2 <- shapviz(S, X)
 #' sv_importance(x2)
+#' sv_importance(x2, max_display = 5)
+#' sv_importance(x2, max_display = 5, show_other = FALSE)
 sv_importance <- function(object, ...) {
   UseMethod("sv_importance")
 }
@@ -72,7 +77,8 @@ sv_importance.default <- function(object, ...) {
 #' @describeIn sv_importance SHAP importance plot for an object of class "shapviz".
 #' @export
 sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "no"),
-                                  max_display = 15L, fill = "#fca50a", bar_width = 2/3,
+                                  max_display = 15L, show_other = TRUE,
+                                  fill = "#fca50a", bar_width = 2/3,
                                   bee_width = 0.4, bee_adjust = 0.5,
                                   viridis_args = getOption("shapviz.viridis_args"),
                                   color_bar_title = "Feature value",
@@ -98,19 +104,29 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
   X_tmp <- apply(data.matrix(X), 2L, FUN = .min_max_scale)
   X_scaled <- as.data.frame(if (nrow(X) >= 2L) X_tmp else t(X_tmp))
 
-  # Collapse unimportant features (here, it is important that 'imp' is sorted)
-  ok <- utils::head(names(imp), max_display - 1L)
-  if (length(ok) < ncol(X) - 1L) {
-    bad <- setdiff(colnames(X), ok)
-    nn <- paste("Sum of", length(bad), "other")
+  # Deal with too many features -> important: "imp" is sorted
+  if (ncol(S) > max_display) {
+    if (!show_other) {
+      imp <- imp[seq_len(max_display)]
+      S <- S[, names(imp), drop = FALSE]
+      X_scaled <- X_scaled[names(imp)]
+    } else {
+      to_keep <- names(imp[seq_len(max_display - 1L)])
+      to_collapse <- setdiff(colnames(S), to_keep)
 
-    X_scaled_bad <- rowSums(X_scaled[bad])
-    X_scaled <- X_scaled[ok]
-    X_scaled[[nn]] <- .min_max_scale(X_scaled_bad)
+      # Collapse scaled feature values
+      other_name <- paste("Sum of", length(to_collapse), "other")
+      collapsed <- .min_max_scale(rowSums(X_scaled[to_collapse]))
+      X_scaled <- X_scaled[to_keep]
+      X_scaled[[other_name]] <- collapsed
 
-    S <- cbind(S[, ok, drop = FALSE], rowSums(S[, bad, drop = FALSE]))
-    colnames(S) <- c(ok, nn)
-    imp <- .get_imp(S)
+      # Collapse SHAP values
+      S <- cbind(S[, to_keep, drop = FALSE], rowSums(S[, to_collapse, drop = FALSE]))
+      colnames(S) <- c(to_keep, other_name)
+
+      # Recalculate importances (only "other" is new/different)
+      imp <- .get_imp(S)
+    }
   }
 
   imp_df <- data.frame(feature = stats::reorder(names(imp), imp), value = imp)

@@ -16,6 +16,13 @@ test_that("using 'max_display' gives no error", {
   expect_s3_class(sv_importance(x, max_display = 2L), "ggplot")
 })
 
+test_that("using 'show_other = FALSE' gives no error", {
+  expect_s3_class(sv_importance(x, max_display = 2L, show_other = FALSE), "ggplot")
+  expect_s3_class(
+    sv_importance(x, max_display = 2L, show_other = FALSE, kind = "beeswarm"), "ggplot"
+  )
+})
+
 # Now with non-standard name
 ir <- iris
 ir["strange name"] <- ir$Sepal.Width * ir$Petal.Length
@@ -27,6 +34,8 @@ test_that("plots work for non-syntactic column names", {
   expect_s3_class(sv_waterfall(x, 2), "ggplot")
   expect_s3_class(sv_force(x, 2), "ggplot")
   expect_s3_class(sv_importance(x), "ggplot")
+  expect_s3_class(sv_importance(x, max_display = 2, kind = "beeswarm"), "ggplot")
+  expect_s3_class(sv_importance(x, max_display = 2, show_other = FALSE), "ggplot")
   expect_s3_class(sv_importance(x, kind = "beeswarm"), "ggplot")
   expect_s3_class(sv_dependence(x, "strange name", color_var = "auto"), "ggplot")
   expect_s3_class(

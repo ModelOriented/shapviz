@@ -14,6 +14,7 @@ sv_importance(object, ...)
   object,
   kind = c("bar", "beeswarm", "both", "no"),
   max_display = 15L,
+  show_other = TRUE,
   fill = "#fca50a",
   bar_width = 2/3,
   bee_width = 0.4,
@@ -38,11 +39,15 @@ and setting \code{size = 3} will produce larger dots.}
 Set to "no" in order to suppress plotting. In that case, the sorted
 SHAP feature importances of all variables are returned.}
 
-\item{max_display}{Maximum number of features (with highest importance)
-should be plotted? If there are more, the least important variables are collapsed:
+\item{max_display}{Maximum number of features (with highest importance) to plot.
+If there are more, the least important variables are collapsed to an "other" group:
 their SHAP values are added and their min-max-scaled feature values are added as
-well (and the resulting vector is min-max-scaled again). Set to \code{Inf} to show
-all features. Has no effect if \code{kind = "no"}.}
+well (and the resulting vector is min-max-scaled again).
+Set to \code{Inf} to show all features.
+Has no effect if \code{kind = "no"} or if \code{show_other = FALSE}.}
+
+\item{show_other}{If the number of features is larger than \code{max_display}:
+Should the "other" group be shown (default) or not?}
 
 \item{fill}{Color used to fill the bars (only used if bars are shown).}
 

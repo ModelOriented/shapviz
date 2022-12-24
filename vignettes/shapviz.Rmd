@@ -40,15 +40,15 @@ Furthermore, a `baseline` can be passed to represent an average prediction on th
 A key feature of "shapviz" is that `X` is used for visualization only. Thus it is perfectly fine to use factor variables, even if the underlying model would not accept these.
 Additionally, in order to improve visualization, it can sometimes make sense to clip gross outliers, take logarithms for certain columns, or replace missing values by some explicit value.
 
-To further simplify the use of "shapviz", we added direct connectors to the R packages
+To further simplify the use of "shapviz", we added direct connectors to these R packages:
 
-- [`XGBoost`](https://CRAN.R-project.org/package=xgboost),
-- [`LightGBM`](https://CRAN.R-project.org/package=lightgbm),
-- [`h2o`](https://CRAN.R-project.org/package=h2o),
+- [`XGBoost`](https://CRAN.R-project.org/package=xgboost)
+- [`LightGBM`](https://CRAN.R-project.org/package=lightgbm)
+- [`h2o`](https://CRAN.R-project.org/package=h2o)
 - [`kernelshap`](https://CRAN.R-project.org/package=kernelshap)
-- [`fastshap`](https://CRAN.R-project.org/package=fastshap), 
-- [`shapr`](https://CRAN.R-project.org/package=shapr),
-- [`treeshap`](https://github.com/ModelOriented/treeshap), and
+- [`fastshap`](https://CRAN.R-project.org/package=fastshap)
+- [`shapr`](https://CRAN.R-project.org/package=shapr)
+- [`treeshap`](https://github.com/ModelOriented/treeshap)
 
 For XGBoost, LightGBM, and H2O, the SHAP values are directly calculated from the fitted model.
 

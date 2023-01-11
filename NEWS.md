@@ -1,6 +1,6 @@
-# shapviz 0.4.1 DEVEL
+# shapviz 0.4.1
 
-## New functionalities
+## New functionality
 
 - Hide "other": `sv_importance()` has received a new argument `show_others = TRUE`. Set to `FALSE` to hide the "other" bar/beeswarm.
 

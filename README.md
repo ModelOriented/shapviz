@@ -135,7 +135,7 @@ sv_importance(shp, kind = "both", show_numbers = TRUE, bee_width = 0.2)
 A scatterplot of SHAP values of a feature like `color` against its observed values gives a great impression on the feature effect on the response. Vertical scatter gives additional info on interaction effects. "shapviz" offers a heuristic to pick another feature on the color scale with potential strongest interaction.
 
 ``` r
-sv_dependence(shp, v = "color", "auto")
+sv_dependence(shp, v = "color", color_var = "auto")
 ```
 
 ![](man/figures/README-dep.png)

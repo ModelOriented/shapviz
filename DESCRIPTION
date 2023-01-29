@@ -1,6 +1,6 @@
 Package: shapviz
 Title: SHAP Visualizations
-Version: 0.4.1
+Version: 0.4.2
 Authors@R: 
     person("Michael", "Mayer", , "mayermichael79@gmail.com", role = c("aut", "cre"))
 Description: Visualizations for SHAP (SHapley Additive exPlanations), such
@@ -23,7 +23,7 @@ RoxygenNote: 7.2.3
 Imports: 
     ggfittext (>= 0.8.0),
     gggenes,
-    ggplot2 (>= 3.0.0),
+    ggplot2 (>= 3.4.0),
     ggrepel,
     grid,
     rlang (>= 0.3.0),

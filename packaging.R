@@ -4,7 +4,7 @@
 
 # WORKFLOW: UPDATE EXISTING PACKAGE
 # 1) Modify package content and documentation.
-# 2) Increase package number in "use_description" below.
+# 2) Increase package version in "use_description" below.
 # 3) Go through this script and carefully answer "no" if a "use_*" function
 #    asks to overwrite the existing files. Don't skip that function call.
 # devtools::load_all()
@@ -15,7 +15,7 @@ library(usethis)
 use_description(
   fields = list(
     Title = "SHAP Visualizations",
-    Version = "0.4.1",
+    Version = "0.4.2",
     Description = "Visualizations for SHAP (SHapley Additive exPlanations),
     such as waterfall plots, force plots, various types of importance plots,
     and dependence plots.
@@ -38,7 +38,7 @@ use_package("stats", "Imports")
 use_package("utils", "Imports")
 use_package("rlang", "imports", min_version = "0.3.0")
 use_package("grid", "Imports")
-use_package("ggplot2", "Imports", min_version = "3.0.0")
+use_package("ggplot2", "Imports", min_version = "3.4.0")
 use_package("gggenes", "Imports")
 use_package("ggfittext", "Imports", min_version = "0.8.0")
 use_package("ggrepel", "Imports")

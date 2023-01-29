@@ -1,3 +1,9 @@
+# shapviz 0.4.2
+
+## Compatibility with "ggplot2"
+
+- "ggplot2" 3.4 has replaced the "size" aesthetic in line-based geoms by "linewidth". This has been adapted. "shapviz" now depends on ggplot2 >= 3.4.
+
 # shapviz 0.4.1
 
 ## New functionality

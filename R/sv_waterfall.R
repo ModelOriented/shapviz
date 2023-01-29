@@ -126,7 +126,7 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
     p <- p +
       geom_segment(
         aes(x = to, xend = to, y = i, yend = .lag(i, lead = TRUE, default = m)),
-        size = 0.3,
+        linewidth = 0.3,
         linetype = 2
       )
   }
@@ -140,7 +140,7 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
         xend = full_range,
         y = c(m, 1),
         yend = c(m, 1) + m * c(0.075, -0.075) + 0.13 * c(1, -1),
-        size = 0.3,
+        linewidth = 0.3,
         linetype = 2
       ) +
       annotate(

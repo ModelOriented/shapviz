@@ -134,7 +134,7 @@ sv_force.shapviz <- function(object, row_id = 1L, max_display = 6L,
         xend = b_pred,
         y = c(0.5, 0.75),
         yend = c(0.92, 1),
-        size = 0.3,
+        linewidth = 0.3,
         linetype = 2
       ) +
       annotate(

@@ -19,9 +19,17 @@ shapviz(object, ...)
 
 \method{shapviz}{default}(object, ...)
 
-\method{shapviz}{matrix}(object, X, baseline = 0, collapse = NULL, ...)
+\method{shapviz}{matrix}(object, X, baseline = 0, collapse = NULL, S_inter = NULL, ...)
 
-\method{shapviz}{xgb.Booster}(object, X_pred, X = X_pred, which_class = NULL, collapse = NULL, ...)
+\method{shapviz}{xgb.Booster}(
+  object,
+  X_pred,
+  X = X_pred,
+  which_class = NULL,
+  collapse = NULL,
+  interactions = FALSE,
+  ...
+)
 
 \method{shapviz}{lgb.Booster}(object, X_pred, X = X_pred, which_class = NULL, collapse = NULL, ...)
 
@@ -65,6 +73,9 @@ predictions.}
 column names in the SHAP matrix that should be collapsed to a single column by summation.
 The name of the new column equals the name of the vector in \code{collapse}.}
 
+\item{S_inter}{3D array of SHAP interaction values. If \code{object} has shape n x p,
+then \code{S_inter} needs to be of shape n x p x p. Default is \code{NULL}.}
+
 \item{X_pred}{Data set as expected by the \code{predict} function of
 XGBoost, LightGBM, or H2O. For XGBoost, a matrix or \code{xgb.DMatrix},
 for LightGBM a matrix, and for H2O a \code{data.frame} or an \code{H2OFrame}.
@@ -73,6 +84,9 @@ Only used for XGBoost, LightGBM, or H2O objects.}
 \item{which_class}{In case of a multiclass or multioutput setting,
 which class/output (>= 1) to explain. Currently relevant for XGBoost, LightGBM,
 and kernelshap.}
+
+\item{interactions}{Should SHAP interactions be calculated (default is \code{FALSE})?
+Only available for XGBoost.}
 }
 \value{
 An object of class "shapviz" with the following three elements:

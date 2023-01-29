@@ -39,6 +39,10 @@
 #' @param collapse A named list of character vectors. Each vector specifies a group of
 #' column names in the SHAP matrix that should be collapsed to a single column by summation.
 #' The name of the new column equals the name of the vector in \code{collapse}.
+#' @param interactions Should SHAP interactions be calculated (default is \code{FALSE})?
+#' Only available for XGBoost.
+#' @param S_inter 3D array of SHAP interaction values. If \code{object} has shape n x p,
+#' then \code{S_inter} needs to be of shape n x p x p. Default is \code{NULL}.
 #' @param ... Parameters passed to other methods (currently only used by
 #' the \code{predict} functions of XGBoost, LightGBM, and H2O).
 #' @return An object of class "shapviz" with the following three elements:
@@ -69,7 +73,8 @@ shapviz.default = function(object, ...) {
 
 #' @describeIn shapviz Creates a "shapviz" object from a matrix of SHAP values.
 #' @export
-shapviz.matrix = function(object, X, baseline = 0, collapse = NULL, ...) {
+shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
+                          S_inter = NULL, ...) {
   object <- collapse_shap(object, collapse = collapse)
   stopifnot(
     "'X' must be a matrix or data.frame" = is.matrix(X) || is.data.frame(X),
@@ -85,10 +90,23 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL, ...) {
       length(baseline) == 1L && is.numeric(baseline),
     "'baseline' cannot be NA" = !is.na(baseline)
   )
+  if (!is.null(S_inter)) {
+    stopifnot(
+      "'S_inter' must be an array" = is.array(S_inter),
+      "'S_inter' must have dimension 3" = length(dim(S_inter)) == 3L,
+      "Shape of 'S_inter' must be consistent with 'object'" =
+        dim(S_inter) == c(dim(object), ncol(object)),
+      "Dimnames 2 and 3 of 'S_inter' must be consistent" =
+        dimnames(S_inter)[[2L]] == dimnames(S_inter)[[3L]],
+      "Dimnames of 'S_inter' must be consistent with those of 'object'" =
+        dimnames(S_inter)[[2L]] == colnames(object)
+    )
+  }
   out <- list(
     S = object,
     X = as.data.frame(X)[colnames(object)],
-    baseline = baseline
+    baseline = baseline,
+    S_inter = S_inter
   )
   class(out) <- "shapviz"
   out
@@ -142,8 +160,8 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL, ...) {
 #'   collapse = list(Species = c("Speciessetosa", "Speciesversicolor", "Speciesvirginica"))
 #' )
 #' x
-shapviz.xgb.Booster = function(object, X_pred, X = X_pred,
-                               which_class = NULL, collapse = NULL, ...) {
+shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL,
+                               collapse = NULL, interactions = FALSE, ...) {
   stopifnot(
     "X must be a matrix or data.frame. It can't be an object of class xgb.DMatrix" =
       is.matrix(X) || is.data.frame(X),
@@ -154,17 +172,26 @@ shapviz.xgb.Booster = function(object, X_pred, X = X_pred,
 
   S <- stats::predict(object, newdata = X_pred, predcontrib = TRUE, ...)
 
+  if (interactions) {
+    S_inter <- stats::predict(object, newdata = X_pred, predinteraction = TRUE, ...)
+  }
+
   # Multiclass
   if (is.list(S)) {
     stopifnot(!is.null(which_class), which_class <= length(S))
     S <- S[[which_class]]
+    if (interactions) {
+      S_inter <- S_inter[[which_class]]
+    }
   }
 
   # Call matrix method
+  nms <- setdiff(colnames(S), "BIAS")
   shapviz.matrix(
-    S[, setdiff(colnames(S), "BIAS"), drop = FALSE],
+    S[, nms, drop = FALSE],
     X = X,
     baseline = unname(S[1L, "BIAS"]),
+    S_inter = if (interactions) S_inter[, nms, nms, drop = FALSE],
     collapse = collapse
   )
 }
@@ -217,11 +244,17 @@ shapviz.explain <- function(object, X, baseline = 0, collapse = NULL, ...) {
 #' @export
 shapviz.treeshap <- function(object, X = object[["observations"]],
                              baseline = 0, collapse = NULL, ...) {
+  if (!is.null(object[["interactions"]])) {
+    S_inter <- aperm(object[["interactions"]], c(3L, 1:2))
+  } else {
+    S_inter <- NULL
+  }
   shapviz.matrix(
     as.matrix(object[["shaps"]]),
     X = X,
     baseline = baseline,
-    collapse = collapse
+    collapse = collapse,
+    S_inter = S_inter
   )
 }
 

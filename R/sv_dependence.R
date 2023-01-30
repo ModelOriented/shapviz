@@ -1,18 +1,21 @@
 #' SHAP Dependence Plot
 #'
-#' Creates a scatter plot of the SHAP values of a feature against its feature values.
-#' A second variable, \code{color_var}, can be selected to be used on the color axis.
-#' In this way, one can get a sense of possible interaction effects.
-#' Set \code{color_var = "auto"} to use a simple heuristic to select the color
-#' feature with the strongest apparent interaction.
-#' With discrete \code{v}, horizontal jitter is added by default.
+#' Scatter plot of the SHAP values of a feature against its feature values.
+#' Using a \code{color_var} on the color axis, one can get a sense of possible interaction
+#' effects. Set \code{color_var = "auto"} to select the color feature with the largest
+#' average absolute SHAP interaction value. If no SHAP interaction values are available,
+#' a correlation based heuristic is used instead. If SHAP interaction values are
+#' available, setting \code{interactions = TRUE} allows to focus on pure main effects or
+#' pure interaction effects.
 #'
 #' @importFrom rlang .data
 #' @param object An object of class "shapviz".
 #' @param v Column name of feature to be plotted.
 #' @param color_var Feature name to be used on the color scale to investigate interactions.
-#' The default is \code{NULL} (no color feature). An experimental option is "auto",
-#' which selects - by a simple heuristic - a variable with seemingly strongest interaction.
+#' The default is \code{NULL} (no color feature). If "auto", the variable with strongest
+#' average absolute SHAP interaction value is picked. If the "shapviz" object does not
+#' contain SHAP interaction values (the usual case), a correlation based heuristic is
+#' used instead.
 #' Check details for how to change the color scale.
 #' @param color Color to be used if \code{color_var = NULL}.
 #' @param viridis_args List of viridis color scale arguments, see
@@ -26,6 +29,10 @@
 #' @param jitter_width The amount of horizontal jitter. The default (\code{NULL}) will
 #' use a value of 0.2 in case \code{v} is a factor, logical, or character variable, and
 #' no jitter otherwise.
+#' @param interactions Should SHAP interaction values be plotted? Default is \code{FALSE}.
+#' Requires SHAP interaction values. If no \code{color_var} is passed (or it is equal to
+#' \code{v}), the pure main effect of \code{v} is visualized. Otherwise, twice the SHAP
+#' interaction values between \code{v} and the \code{color_var} are plotted.
 #' @param ... Arguments passed to \code{geom_jitter()}.
 #' @return An object of class \code{ggplot} representing a dependence plot.
 #' @export
@@ -37,6 +44,10 @@
 #' sv_dependence(x, "Petal.Length")
 #' sv_dependence(x, "Petal.Length", color_var = "Species")
 #' sv_dependence(x, "Species", color_var = "auto")
+#'
+#' x2 <- shapviz(fit, X_pred = dtrain, X = iris[, -1], interactions = TRUE)
+#' sv_dependence(x, "Petal.Length", interactions = TRUE)
+#' sv_dependence(x, "Petal.Length", color_var = "auto", interactions = TRUE)
 sv_dependence <- function(object, ...) {
   UseMethod("sv_dependence")
 }
@@ -51,14 +62,18 @@ sv_dependence.default <- function(object, ...) {
 #' @export
 sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b",
                                   viridis_args = getOption("shapviz.viridis_args"),
-                                  jitter_width = NULL, ...) {
+                                  jitter_width = NULL, interactions = FALSE, ...) {
   S <- get_shap_values(object)
   X <- get_feature_values(object)
+  S_inter <- get_shap_interactions(object)
   stopifnot(
     length(v) <= 1L,
     v %in% colnames(S),
     is.null(color_var) || (color_var %in% c("auto", colnames(S)))
   )
+  if (interactions && is.null(S_inter)) {
+    stop("No SHAP interaction values available.")
+  }
 
   # Set jitter value
   if (is.null(jitter_width)) {
@@ -68,14 +83,31 @@ sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b"
   # Set color value
   if (!is.null(color_var) && color_var == "auto" && !("auto" %in% colnames(S))) {
     scores <- potential_interactions(object, v)
-    color_var <- names(scores)[1L]
+    color_var <- names(scores)[1L]  # NULL if p = 1L
   }
-  dat <- data.frame(S[, v], X[[v]])
+  if (isTRUE(interactions)) {
+    if (is.null(color_var)) {
+      color_var <- v
+    }
+    if (color_var == v) {
+      y_lab <- paste("SHAP main effect of", v)
+    } else {
+      y_lab <- "SHAP interaction value"
+    }
+    s <- S_inter[, v, color_var]
+    if (color_var != v) {
+      s <- 2 * s  # Account for symmetric SHAP interactions
+    }
+  } else {
+    y_lab <- paste("SHAP value of", v)
+    s <- S[, v]
+  }
+  dat <- data.frame(s, X[[v]])
   colnames(dat) <- c("shap", v)
-  if (is.null(color_var)) {
+  if (is.null(color_var) || color_var == v) {
     p <- ggplot(dat, aes(x = .data[[v]], y = shap)) +
       geom_jitter(color = color, width = jitter_width, height = 0, ...) +
-      ylab(paste("SHAP value of", v))
+      ylab(y_lab)
     return(p)
   }
   dat[[color_var]] <- X[[color_var]]
@@ -89,18 +121,21 @@ sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b"
   }
   ggplot(dat, aes(x = .data[[v]], y = shap, color = .data[[color_var]])) +
     geom_jitter(width = jitter_width, height = 0, ...) +
-    ylab(paste("SHAP value of", v)) +
+    ylab(y_lab) +
     do.call(vir, viridis_args)
 }
 
 
-#' Strongest Interaction
+#' Interaction Strength
 #'
-#' This function tries to detect the approximately strongest interacting feature with
-#' \code{v}. It works by calculating an average squared correlation between
-#' the SHAP values of \code{v} and each feature across values of \code{v}.
-#' To this purpose, a numeric \code{v} with more than \code{n_bins} unique values
-#' is binned into that many quantile bins.
+#' Returns the interaction strengths between variable \code{v} and all other variables.
+#' If SHAP interaction values are available, interaction strength
+#' between feature \code{v} and another feature \code{v'} is measured by twice their
+#' mean absolute SHAP interaction values. Otherwise, we use as heuristic the
+#' squared correlation between feature values of \code{v'} and
+#' SHAP values of \code{v}, averaged over (binned) values of \code{v}.
+#' A numeric \code{v} with more than \code{n_bins} unique values is binned into
+#' quantile bins.
 #' Currently \code{n_bins} equals the smaller of n/20 and sqrt(n), where n is the
 #' sample size.
 #' The average squared correlation is weighted by the number of non-missing feature
@@ -109,28 +144,34 @@ sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b"
 #'
 #' @param obj An object of type "shapviz".
 #' @param v Variable name.
-#' @return A named vector of average squared correlations, sorted in decreasing order.
+#' @return A named vector of decreasing interaction strengths.
 #' @export
 #' @seealso \code{\link{sv_dependence}}
 potential_interactions <- function(obj, v) {
   stopifnot(is.shapviz(obj))
   S <- get_shap_values(obj)
+  S_inter <- get_shap_interactions(obj)
   X <- get_feature_values(obj)
+  v_other <- setdiff(colnames(X), v)
   stopifnot(v %in% colnames(X))
 
   if (ncol(S) < 2L) {
     return(NULL)
   }
 
+  # Simple case: we have SHAP interaction values
+  if (!is.null(S_inter)) {
+    return(sort(2 * colMeans(abs(S_inter[, v, ]))[v_other], decreasing = TRUE))
+  }
+
+  # Complicated case: we need to rely on correlation based heuristic
   r_sq <- function(s, x) {
     suppressWarnings(stats::cor(s, data.matrix(x), use = "p")^2)
   }
-
-  # Calculate average squared correlation between SHAP value and color across bins
   n_bins <- ceiling(min(sqrt(nrow(X)), nrow(X) / 20))
   v_bin <- .fast_bin(X[[v]], n_bins = n_bins)
   s_bin <- split(S[, v], v_bin)
-  X_bin <- split(X[setdiff(colnames(X), v)], v_bin)
+  X_bin <- split(X[v_other], v_bin)
   w <- do.call(rbind, lapply(X_bin, function(z) colSums(!is.na(z))))
   cor_squared <- do.call(rbind, mapply(r_sq, s_bin, X_bin, SIMPLIFY = FALSE))
   sort(colSums(w * cor_squared, na.rm = TRUE) / colSums(w), decreasing = TRUE)

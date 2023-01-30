@@ -11,6 +11,9 @@
 \alias{get_baseline}
 \alias{get_baseline.shapviz}
 \alias{get_baseline.default}
+\alias{get_shap_interactions}
+\alias{get_shap_interactions.shapviz}
+\alias{get_shap_interactions.default}
 \title{Extractor Functions}
 \usage{
 get_shap_values(object, ...)
@@ -30,6 +33,12 @@ get_baseline(object, ...)
 \method{get_baseline}{shapviz}(object, ...)
 
 \method{get_baseline}{default}(object, ...)
+
+get_shap_interactions(object, ...)
+
+\method{get_shap_interactions}{shapviz}(object, ...)
+
+\method{get_shap_interactions}{default}(object, ...)
 }
 \arguments{
 \item{object}{Object to extract something.}
@@ -37,10 +46,13 @@ get_baseline(object, ...)
 \item{...}{Currently unused.}
 }
 \value{
-\code{get_shap_values()} returns the matrix of SHAP values, \code{get_feature_values()} the \code{data.frame} of feature values, and \code{get_baseline()} the numeric baseline value of the input.
+\code{get_shap_values()} returns the matrix of SHAP values,
+\code{get_feature_values()} the \code{data.frame} of feature values,
+\code{get_baseline()} the numeric baseline value,
+and \code{get_shap_interactions()} the SHAP interactions of the input.
 }
 \description{
-Functions to extract SHAP values, feature values, or the baseline from a "shapviz" object.
+Functions to extract SHAP values, feature values, the baseline, or SHAP interactions from a "shapviz" object.
 }
 \examples{
 S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))

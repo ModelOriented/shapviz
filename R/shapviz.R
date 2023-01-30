@@ -103,7 +103,7 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
         dimnames(S_inter)[[2L]] == colnames(object),
       "SHAP interactions must sum to SHAP values" = all.equal(
         apply(S_inter, 1:2, FUN = sum),
-        x$S,
+        object,
         tolerance = 1e-4,
         check.attributes = FALSE
       )

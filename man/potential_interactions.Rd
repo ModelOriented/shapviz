@@ -2,7 +2,7 @@
 % Please edit documentation in R/sv_dependence.R
 \name{potential_interactions}
 \alias{potential_interactions}
-\title{Strongest Interaction}
+\title{Interaction Strength}
 \usage{
 potential_interactions(obj, v)
 }
@@ -12,14 +12,17 @@ potential_interactions(obj, v)
 \item{v}{Variable name.}
 }
 \value{
-A named vector of average squared correlations, sorted in decreasing order.
+A named vector of decreasing interaction strengths.
 }
 \description{
-This function tries to detect the approximately strongest interacting feature with
-\code{v}. It works by calculating an average squared correlation between
-the SHAP values of \code{v} and each feature across values of \code{v}.
-To this purpose, a numeric \code{v} with more than \code{n_bins} unique values
-is binned into that many quantile bins.
+Returns the interaction strengths between variable \code{v} and all other variables.
+If SHAP interaction values are available, interaction strength
+between feature \code{v} and another feature \code{v'} is measured by twice their
+mean absolute SHAP interaction values. Otherwise, we use as heuristic the
+squared correlation between feature values of \code{v'} and
+SHAP values of \code{v}, averaged over (binned) values of \code{v}.
+A numeric \code{v} with more than \code{n_bins} unique values is binned into
+quantile bins.
 Currently \code{n_bins} equals the smaller of n/20 and sqrt(n), where n is the
 sample size.
 The average squared correlation is weighted by the number of non-missing feature

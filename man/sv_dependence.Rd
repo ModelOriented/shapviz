@@ -17,6 +17,7 @@ sv_dependence(object, ...)
   color = "#3b528b",
   viridis_args = getOption("shapviz.viridis_args"),
   jitter_width = NULL,
+  interactions = FALSE,
   ...
 )
 }
@@ -28,8 +29,10 @@ sv_dependence(object, ...)
 \item{v}{Column name of feature to be plotted.}
 
 \item{color_var}{Feature name to be used on the color scale to investigate interactions.
-The default is \code{NULL} (no color feature). An experimental option is "auto",
-which selects - by a simple heuristic - a variable with seemingly strongest interaction.
+The default is \code{NULL} (no color feature). If "auto", the variable with strongest
+average absolute SHAP interaction value is picked. If the "shapviz" object does not
+contain SHAP interaction values (the usual case), a correlation based heuristic is
+used instead.
 Check details for how to change the color scale.}
 
 \item{color}{Color to be used if \code{color_var = NULL}.}
@@ -46,17 +49,23 @@ Only relevant if \code{color_var} is not \code{NULL}.}
 \item{jitter_width}{The amount of horizontal jitter. The default (\code{NULL}) will
 use a value of 0.2 in case \code{v} is a factor, logical, or character variable, and
 no jitter otherwise.}
+
+\item{interactions}{Should SHAP interaction values be plotted? Default is \code{FALSE}.
+Requires SHAP interaction values. If no \code{color_var} is passed (or it is equal to
+\code{v}), the pure main effect of \code{v} is visualized. Otherwise, twice the SHAP
+interaction values between \code{v} and the \code{color_var} are plotted.}
 }
 \value{
 An object of class \code{ggplot} representing a dependence plot.
 }
 \description{
-Creates a scatter plot of the SHAP values of a feature against its feature values.
-A second variable, \code{color_var}, can be selected to be used on the color axis.
-In this way, one can get a sense of possible interaction effects.
-Set \code{color_var = "auto"} to use a simple heuristic to select the color
-feature with the strongest apparent interaction.
-With discrete \code{v}, horizontal jitter is added by default.
+Scatter plot of the SHAP values of a feature against its feature values.
+Using a \code{color_var} on the color axis, one can get a sense of possible interaction
+effects. Set \code{color_var = "auto"} to select the color feature with the largest
+average absolute SHAP interaction value. If no SHAP interaction values are available,
+a correlation based heuristic is used instead. If SHAP interaction values are
+available, setting \code{interactions = TRUE} allows to focus on pure main effects or
+pure interaction effects.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -72,6 +81,10 @@ x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
 sv_dependence(x, "Petal.Length")
 sv_dependence(x, "Petal.Length", color_var = "Species")
 sv_dependence(x, "Species", color_var = "auto")
+
+x2 <- shapviz(fit, X_pred = dtrain, X = iris[, -1], interactions = TRUE)
+sv_dependence(x, "Petal.Length", interactions = TRUE)
+sv_dependence(x, "Petal.Length", color_var = "auto", interactions = TRUE)
 }
 \seealso{
 \code{\link{potential_interactions}}

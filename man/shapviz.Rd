@@ -94,6 +94,7 @@ An object of class "shapviz" with the following three elements:
 \item \code{S}: A numeric matrix of SHAP values.
 \item \code{X}: A \code{data.frame} containing the feature values corresponding to \code{S}.
 \item \code{baseline}: Baseline value, representing the average prediction at the scale of the SHAP values.
+\item \code{S_inter}: A numeric array of SHAP interaction values or \code{NULL}.
 }
 }
 \description{

@@ -12,6 +12,7 @@
 #' @seealso \code{\link{shapviz}}.
 print.shapviz <- function(x, n = 2L, ...) {
   S <- get_shap_values(x)
+  S_inter <- get_shap_interactions(x)
   n <- min(n, nrow(S))
   cat(
     "'shapviz' object representing \n  - SHAP matrix of dimension",
@@ -19,6 +20,11 @@ print.shapviz <- function(x, n = 2L, ...) {
     "\n  - feature data.frame of dimension",  nrow(S), "x", ncol(S),
     "\n  - baseline value of", get_baseline(x)
   )
+  if (!is.null(S_inter)) {
+    cat(
+      "\n  - SHAP interaction array of dimension",
+      paste(dim(S_inter), collapse = " x "))
+  }
   cat("\n\n")
   cat("SHAP values of first", n, "observations:\n")
   print(utils::head(S, n))

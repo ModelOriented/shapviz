@@ -55,6 +55,7 @@ sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b"
   S <- get_shap_values(object)
   X <- get_feature_values(object)
   stopifnot(
+    length(v) <= 1L,
     v %in% colnames(S),
     is.null(color_var) || (color_var %in% c("auto", colnames(S)))
   )

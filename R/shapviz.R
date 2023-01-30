@@ -50,6 +50,7 @@
 #'   \item \code{S}: A numeric matrix of SHAP values.
 #'   \item \code{X}: A \code{data.frame} containing the feature values corresponding to \code{S}.
 #'   \item \code{baseline}: Baseline value, representing the average prediction at the scale of the SHAP values.
+#'   \item \code{S_inter}: A numeric array of SHAP interaction values or \code{NULL}.
 #' }
 #' @export
 #' @seealso \code{\link{sv_importance}}, \code{\link{sv_dependence}},
@@ -99,7 +100,13 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
       "Dimnames 2 and 3 of 'S_inter' must be consistent" =
         dimnames(S_inter)[[2L]] == dimnames(S_inter)[[3L]],
       "Dimnames of 'S_inter' must be consistent with those of 'object'" =
-        dimnames(S_inter)[[2L]] == colnames(object)
+        dimnames(S_inter)[[2L]] == colnames(object),
+      "SHAP interactions must sum to SHAP values" = all.equal(
+        apply(S_inter, 1:2, FUN = sum),
+        x$S,
+        tolerance = 1e-4,
+        check.attributes = FALSE
+      )
     )
   }
   out <- list(

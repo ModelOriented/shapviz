@@ -10,6 +10,7 @@
 
 ## User visible changes
 
+- `sv_importance()` used to collapse other features into one bar/beeswarm in case of too many features. This logic has been removed. Now, no "Other" bar/beeswarm is shown anymore, and the `show_other` argument is deprecated.
 - `sv_dependence()` now also adds horizontal jitter in case `v` is numeric with at most seven unique values. Previously, no jitter was applied in this case.
 
 ## Compatibility with "ggplot2"

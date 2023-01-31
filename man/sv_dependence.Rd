@@ -47,8 +47,8 @@ with \code{options(shapviz.viridis_args = NULL)} or set \code{viridis_args = NUL
 Only relevant if \code{color_var} is not \code{NULL}.}
 
 \item{jitter_width}{The amount of horizontal jitter. The default (\code{NULL}) will
-use a value of 0.2 in case \code{v} is a factor, logical, or character variable, and
-no jitter otherwise.}
+use a value of 0.2 in case \code{v} is discrete, and no jitter otherwise.
+(Numeric variables are considered discrete if they have at most 7 unique values.)}
 
 \item{interactions}{Should SHAP interaction values be plotted? Default is \code{FALSE}.
 Requires SHAP interaction values. If no \code{color_var} is passed (or it is equal to
@@ -82,9 +82,10 @@ sv_dependence(x, "Petal.Length")
 sv_dependence(x, "Petal.Length", color_var = "Species")
 sv_dependence(x, "Species", color_var = "auto")
 
+# SHAP interaction values
 x2 <- shapviz(fit, X_pred = dtrain, X = iris[, -1], interactions = TRUE)
-sv_dependence(x, "Petal.Length", interactions = TRUE)
-sv_dependence(x, "Petal.Length", color_var = "auto", interactions = TRUE)
+sv_dependence(x2, "Petal.Length", interactions = TRUE)
+sv_dependence(x2, "Petal.Length", color_var = "auto", interactions = TRUE)
 }
 \seealso{
 \code{\link{potential_interactions}}

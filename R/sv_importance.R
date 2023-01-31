@@ -15,13 +15,8 @@
 #' Set to "no" in order to suppress plotting. In that case, the sorted
 #' SHAP feature importances of all variables are returned.
 #' @param max_display Maximum number of features (with highest importance) to plot.
-#' If there are more, the least important variables are collapsed to an "other" group:
-#' their SHAP values are added and their min-max-scaled feature values are added as
-#' well (and the resulting vector is min-max-scaled again).
-#' Set to \code{Inf} to show all features.
-#' Has no effect if \code{kind = "no"} or if \code{show_other = FALSE}.
-#' @param show_other If the number of features is larger than \code{max_display}:
-#' Should the "other" group be shown (default) or not?
+#' Set to \code{Inf} to show all features. Has no effect if \code{kind = "no"}.
+#' @param show_other Deprecated.
 #' @param fill Color used to fill the bars (only used if bars are shown).
 #' @param bar_width Relative width of the bars (only used if bars are shown).
 #' @param bee_width Relative width of the beeswarms (only used if beeswarm shown).
@@ -63,7 +58,7 @@
 #' x2 <- shapviz(S, X)
 #' sv_importance(x2)
 #' sv_importance(x2, max_display = 5)
-#' sv_importance(x2, max_display = 5, show_other = FALSE)
+
 sv_importance <- function(object, ...) {
   UseMethod("sv_importance")
 }
@@ -77,7 +72,7 @@ sv_importance.default <- function(object, ...) {
 #' @describeIn sv_importance SHAP importance plot for an object of class "shapviz".
 #' @export
 sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "no"),
-                                  max_display = 15L, show_other = TRUE,
+                                  max_display = 15L, show_other = NULL,
                                   fill = "#fca50a", bar_width = 2/3,
                                   bee_width = 0.4, bee_adjust = 0.5,
                                   viridis_args = getOption("shapviz.viridis_args"),
@@ -86,16 +81,23 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
                                   number_size = 3.2, ...) {
   stopifnot("format_fun must be a function" = is.function(format_fun))
   kind <- match.arg(kind)
-  if ("width" %in% names(list(...))) {
-    # To be removed in 0.5.0
-    warning("Passing 'width' via ... is deprecated. Use 'bar_width' or 'bee_width'.")
+  if (!is.null(show_other)) {
+    warning(
+      "The argument 'show_other' is deprecated and will be removed in version 0.6.0"
+    )
   }
-
   S <- get_shap_values(object)
   X <- get_feature_values(object)
   imp <- .get_imp(S)
   if (kind == "no") {
     return(imp)
+  }
+
+  # Deal with too many features -> important: "imp" is sorted
+  if (ncol(S) > max_display) {
+    imp <- imp[seq_len(max_display)]
+    S <- S[, names(imp), drop = FALSE]
+    X <- X[names(imp)]
   }
 
   # The next two lines would be more elegant, but require R >= 4.1
@@ -104,31 +106,7 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
   X_tmp <- apply(data.matrix(X), 2L, FUN = .min_max_scale)
   X_scaled <- as.data.frame(if (nrow(X) >= 2L) X_tmp else t(X_tmp))
 
-  # Deal with too many features -> important: "imp" is sorted
-  if (ncol(S) > max_display) {
-    if (!show_other) {
-      imp <- imp[seq_len(max_display)]
-      S <- S[, names(imp), drop = FALSE]
-      X_scaled <- X_scaled[names(imp)]
-    } else {
-      to_keep <- names(imp[seq_len(max_display - 1L)])
-      to_collapse <- setdiff(colnames(S), to_keep)
-
-      # Collapse scaled feature values
-      other_name <- paste("Sum of", length(to_collapse), "other")
-      collapsed <- .min_max_scale(rowSums(X_scaled[to_collapse]))
-      X_scaled <- X_scaled[to_keep]
-      X_scaled[[other_name]] <- collapsed
-
-      # Collapse SHAP values
-      S <- cbind(S[, to_keep, drop = FALSE], rowSums(S[, to_collapse, drop = FALSE]))
-      colnames(S) <- c(to_keep, other_name)
-
-      # Recalculate importances (only "other" is new/different)
-      imp <- .get_imp(S)
-    }
-  }
-
+  # Switch to dataframe logic
   imp_df <- data.frame(feature = stats::reorder(names(imp), imp), value = imp)
 
   is_bar <- kind == "bar"

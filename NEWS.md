@@ -10,7 +10,7 @@
 - `sv_dependence(x, v = "x1", color_var = "x2", interactions = TRUE)` plots SHAP interaction values (multiplied with a factor of 2 due to symmetry)
 - `sv_dependence(x, v = "x1", interactions = TRUE)` plots pure main effects of "x1".
 - If SHAP interaction values are available, `sv_dependence(..., color_var = "auto")` uses those to determine the most interacting color variable.
-- `collapse_shap()` also works for SHAP interaction matrices.
+- `collapse_shap()` also works for SHAP interaction arrays.
 
 ## User visible changes
 

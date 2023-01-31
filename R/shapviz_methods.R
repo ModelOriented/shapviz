@@ -110,13 +110,13 @@ get_feature_values <- function(object, ...) {
 
 #' @rdname extractors
 #' @export
-get_feature_values.shapviz = function(object, ...) {
+get_feature_values.shapviz <- function(object, ...) {
   object[["X"]]
 }
 
 #' @rdname extractors
 #' @export
-get_feature_values.default = function(object, ...) {
+get_feature_values.default <- function(object, ...) {
   stop("No default method available.")
 }
 

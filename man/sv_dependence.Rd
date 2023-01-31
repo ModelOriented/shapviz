@@ -32,8 +32,7 @@ sv_dependence(object, ...)
 The default is \code{NULL} (no color feature). If "auto", the variable with strongest
 average absolute SHAP interaction value is picked. If the "shapviz" object does not
 contain SHAP interaction values (the usual case), a correlation based heuristic is
-used instead.
-Check details for how to change the color scale.}
+used instead.}
 
 \item{color}{Color to be used if \code{color_var = NULL}.}
 
@@ -61,11 +60,12 @@ An object of class \code{ggplot} representing a dependence plot.
 \description{
 Scatter plot of the SHAP values of a feature against its feature values.
 Using a \code{color_var} on the color axis, one can get a sense of possible interaction
-effects. Set \code{color_var = "auto"} to select the color feature with the largest
-average absolute SHAP interaction value. If no SHAP interaction values are available,
-a correlation based heuristic is used instead. If SHAP interaction values are
+effects. Set \code{color_var = "auto"} to automatically select the color feature with
+the strongest interaction effects. If SHAP interaction values are available,
+this is determined by the average absolute SHAP interactions.
+Otherwise, a correlation based heuristic is used instead. If SHAP interaction values are
 available, setting \code{interactions = TRUE} allows to focus on pure main effects or
-pure interaction effects.
+on pure interaction effects.
 }
 \section{Methods (by class)}{
 \itemize{

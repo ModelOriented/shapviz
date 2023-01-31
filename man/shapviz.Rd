@@ -76,8 +76,7 @@ The name of the new column equals the name of the vector in \code{collapse}.}
 \item{S_inter}{Optional 3D array of SHAP interaction values.
 If \code{object} has shape n x p, then \code{S_inter} needs to be of shape n x p x p.
 Summation over the second (or third) dimension should yield the usual SHAP values.
-Furthermore, dimensions 2 and 3 are expected to be symmetric. Both conditions are
-tested with a relatively high tolerance of 1e-4. Default is \code{NULL}.}
+Furthermore, dimensions 2 and 3 are expected to be symmetric. Default is \code{NULL}.}
 
 \item{X_pred}{Data set as expected by the \code{predict} function of
 XGBoost, LightGBM, or H2O. For XGBoost, a matrix or \code{xgb.DMatrix},

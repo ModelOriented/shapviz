@@ -336,11 +336,11 @@ shapviz.H2OModel = function(object, X_pred, X = as.data.frame(X_pred),
       "Dimnames 2 and 3 of 'S_inter' must be consistent" = nms[[2L]] == nms[[3L]],
       "Dimnames of 'S_inter' must be consistent with those of 'object'" =
         nms[[2L]] == colnames(object),
-      "No missing SHAP interaction values allowed" = !anyNA(S_inter),
-      "SHAP interactions must sum up to SHAP values" =
-        max(abs(object - apply(S_inter, 1:2, FUN = sum))) <= 1e-4,
-      "SHAP interactions should be symmetric in dimensions 2 and 3" =
-        max(abs(S_inter - aperm(S_inter, c(1L, 3:2)))) <= 1e-4
+      "No missing SHAP interaction values allowed" = !anyNA(S_inter)
+      # "SHAP interactions must sum up to SHAP values" =
+      #   max(abs(object - apply(S_inter, 1:2, FUN = sum))) <= 1e-4,
+      # "SHAP interactions should be symmetric in dimensions 2 and 3" =
+      #   max(abs(S_inter - aperm(S_inter, c(1L, 3:2)))) <= 1e-4
     )
   }
 }

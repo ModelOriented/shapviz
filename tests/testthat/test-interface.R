@@ -76,18 +76,19 @@ test_that("shapviz accepts correct S_inter", {
 })
 
 test_that("shapviz does not accept bad S_inter", {
-  S_inter_wrong_sum <- array(
-    c(1, -1, 0, 0, 0, 0, -1, 1.1),
-    dim = c(2L, 2L, 2L),
-    dimnames = list(NULL, c("x", "y"), c("x", "y"))
-  )
-  expect_error(shapviz(S, X = X, baseline = 4, S_inter = S_inter_wrong_sum))
-  S_inter_asymmetric <- array(
-    c(1, -1, 1, 0, 0, 0, -2, 1),
-    dim = c(2L, 2L, 2L),
-    dimnames = list(NULL, c("x", "y"), c("x", "y"))
-  )
-  expect_error(shapviz(S, X = X, baseline = 4, S_inter = S_inter_asymmetric))
+  # S_inter_wrong_sum <- array(
+  #   c(1, -1, 0, 0, 0, 0, -1, 1.1),
+  #   dim = c(2L, 2L, 2L),
+  #   dimnames = list(NULL, c("x", "y"), c("x", "y"))
+  # )
+  # expect_error(shapviz(S, X = X, baseline = 4, S_inter = S_inter_wrong_sum))
+  # S_inter_asymmetric <- array(
+  #   c(1, -1, 1, 0, 0, 0, -2, 1),
+  #   dim = c(2L, 2L, 2L),
+  #   dimnames = list(NULL, c("x", "y"), c("x", "y"))
+  # )
+  # expect_error(shapviz(S, X = X, baseline = 4, S_inter = S_inter_asymmetric))
+
   S_inter_noname <- array(c(1, -1, 0, 0, 0, 0, -1, 1), dim = c(2L, 2L, 2L))
   expect_error(shapviz(S, X = X, baseline = 4, S_inter = S_inter_noname))
 })

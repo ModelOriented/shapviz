@@ -1,6 +1,6 @@
-# shapviz 0.5.0
+# shapviz 0.4.2
 
-## Major improvement: SHAP interaction values
+## Major improvement: Initial support for SHAP interaction values
 
 - Introduced API for SHAP interaction values through `shapviz(..., interactions = TRUE)`. Currently, this works for XGBoost objects. Another option is to use the "treeshap" package and then call `shapviz()`.
 - SHAP interaction values can be extracted by `get_shap_interactions()` or by list subsetting of element `S_inter`.
@@ -8,7 +8,9 @@
 - `sv_dependence(x, v = "x1", color_var = "x2", interactions = TRUE)` plots SHAP interaction values (multiplied with a factor of 2 due to symmetry), while `sv_dependence(x, v = "x1", interactions = TRUE)` plots pure main effects of "x1".
 - Argument `color_var = "auto"` also works with `interactions = TRUE`.
 
-# shapviz 0.4.2 (not on CRAN)
+## User visible changes
+
+- `sv_dependence()` now also adds horizontal jitter in case `v` is numeric with at most seven unique values. Previously, no jitter was applied in this case.
 
 ## Compatibility with "ggplot2"
 

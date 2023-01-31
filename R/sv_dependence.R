@@ -27,8 +27,8 @@
 #' with \code{options(shapviz.viridis_args = NULL)} or set \code{viridis_args = NULL}.
 #' Only relevant if \code{color_var} is not \code{NULL}.
 #' @param jitter_width The amount of horizontal jitter. The default (\code{NULL}) will
-#' use a value of 0.2 in case \code{v} is a factor, logical, or character variable, and
-#' no jitter otherwise.
+#' use a value of 0.2 in case \code{v} is discrete, and no jitter otherwise.
+#' (Numeric variables are considered discrete if they have at most 7 unique values.)
 #' @param interactions Should SHAP interaction values be plotted? Default is \code{FALSE}.
 #' Requires SHAP interaction values. If no \code{color_var} is passed (or it is equal to
 #' \code{v}), the pure main effect of \code{v} is visualized. Otherwise, twice the SHAP
@@ -45,9 +45,10 @@
 #' sv_dependence(x, "Petal.Length", color_var = "Species")
 #' sv_dependence(x, "Species", color_var = "auto")
 #'
+#' # SHAP interaction values
 #' x2 <- shapviz(fit, X_pred = dtrain, X = iris[, -1], interactions = TRUE)
-#' sv_dependence(x, "Petal.Length", interactions = TRUE)
-#' sv_dependence(x, "Petal.Length", color_var = "auto", interactions = TRUE)
+#' sv_dependence(x2, "Petal.Length", interactions = TRUE)
+#' sv_dependence(x2, "Petal.Length", color_var = "auto", interactions = TRUE)
 sv_dependence <- function(object, ...) {
   UseMethod("sv_dependence")
 }
@@ -179,14 +180,13 @@ potential_interactions <- function(obj, v) {
 
 # Helper functions
 
-# Same as unexported function of ggplot2
-.is_discrete <- function(z) {
-  is.factor(z) || is.character(z) || is.logical(z)
+.is_discrete <- function(z, n_unique = 7L) {
+  is.factor(z) || is.character(z) || is.logical(z) || (length(unique(z)) <= n_unique)
 }
 
 # Bins z into integer valued bins, but only if discrete
 .fast_bin <- function(z, n_bins) {
-  if (.is_discrete(z) || length(unique(z)) <= n_bins) {
+  if (.is_discrete(z, n_unique = n_bins)) {
     return(z)
   }
   q <- stats::quantile(z, seq(0, 1, length.out = n_bins + 1L), na.rm = TRUE)

@@ -35,7 +35,7 @@ These plots require a "shapviz" object, which is built from two things only:
 1. `S`: Matrix of SHAP values
 2. `X`: Dataset that includes the corresponding feature values
 
-Furthermore, a `baseline` can be passed to represent an average prediction on the scale of the SHAP values.
+Optionally, a `baseline` can be passed to represent an average prediction on the scale of the SHAP values. Also a 3D array of SHAP interaction values can be passed as `S_inter`.
 
 A key feature of "shapviz" is that `X` is used for visualization only. Thus it is perfectly fine to use factor variables, even if the underlying model would not accept these.
 Additionally, in order to improve visualization, it can sometimes make sense to clip gross outliers, take logarithms for certain columns, or replace missing values by some explicit value.
@@ -104,9 +104,7 @@ In this example we construct the "shapviz" object directly from the fitted XGBoo
 dia_small <- diamonds[sample(nrow(diamonds), 2000L), ]
 
 # We also pass feature data X with originally encoded values
-shp <- shapviz(
-  fit, X_pred = data.matrix(dia_small[x]), X = dia_small, interactions = TRUE
-)
+shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
 ```
 
 Note: If `X_pred` would contain one-hot-encoded dummy variables, their SHAP values could be collapsed by the `collapse` argument of `shapviz()`.
@@ -158,7 +156,11 @@ sv_dependence(shp, v = "carat", color_var = "auto", alpha = 0.2, size = 1) +
 If SHAP interaction values have been computed (via XGBoost or "treeshap"), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two by symmetry):
 
 ```{r}
-sv_dependence(shp, v = "color", color_var = "cut", interactions = TRUE)
+shp_with_inter <- shapviz(
+  fit, X_pred = data.matrix(dia_small[x]), X = dia_small, interactions = TRUE
+)
+
+sv_dependence(shp_with_inter, v = "color", color_var = "cut", interactions = TRUE)
 ```
 
 ## Interface to other packages

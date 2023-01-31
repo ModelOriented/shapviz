@@ -2,11 +2,12 @@
 #'
 #' Scatter plot of the SHAP values of a feature against its feature values.
 #' Using a \code{color_var} on the color axis, one can get a sense of possible interaction
-#' effects. Set \code{color_var = "auto"} to select the color feature with the largest
-#' average absolute SHAP interaction value. If no SHAP interaction values are available,
-#' a correlation based heuristic is used instead. If SHAP interaction values are
+#' effects. Set \code{color_var = "auto"} to automatically select the color feature with
+#' the strongest interaction effects. If SHAP interaction values are available,
+#' this is determined by the average absolute SHAP interactions.
+#' Otherwise, a correlation based heuristic is used instead. If SHAP interaction values are
 #' available, setting \code{interactions = TRUE} allows to focus on pure main effects or
-#' pure interaction effects.
+#' on pure interaction effects.
 #'
 #' @importFrom rlang .data
 #' @param object An object of class "shapviz".
@@ -16,7 +17,6 @@
 #' average absolute SHAP interaction value is picked. If the "shapviz" object does not
 #' contain SHAP interaction values (the usual case), a correlation based heuristic is
 #' used instead.
-#' Check details for how to change the color scale.
 #' @param color Color to be used if \code{color_var = NULL}.
 #' @param viridis_args List of viridis color scale arguments, see
 #' \code{?ggplot2::scale_color_viridis_c()}. The default points to the global
@@ -73,12 +73,12 @@ sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b"
     is.null(color_var) || (color_var %in% c("auto", colnames(S)))
   )
   if (interactions && is.null(S_inter)) {
-    stop("No SHAP interaction values available.")
+    stop("No SHAP interaction values available in 'object'.")
   }
 
   # Set jitter value
   if (is.null(jitter_width)) {
-    jitter_width <- 0.2 * .is_discrete(X[[v]])
+    jitter_width <- 0.2 * .is_discrete(X[[v]], n_unique = 7L)
   }
 
   # Set color value
@@ -97,7 +97,7 @@ sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b"
     }
     s <- S_inter[, v, color_var]
     if (color_var != v) {
-      s <- 2 * s  # Account for symmetric SHAP interactions
+      s <- 2 * s  # Off-diagonals need to be multiplied by 2 for symmetry reasons
     }
   } else {
     y_lab <- paste("SHAP value of", v)
@@ -112,7 +112,7 @@ sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b"
     return(p)
   }
   dat[[color_var]] <- X[[color_var]]
-  vir <- if (.is_discrete(dat[[color_var]])) {
+  vir <- if (.is_discrete(dat[[color_var]], n_unique = 0L)) {  # only if non-numeric
     vir <- scale_color_viridis_d
   } else {
     vir <- scale_color_viridis_c
@@ -180,7 +180,7 @@ potential_interactions <- function(obj, v) {
 
 # Helper functions
 
-.is_discrete <- function(z, n_unique = 7L) {
+.is_discrete <- function(z, n_unique) {
   is.factor(z) || is.character(z) || is.logical(z) || (length(unique(z)) <= n_unique)
 }
 

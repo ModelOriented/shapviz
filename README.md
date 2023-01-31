@@ -6,7 +6,7 @@
 
 SHAP (SHapley Additive exPlanations, [1]) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. The "shapviz" package offers the latter: 
 
-- `sv_dependence()`: Dependence plots to study feature effects (optionally colored by heuristically strongest interacting feature).
+- `sv_dependence()`: Dependence plots to study feature effects.
 - `sv_importance()`: Importance plots (bar plots and/or beeswarm "summary" plots) to study variable importance.
 - `sv_waterfall()`: Waterfall plots to study single predictions.
 - `sv_force()`: Force plots as an alternative to waterfall plots.
@@ -16,7 +16,7 @@ These plots require a "shapviz" object, which is built from two things only:
 1. `S`: Matrix of SHAP values
 2. `X`: Dataset that includes the corresponding feature values
 
-Furthermore, a `baseline` can be passed to represent an average prediction on the scale of the SHAP values.
+Optionally, a `baseline` can be passed to represent an average prediction on the scale of the SHAP values. Also a 3D array of SHAP interaction values can be passed as `S_inter`.
 
 A key feature of "shapviz" is that `X` is used for visualization only. Thus it is perfectly fine to use factor variables, even if the underlying model would not accept these.
 Additionally, in order to improve visualization, it can sometimes make sense to clip gross outliers, take logarithms for certain columns, or replace missing values by some explicit value.
@@ -81,7 +81,7 @@ dia_small <- diamonds[sample(nrow(diamonds), 2000L), ]
 shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
 ```
 
-Note: If `X_pred` would contain one-hot-encoded dummy variables, their SHAP values could be collapsed by the `collapse` argument of `shapviz()`.
+Note: If `X_pred` would contain one-hot-encoded dummy variables, their SHAP values (and also SHAP interaction values) could be collapsed by the `collapse` argument of `shapviz()`.
 
 ### Waterfall plot
 
@@ -132,13 +132,27 @@ sv_importance(shp, kind = "both", show_numbers = TRUE, bee_width = 0.2)
 
 ### Dependence plot
 
-A scatterplot of SHAP values of a feature like `color` against its observed values gives a great impression on the feature effect on the response. Vertical scatter gives additional info on interaction effects. "shapviz" offers a heuristic to pick another feature on the color scale with potential strongest interaction.
+A scatterplot of SHAP values of a feature like `color` against its observed values gives a great impression on the feature effect on the response. Vertical scatter gives additional info on interaction effects. Use `color_var = "auto"` to let "shapviz" select the strongest interacting variable. In case no SHAP interaction values are available, a simple heuristic is used.
 
 ``` r
 sv_dependence(shp, v = "color", color_var = "auto")
 ```
 
 ![](man/figures/README-dep.png)
+
+### Interactions
+
+If SHAP interaction values have been computed (via XGBoost or "treeshap"), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry):
+
+``` r
+shp_with_inter <- shapviz(
+  fit, X_pred = data.matrix(dia_small[x]), X = dia_small, interactions = TRUE
+)
+
+sv_dependence(shp_with_inter, v = "color", color_var = "cut", interactions = TRUE)
+```
+
+![](man/figures/README-dep2.png)
 
 ## More
 

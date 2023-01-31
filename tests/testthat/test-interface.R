@@ -49,4 +49,48 @@ test_that("shapviz works with single column input", {
   expect_s3_class(sv_dependence(shp2, "x", color_var = "auto"), "ggplot")
 })
 
+# Interactions
+test_that("shapviz accepts correct S_inter", {
+  S_inter <- array(
+    c(1, -1, 0, 0, 0, 0, -1, 1),
+    dim = c(2L, 2L, 2L),
+    dimnames = list(NULL, c("x", "y"), c("x", "y"))
+  )
+  expect_silent(shp_inter <- shapviz(S, X = X, baseline = 4, S_inter = S_inter))
+  expect_silent(
+    shapviz(
+      S[1L, , drop = FALSE],
+      X = X[1L, ],
+      baseline = 4,
+      S_inter = S_inter[1L, , , drop = FALSE]
+    )
+  )
+  expect_silent(
+    shapviz(
+      S[, "x", drop = FALSE],
+      X = X["x"],
+      baseline = 4,
+      S_inter = S_inter[, "x", "x", drop = FALSE]
+    )
+  )
+})
+
+test_that("shapviz does not accept bad S_inter", {
+  # S_inter_wrong_sum <- array(
+  #   c(1, -1, 0, 0, 0, 0, -1, 1.1),
+  #   dim = c(2L, 2L, 2L),
+  #   dimnames = list(NULL, c("x", "y"), c("x", "y"))
+  # )
+  # expect_error(shapviz(S, X = X, baseline = 4, S_inter = S_inter_wrong_sum))
+  # S_inter_asymmetric <- array(
+  #   c(1, -1, 1, 0, 0, 0, -2, 1),
+  #   dim = c(2L, 2L, 2L),
+  #   dimnames = list(NULL, c("x", "y"), c("x", "y"))
+  # )
+  # expect_error(shapviz(S, X = X, baseline = 4, S_inter = S_inter_asymmetric))
+
+  S_inter_noname <- array(c(1, -1, 0, 0, 0, 0, -1, 1), dim = c(2L, 2L, 2L))
+  expect_error(shapviz(S, X = X, baseline = 4, S_inter = S_inter_noname))
+})
+
 

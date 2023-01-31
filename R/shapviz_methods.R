@@ -12,6 +12,7 @@
 #' @seealso \code{\link{shapviz}}.
 print.shapviz <- function(x, n = 2L, ...) {
   S <- get_shap_values(x)
+  S_inter <- get_shap_interactions(x)
   n <- min(n, nrow(S))
   cat(
     "'shapviz' object representing \n  - SHAP matrix of dimension",
@@ -19,6 +20,11 @@ print.shapviz <- function(x, n = 2L, ...) {
     "\n  - feature data.frame of dimension",  nrow(S), "x", ncol(S),
     "\n  - baseline value of", get_baseline(x)
   )
+  if (!is.null(S_inter)) {
+    cat(
+      "\n  - SHAP interaction array of dimension",
+      paste(dim(S_inter), collapse = " x "))
+  }
   cat("\n\n")
   cat("SHAP values of first", n, "observations:\n")
   print(utils::head(S, n))
@@ -62,17 +68,20 @@ is.shapviz <- function(object){
 
 #' Extractor Functions
 #'
-#' Functions to extract SHAP values, feature values, or the baseline from a "shapviz" object.
+#' Functions to extract SHAP values, feature values, the baseline, or SHAP interactions from a "shapviz" object.
 #'
 #' @name extractors
 #' @param object Object to extract something.
 #' @param ... Currently unused.
-#' @return `get_shap_values()` returns the matrix of SHAP values, `get_feature_values()` the \code{data.frame} of feature values, and `get_baseline()` the numeric baseline value of the input.
+#' @return `get_shap_values()` returns the matrix of SHAP values,
+#' `get_feature_values()` the \code{data.frame} of feature values,
+#' `get_baseline()` the numeric baseline value,
+#' and `get_shap_interactions()` the SHAP interactions of the input.
 NULL
 
 #' @rdname extractors
 #' @export
-get_shap_values <- function(object, ...){
+get_shap_values <- function(object, ...) {
   UseMethod("get_shap_values")
 }
 
@@ -95,25 +104,25 @@ get_shap_values.default = function(object, ...) {
 
 #' @rdname extractors
 #' @export
-get_feature_values <- function(object, ...){
+get_feature_values <- function(object, ...) {
   UseMethod("get_feature_values")
 }
 
 #' @rdname extractors
 #' @export
-get_feature_values.shapviz = function(object, ...) {
+get_feature_values.shapviz <- function(object, ...) {
   object[["X"]]
 }
 
 #' @rdname extractors
 #' @export
-get_feature_values.default = function(object, ...) {
+get_feature_values.default <- function(object, ...) {
   stop("No default method available.")
 }
 
 #' @rdname extractors
 #' @export
-get_baseline <- function(object, ...){
+get_baseline <- function(object, ...) {
   UseMethod("get_baseline")
 }
 
@@ -126,5 +135,23 @@ get_baseline.shapviz = function(object, ...) {
 #' @rdname extractors
 #' @export
 get_baseline.default = function(object, ...) {
+  stop("No default method available.")
+}
+
+#' @rdname extractors
+#' @export
+get_shap_interactions <- function(object, ...) {
+  UseMethod("get_shap_interactions")
+}
+
+#' @rdname extractors
+#' @export
+get_shap_interactions.shapviz = function(object, ...) {
+  object[["S_inter"]]
+}
+
+#' @rdname extractors
+#' @export
+get_shap_interactions.default = function(object, ...) {
   stop("No default method available.")
 }

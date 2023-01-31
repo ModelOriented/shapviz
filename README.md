@@ -142,7 +142,7 @@ sv_dependence(shp, v = "color", color_var = "auto")
 
 ### Interactions
 
-If SHAP interaction values have been computed (via XGBoost or "treeshap"), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two by symmetry):
+If SHAP interaction values have been computed (via XGBoost or "treeshap"), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry):
 
 ``` r
 shp_with_inter <- shapviz(

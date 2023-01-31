@@ -153,7 +153,7 @@ sv_dependence(shp, v = "carat", color_var = "auto", alpha = 0.2, size = 1) +
 
 ### Interactions
 
-If SHAP interaction values have been computed (via XGBoost or "treeshap"), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two by symmetry):
+If SHAP interaction values have been computed (via XGBoost or "treeshap"), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry):
 
 ```{r}
 shp_with_inter <- shapviz(
@@ -249,10 +249,10 @@ fit <- ranger(
   y = diamonds$price, x = data.matrix(diamonds[x]), max.depth = 6, num.trees = 100
 )
 unified_model <- ranger.unify(fit, data.matrix(diamonds[x]))
-shaps <- treeshap(unified_model, data.matrix(dia_small[x]))
+shaps <- treeshap(unified_model, data.matrix(dia_small[x]), interactions = TRUE)
 shp <- shapviz(shaps, X = dia_small)
 sv_importance(shp)
-sv_dependence(shp, "carat", color_var = "auto", alpha = 0.2, size = 1)
+sv_dependence(shp, "carat", color_var = "auto", alpha = 0.7, interactions = TRUE)
 ```
 
 ### kernelshap

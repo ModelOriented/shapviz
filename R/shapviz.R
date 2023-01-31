@@ -41,8 +41,10 @@
 #' The name of the new column equals the name of the vector in \code{collapse}.
 #' @param interactions Should SHAP interactions be calculated (default is \code{FALSE})?
 #' Only available for XGBoost.
-#' @param S_inter 3D array of SHAP interaction values. If \code{object} has shape n x p,
-#' then \code{S_inter} needs to be of shape n x p x p. Default is \code{NULL}.
+#' @param S_inter Optional 3D array of SHAP interaction values.
+#' If \code{object} has shape n x p, then \code{S_inter} needs to be of shape n x p x p.
+#' Summation over the second (or third) dimension should yield the usual SHAP values.
+#' Furthermore, dimensions 2 and 3 are expected to be symmetric. Default is \code{NULL}.
 #' @param ... Parameters passed to other methods (currently only used by
 #' the \code{predict} functions of XGBoost, LightGBM, and H2O).
 #' @return An object of class "shapviz" with the following three elements:
@@ -50,7 +52,7 @@
 #'   \item \code{S}: A numeric matrix of SHAP values.
 #'   \item \code{X}: A \code{data.frame} containing the feature values corresponding to \code{S}.
 #'   \item \code{baseline}: Baseline value, representing the average prediction at the scale of the SHAP values.
-#'   \item \code{S_inter}: A numeric array of SHAP interaction values or \code{NULL}.
+#'   \item \code{S_inter}: A numeric array of SHAP interaction values (or \code{NULL}).
 #' }
 #' @export
 #' @seealso \code{\link{sv_importance}}, \code{\link{sv_dependence}},
@@ -76,39 +78,13 @@ shapviz.default = function(object, ...) {
 #' @export
 shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
                           S_inter = NULL, ...) {
-  object <- collapse_shap(object, collapse = collapse)
-  stopifnot(
-    "'X' must be a matrix or data.frame" = is.matrix(X) || is.data.frame(X),
-    "'object' need at least one row and one column" = dim(object) >= 1L,
-    "'X' need at least one row and one column" = dim(X) >= 1L,
-    "The number of rows of 'object' and 'X' differ" = nrow(object) == nrow(X),
-    "'object' must have column names" = !is.null(colnames(object)),
-    "'X' must have column names" = !is.null(colnames(X)),
-    "'X' must contain all column names of 'object'" =
-      all(colnames(object) %in% colnames(X)),
-    "No missing SHAP values allowed" = !anyNA(object),
-    "'baseline' has to be a single number" =
-      length(baseline) == 1L && is.numeric(baseline),
-    "'baseline' cannot be NA" = !is.na(baseline)
-  )
-  if (!is.null(S_inter)) {
-    stopifnot(
-      "'S_inter' must be an array" = is.array(S_inter),
-      "'S_inter' must have dimension 3" = length(dim(S_inter)) == 3L,
-      "Shape of 'S_inter' must be consistent with 'object'" =
-        dim(S_inter) == c(dim(object), ncol(object)),
-      "Dimnames 2 and 3 of 'S_inter' must be consistent" =
-        dimnames(S_inter)[[2L]] == dimnames(S_inter)[[3L]],
-      "Dimnames of 'S_inter' must be consistent with those of 'object'" =
-        dimnames(S_inter)[[2L]] == colnames(object),
-      "SHAP interactions must sum to SHAP values" = all.equal(
-        apply(S_inter, 1:2, FUN = sum),
-        object,
-        tolerance = 1e-4,
-        check.attributes = FALSE
-      )
-    )
+  if (!is.null(collapse)) {
+    object <- collapse_shap(object, collapse = collapse)
+    if (!is.null(S_inter)) {
+      S_inter <- collapse_shap(S_inter, collapse = collapse)
+    }
   }
+  .input_checks(object = object, X = X, baseline = baseline, S_inter = S_inter)
   out <- list(
     S = object,
     X = as.data.frame(X)[colnames(object)],
@@ -330,4 +306,41 @@ shapviz.H2OModel = function(object, X_pred, X = as.data.frame(X_pred),
     baseline = unname(S[1L, "BiasTerm"]),
     collapse = collapse
   )
+}
+
+# Helper function
+.input_checks <- function(object, X, baseline = 0, S_inter = NULL) {
+  stopifnot(
+    "'X' must be a matrix or data.frame" = is.matrix(X) || is.data.frame(X),
+    "'object' needs at least one row and one column" = dim(object) >= 1L,
+    "'X' need at least one row and one column" = dim(X) >= 1L,
+    "The number of rows of 'object' and 'X' differ" = nrow(object) == nrow(X),
+    "'object' must have column names" = !is.null(colnames(object)),
+    "'X' must have column names" = !is.null(colnames(X)),
+    "'X' must contain all column names of 'object'" =
+      all(colnames(object) %in% colnames(X)),
+    "No missing SHAP values allowed" = !anyNA(object),
+    "'baseline' has to be a single number" =
+      length(baseline) == 1L && is.numeric(baseline),
+    "'baseline' cannot be NA" = !is.na(baseline)
+  )
+  if (!is.null(S_inter)) {
+    nms <- dimnames(S_inter)
+    stopifnot(
+      "'S_inter' must be an array" = is.array(S_inter),
+      "'S_inter' must be 3-dimensional" = length(dim(S_inter)) == 3L,
+      "Shape of 'S_inter' must be consistent with 'object'" =
+        dim(S_inter) == c(dim(object), ncol(object)),
+      "Dimensions 2 and 3 of 'S_inter' must have names" =
+        !is.null(nms[[2L]]) && !is.null(nms[[3L]]),
+      "Dimnames 2 and 3 of 'S_inter' must be consistent" = nms[[2L]] == nms[[3L]],
+      "Dimnames of 'S_inter' must be consistent with those of 'object'" =
+        nms[[2L]] == colnames(object),
+      "No missing SHAP interaction values allowed" = !anyNA(S_inter),
+      "SHAP interactions must sum up to SHAP values" =
+        max(abs(object - apply(S_inter, 1:2, FUN = sum))) <= 1e-4,
+      "SHAP interactions should be symmetric in dimensions 2 and 3" =
+        max(abs(S_inter - aperm(S_inter, c(1L, 3:2)))) <= 1e-4
+    )
+  }
 }

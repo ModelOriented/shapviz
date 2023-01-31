@@ -38,3 +38,48 @@ test_that("collapse_shap work for two groups", {
   expect_equal(colnames(out), c("x", "age", "letter"))
   expect_equal(out[, "age"], rowSums(S[, c("age low", "age high")]))
 })
+
+# Interactions
+
+test_that("collapse_shap gives an error for arrays of dimension >3", {
+  S_inter <- array(
+    dim = c(2L, 2L, 2L, 2L),
+    dimnames = replicate(4L, c("a", "b"), simplify = FALSE)
+  )
+  expect_error(collapse_shap(S_inter, collapse = list(ab = c("a", "b"))))
+})
+
+test_that("collapse_shap works for SHAP interactions (result is nx1x1)", {
+  S_inter <- array(
+    1,
+    dim = c(2L, 2L, 2L),
+    dimnames = list(NULL, c("a", "b"), c("a", "b"))
+  )
+  out <- collapse_shap(S_inter, collapse = list(ab = c("a", "b")))
+  expected_value <- array(4, dim = c(2L, 1L, 1L), dimnames = list(NULL, "ab", "ab"))
+  expect_equal(out, expected_value)
+})
+
+test_that("collapse_shap works for SHAP interactions and n = 1", {
+  S_inter <- array(
+    1,
+    dim = c(1L, 2L, 2L),
+    dimnames = list(NULL, c("a", "b"), c("a", "b"))
+  )
+  out <- collapse_shap(S_inter, collapse = list(ab = c("a", "b")))
+  expected_value <- array(4, dim = c(1L, 1L, 1L), dimnames = list(NULL, "ab", "ab"))
+  expect_equal(out, expected_value)
+})
+
+test_that("collapse_shap works for SHAP interactions and two collapses (result is nx2x2)", {
+  S_inter <- array(
+    1,
+    dim = c(2L, 4L, 4L),
+    dimnames = list(NULL, letters[1:4], letters[1:4])
+  )
+  out <- collapse_shap(S_inter, collapse = list(cd = c("c", "d"), ab = c("a", "b")))
+  expected_value <- array(
+    4, dim = c(2L, 2L, 2L), dimnames = list(NULL, c("cd", "ab"), c("cd", "ab"))
+  )
+  expect_equal(out, expected_value)
+})

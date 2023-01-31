@@ -81,7 +81,7 @@ dia_small <- diamonds[sample(nrow(diamonds), 2000L), ]
 shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
 ```
 
-Note: If `X_pred` would contain one-hot-encoded dummy variables, their SHAP values could be collapsed by the `collapse` argument of `shapviz()`.
+Note: If `X_pred` would contain one-hot-encoded dummy variables, their SHAP values (and also SHAP interaction values) could be collapsed by the `collapse` argument of `shapviz()`.
 
 ### Waterfall plot
 

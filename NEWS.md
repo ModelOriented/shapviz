@@ -2,16 +2,20 @@
 
 ## Major improvement: Initial support for SHAP interaction values
 
-- Introduced API for SHAP interaction values through `shapviz(..., interactions = TRUE)`. Currently, this works for XGBoost objects. Another option is to use the "treeshap" package and then call `shapviz()`.
-- SHAP interaction values can be extracted by `get_shap_interactions()` or by list subsetting of element `S_inter`.
-- If SHAP interaction values are available, `sv_dependence(..., color_var = "auto")` uses those to determine the color variable.
-- `sv_dependence(x, v = "x1", color_var = "x2", interactions = TRUE)` plots SHAP interaction values (multiplied with a factor of 2 due to symmetry), while `sv_dependence(x, v = "x1", interactions = TRUE)` plots pure main effects of "x1".
-- Argument `color_var = "auto"` also works with `interactions = TRUE`.
+- Introduced API for SHAP interaction values `S_inter` (3D array of dimension consistent with SHAP matrix `S`):
+    - Matrix method: `shapviz(..., S_inter = NULL)`
+    - XGBoost method: `shapviz(..., interactions = TRUE)`
+    - treeshap method: `shapviz(...)`
+- SHAP interaction values can be extracted by `get_shap_interactions()`.
+- `sv_dependence(x, v = "x1", color_var = "x2", interactions = TRUE)` plots SHAP interaction values (multiplied with a factor of 2 due to symmetry)
+- `sv_dependence(x, v = "x1", interactions = TRUE)` plots pure main effects of "x1".
+- If SHAP interaction values are available, `sv_dependence(..., color_var = "auto")` uses those to determine the most interacting color variable.
+- `collapse_shap()` also works for SHAP interaction matrices.
 
 ## User visible changes
 
-- `sv_importance()` used to collapse other features into one bar/beeswarm in case of too many features. This logic has been removed. Now, no "Other" bar/beeswarm is shown anymore, and the `show_other` argument is deprecated.
-- `sv_dependence()` now also adds horizontal jitter in case `v` is numeric with at most seven unique values. Previously, no jitter was applied in this case.
+- `sv_importance()`: In case of too many features, `sv_importance()` used to collapse the remaining features into one bar/beeswarm. This logic has been removed for maintainability reasons, and the `show_other` argument has been deprecated.
+- By default, `sv_dependence()` automatically adds horizontal jitter for discrete `v`. This now also works if `v` is numeric with at most seven unique values, not only for logicals, factors, and character `v`.
 
 ## Compatibility with "ggplot2"
 

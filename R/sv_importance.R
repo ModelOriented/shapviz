@@ -87,61 +87,34 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
     )
   }
   S <- get_shap_values(object)
-  X <- get_feature_values(object)
   imp <- .get_imp(S)
+  ord <- names(imp)
+
   if (kind == "no") {
     return(imp)
   }
 
-  # Deal with too many features -> important: "imp" is sorted
+  # Deal with too many features
   if (ncol(S) > max_display) {
-    imp <- imp[seq_len(max_display)]
-    S <- S[, names(imp), drop = FALSE]
-    X <- X[names(imp)]
+    ord <- ord[seq_len(max_display)]
   }
 
-  # The next two lines would be more elegant, but require R >= 4.1
-  # X_scaled <- X
-  # X_scaled[] <- apply(data.matrix(X), 2L, FUN = .min_max_scale, simplify = FALSE)
-  X_tmp <- apply(data.matrix(X), 2L, FUN = .min_max_scale)
-  X_scaled <- as.data.frame(if (nrow(X) >= 2L) X_tmp else t(X_tmp))
-
-  # Switch to dataframe logic
-  imp_df <- data.frame(feature = stats::reorder(names(imp), imp), value = imp)
-
+  # ggplot will need to work with data.frame
+  imp_df <- data.frame(feature = factor(ord, rev(ord)), value = imp[ord])
   is_bar <- kind == "bar"
   if (is_bar) {
     p <- ggplot(imp_df, aes(x = feature, y = value)) +
       geom_bar(fill = fill, width = bar_width, stat = "identity", ...) +
       labs(x = element_blank(), y = "mean(|SHAP value|)")
   } else {
-    # Transpose S and X_scaled
-    S <- as.data.frame(S)
-    stopifnot(colnames(S) == colnames(X_scaled)) # to be absolutely sure...
-    S_long <- utils::stack(S)
-    df <- data.frame(
-      feature = stats::reorder(S_long$ind, abs(S_long$values)),
-      value = S_long$values,
-      color = utils::stack(X_scaled)$values
+    # Prepare data.frame for beeswarm plot
+    S <- S[, ord, drop = FALSE]
+    X <- .scale_X(get_feature_values(object)[ord])
+    df <- transform(
+      as.data.frame.table(S, responseName = "value"),
+      feature = factor(Var2, levels = rev(ord)),
+      color = as.data.frame.table(X)$Freq
     )
-
-    # Put together color scale and deal with special case of only one unique v value
-    if (!is.null(color_bar_title)) {
-      nv <- length(unique(df$color))
-      viridis_args_plus <-
-        list(
-          breaks = if (nv >= 2L) 0:1 else 0.5,
-          labels = if (nv >= 2L) c("Low", "High") else "Avg",
-          guide = guide_colorbar(
-            barwidth = 0.4,
-            barheight = 8,
-            title.theme = element_text(angle = 90, hjust = 0.5, vjust = 0),
-            title.position = "left"
-          )
-        )
-    } else {
-      viridis_args_plus <- list(guide = "none")
-    }
 
     p <- ggplot(df, aes(x = feature, y = value))
     if (kind == "both") {
@@ -155,7 +128,11 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
         position = position_bee(width = bee_width, adjust = bee_adjust),
         ...
       ) +
-      do.call(scale_color_viridis_c, c(viridis_args, viridis_args_plus)) +
+      .get_color_scale(
+        viridis_args = viridis_args,
+        bar = !is.null(color_bar_title),
+        ncol = length(unique(df$color))   # Special case of constant feature values
+      ) +
       labs(x = element_blank(), y = "SHAP value", color = color_bar_title)
   }
   if (show_numbers) {
@@ -185,12 +162,38 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
     z[!is.na(z)] <- 0.5
     return(z)
   }
-  return((z - r[1L]) /(r[2L] - r[1L]))
+  (z - r[1L]) /(r[2L] - r[1L])
 }
 
 .get_imp <- function(z) {
   sort(colMeans(abs(z)), decreasing = TRUE)
 }
+
+.scale_X <- function(X) {
+  X_scaled <- apply(data.matrix(X), 2L, FUN = .min_max_scale)
+  if (nrow(X) == 1L) t(X_scaled) else X_scaled
+}
+
+# ncol < 2 treats the special case of constant feature values (e.g., if n = 1)
+.get_color_scale <- function(viridis_args, bar = TRUE, ncol = 2L) {
+  if (bar) {
+    viridis_args_plus <-
+      list(
+        breaks = if (ncol >= 2L) 0:1 else 0.5,
+        labels = if (ncol >= 2L) c("Low", "High") else "Avg",
+        guide = guide_colorbar(
+          barwidth = 0.4,
+          barheight = 8,
+          title.theme = element_text(angle = 90, hjust = 0.5, vjust = 0),
+          title.position = "left"
+        )
+      )
+  } else {
+    viridis_args_plus <- list(guide = "none")
+  }
+  return(do.call(scale_color_viridis_c, c(viridis_args, viridis_args_plus)))
+}
+
 
 #' Number Formatter
 #'

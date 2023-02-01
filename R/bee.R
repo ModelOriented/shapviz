@@ -23,9 +23,11 @@ PositionBee <- ggplot2::ggproto(
     )
   },
 
-  compute_layer = function(self, data, params, layout) {
+  compute_panel = function(self, data, params, scales) {
+    data <- ggplot2::flip_data(data, params$flipped_aes)
     x_jit <- ave2(data$y, g = data$x, FUN = shifter, adjust = params$adjust)
-    ggplot2::transform_position(data, function(x) x + x_jit * params$width)
+    data <- ggplot2::transform_position(data, function(x) x + x_jit * params$width)
+    ggplot2::flip_data(data, params$flipped_aes)
   }
 )
 

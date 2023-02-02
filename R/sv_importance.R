@@ -103,9 +103,9 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
   imp_df <- data.frame(feature = factor(ord, rev(ord)), value = imp[ord])
   is_bar <- kind == "bar"
   if (is_bar) {
-    p <- ggplot(imp_df, aes(x = feature, y = value)) +
+    p <- ggplot(imp_df, aes(x = value, y = feature)) +
       geom_bar(fill = fill, width = bar_width, stat = "identity", ...) +
-      labs(x = element_blank(), y = "mean(|SHAP value|)")
+      labs(x = "mean(|SHAP value|)", y = element_blank())
   } else {
     # Prepare data.frame for beeswarm plot
     S <- S[, ord, drop = FALSE]
@@ -116,13 +116,13 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
       color = as.data.frame.table(X)$Freq
     )
 
-    p <- ggplot(df, aes(x = feature, y = value))
+    p <- ggplot(df, aes(x = value, y = feature))
     if (kind == "both") {
       p <- p +
         geom_bar(data = imp_df, fill = fill, width = bar_width, stat = "identity")
     }
     p <- p +
-      geom_hline(yintercept = 0, color = "darkgray") +
+      geom_vline(xintercept = 0, color = "darkgray") +
       geom_point(
         aes(color = color),
         position = position_bee(width = bee_width, adjust = bee_adjust),
@@ -133,25 +133,25 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
         bar = !is.null(color_bar_title),
         ncol = length(unique(df$color))   # Special case of constant feature values
       ) +
-      labs(x = element_blank(), y = "SHAP value", color = color_bar_title)
+      labs(x = "SHAP value", y = element_blank(), color = color_bar_title)
   }
   if (show_numbers) {
     p <- p +
       geom_text(
         data = imp_df,
         aes(
-          y = if (is_bar) value + max(value) / 60 else
+          x = if (is_bar) value + max(value) / 60 else
             min(df$value) - diff(range(df$value)) / 20,
           label = format_fun(value)
         ),
         hjust = !is_bar,
         size = number_size
       ) +
-      scale_y_continuous(
+      scale_x_continuous(
         expand = expansion(mult = 0.05 + c(0.12 *!is_bar, 0.09 * is_bar))
       )
   }
-  p + coord_flip(clip = "off")
+  p
 }
 
 # Helper functions

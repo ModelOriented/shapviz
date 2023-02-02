@@ -75,7 +75,7 @@ sv_interaction.shapviz <- function(object, kind = c("beeswarm", "heatmap", "no")
   X_long <- as.data.frame.table(X)
   df <- transform(
     as.data.frame.table(S_inter, responseName = "value"),
-    Variable = factor(Var2, levels = rev(ord)),
+    Variable = factor(Var2, levels = ord),
     Variable2 = factor(Var3, levels = ord),
     color = X_long$Freq  #  Correctly recycled
   )
@@ -84,21 +84,24 @@ sv_interaction.shapviz <- function(object, kind = c("beeswarm", "heatmap", "no")
   mask <- df[["Variable"]] != df[["Variable2"]]
   df[mask, "value"] <- 2 * df[mask, "value"]
 
-  ggplot(df, aes(Variable, value)) +
-    geom_hline(yintercept = 0, color = "darkgray") +
+  ggplot(df, aes(x = value, y = "1")) +
+    geom_vline(xintercept = 0, color = "darkgray") +
     geom_point(
       aes(color = color),
       position = position_bee(width = bee_width, adjust = bee_adjust),
       alpha = alpha,
       ...
     ) +
-    facet_wrap("Variable2", nrow = 1L) +
-    labs(x = element_blank(), y = "SHAP value", color = color_bar_title) +
+    facet_grid(Variable ~ Variable2, switch = "y") +
+    labs(x = "SHAP value", y = element_blank(), color = color_bar_title) +
     .get_color_scale(
       viridis_args = viridis_args,
       bar = !is.null(color_bar_title),
       ncol = length(unique(X_long$Freq))
     ) +
-    theme(panel.spacing = unit(0.15, "lines")) +
-      coord_flip()
+    theme(
+      panel.spacing = unit(0.2, "lines"),
+      axis.ticks.y = element_blank(),
+      axis.text.y = element_blank()
+    )
 }

@@ -214,7 +214,7 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
 #' format_max(y)
 #' format_max(y, digits = 5)
 format_max <- function(x, digits = 4L, ...) {
-  mx <- trunc(log10(max(abs(x)))) + 1L
+  mx <- trunc(log10(max(abs(x), na.rm = TRUE))) + 1L
   x_rounded <- round(x, pmax(0L, digits - mx))
   format(x_rounded, scientific = FALSE, trim = TRUE, ...)
 }

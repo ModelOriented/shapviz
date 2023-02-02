@@ -7,6 +7,7 @@
     - XGBoost method: `shapviz(..., interactions = TRUE)`
     - treeshap method: `shapviz(...)`
 - SHAP interaction values can be extracted by `get_shap_interactions()`.
+- `sv_interaction(x)` shows matrix of beeswarm plots.
 - `sv_dependence(x, v = "x1", color_var = "x2", interactions = TRUE)` plots SHAP interaction values (multiplied with a factor of 2 due to symmetry)
 - `sv_dependence(x, v = "x1", interactions = TRUE)` plots pure main effects of "x1".
 - If SHAP interaction values are available, `sv_dependence(..., color_var = "auto")` uses those to determine the most interacting color variable.
@@ -20,6 +21,10 @@
 ## Compatibility with "ggplot2"
 
 - "ggplot2" 3.4 has replaced the "size" aesthetic in line-based geoms by "linewidth". This has been adapted. "shapviz" now depends on ggplot2 >= 3.4.
+
+## Technical changes
+
+- `sv_importance()` does not use flipped coordinate system anymore.
 
 # shapviz 0.4.1
 

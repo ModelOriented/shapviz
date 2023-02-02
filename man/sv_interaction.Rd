@@ -14,6 +14,7 @@ sv_interaction(object, ...)
   object,
   kind = c("beeswarm", "heatmap", "no"),
   max_display = 7L,
+  alpha = 0.3,
   bee_width = 0.3,
   bee_adjust = 0.5,
   viridis_args = getOption("shapviz.viridis_args"),
@@ -24,17 +25,16 @@ sv_interaction(object, ...)
 \arguments{
 \item{object}{An object of class "shapviz".}
 
-\item{...}{Arguments passed to \code{geom_bar()} (if \code{kind = "bar"}) or
-to \code{geom_point()} otherwise.
-For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms,
-and setting \code{size = 3} will produce larger dots.}
+\item{...}{Arguments passed to \code{geom_point()}.
+For instance, passing \code{size = 1} will produce smaller dots.}
 
-\item{kind}{Should a "bar" plot (the default), a "beeswarm" plot, or "both" be shown?
-Set to "no" in order to suppress plotting. In that case, the sorted
-SHAP feature importances of all variables are returned.}
+\item{kind}{Set to "no" to simply return the matrix of average absolute SHAP
+interactions.}
 
-\item{max_display}{Maximum number of features (with highest importance) to plot.
+\item{max_display}{Maximum number of features (with highest SHAP importance) to plot.
 Set to \code{Inf} to show all features. Has no effect if \code{kind = "no"}.}
+
+\item{alpha}{Transparency of the beeswarm dots. Defaults to 0.3.}
 
 \item{bee_width}{Relative width of the beeswarms (only used if beeswarm shown).}
 
@@ -51,36 +51,17 @@ with \code{options(shapviz.viridis_args = NULL)} or set \code{viridis_args = NUL
 
 \item{color_bar_title}{Title of color bar of the beeswarm plot.
 Set to \code{NULL} to hide the color bar altogether.}
-
-\item{show_other}{Deprecated.}
-
-\item{fill}{Color used to fill the bars (only used if bars are shown).}
-
-\item{bar_width}{Relative width of the bars (only used if bars are shown).}
-
-\item{show_numbers}{Should SHAP feature importances be printed?
-Default is \code{FALSE}.}
-
-\item{format_fun}{Function used to format SHAP feature importances
-(only if \code{show_numbers = TRUE}). To change to scientific notation, use e.g.
-\code{function(x) = prettyNum(x, scientific = TRUE)}.}
-
-\item{number_size}{Text size of the numbers (if \code{show_numbers = TRUE}).}
 }
 \value{
 A "ggplot" object representing an importance plot, or - if
-\code{kind = "no"} - a named numeric vector of sorted SHAP feature importances.
+\code{kind = "no"} - a named numeric matrix of average absolute SHAP interactions
+sorted by the average absolute SHAP values.
 }
 \description{
-This function provides two types of SHAP importance plots: a bar plot
-and a beeswarm plot (sometimes called "SHAP summary plot").
-The bar plot shows SHAP feature importances, calculated as the average absolute SHAP
-value per feature.
-The beeswarm plot displays SHAP values per feature, using min-max
-scaled feature values on the color axis. Non-numeric features are transformed
-to numeric by calling \code{data.matrix()} first.
-For both types of plots, the features are sorted in decreasing
-order of importance. The two types of plots can also be combined.
+This function provides ...
+The colors on the beeswarm plots represent min-max scaled feature values.
+Non-numeric features are transformed to numeric by calling \code{data.matrix()} first.
+The features are sorted in decreasing order of usual SHAP importance.
 }
 \section{Methods (by class)}{
 \itemize{

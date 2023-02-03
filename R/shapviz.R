@@ -100,7 +100,7 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
 #' @examples
 #' X_pred <- data.matrix(iris[, -1])
 #' dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1])
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
 #'
 #' # Will use numeric matrix "X_pred" as feature matrix
 #' x <- shapviz(fit, X_pred = X_pred)

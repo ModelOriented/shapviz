@@ -72,7 +72,7 @@ The features are sorted in decreasing order of usual SHAP importance.
 }}
 \examples{
 dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
 x <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 sv_interaction(x)
 sv_interaction(x, max_display = 2, size = 3, alpha = 0.1)

@@ -1,13 +1,14 @@
 #' SHAP Interaction Plot
 #'
-#' This function provides ...
+#' Plots a beeswarm plot for each feature pair. Diagonals represent the main effects,
+#' while off-diagonals show interactions (multiplied by two due to symmetry).
 #' The colors on the beeswarm plots represent min-max scaled feature values.
 #' Non-numeric features are transformed to numeric by calling \code{data.matrix()} first.
 #' The features are sorted in decreasing order of usual SHAP importance.
 #'
-#' @param object An object of class "shapviz".
+#' @param object An object of class "shapviz" containing element \code{S_inter}.
 #' @param kind Set to "no" to simply return the matrix of average absolute SHAP
-#' interactions.
+#' interactions. The default is "beeswarm".
 #' @param max_display Maximum number of features (with highest SHAP importance) to plot.
 #' Set to \code{Inf} to show all features. Has no effect if \code{kind = "no"}.
 #' @param alpha Transparency of the beeswarm dots. Defaults to 0.3.
@@ -25,18 +26,16 @@
 #' Set to \code{NULL} to hide the color bar altogether.
 #' @param ... Arguments passed to \code{geom_point()}.
 #' For instance, passing \code{size = 1} will produce smaller dots.
-#' @return A "ggplot" object representing an importance plot, or - if
-#' \code{kind = "no"} - a named numeric matrix of average absolute SHAP interactions
-#' sorted by the average absolute SHAP values.
+#' @return A "ggplot" object, or - if \code{kind = "no"} - a named numeric matrix
+#' of average absolute SHAP interactions sorted by the average absolute SHAP values.
 #' @export
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
 #' x <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 #' sv_interaction(x)
-#' sv_interaction(x, max_display = 2)
+#' sv_interaction(x, max_display = 2, size = 3, alpha = 0.1)
 #' sv_interaction(x, kind = "no")
-
 sv_interaction <- function(object, ...) {
   UseMethod("sv_interaction")
 }
@@ -49,7 +48,7 @@ sv_interaction.default <- function(object, ...) {
 
 #' @describeIn sv_interaction SHAP interaction plot for an object of class "shapviz".
 #' @export
-sv_interaction.shapviz <- function(object, kind = c("beeswarm", "heatmap", "no"),
+sv_interaction.shapviz <- function(object, kind = c("beeswarm", "no"),
                                    max_display = 7L, alpha = 0.3,
                                    bee_width = 0.3, bee_adjust = 0.5,
                                    viridis_args = getOption("shapviz.viridis_args"),
@@ -75,13 +74,13 @@ sv_interaction.shapviz <- function(object, kind = c("beeswarm", "heatmap", "no")
   X_long <- as.data.frame.table(X)
   df <- transform(
     as.data.frame.table(S_inter, responseName = "value"),
-    Variable = factor(Var2, levels = ord),
+    Variable1 = factor(Var2, levels = ord),
     Variable2 = factor(Var3, levels = ord),
-    color = X_long$Freq  #  Correctly recycled
+    color = X_long$Freq  #  Correctly recycled along the third dimension of S_inter
   )
 
   # Compensate symmetry
-  mask <- df[["Variable"]] != df[["Variable2"]]
+  mask <- df[["Variable1"]] != df[["Variable2"]]
   df[mask, "value"] <- 2 * df[mask, "value"]
 
   ggplot(df, aes(x = value, y = "1")) +
@@ -92,7 +91,7 @@ sv_interaction.shapviz <- function(object, kind = c("beeswarm", "heatmap", "no")
       alpha = alpha,
       ...
     ) +
-    facet_grid(Variable ~ Variable2, switch = "y") +
+    facet_grid(Variable1 ~ Variable2, switch = "y") +
     labs(x = "SHAP value", y = element_blank(), color = color_bar_title) +
     .get_color_scale(
       viridis_args = viridis_args,

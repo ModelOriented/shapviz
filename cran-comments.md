@@ -1,6 +1,6 @@
-# Submission of shapviz 0.4.1
+# Submission of shapviz 0.5.0
 
-Dear CRAN team, I hope you had a good holiday break. This update adds a small but important functionality desired by different people to the importance plots.
+Dear CRAN team. "shapviz" now offers plots for SHAP interaction values - a feature that was on the wishlist for quite some time.
 
 ## Checks
 

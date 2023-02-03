@@ -1,21 +1,21 @@
-# shapviz 0.4.2
+# shapviz 0.5.0
 
-## Major improvement: Initial support for SHAP interaction values
+## Major improvement: SHAP interaction values
 
-- Introduced API for SHAP interaction values `S_inter` (3D array of dimension consistent with SHAP matrix `S`):
-    - Matrix method: `shapviz(..., S_inter = NULL)`
-    - XGBoost method: `shapviz(..., interactions = TRUE)`
-    - treeshap method: `shapviz(...)`
-- SHAP interaction values can be extracted by `get_shap_interactions()`.
+- Introduced API for SHAP interaction values `S_inter` (3D array):
+    - Matrix method: `shapviz(object, ..., S_inter = NULL)`
+    - XGBoost method: `shapviz(object, ..., interactions = TRUE)`
+    - treeshap method: `shapviz(object, ...)`
 - `sv_interaction(x)` shows matrix of beeswarm plots.
-- `sv_dependence(x, v = "x1", color_var = "x2", interactions = TRUE)` plots SHAP interaction values (multiplied with a factor of 2 due to symmetry)
+- `sv_dependence(x, v = "x1", color_var = "x2", interactions = TRUE)` plots SHAP interaction values.
 - `sv_dependence(x, v = "x1", interactions = TRUE)` plots pure main effects of "x1".
 - If SHAP interaction values are available, `sv_dependence(..., color_var = "auto")` uses those to determine the most interacting color variable.
 - `collapse_shap()` also works for SHAP interaction arrays.
+- SHAP interaction values can be extracted by `get_shap_interactions()`.
 
 ## User visible changes
 
-- `sv_importance()`: In case of too many features, `sv_importance()` used to collapse the remaining features into one bar/beeswarm. This logic has been removed for maintainability reasons, and the `show_other` argument has been deprecated.
+- `sv_importance()`: In case of too many features, `sv_importance()` used to collapse the remaining features into an additional bar/beeswarm. This logic has been removed, and the `show_other` argument has been deprecated.
 - By default, `sv_dependence()` automatically adds horizontal jitter for discrete `v`. This now also works if `v` is numeric with at most seven unique values, not only for logicals, factors, and character `v`.
 
 ## Compatibility with "ggplot2"
@@ -24,7 +24,7 @@
 
 ## Technical changes
 
-- `sv_importance()` does not use flipped coordinate system anymore.
+- `sv_importance()` does not use a flipped coordinate system anymore.
 
 # shapviz 0.4.1
 

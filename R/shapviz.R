@@ -44,7 +44,7 @@
 #' @param S_inter Optional 3D array of SHAP interaction values.
 #' If \code{object} has shape n x p, then \code{S_inter} needs to be of shape n x p x p.
 #' Summation over the second (or third) dimension should yield the usual SHAP values.
-#' Furthermore, dimensions 2 and 3 are expected to be symmetric. Default is \code{NULL}.
+#' Furthermore, dimensions 2 and 3 are symmetric. Default is \code{NULL}.
 #' @param ... Parameters passed to other methods (currently only used by
 #' the \code{predict} functions of XGBoost, LightGBM, and H2O).
 #' @return An object of class "shapviz" with the following three elements:
@@ -55,7 +55,7 @@
 #'   \item \code{S_inter}: A numeric array of SHAP interaction values (or \code{NULL}).
 #' }
 #' @export
-#' @seealso \code{\link{sv_importance}}, \code{\link{sv_dependence}},
+#' @seealso \code{\link{sv_importance}}, \code{\link{sv_dependence}}, \code{\link{sv_interaction}},
 #' \code{\link{sv_waterfall}}, \code{\link{sv_force}}, \code{\link{collapse_shap}}
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
@@ -227,10 +227,9 @@ shapviz.explain <- function(object, X, baseline = 0, collapse = NULL, ...) {
 #' @export
 shapviz.treeshap <- function(object, X = object[["observations"]],
                              baseline = 0, collapse = NULL, ...) {
-  if (!is.null(object[["interactions"]])) {
-    S_inter <- aperm(object[["interactions"]], c(3L, 1:2))
-  } else {
-    S_inter <- NULL
+  S_inter <- object[["interactions"]]
+  if (!is.null(S_inter)) {
+    S_inter <- aperm(S_inter, c(3L, 1:2))
   }
   shapviz.matrix(
     as.matrix(object[["shaps"]]),

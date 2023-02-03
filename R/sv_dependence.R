@@ -4,10 +4,10 @@
 #' Using a \code{color_var} on the color axis, one can get a sense of possible interaction
 #' effects. Set \code{color_var = "auto"} to automatically select the color feature with
 #' the strongest interaction effects. If SHAP interaction values are available,
-#' this is determined by the average absolute SHAP interactions.
+#' this is determined by the average absolute SHAP interaction.
 #' Otherwise, a correlation based heuristic is used instead. If SHAP interaction values are
 #' available, setting \code{interactions = TRUE} allows to focus on pure main effects or
-#' on pure interaction effects.
+#' on pure interaction effects (multiplied by two).
 #'
 #' @importFrom rlang .data
 #' @param object An object of class "shapviz".
@@ -40,13 +40,13 @@
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
-#' x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
+#' x <- shapviz(fit, X_pred = dtrain, X = iris)
 #' sv_dependence(x, "Petal.Length")
 #' sv_dependence(x, "Petal.Length", color_var = "Species")
 #' sv_dependence(x, "Species", color_var = "auto")
 #'
 #' # SHAP interaction values
-#' x2 <- shapviz(fit, X_pred = dtrain, X = iris[, -1], interactions = TRUE)
+#' x2 <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 #' sv_dependence(x2, "Petal.Length", interactions = TRUE)
 #' sv_dependence(x2, "Petal.Length", color_var = "auto", interactions = TRUE)
 sv_dependence <- function(object, ...) {

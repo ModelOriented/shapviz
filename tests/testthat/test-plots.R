@@ -52,7 +52,11 @@ test_that("potential_interactions() depend on presence of S_inter", {
   )
 })
 
-# Now with non-standard name
+test_that("Interaction plots provide ggplot object", {
+  expect_s3_class(sv_interaction(x_inter), "ggplot")
+})
+
+# Non-standard name
 ir <- iris
 ir["strange name"] <- ir$Sepal.Width * ir$Petal.Length
 dtrain <- xgboost::xgb.DMatrix(data.matrix(ir[, -1L]), label = ir[, 1L])

@@ -18,14 +18,16 @@ PositionBee <- ggplot2::ggproto(
 
   setup_params = function(self, data) {
     list(
-      width = if (!is.null(self$width)) self$width else ggplot2::resolution(data$x, zero = FALSE) * 0.4,
+      width = if (!is.null(self$width)) self$width else ggplot2::resolution(data$y, zero = FALSE) * 0.4,
       adjust = if (!is.null(self$adjust)) self$adjust else 0.5
     )
   },
 
-  compute_layer = function(self, data, params, layout) {
-    x_jit <- ave2(data$y, g = data$x, FUN = shifter, adjust = params$adjust)
-    ggplot2::transform_position(data, function(x) x + x_jit * params$width)
+  compute_panel = function(self, data, params, scales) {
+    data <- ggplot2::flip_data(data, params$flipped_aes)
+    y_jit <- ave2(data$x, g = data$y, FUN = shifter, adjust = params$adjust)
+    data <- ggplot2::transform_position(data, trans_y = function(y) y + y_jit * params$width)
+    ggplot2::flip_data(data, params$flipped_aes)
   }
 )
 

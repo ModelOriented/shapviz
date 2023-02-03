@@ -15,10 +15,10 @@ library(usethis)
 use_description(
   fields = list(
     Title = "SHAP Visualizations",
-    Version = "0.4.2",
+    Version = "0.5.0",
     Description = "Visualizations for SHAP (SHapley Additive exPlanations),
     such as waterfall plots, force plots, various types of importance plots,
-    and dependence plots.
+    dependence plots, and interaction plots.
     These plots act on a 'shapviz' object created from a matrix of SHAP
     values and a corresponding feature dataset. Wrappers for the R packages
     'xgboost', 'lightgbm', 'fastshap', 'shapr', 'h2o', 'treeshap', and 'kernelshap'

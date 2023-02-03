@@ -61,7 +61,10 @@ sv_interaction.shapviz <- function(object, kind = c("beeswarm", "no"),
   ord <- names(.get_imp(get_shap_values(object)))
 
   if (kind == "no") {
-    return(apply(abs(S_inter), 2:3, mean)[ord, ord])
+    mat <- apply(abs(S_inter), 2:3, mean)[ord, ord]
+    off_diag <- row(mat) != col(mat)
+    mat[off_diag] <- mat[off_diag] * 2  # compensate symmetry
+    return(mat)
   }
 
   if (ncol(S_inter) > max_display) {

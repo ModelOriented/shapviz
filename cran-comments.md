@@ -11,8 +11,6 @@ Dear CRAN team. "shapviz" now offers plots for SHAP interaction values - a featu
 
 ### check_rhub()
 
-Winbuilder: Status: OK
-
 rhub notes
 
 NOTES:
@@ -25,3 +23,4 @@ Found the following files/directories:
   
 ### check_win_devel()
 
+winbuilder: Status: OK

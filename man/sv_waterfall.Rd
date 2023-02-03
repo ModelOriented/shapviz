@@ -82,7 +82,7 @@ SHAP value. The plot has to be read from bottom to top.
 }}
 \examples{
 dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
 x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
 sv_waterfall(x)
 sv_waterfall(x, row_id = 123, max_display = 2, size = 9, fill_colors = 4:5)

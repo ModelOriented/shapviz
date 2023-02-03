@@ -76,7 +76,7 @@ on pure interaction effects (multiplied by two).
 }}
 \examples{
 dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
 x <- shapviz(fit, X_pred = dtrain, X = iris)
 sv_dependence(x, "Petal.Length")
 sv_dependence(x, "Petal.Length", color_var = "Species")

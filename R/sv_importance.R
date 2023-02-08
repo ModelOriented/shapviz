@@ -87,7 +87,6 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
   }
   S <- get_shap_values(object)
   imp <- .get_imp(S)
-  ord <- names(imp)
 
   if (kind == "no") {
     return(imp)
@@ -95,11 +94,13 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
 
   # Deal with too many features
   if (ncol(S) > max_display) {
-    ord <- ord[seq_len(max_display)]
+    imp <- imp[seq_len(max_display)]
   }
 
+  ord <- names(imp)
+
   # ggplot will need to work with data.frame
-  imp_df <- data.frame(feature = factor(ord, rev(ord)), value = imp[ord])
+  imp_df <- data.frame(feature = factor(ord, rev(ord)), value = imp)
   is_bar <- kind == "bar"
   if (is_bar) {
     p <- ggplot(imp_df, aes(x = value, y = feature)) +

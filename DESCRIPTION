@@ -1,6 +1,6 @@
 Package: shapviz
 Title: SHAP Visualizations
-Version: 0.5.0
+Version: 0.5.1
 Authors@R: 
     person("Michael", "Mayer", , "mayermichael79@gmail.com", role = c("aut", "cre"))
 Description: Visualizations for SHAP (SHapley Additive exPlanations), such

@@ -1,3 +1,7 @@
+# shapviz 0.5.1
+
+## Minor code simplification in `sv_importance()`.
+
 # shapviz 0.5.0
 
 ## Major improvement: SHAP interaction values

@@ -112,7 +112,7 @@ sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b"
     return(p)
   }
   dat[[color_var]] <- X[[color_var]]
-  vir <- if (.is_discrete(dat[[color_var]], n_unique = 0L)) {  # only if non-numeric
+  if (.is_discrete(dat[[color_var]], n_unique = 0L)) {  # only if non-numeric
     vir <- scale_color_viridis_d
   } else {
     vir <- scale_color_viridis_c

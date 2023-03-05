@@ -37,7 +37,7 @@ test_that("shapviz works with single row input", {
   expect_s3_class(sv_importance(shp1, kind = "beeswarm"), "ggplot")
   expect_s3_class(sv_importance(shp1), "ggplot")
   expect_s3_class(sv_dependence(shp1, "x", color_var = "y"), "ggplot")
-  expect_s3_class(sv_dependence(shp1, "x", color_var = "auto"), "ggplot")
+  expect_s3_class(sv_dependence(shp1, "x"), "ggplot")
 })
 
 test_that("shapviz works with single column input", {
@@ -46,7 +46,7 @@ test_that("shapviz works with single column input", {
   expect_s3_class(sv_force(shp2), "ggplot")
   expect_s3_class(sv_importance(shp2, kind = "both"), "ggplot")
   expect_s3_class(sv_dependence(shp2, "x"), "ggplot")
-  expect_s3_class(sv_dependence(shp2, "x", color_var = "auto"), "ggplot")
+  expect_s3_class(sv_dependence(shp2, "x", color_var = NULL), "ggplot")
 })
 
 # Interactions
@@ -76,21 +76,6 @@ test_that("shapviz accepts correct S_inter", {
 })
 
 test_that("shapviz does not accept bad S_inter", {
-  # S_inter_wrong_sum <- array(
-  #   c(1, -1, 0, 0, 0, 0, -1, 1.1),
-  #   dim = c(2L, 2L, 2L),
-  #   dimnames = list(NULL, c("x", "y"), c("x", "y"))
-  # )
-  # expect_error(shapviz(S, X = X, baseline = 4, S_inter = S_inter_wrong_sum))
-  # S_inter_asymmetric <- array(
-  #   c(1, -1, 1, 0, 0, 0, -2, 1),
-  #   dim = c(2L, 2L, 2L),
-  #   dimnames = list(NULL, c("x", "y"), c("x", "y"))
-  # )
-  # expect_error(shapviz(S, X = X, baseline = 4, S_inter = S_inter_asymmetric))
-
   S_inter_noname <- array(c(1, -1, 0, 0, 0, 0, -1, 1), dim = c(2L, 2L, 2L))
   expect_error(shapviz(S, X = X, baseline = 4, S_inter = S_inter_noname))
 })
-
-

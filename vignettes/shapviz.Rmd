@@ -143,12 +143,14 @@ sv_importance(shp, kind = "both", show_numbers = TRUE, bee_width = 0.2)
 
 ### SHAP dependence plots
 
-A SHAP beeswarm importance plot gives first hints on whether high feature values tend to high or low predictions. This impression can be substantiated by studying simple scatterplots of SHAP values of a feature against its feature values. A second feature can be added as color information to see whether the feature effect depends on the feature on the color scale or not. The stronger the vertical scatter for similar values on the x axis, the stronger the interactions.
+A SHAP beeswarm importance plot gives first hints on whether high feature values tend to high or low predictions. This impression can be substantiated by studying simple scatterplots of SHAP values of a feature against its feature values. 
 
-```{r}
-sv_dependence(shp, v = "color", color_var = "auto")
+On the color axis, the feature with (heuristically) strongest interaction is shown by default. Use `color_var` to use another feature (or `NULL` for no coloring).
 
-sv_dependence(shp, v = "carat", color_var = "auto", alpha = 0.2, size = 1) +
+```{r, dev = 'svg'}
+sv_dependence(shp, v = "color")
+
+sv_dependence(shp, v = "carat", alpha = 0.2, size = 1) +
   guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2)))
 ```
 
@@ -207,8 +209,9 @@ shap <- explain(
 )
 
 sv <- shapviz(shap, X = iris)
-sv_dependence(sv, "Sepal.Width")
+sv_dependence(sv, "Sepal.Width", color_var = NULL)
 ```
+
 ### shapr
 
 ```r
@@ -227,7 +230,7 @@ explanation <- explain(
 )
 
 shp <- shapviz(explanation)
-sv_dependence(shp, "carat", "auto")
+sv_dependence(shp, "carat")
 ```
 
 ### H2O
@@ -244,7 +247,7 @@ dia_h2o <- as.h2o(diamonds)
 fit <- h2o.gbm(x, "price", training_frame = dia_h2o)
 shp <- shapviz(fit, X_pred = dia_small)
 sv_force(shp, row_id = 1)
-sv_dependence(shp, "carat", "auto")
+sv_dependence(shp, "carat")
 ```
 
 ### treeshap
@@ -260,7 +263,7 @@ unified_model <- ranger.unify(fit, data.matrix(diamonds[x]))
 shaps <- treeshap(unified_model, data.matrix(dia_small[x]), interactions = TRUE)
 shp <- shapviz(shaps, X = dia_small)
 sv_importance(shp)
-sv_dependence(shp, "carat", color_var = "auto", alpha = 0.7, interactions = TRUE)
+sv_dependence(shp, "carat", alpha = 0.7, interactions = TRUE)
 ```
 
 ### kernelshap
@@ -274,7 +277,7 @@ ks <- kernelshap(fit, dia_small[x], bg_X = dia_smaller)
 
 shp <- shapviz(ks)
 sv_importance(shp)
-sv_dependence(shp, "carat")
+sv_dependence(shp, "carat", color_var = NULL)
 ```
 
 ### Any other package
@@ -334,7 +337,7 @@ fit <- catboost.train(
 
 shp <- shapviz(fit, X_pred = dia_small[x])
 sv_importance(shp)
-sv_dependence(shp, "clarity", color_var = "auto", alpha = 0.2, size = 1)
+sv_dependence(shp, "clarity", alpha = 0.2, size = 1)
 ```
 
 ## Classification models

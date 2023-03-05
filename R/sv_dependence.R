@@ -1,22 +1,15 @@
 #' SHAP Dependence Plot
 #'
 #' Scatter plot of the SHAP values of a feature against its feature values.
-#' Using a \code{color_var} on the color axis, one can get a sense of possible interaction
-#' effects. Set \code{color_var = "auto"} to automatically select the color feature with
-#' the strongest interaction effects. If SHAP interaction values are available,
-#' this is determined by the average absolute SHAP interaction.
-#' Otherwise, a correlation based heuristic is used instead. If SHAP interaction values are
-#' available, setting \code{interactions = TRUE} allows to focus on pure main effects or
-#' on pure interaction effects (multiplied by two).
+#' If SHAP interaction values are available, setting \code{interactions = TRUE} allows
+#' to focus on pure interaction effects (multiplied by two) or on pure main effects.
 #'
 #' @importFrom rlang .data
 #' @param object An object of class "shapviz".
 #' @param v Column name of feature to be plotted.
 #' @param color_var Feature name to be used on the color scale to investigate interactions.
-#' The default is \code{NULL} (no color feature). If "auto", the variable with strongest
-#' average absolute SHAP interaction value is picked. If the "shapviz" object does not
-#' contain SHAP interaction values (the usual case), a correlation based heuristic is
-#' used instead.
+#' The default ("auto") uses SHAP interaction values (if available) or a heuristic to
+#' select the strongest interacting feature. Set to \code{NULL} to not use the color axis.
 #' @param color Color to be used if \code{color_var = NULL}.
 #' @param viridis_args List of viridis color scale arguments, see
 #' \code{?ggplot2::scale_color_viridis_c()}. The default points to the global
@@ -30,7 +23,7 @@
 #' use a value of 0.2 in case \code{v} is discrete, and no jitter otherwise.
 #' (Numeric variables are considered discrete if they have at most 7 unique values.)
 #' @param interactions Should SHAP interaction values be plotted? Default is \code{FALSE}.
-#' Requires SHAP interaction values. If no \code{color_var} is passed (or it is equal to
+#' Requires SHAP interaction values. If \code{color_var = NULL} (or it is equal to
 #' \code{v}), the pure main effect of \code{v} is visualized. Otherwise, twice the SHAP
 #' interaction values between \code{v} and the \code{color_var} are plotted.
 #' @param ... Arguments passed to \code{geom_jitter()}.
@@ -43,12 +36,12 @@
 #' x <- shapviz(fit, X_pred = dtrain, X = iris)
 #' sv_dependence(x, "Petal.Length")
 #' sv_dependence(x, "Petal.Length", color_var = "Species")
-#' sv_dependence(x, "Species", color_var = "auto")
+#' sv_dependence(x, "Petal.Length", color_var = NULL)
 #'
 #' # SHAP interaction values
 #' x2 <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 #' sv_dependence(x2, "Petal.Length", interactions = TRUE)
-#' sv_dependence(x2, "Petal.Length", color_var = "auto", interactions = TRUE)
+#' sv_dependence(x2, "Petal.Length", color_var = NULL, interactions = TRUE)
 sv_dependence <- function(object, ...) {
   UseMethod("sv_dependence")
 }
@@ -61,7 +54,7 @@ sv_dependence.default <- function(object, ...) {
 
 #' @describeIn sv_dependence SHAP dependence plot for shp object.
 #' @export
-sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b",
+sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528b",
                                   viridis_args = getOption("shapviz.viridis_args"),
                                   jitter_width = NULL, interactions = FALSE, ...) {
   S <- get_shap_values(object)
@@ -91,7 +84,7 @@ sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b"
       color_var <- v
     }
     if (color_var == v) {
-      y_lab <- paste("SHAP main effect of", v)
+      y_lab <- "SHAP main effect"
     } else {
       y_lab <- "SHAP interaction value"
     }
@@ -100,7 +93,7 @@ sv_dependence.shapviz <- function(object, v, color_var = NULL, color = "#3b528b"
       s <- 2 * s  # Off-diagonals need to be multiplied by 2 for symmetry reasons
     }
   } else {
-    y_lab <- paste("SHAP value of", v)
+    y_lab <- "SHAP value"
     s <- S[, v]
   }
   dat <- data.frame(s, X[[v]])

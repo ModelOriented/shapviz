@@ -109,7 +109,7 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
 #'
 #' # Will use original values as feature matrix
 #' x <- shapviz(fit, X_pred = X_pred, X = iris)
-#' sv_dependence(x, "Species", color_var = "auto")
+#' sv_dependence(x, "Species")
 #'
 #' # "X_pred" can also be passed as xgb.DMatrix, but only if X is passed as well!
 #' x <- shapviz(fit, X_pred = dtrain, X = iris)

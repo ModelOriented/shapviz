@@ -1,6 +1,9 @@
-# shapviz 0.5.1
+# shapviz 0.6.0
 
-## Minor code simplification in `sv_importance()`.
+## Change in defaults
+
+- `sv_dependence()` now uses `color_var = "auto"` instead of `color_var = NULL`.
+- `sv_dependence()` now uses "SHAP value" as y label (instead of the more verbose "SHAP value of [feature]").
 
 # shapviz 0.5.0
 

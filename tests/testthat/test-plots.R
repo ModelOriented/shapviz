@@ -7,7 +7,7 @@ test_that("plots work for basic example", {
   expect_s3_class(sv_force(x, 2), "ggplot")
   expect_s3_class(sv_importance(x), "ggplot")
   expect_s3_class(sv_importance(x, kind = "beeswarm"), "ggplot")
-  expect_s3_class(sv_dependence(x, "Petal.Length", color_var = "auto"), "ggplot")
+  expect_s3_class(sv_dependence(x, "Petal.Length"), "ggplot")
 })
 
 test_that("using 'max_display' gives no error", {
@@ -24,9 +24,7 @@ test_that("dependence plots work for interactions = TRUE", {
     sv_dependence(x_inter, v = "Petal.Length", interactions = TRUE), "ggplot"
   )
   expect_s3_class(
-    sv_dependence(
-      x_inter, v = "Petal.Length", color_var = "auto", interactions = TRUE
-    ),
+    sv_dependence(x_inter, v = "Petal.Length", interactions = TRUE),
     "ggplot"
   )
   expect_s3_class(
@@ -37,7 +35,7 @@ test_that("dependence plots work for interactions = TRUE", {
 
 test_that("main effect plots equal case color_var = v", {
   expect_equal(
-    sv_dependence(x_inter, "Petal.Length", interactions = TRUE),
+    sv_dependence(x_inter, "Petal.Length", color_var = NULL, interactions = TRUE),
     sv_dependence(
       x_inter, "Petal.Length", color_var = "Petal.Length", interactions = TRUE
     )
@@ -69,7 +67,7 @@ test_that("plots work for non-syntactic column names", {
   expect_s3_class(sv_importance(x), "ggplot")
   expect_s3_class(sv_importance(x, max_display = 2, kind = "beeswarm"), "ggplot")
   expect_s3_class(sv_importance(x, kind = "beeswarm"), "ggplot")
-  expect_s3_class(sv_dependence(x, "strange name", color_var = "auto"), "ggplot")
+  expect_s3_class(sv_dependence(x, "strange name"), "ggplot")
   expect_s3_class(
     sv_dependence(x, "Petal.Length", color_var = "strange name"), "ggplot"
   )

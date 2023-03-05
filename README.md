@@ -133,13 +133,13 @@ sv_importance(shp, kind = "both", show_numbers = TRUE, bee_width = 0.2)
 
 ### Dependence plot
 
-A scatterplot of SHAP values of a feature like `color` against its observed values gives a great impression on the feature effect on the response. Vertical scatter gives additional info on interaction effects. Use `color_var = "auto"` to let "shapviz" select the strongest interacting variable. In case no SHAP interaction values are available, a simple heuristic is used.
+A scatterplot of SHAP values of a feature like `color` against its observed values gives a great impression on the feature effect on the response. Vertical scatter gives additional info on interaction effects (using a heuristic to select the feature on the color axis).
 
 ``` r
-sv_dependence(shp, v = "color", color_var = "auto")
+sv_dependence(shp, v = "color")
 ```
 
-![](man/figures/README-dep.png)
+![](man/figures/README-dep.svg)
 
 ### Interactions
 
@@ -153,7 +153,7 @@ shp_with_inter <- shapviz(
 sv_dependence(shp_with_inter, v = "color", color_var = "cut", interactions = TRUE)
 ```
 
-![](man/figures/README-dep2.png)
+![](man/figures/README-dep2.svg)
 
 We can also study all interactions and main effects together using the following beeswarm visualization:
 

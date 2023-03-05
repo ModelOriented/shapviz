@@ -18,7 +18,6 @@ Packages which this enhances but not available for checking:
 Found the following files/directories:
   'lastMiKTeXException'
 
-  
 ### check_win_devel()
 
 Status: OK

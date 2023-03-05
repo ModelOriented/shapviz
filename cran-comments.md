@@ -1,19 +1,6 @@
-# Re-Submission of shapviz 0.5.0
+# Submission of shapviz 0.6.0
 
-A pre-check failed:
-
-```
-Examples with CPU time > 2.5 times elapsed time
-               user system elapsed ratio
-sv_dependence 1.268  0.032   0.472 2.754
-```
-
-I have now set the parameter `nthread = 1` in fitting the XGBoost models in the
-examples, hoping to solve that issue.
-
-## Original message
-
-Dear CRAN team. "shapviz" now offers plots for SHAP interaction values - a feature that was on the wishlist for quite some time.
+Dear CRAN team. The dependence plot now uses better defaults. As they are user visible in some cases, the version jumps from 0.5.0 to 0.6.0. 
 
 ## Checks
 
@@ -24,16 +11,13 @@ Dear CRAN team. "shapviz" now offers plots for SHAP interaction values - a featu
 
 ### check_rhub()
 
-rhub notes
-
-NOTES:
 * checking package dependencies ... NOTE
-Packages which this enhances but not available for checking:
   'h2o', 'lightgbm'
+Packages which this enhances but not available for checking:
 * checking for detritus in the temp directory ... NOTE
 Found the following files/directories:
   'lastMiKTeXException'
-  
+
 ### check_win_devel()
 
-winbuilder: Status: OK
+Status: OK

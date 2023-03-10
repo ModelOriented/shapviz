@@ -1,3 +1,9 @@
+# shapviz 0.6.1
+
+## New features
+
+- "shapviz" objects `x` can now be subsetted using `x[cond, features]`.
+
 # shapviz 0.6.0
 
 ## Change in defaults

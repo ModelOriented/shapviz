@@ -14,6 +14,16 @@ test_that("dim, nrow, ncol work", {
   expect_equal(ncol(shp), 2L)
 })
 
+test_that("subsetting works", {
+  expect_equal(dim(shp[, "x"]$S), c(2L, 1L))
+  expect_equal(dim(shp[, "x"]$X), c(2L, 1L))
+  expect_equal(dim(shp[1, "x"]$S), c(1L, 1L))
+  expect_equal(dim(shp[1, "x"]$X), c(1L, 1L))
+  expect_equal(dim(shp[1, ]$S), c(1L, 2L))
+  expect_equal(dim(shp[1, ]$X), c(1L, 2L))
+  expect_equal(get_baseline(shp[1, ]), get_baseline(shp))
+})
+
 test_that("column order of X does no matter", {
   expect_equal(shp, shapviz(S, X[, 2:1], baseline = 4))
 })
@@ -73,6 +83,9 @@ test_that("shapviz accepts correct S_inter", {
       S_inter = S_inter[, "x", "x", drop = FALSE]
     )
   )
+  expect_equal(dim(shp_inter[, "x"]$S_inter), c(2L, 1L, 1L))
+  expect_equal(dim(shp_inter[1, ]$S_inter), c(1L, 2L, 2L))
+  expect_equal(dim(shp_inter[1, "x"]$S_inter), c(1L, 1L, 1L))
 })
 
 test_that("shapviz does not accept bad S_inter", {

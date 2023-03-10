@@ -155,3 +155,32 @@ get_shap_interactions.shapviz = function(object, ...) {
 get_shap_interactions.default = function(object, ...) {
   stop("No default method available.")
 }
+
+#' Subsets "shapviz" Object
+#'
+#' Use standard square bracket subsetting to select rows and/or columns of
+#' SHAP values, feature values, and SHAP interaction values of a "shapviz" object.
+#'
+#' @param x An object of class "shapviz".
+#' @param i Row subsetting.
+#' @param j Column subsetting.
+#' @param ... Currently unused.
+#' @return A new object of class "shapviz".
+#' @export
+#' @examples
+#' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' x <- shapviz(S, X, baseline = 4)
+#' x[1, "x"]
+#' @seealso \code{\link{shapviz}}.
+#' @export
+`[.shapviz` = function(x, i, j, ...) {
+  inter <- get_shap_interactions(x)
+  shapviz(
+    object = get_shap_values(x)[i, j, drop = FALSE],
+    X = get_feature_values(x)[i, j, drop = FALSE],
+    baseline = get_baseline(x),
+    S_inter = if (!is.null(inter)) inter[i, j, j, drop = FALSE]
+  )
+}
+

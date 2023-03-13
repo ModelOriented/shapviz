@@ -174,7 +174,7 @@ get_shap_interactions.default = function(object, ...) {
 #' x[1, "x"]
 #' @seealso \code{\link{shapviz}}.
 #' @export
-`[.shapviz` = function(x, i, j, ...) {
+`[.shapviz` <- function(x, i, j, ...) {
   inter <- get_shap_interactions(x)
   shapviz(
     object = get_shap_values(x)[i, j, drop = FALSE],

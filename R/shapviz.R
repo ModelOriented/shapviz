@@ -9,6 +9,7 @@
 #'   \item H2O model (tree-based regression or binary classification model)
 #'   \item "shapr" object from the package "shapr"
 #'   \item The result of calling \code{treeshap()} from the "treeshap" package
+#'   \item The result of calling \code{predict_parts()} from the "dalex" package
 #'   \item "kernelshap" object from the "kernelshap" package
 #' }
 #' The "shapviz" vignette explains how to use each of them.
@@ -70,7 +71,7 @@ shapviz <- function(object, ...){
 #' @export
 shapviz.default = function(object, ...) {
   stop("No default method available. shapviz() is available for objects
-       of class 'matrix', 'xgb.Booster', 'lgb.Booster', 'treeshap',
+       of class 'matrix', 'xgb.Booster', 'lgb.Booster', 'treeshap', 'predict_parts',
        'shapr', 'H2OModel', 'explain' (from fastshap package), and 'kernelshap'.")
 }
 
@@ -238,6 +239,37 @@ shapviz.treeshap <- function(object, X = object[["observations"]],
     collapse = collapse,
     S_inter = S_inter
   )
+}
+
+#' @describeIn shapviz Creates a "shapviz" object from dalex's "predict_parts()" method.
+#' @export
+shapviz.predict_parts <- function(object, X = object[["X"]],
+                                  collapse = NULL, ...){
+  if('shap' %in% class(object) || 'break_down' %in% class(object)){
+    if('shap' %in% class(object)){
+      aggregated <- as.data.frame(object[object$B == 0, ])
+      baseline <- attr(object, 'intercept')
+    } else {
+      aggregated <- as.data.frame(object)
+      aggregated <- aggregated[2:(nrow(aggregated) - 1),]
+      tmp <- as.data.frame(bk_shap)
+      baseline <- tmp[tmp$variable == 'intercept', 'contribution']
+    }
+
+    shaps <- as.data.frame(aggregated[, c('contribution')])
+    shaps <- as.matrix(t(shaps))
+    colnames(shaps) <- rownames(aggregated)
+    rownames(shaps) <- NULL
+
+    X <- as.data.frame(aggregated[, c('variable_value')])
+    X <- as.data.frame(t(X))
+    colnames(X) <- rownames(aggregated)
+    rownames(X) <- NULL
+
+    shapviz::shapviz(shaps, X = X, baseline = baseline, collapse = collapse)
+  } else {
+    stop("Incorrect object! It is neither 'shap' nor 'break_down'!")
+  }
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from shapr's "explain()" method.

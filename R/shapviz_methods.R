@@ -184,3 +184,47 @@ get_shap_interactions.default = function(object, ...) {
   )
 }
 
+#' Concatenates "shapviz" Object
+#'
+#' Use standard plus operator to concatenate a number of "shapviz" objects.
+#'
+#' @param ... "shapviz" objects to be concatenated
+#' @return A new object of class "shapviz".
+#' @export
+#' @examples
+#' S1 <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' S2 <- matrix(c(-1, 1, 1, -1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X1 <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' X2 <- data.frame(x = c("b", "a"), y = c(100, 10))
+#' x1 <- shapviz(S1, X1, baseline = 4)
+#' x2 <- shapviz(S2, X2, baseline = 4)
+#' x1 + x2
+#' @seealso \code{\link{shapviz}}.
+#' @export
+`+.shapviz` <- function(...){
+  args <- list(...)
+  baselines <- sapply(args, function(x){getElement(x, 'baseline')})
+  if(!(length(unique(baselines)) == 1)){
+    stop("Baseline attributes are not the same in all objects!")
+  }
+
+  collapses <- sapply(args, function(x){getElement(x, 'collapse')})
+  if(!(length(unique(collapses)) == 1)){
+    stop("Collapse attributes are not the same in all objects!")
+  }
+
+  baseline <- args[[1]]$baseline
+  collapse <- args[[1]]$collapse
+
+  S <- do.call(rbind, lapply(1:length(args), function(idv){
+    args[[idv]]$S
+  }))
+  S <- as.matrix(S)
+
+  X <- do.call(rbind, lapply(1:length(args), function(idv){
+    args[[idv]]$X
+  }))
+
+  shapviz(S, X = X, baseline = baseline, collapse = collapse)
+}
+

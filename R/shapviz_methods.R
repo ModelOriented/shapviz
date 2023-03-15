@@ -188,6 +188,7 @@ get_shap_interactions.default = function(object, ...) {
 #'
 #' Use standard plus operator to concatenate a number of "shapviz" objects.
 #'
+#' @param x An object of class "shapviz".
 #' @param ... "shapviz" objects to be concatenated
 #' @return A new object of class "shapviz".
 #' @export
@@ -201,8 +202,8 @@ get_shap_interactions.default = function(object, ...) {
 #' x1 + x2
 #' @seealso \code{\link{shapviz}}.
 #' @export
-`+.shapviz` <- function(...){
-  args <- list(...)
+`+.shapviz` <- function(x, ...){
+  args <- list(x, ...)
   baselines <- sapply(args, function(x){getElement(x, 'baseline')})
   if(!(length(unique(baselines)) == 1)){
     stop("Baseline attributes are not the same in all objects!")

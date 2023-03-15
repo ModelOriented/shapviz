@@ -50,6 +50,7 @@ To further simplify the use of "shapviz", we added direct connectors to these R 
 - [`fastshap`](https://CRAN.R-project.org/package=fastshap)
 - [`shapr`](https://CRAN.R-project.org/package=shapr)
 - [`treeshap`](https://github.com/ModelOriented/treeshap)
+- [`DALEX`](https://cran.r-project.org/web/packages/DALEX)
 
 For XGBoost, LightGBM, and H2O, the SHAP values are directly calculated from the fitted model.
 
@@ -264,6 +265,36 @@ shaps <- treeshap(unified_model, data.matrix(dia_small[x]), interactions = TRUE)
 shp <- shapviz(shaps, X = dia_small)
 sv_importance(shp)
 sv_dependence(shp, "carat", alpha = 0.7, interactions = TRUE)
+```
+
+### DALEX
+
+```r
+library(DALEX)
+library(ranger)
+
+fit <- ranger(
+  y = diamonds$price, x = data.matrix(diamonds[x]), max.depth = 6, num.trees = 100
+)
+predict_func <- function(model, X){
+  predict(model, X)$predictions[,2]
+}
+explainer <- explain(
+  fit,
+  data = data.matrix(diamonds[x]),
+  y = diamonds$price,
+  label = 'diamonds',
+  predict_function = predict_func
+)
+shap <- predict_parts(explainer, data.matrix(diamonds)[1,], 
+  type='shap', keep_distributions=FALSE)
+shp <- shapviz(shap)
+sv_force(shp)
+shap2 <- predict_parts(explainer, data.matrix(diamonds)[2,], 
+  type='shap', keep_distributions=FALSE)
+shp2 <- shapviz(shap2)
+shp_concat <- shp + shp2
+sv_importance(shp_concat, kind = "beeswarm")
 ```
 
 ### kernelshap

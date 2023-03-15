@@ -252,7 +252,7 @@ shapviz.predict_parts <- function(object, X = object[["X"]],
     } else {
       aggregated <- as.data.frame(object)
       aggregated <- aggregated[2:(nrow(aggregated) - 1),]
-      tmp <- as.data.frame(bk_shap)
+      tmp <- as.data.frame(object)
       baseline <- tmp[tmp$variable == 'intercept', 'contribution']
     }
 

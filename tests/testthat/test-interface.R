@@ -24,6 +24,15 @@ test_that("subsetting works", {
   expect_equal(get_baseline(shp[1, ]), get_baseline(shp))
 })
 
+test_that("concatenating works", {
+  expect_equal(dim((shp + shp)$S), c(4L, 2L))
+  expect_equal(dim((shp + shp)$X), c(4L, 2L))
+  expect_equal((shp + shp)$baseline, shp$baseline)
+  expect_equal((shp + shp)$collapse, shp$collapse)
+  expect_equal(dim((shp + shp + shp)$S), c(6L, 2L))
+  expect_equal(dim((shp + shp + shp)$X), c(6L, 2L))
+})
+
 test_that("column order of X does no matter", {
   expect_equal(shp, shapviz(S, X[, 2:1], baseline = 4))
 })

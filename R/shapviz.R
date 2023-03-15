@@ -9,7 +9,7 @@
 #'   \item H2O model (tree-based regression or binary classification model)
 #'   \item "shapr" object from the package "shapr"
 #'   \item The result of calling \code{treeshap()} from the "treeshap" package
-#'   \item The result of calling \code{predict_parts()} from the "dalex" package
+#'   \item The result of calling \code{predict_parts()} from the "DALEX" package
 #'   \item "kernelshap" object from the "kernelshap" package
 #' }
 #' The "shapviz" vignette explains how to use each of them.
@@ -241,7 +241,7 @@ shapviz.treeshap <- function(object, X = object[["observations"]],
   )
 }
 
-#' @describeIn shapviz Creates a "shapviz" object from dalex's "predict_parts()" method.
+#' @describeIn shapviz Creates a "shapviz" object from DALEX's "predict_parts()" method.
 #' @export
 shapviz.predict_parts <- function(object, X = object[["X"]],
                                   collapse = NULL, ...){

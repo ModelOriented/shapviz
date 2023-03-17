@@ -138,29 +138,6 @@ get_baseline.default = function(object, ...) {
   stop("No default method available.")
 }
 
-###
-
-#' @rdname extractors
-#' @export
-get_collapse <- function(object, ...) {
-  UseMethod("get_collapse")
-}
-
-#' @rdname extractors
-#' @export
-get_collapse.shapviz = function(object, ...) {
-  object[["collapse"]]
-}
-
-#' @rdname extractors
-#' @export
-get_collapse.default = function(object, ...) {
-  stop("No default method available.")
-}
-
-
-##
-
 #' @rdname extractors
 #' @export
 get_shap_interactions <- function(object, ...) {
@@ -258,17 +235,10 @@ dimnames.shapviz <- function(x) {
     warning("Baselines not identical! Will use the one from the first shapviz object.")
   }
 
-  collapse <- get_collapse(e1)
-  collapse2 <- get_collapse(e2)
-  if ((is.null(collapse) && !is.null(collapse2)) || (!is.null(collapse) && collapse != collapse2)) {
-    warning("Collapse arguments not identical! Will use the one from the first shapviz object.")
-  }
-
   shapviz(
     object = rbind(get_shap_values(e1), get_shap_values(e2)),
     X = rbind(get_feature_values(e1), get_feature_values(e2)),
     b = baseline,
-    collapse = collapse,
     S_inter = rbind_S_inter(get_shap_interactions(e1), get_shap_interactions(e2))
   )
 }

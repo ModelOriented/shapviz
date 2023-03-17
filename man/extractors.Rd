@@ -11,9 +11,6 @@
 \alias{get_baseline}
 \alias{get_baseline.shapviz}
 \alias{get_baseline.default}
-\alias{get_collapse}
-\alias{get_collapse.shapviz}
-\alias{get_collapse.default}
 \alias{get_shap_interactions}
 \alias{get_shap_interactions.shapviz}
 \alias{get_shap_interactions.default}
@@ -36,12 +33,6 @@ get_baseline(object, ...)
 \method{get_baseline}{shapviz}(object, ...)
 
 \method{get_baseline}{default}(object, ...)
-
-get_collapse(object, ...)
-
-\method{get_collapse}{shapviz}(object, ...)
-
-\method{get_collapse}{default}(object, ...)
 
 get_shap_interactions(object, ...)
 

@@ -294,6 +294,7 @@ shap2 <- predict_parts(explainer, data.matrix(diamonds)[2,],
   type='shap', keep_distributions=FALSE)
 shp2 <- shapviz(shap2)
 shp_concat <- shp + shp2
+shp_concat <- rbind(shp, shp2)
 sv_importance(shp_concat, kind = "beeswarm")
 ```
 

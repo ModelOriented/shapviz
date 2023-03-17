@@ -138,6 +138,29 @@ get_baseline.default = function(object, ...) {
   stop("No default method available.")
 }
 
+###
+
+#' @rdname extractors
+#' @export
+get_collapse <- function(object, ...) {
+  UseMethod("get_collapse")
+}
+
+#' @rdname extractors
+#' @export
+get_collapse.shapviz = function(object, ...) {
+  object[["collapse"]]
+}
+
+#' @rdname extractors
+#' @export
+get_collapse.default = function(object, ...) {
+  stop("No default method available.")
+}
+
+
+##
+
 #' @rdname extractors
 #' @export
 get_shap_interactions <- function(object, ...) {
@@ -184,12 +207,51 @@ get_shap_interactions.default = function(object, ...) {
   )
 }
 
+#' Dimnames of "shapviz" Object
+#'
+#' @param x An object of class "shapviz".
+#' @return Dimnames of the SHAP matrix.
+#' @export
+#' @examples
+#' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' x <- shapviz(S, X, baseline = 4)
+#' dimnames(x)
+#'
+#' # Implies colnames()
+#' colnames(x)
+#' @seealso \code{\link{shapviz}}.
+#' @export
+dimnames.shapviz <- function(x) {
+  dimnames(get_shap_values(x))
+}
+
+# Binds two compatible SHAP interaction arrays along the first dimension.
+rbind_S_inter <- function(x, y) {
+  if (is.null(x) || is.null(y)) {
+    stopifnot(is.null(x) && is.null(y))
+    return(NULL)
+  }
+
+  # Could do many input checks, but consistency is given when called from `+.shapviz`()
+  nx <- nrow(x)
+  out <- array(
+    dim = c(nx + nrow(y), dim(x)[-1L]),
+    dimnames = c(list(NULL), dimnames(x)[-1L])
+  )
+
+  ix <- seq_len(nx)
+  out[ix, , ] <- x
+  out[-ix, , ] <- y
+  out
+}
+
 #' Concatenates "shapviz" Object
 #'
 #' Use standard plus operator to concatenate a number of "shapviz" objects.
 #'
-#' @param x An object of class "shapviz".
-#' @param ... "shapviz" objects to be concatenated
+#' @param e1 The first object of class "shapviz".
+#' @param e2 The second object of class "shapviz".
 #' @return A new object of class "shapviz".
 #' @export
 #' @examples
@@ -202,30 +264,53 @@ get_shap_interactions.default = function(object, ...) {
 #' x1 + x2
 #' @seealso \code{\link{shapviz}}.
 #' @export
-`+.shapviz` <- function(x, ...){
-  args <- list(x, ...)
-  baselines <- sapply(args, function(x){getElement(x, 'baseline')})
-  if(!(length(unique(baselines)) == 1)){
-    stop("Baseline attributes are not the same in all objects!")
+`+.shapviz` <- function(e1, e2){
+  # input checks
+  stopifnot(
+    is.shapviz(e1),
+    is.shapviz(e2),
+    ncol(e1) == ncol(e2),
+    colnames(e1) == colnames(e2)
+  )
+
+  baseline <- get_baseline(e1)
+  if (baseline != get_baseline(e2)) {
+    warning("Baselines not identical! Will use the one from the first shapviz object.")
   }
 
-  collapses <- sapply(args, function(x){getElement(x, 'collapse')})
-  if(!(length(unique(collapses)) == 1)){
-    stop("Collapse attributes are not the same in all objects!")
+  collapse <- get_collapse(e1)
+  collapse2 <- get_collapse(e2)
+  if ((is.null(collapse) && !is.null(collapse2)) || (!is.null(collapse) && collapse != collapse2)) {
+    warning("Collapse arguments not identical! Will use the one from the first shapviz object.")
   }
 
-  baseline <- args[[1]]$baseline
-  collapse <- args[[1]]$collapse
+  shapviz(
+    object = rbind(get_shap_values(e1), get_shap_values(e2)),
+    X = rbind(get_feature_values(e1), get_feature_values(e2)),
+    b = baseline,
+    collapse = collapse,
+    S_inter = rbind_S_inter(get_shap_interactions(e1), get_shap_interactions(e2))
+  )
+}
 
-  S <- do.call(rbind, lapply(1:length(args), function(idv){
-    args[[idv]]$S
-  }))
-  S <- as.matrix(S)
-
-  X <- do.call(rbind, lapply(1:length(args), function(idv){
-    args[[idv]]$X
-  }))
-
-  shapviz(S, X = X, baseline = baseline, collapse = collapse)
+#' Concatenates "shapviz" Object
+#'
+#' It is based on the `+.shapviz` operator
+#'
+#' @param ... "shapviz" objects to be concatenated
+#' @return A new object of class "shapviz".
+#' @export
+#' @examples
+#' S1 <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' S2 <- matrix(c(-1, 1, 1, -1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X1 <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' X2 <- data.frame(x = c("b", "a"), y = c(100, 10))
+#' x1 <- shapviz(S1, X1, baseline = 4)
+#' x2 <- shapviz(S2, X2, baseline = 4)
+#' rbind(x1, x2)
+#' @seealso \code{\link{shapviz}}.
+#' @export
+rbind.shapviz <- function(...) {
+  Reduce(`+`, list(...))
 }
 

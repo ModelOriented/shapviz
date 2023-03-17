@@ -15,7 +15,7 @@
 A new object of class "shapviz".
 }
 \description{
-Use standard plus operator to concatenate a number of "shapviz" objects.
+Use standard plus operator to concatenate two "shapviz" objects.
 }
 \examples{
 S1 <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))

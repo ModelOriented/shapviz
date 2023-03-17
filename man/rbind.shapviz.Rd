@@ -2,12 +2,12 @@
 % Please edit documentation in R/shapviz_methods.R
 \name{rbind.shapviz}
 \alias{rbind.shapviz}
-\title{Concatenates "shapviz" Object}
+\title{Concatenates "shapviz" Objects}
 \usage{
 \method{rbind}{shapviz}(...)
 }
 \arguments{
-\item{...}{"shapviz" objects to be concatenated}
+\item{...}{"shapviz" objects to be concatenated.}
 }
 \value{
 A new object of class "shapviz".

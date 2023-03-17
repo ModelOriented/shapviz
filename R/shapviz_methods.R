@@ -226,29 +226,9 @@ dimnames.shapviz <- function(x) {
   dimnames(get_shap_values(x))
 }
 
-# Binds two compatible SHAP interaction arrays along the first dimension.
-rbind_S_inter <- function(x, y) {
-  if (is.null(x) || is.null(y)) {
-    stopifnot(is.null(x) && is.null(y))
-    return(NULL)
-  }
-
-  # Could do many input checks, but consistency is given when called from `+.shapviz`()
-  nx <- nrow(x)
-  out <- array(
-    dim = c(nx + nrow(y), dim(x)[-1L]),
-    dimnames = c(list(NULL), dimnames(x)[-1L])
-  )
-
-  ix <- seq_len(nx)
-  out[ix, , ] <- x
-  out[-ix, , ] <- y
-  out
-}
-
 #' Concatenates "shapviz" Object
 #'
-#' Use standard plus operator to concatenate a number of "shapviz" objects.
+#' Use standard plus operator to concatenate two "shapviz" objects.
 #'
 #' @param e1 The first object of class "shapviz".
 #' @param e2 The second object of class "shapviz".
@@ -293,11 +273,11 @@ rbind_S_inter <- function(x, y) {
   )
 }
 
-#' Concatenates "shapviz" Object
+#' Concatenates "shapviz" Objects
 #'
 #' It is based on the `+.shapviz` operator
 #'
-#' @param ... "shapviz" objects to be concatenated
+#' @param ... "shapviz" objects to be concatenated.
 #' @return A new object of class "shapviz".
 #' @export
 #' @examples
@@ -312,5 +292,27 @@ rbind_S_inter <- function(x, y) {
 #' @export
 rbind.shapviz <- function(...) {
   Reduce(`+`, list(...))
+}
+
+# Helper functions
+
+# Binds two compatible SHAP interaction arrays along the first dimension.
+rbind_S_inter <- function(x, y) {
+  if (is.null(x) || is.null(y)) {
+    stopifnot(is.null(x) && is.null(y))
+    return(NULL)
+  }
+
+  # Could do many input checks, but consistency is given when called from `+.shapviz`()
+  nx <- nrow(x)
+  out <- array(
+    dim = c(nx + nrow(y), dim(x)[-1L]),
+    dimnames = c(list(NULL), dimnames(x)[-1L])
+  )
+
+  ix <- seq_len(nx)
+  out[ix, , ] <- x
+  out[-ix, , ] <- y
+  out
 }
 

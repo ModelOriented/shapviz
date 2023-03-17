@@ -245,7 +245,7 @@ shapviz.treeshap <- function(object, X = object[["observations"]],
 #' @export
 shapviz.predict_parts <- function(object, X = object[["X"]],
                                   collapse = NULL, ...){
-  if('shap' %in% class(object) || 'break_down' %in% class(object) || 'shap_aggregated' %in% class(object)){
+  if (inherits(object, c("shap", "break_down", "shap_aggregated"))) {
     if('shap' %in% class(object)){
       aggregated <- as.data.frame(object[object$B == 0, ])
       baseline <- attr(object, 'intercept')

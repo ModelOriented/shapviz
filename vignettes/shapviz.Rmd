@@ -276,24 +276,24 @@ library(ranger)
 fit <- ranger(
   y = diamonds$price, x = data.matrix(diamonds[x]), max.depth = 6, num.trees = 100
 )
-predict_func <- function(model, X){
-  predict(model, X)$predictions[,2]
+predict_func <- function(model, X) {
+  predict(model, X)$predictions[, 2]
 }
 explainer <- explain(
   fit,
   data = data.matrix(diamonds[x]),
   y = diamonds$price,
-  label = 'diamonds',
+  label = "diamonds",
   predict_function = predict_func
 )
-shap <- predict_parts(explainer, data.matrix(diamonds)[1,], 
-  type='shap', keep_distributions=FALSE)
+shap <- predict_parts(explainer, data.matrix(diamonds)[1, ], 
+  type="shap", keep_distributions=FALSE)
 shp <- shapviz(shap)
 sv_force(shp)
-shap2 <- predict_parts(explainer, data.matrix(diamonds)[2,], 
-  type='shap', keep_distributions=FALSE)
+shap2 <- predict_parts(explainer, data.matrix(diamonds)[2, ], 
+  type="shap", keep_distributions=FALSE)
 shp2 <- shapviz(shap2)
-shp_concat <- shp + shp2
+# shp_concat <- shp + shp2
 shp_concat <- rbind(shp, shp2)
 sv_importance(shp_concat, kind = "beeswarm")
 ```

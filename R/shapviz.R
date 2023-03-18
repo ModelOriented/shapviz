@@ -243,37 +243,30 @@ shapviz.treeshap <- function(object, X = object[["observations"]],
 
 #' @describeIn shapviz Creates a "shapviz" object from DALEX's "predict_parts()" method.
 #' @export
-shapviz.predict_parts <- function(object, X = object[["X"]],
-                                  collapse = NULL, ...){
-  if (inherits(object, c("shap", "break_down", "shap_aggregated"))) {
-    if('shap' %in% class(object)){
-      aggregated <- as.data.frame(object[object$B == 0, ])
-      baseline <- attr(object, 'intercept')
-    } else {
-      if('shap_aggregated' %in% class(object)){
-        aggregated <- as.data.frame(object$aggregated)
-      } else {
-        aggregated <- as.data.frame(object)
-      }
-      aggregated <- aggregated[2:(nrow(aggregated) - 1),]
-      tmp <- as.data.frame(object)
-      baseline <- tmp[tmp$variable == 'intercept', 'contribution']
-    }
-
-    shaps <- as.data.frame(aggregated[, c('contribution')])
-    shaps <- as.matrix(t(shaps))
-    colnames(shaps) <- rownames(aggregated)
-    rownames(shaps) <- NULL
-
-    X <- as.data.frame(aggregated[, c('variable_value')])
-    X <- as.data.frame(t(X))
-    colnames(X) <- rownames(aggregated)
-    rownames(X) <- NULL
-
-    shapviz::shapviz(shaps, X = X, baseline = baseline, collapse = collapse)
-  } else {
-    stop("Incorrect object! It is neither 'shap' nor 'break_down'!")
+shapviz.predict_parts <- function(object, ...) {
+  if (!inherits(object, c("shap", "shap_aggregated", "break_down"))) {
+    stop("Incorrect object! It is neither 'shap', 'shap_aggregated' nor 'break_down'!")
   }
+  if (inherits(object, "shap")) {
+    agg <- as.data.frame(object[object$B == 0, ])
+    baseline <- attr(object, "intercept")
+  } else {
+    if (inherits(object, "shap_aggregated")) {
+      agg <- object$aggregated
+    } else {  # break_down
+      agg <- as.data.frame(object)  # to drop additional classes
+    }
+    baseline <- agg[1L, "contribution"]
+    agg <- agg[2:(nrow(agg) - 1L), ]     # Drop intercept and prediction
+  }
+
+  ## Problem: agg might contain all feature values as strings
+  ## -> excludes sv_dependence() and beeswarms
+  X <- data.frame(t(agg[["variable_value"]]))
+  S <- t(agg[["contribution"]])
+  colnames(X) <- colnames(S) <- agg[["variable_name"]]
+
+  shapviz(shaps, X = X, baseline = baseline, ...)
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from shapr's "explain()" method.

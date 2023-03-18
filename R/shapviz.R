@@ -266,7 +266,7 @@ shapviz.predict_parts <- function(object, ...) {
   S <- t(agg[["contribution"]])
   colnames(X) <- colnames(S) <- agg[["variable_name"]]
 
-  shapviz(shaps, X = X, baseline = baseline, ...)
+  shapviz(S, X = X, baseline = baseline, ...)
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from shapr's "explain()" method.

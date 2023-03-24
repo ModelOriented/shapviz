@@ -9,6 +9,7 @@
 #'   \item H2O model (tree-based regression or binary classification model)
 #'   \item "shapr" object from the package "shapr"
 #'   \item The result of calling \code{treeshap()} from the "treeshap" package
+#'   \item The result of calling \code{predict_parts()} from the "DALEX" package
 #'   \item "kernelshap" object from the "kernelshap" package
 #' }
 #' The "shapviz" vignette explains how to use each of them.
@@ -70,7 +71,7 @@ shapviz <- function(object, ...){
 #' @export
 shapviz.default = function(object, ...) {
   stop("No default method available. shapviz() is available for objects
-       of class 'matrix', 'xgb.Booster', 'lgb.Booster', 'treeshap',
+       of class 'matrix', 'xgb.Booster', 'lgb.Booster', 'treeshap', 'predict_parts',
        'shapr', 'H2OModel', 'explain' (from fastshap package), and 'kernelshap'.")
 }
 
@@ -238,6 +239,34 @@ shapviz.treeshap <- function(object, X = object[["observations"]],
     collapse = collapse,
     S_inter = S_inter
   )
+}
+
+#' @describeIn shapviz Creates a "shapviz" object from DALEX's "predict_parts()" method.
+#' @export
+shapviz.predict_parts <- function(object, ...) {
+  if (!inherits(object, c("shap", "shap_aggregated", "break_down"))) {
+    stop("Incorrect object! It is neither 'shap', 'shap_aggregated' nor 'break_down'!")
+  }
+  if (inherits(object, "shap")) {
+    agg <- as.data.frame(object[object$B == 0, ])
+    baseline <- attr(object, "intercept")
+  } else {
+    if (inherits(object, "shap_aggregated")) {
+      agg <- object$aggregated
+    } else {  # break_down
+      agg <- as.data.frame(object)  # to drop additional classes
+    }
+    baseline <- agg[1L, "contribution"]
+    agg <- agg[2:(nrow(agg) - 1L), ]     # Drop intercept and prediction
+  }
+
+  ## Problem: agg might contain all feature values as strings
+  ## -> excludes sv_dependence() and beeswarms
+  X <- data.frame(t(agg[["variable_value"]]))
+  S <- t(agg[["contribution"]])
+  colnames(X) <- colnames(S) <- agg[["variable_name"]]
+
+  shapviz(S, X = X, baseline = baseline, ...)
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from shapr's "explain()" method.

@@ -31,6 +31,7 @@ To further simplify the use of "shapviz", we added direct connectors to these R 
 - [`fastshap`](https://CRAN.R-project.org/package=fastshap)
 - [`shapr`](https://CRAN.R-project.org/package=shapr)
 - [`treeshap`](https://github.com/ModelOriented/treeshap)
+- [`DALEX`](https://cran.r-project.org/web/packages/DALEX)
 
 For XGBoost, LightGBM, and H2O, the SHAP values are directly calculated from the fitted model.
 

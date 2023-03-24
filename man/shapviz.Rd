@@ -8,6 +8,7 @@
 \alias{shapviz.lgb.Booster}
 \alias{shapviz.explain}
 \alias{shapviz.treeshap}
+\alias{shapviz.predict_parts}
 \alias{shapviz.shapr}
 \alias{shapviz.kernelshap}
 \alias{shapviz.H2ORegressionModel}
@@ -42,6 +43,8 @@ shapviz(object, ...)
   collapse = NULL,
   ...
 )
+
+\method{shapviz}{predict_parts}(object, X = object[["X"]], collapse = NULL, ...)
 
 \method{shapviz}{shapr}(object, X = object[["x_test"]], collapse = NULL, ...)
 
@@ -109,6 +112,7 @@ This function creates an object of class "shapviz" from one of the following inp
 \item H2O model (tree-based regression or binary classification model)
 \item "shapr" object from the package "shapr"
 \item The result of calling \code{treeshap()} from the "treeshap" package
+\item The result of calling \code{predict_parts()} from the "DALEX" package
 \item "kernelshap" object from the "kernelshap" package
 }
 The "shapviz" vignette explains how to use each of them.
@@ -133,6 +137,8 @@ explicit value. SHAP values of dummy variables can be combined using the conveni
 \item \code{shapviz(explain)}: Creates a "shapviz" object from fastshap's "explain()" method.
 
 \item \code{shapviz(treeshap)}: Creates a "shapviz" object from treeshap's "treeshap()" method.
+
+\item \code{shapviz(predict_parts)}: Creates a "shapviz" object from DALEX's "predict_parts()" method.
 
 \item \code{shapviz(shapr)}: Creates a "shapviz" object from shapr's "explain()" method.
 

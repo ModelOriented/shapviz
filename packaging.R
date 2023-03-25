@@ -80,7 +80,10 @@ use_logo("logo.png")
 # If package goes to CRAN: infos (check results etc.) for CRAN
 use_cran_comments()
 
-use_github_links() # use this if this project is on github
+use_github_links(overwrite = TRUE) # use this if this project is on github
+
+# Build website
+# use_pkgdown(config_file = "pkgdown/_pkgdown.yml")
 
 # Github actions
 use_github_action("document")

@@ -21,4 +21,9 @@ Useful links:
 \author{
 \strong{Maintainer}: Michael Mayer \email{mayermichael79@gmail.com}
 
+Other contributors:
+\itemize{
+  \item Adrian Stando \email{adrian.j.stando@gmail.com} [contributor]
+}
+
 }

@@ -27,7 +27,9 @@ use_description(
     factor variables in graphs, even if the SHAP values are calculated by a model
     that requires numerical features. The plots are inspired by those provided by
     the 'shap' package in Python, but there is no dependency on it.",
-    `Authors@R` = "person('Michael', 'Mayer', email = 'mayermichael79@gmail.com', role = c('aut', 'cre'))",
+    `Authors@R` =
+    "c(person('Michael', family = 'Mayer', role = c('aut', 'cre'), email = 'mayermichael79@gmail.com'),
+       person('Adrian', family = 'Stando', role = 'ctb', email = 'adrian.j.stando@gmail.com'))",
     Depends = "R (>= 3.6.0)",
     LazyData = NULL
   ),
@@ -50,8 +52,7 @@ use_package("h2o", "Enhances")
 use_gpl_license(2)
 
 # Your files that do not belong to the package itself (others are added by "use_* function")
-use_build_ignore(c("^packaging.R$", "[.]Rproj$", "^backlog$", "examples.R",
-                   "^cran-comments.md$", "^logo.png$"), escape = FALSE)
+use_build_ignore(c("^packaging.R$", "[.]Rproj$", "^logo.png$"), escape = FALSE)
 
 # If your code uses the pipe operator %>%
 # use_pipe()
@@ -80,6 +81,12 @@ use_logo("logo.png")
 use_cran_comments()
 
 use_github_links() # use this if this project is on github
+
+# Github actions
+use_github_action("document")
+use_github_action("check-standard")
+use_github_action("test-coverage")
+use_github_action("pkgdown")
 
 #=============================================================================
 # Finish package building (can use fresh session)

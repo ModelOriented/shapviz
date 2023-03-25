@@ -4,7 +4,7 @@
 
 ## Introduction
 
-SHAP (SHapley Additive exPlanations, [1]) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. The "shapviz" package offers the latter: 
+SHAP (SHapley Additive exPlanations, [1]) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. {shapviz} offers the latter: 
 
 - `sv_dependence()`: Dependence plots to study feature effects and interactions.
 - `sv_importance()`: Importance plots (bar plots and/or beeswarm "summary" plots) to study variable importance.
@@ -22,7 +22,7 @@ Optionally, a `baseline` can be passed to represent an average prediction on the
 A key feature of "shapviz" is that `X` is used for visualization only. Thus it is perfectly fine to use factor variables, even if the underlying model would not accept these.
 Additionally, in order to improve visualization, it can sometimes make sense to clip gross outliers, take logarithms for certain columns, or replace missing values by some explicit value.
 
-To further simplify the use of "shapviz", we added direct connectors to these R packages:
+To further simplify the use of {shapviz}, we added direct connectors to:
 
 - [`XGBoost`](https://CRAN.R-project.org/package=xgboost)
 - [`LightGBM`](https://CRAN.R-project.org/package=lightgbm)
@@ -35,7 +35,7 @@ To further simplify the use of "shapviz", we added direct connectors to these R 
 
 For XGBoost, LightGBM, and H2O, the SHAP values are directly calculated from the fitted model.
 
-[`CatBoost`](https://github.com/catboost) is not included, but see the vignette how to use its SHAP calculation backend with "shapviz".
+[`CatBoost`](https://github.com/catboost) is not included, but see the vignette how to use its SHAP calculation backend with {shapviz}.
 
 ## Installation
 
@@ -144,7 +144,7 @@ sv_dependence(shp, v = "color")
 
 ### Interactions
 
-If SHAP interaction values have been computed (via XGBoost or "treeshap"), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry):
+If SHAP interaction values have been computed (via XGBoost or {treeshap}), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry):
 
 ``` r
 shp_with_inter <- shapviz(

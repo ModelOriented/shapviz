@@ -2,15 +2,19 @@
 
 ## New features
 
-- Support for "predict_parts" objects from "DALEX" package.
-- "shapviz" objects `x1, x2` can now be concatenated using `x1 + x2` or `rbind(x1, x2)`.
+- Support for "predict_parts" objects from "DALEX" package, thanks to Adrian Stando.
+- "shapviz" objects `x1`, `x2` can now be concatenated using `x1 + x2` or `rbind(x1, x2)`, again thanks to Adrian.
 - "shapviz" objects `x` have received a `dimnames()` function, so you can now, e.g., use `colnames(x)` to see the feature names.
-
-# shapviz 0.6.1
-
-## New features
-
 - "shapviz" objects `x` can now be subsetted using `x[cond, features]`.
+
+## New contributor
+
+- Adrian Stando - welcome on the SHAP board.
+
+## Github repository
+
+- To be close to my sister package {kernelshap}, I moved to https://github.com/ModelOriented/shapviz
+- Webpage created with "pgkdown"
 
 # shapviz 0.6.0
 

@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-SHAP (SHapley Additive exPlanations, see @lundberg2017) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. The "shapviz" package offers the latter:
+SHAP (SHapley Additive exPlanations, see @lundberg2017) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. {shapviz} offers the latter:
 
 - `sv_dependence()`: Dependence plots to study feature effects and interactions.
 - `sv_importance()`: Importance plots (bar plots and/or beeswarm plots) to study variable importance.
@@ -41,7 +41,7 @@ Optionally, a `baseline` can be passed to represent an average prediction on the
 A key feature of "shapviz" is that `X` is used for visualization only. Thus it is perfectly fine to use factor variables, even if the underlying model would not accept these.
 Additionally, in order to improve visualization, it can sometimes make sense to clip gross outliers, take logarithms for certain columns, or replace missing values by some explicit value.
 
-To further simplify the use of "shapviz", we added direct connectors to these R packages:
+To further simplify the use of {shapviz}, we added direct connectors to:
 
 - [`XGBoost`](https://CRAN.R-project.org/package=xgboost)
 - [`LightGBM`](https://CRAN.R-project.org/package=lightgbm)
@@ -54,7 +54,7 @@ To further simplify the use of "shapviz", we added direct connectors to these R 
 
 For XGBoost, LightGBM, and H2O, the SHAP values are directly calculated from the fitted model.
 
-[`CatBoost`](https://github.com/catboost) is not included, but see Section "Any other package" how to use its SHAP calculation backend with "shapviz".
+[`CatBoost`](https://github.com/catboost) is not included, but see Section "Any other package" how to use its SHAP calculation backend with {shapviz}.
 
 ## Installation
 
@@ -176,7 +176,7 @@ sv_interaction(shp_with_inter) +
 
 ## Interface to other packages
 
-The above example uses XGBoost to calculate SHAP values. In the following sections, we show (without running the code), how other packages work together with "shapviz".
+The above example uses XGBoost to calculate SHAP values. In the following sections, we show (without running the code), how other packages work together with {shapviz}.
 
 ### LightGBM
 
@@ -269,33 +269,18 @@ sv_dependence(shp, "carat", alpha = 0.7, interactions = TRUE)
 
 ### DALEX
 
+Decompositions of single predictions obtained by `DALEX::predict_parts()`:
+
 ```r
 library(DALEX)
 library(ranger)
 
-fit <- ranger(
-  y = diamonds$price, x = data.matrix(diamonds[x]), max.depth = 6, num.trees = 100
-)
-predict_func <- function(model, X) {
-  predict(model, X)$predictions[, 2]
-}
-explainer <- explain(
-  fit,
-  data = data.matrix(diamonds[x]),
-  y = diamonds$price,
-  label = "diamonds",
-  predict_function = predict_func
-)
-shap <- predict_parts(explainer, data.matrix(diamonds)[1, ], 
-  type="shap", keep_distributions=FALSE)
-shp <- shapviz(shap)
-sv_force(shp)
-shap2 <- predict_parts(explainer, data.matrix(diamonds)[2, ], 
-  type="shap", keep_distributions=FALSE)
-shp2 <- shapviz(shap2)
-# shp_concat <- shp + shp2
-shp_concat <- rbind(shp, shp2)
-sv_importance(shp_concat, kind = "beeswarm")
+fit <- ranger(reformulate(x, "price"), data = diamonds, max.depth = 6, num.trees = 100)
+explainer <- explain(fit, data = diamonds[x], y = diamonds$price, label = "RF")
+breakdown <- predict_parts(explainer, diamonds[10000, ], keep_distributions = FALSE)
+
+sv_force(shapviz(breakdown)) +
+  xlab("Breakdown")
 ```
 
 ### kernelshap
@@ -323,7 +308,7 @@ X <- data.frame(x = c("a", "b"), y = c(100, 10))
 shp <- shapviz(S, X, baseline = 4)
 ```
 
-An example is CatBoost: it is not on CRAN and requires `catboost.*()` functions to calculate SHAP values, so we cannot directly add it to "shapviz" for now. Just use a wrapper like this:
+An example is CatBoost: it is not on CRAN and requires `catboost.*()` functions to calculate SHAP values, so we cannot directly add it to {shapviz} for now. Just use a wrapper like this:
 
 ``` r
 library(catboost)
@@ -375,7 +360,7 @@ sv_dependence(shp, "clarity", alpha = 0.2, size = 1)
 ## Classification models
 
 The plot functions work with one-dimensional model predictions only. However, the wrappers
-for XGBoost, LightGBM, and kernelshap allow to select the category of interest.
+for {xgboost}, {lightgbm}, and {kernelshap} allow to select the category of interest.
 
 ## References
 

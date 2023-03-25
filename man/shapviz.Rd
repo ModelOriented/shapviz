@@ -44,7 +44,7 @@ shapviz(object, ...)
   ...
 )
 
-\method{shapviz}{predict_parts}(object, X = object[["X"]], collapse = NULL, ...)
+\method{shapviz}{predict_parts}(object, ...)
 
 \method{shapviz}{shapr}(object, X = object[["x_test"]], collapse = NULL, ...)
 

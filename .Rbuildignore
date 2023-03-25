@@ -9,3 +9,7 @@ examples.R
 ^cran-comments.md$
 ^logo.png$
 ^CRAN-SUBMISSION$
+^\.github$
+^pkgdown/_pkgdown\.yml$
+^docs$
+^pkgdown$

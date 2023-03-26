@@ -8,10 +8,11 @@ test_that("get_* functions work", {
   expect_equal(X, get_feature_values(shp))
 })
 
-test_that("dim, nrow, ncol work", {
+test_that("dim, nrow, ncol, colnames  work", {
   expect_equal(dim(shp), c(2L, 2L))
   expect_equal(nrow(shp), 2L)
   expect_equal(ncol(shp), 2L)
+  expect_equal(colnames(shp), colnames(S))
 })
 
 test_that("subsetting works", {
@@ -39,6 +40,11 @@ test_that("concatenating with rbind works", {
   expect_equal(dim(rbind(shp, shp, shp)$S), c(6L, 2L))
   expect_equal(dim(rbind(shp, shp, shp)$X), c(6L, 2L))
 })
+
+test_that("print() gives no error", {
+  expect_no_error(print(shp))
+})
+
 
 test_that("column order of X does no matter", {
   expect_equal(shp, shapviz(S, X[, 2:1], baseline = 4))
@@ -108,3 +114,25 @@ test_that("shapviz does not accept bad S_inter", {
   S_inter_noname <- array(c(1, -1, 0, 0, 0, 0, -1, 1), dim = c(2L, 2L, 2L))
   expect_error(shapviz(S, X = X, baseline = 4, S_inter = S_inter_noname))
 })
+
+# More tests on interactions
+S_inter <- array(
+  c(1, -1, 0, 0, 0, 0, -1, 1),
+  dim = c(2L, 2L, 2L),
+  dimnames = list(NULL, c("x", "y"), c("x", "y"))
+)
+shp_inter <- shapviz(S, X = X, baseline = 4, S_inter = S_inter)
+
+test_that("get_shap_interactions, +, rbind works for interactions", {
+  expect_equal(S_inter, get_shap_interactions(shp_inter))
+  expect_equal(dim((shp_inter + shp_inter)$S_inter)[1L], 2 * dim(shp_inter$S_inter)[1L])
+  expect_equal(
+    dim(rbind(shp_inter, shp_inter, shp_inter)$S_inter)[1L],
+    3 * dim(shp_inter$S_inter)[1L]
+  )
+})
+
+test_that("print() gives no error (with interactions)", {
+  expect_no_error(print(shp_inter))
+})
+

@@ -76,4 +76,25 @@ test_that("plots work for non-syntactic column names", {
   )
 })
 
+# Miscellaneous tests
+test_that("there are no default sv_*() methods", {
+  for (f in c(sv_dependence, sv_importance, sv_force, sv_waterfall, sv_interaction)) {
+    expect_error(f(1))
+  }
+})
+
+test_that("sv_importance() and sv_interaction() and kind = 'no' gives numeric output", {
+  X_pred <- data.matrix(iris[, -1L])
+  dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1L])
+  fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
+  x <- shapviz(fit, X_pred = X_pred, interactions = TRUE)
+
+  imp <- sv_importance(x, kind = "no")
+  expect_true(is.numeric(imp) && length(imp) == ncol(X_pred))
+
+  inter <- sv_interaction(x, kind = "no")
+  expect_true(is.numeric(inter) && all(dim(inter) == rep(ncol(X_pred), 2L)))
+})
+
+
 

@@ -13,8 +13,12 @@
 
 ## Github repository
 
-- To be close to my sister package {kernelshap}, I moved to https://github.com/ModelOriented/shapviz
+- To be close to my sister package {kernelshap}, I have moved to https://github.com/ModelOriented/shapviz
 - Webpage created with "pgkdown"
+
+## Deprecated
+
+- As announced, the argument `show_other` of `sv_importance()` has been removed.
 
 # shapviz 0.6.0
 

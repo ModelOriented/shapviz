@@ -45,6 +45,9 @@ test_that("print() gives no error", {
   capture_output(expect_no_error(print(shp)))
 })
 
+test_that("shapviz() gives error for default method", {
+  expect_error(shapviz(1))
+})
 
 test_that("column order of X does no matter", {
   expect_equal(shp, shapviz(S, X[, 2:1], baseline = 4))
@@ -134,5 +137,26 @@ test_that("get_shap_interactions, +, rbind works for interactions", {
 
 test_that("print() gives no error (with interactions)", {
   capture_output(expect_no_error(print(shp_inter)))
+})
+
+# Multiclass
+X_pred <- data.matrix(iris[, -5L])
+dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5L]) - 1L)
+fit <- xgboost::xgb.train(
+  data = dtrain,
+  nrounds = 50L,
+  nthread = 1L,
+  objective="multi:softprob",
+  num_class=3L
+)
+
+test_that("initialization of multiclass xgb model fails without 'which_class'", {
+  expect_error(shapviz(fit, X_pred = X_pred))
+})
+
+test_that("initialization of multiclass xgb model succeeds with 'which_class'", {
+  expect_true(
+    is.shapviz(shapviz(fit, X_pred = X_pred, which_class = 3L, interactions = TRUE))
+  )
 })
 

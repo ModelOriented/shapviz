@@ -16,7 +16,6 @@
 #' SHAP feature importances of all variables are returned.
 #' @param max_display Maximum number of features (with highest importance) to plot.
 #' Set to \code{Inf} to show all features. Has no effect if \code{kind = "no"}.
-#' @param show_other Deprecated.
 #' @param fill Color used to fill the bars (only used if bars are shown).
 #' @param bar_width Relative width of the bars (only used if bars are shown).
 #' @param bee_width Relative width of the beeswarms (only used if beeswarm shown).
@@ -71,8 +70,7 @@ sv_importance.default <- function(object, ...) {
 #' @describeIn sv_importance SHAP importance plot for an object of class "shapviz".
 #' @export
 sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "no"),
-                                  max_display = 15L, show_other = NULL,
-                                  fill = "#fca50a", bar_width = 2/3,
+                                  max_display = 15L, fill = "#fca50a", bar_width = 2/3,
                                   bee_width = 0.4, bee_adjust = 0.5,
                                   viridis_args = getOption("shapviz.viridis_args"),
                                   color_bar_title = "Feature value",
@@ -80,11 +78,6 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
                                   number_size = 3.2, ...) {
   stopifnot("format_fun must be a function" = is.function(format_fun))
   kind <- match.arg(kind)
-  if (!is.null(show_other)) {
-    warning(
-      "The argument 'show_other' is deprecated and will be removed in version 0.6.0"
-    )
-  }
   S <- get_shap_values(object)
   imp <- .get_imp(S)
 

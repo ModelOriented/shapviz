@@ -14,7 +14,6 @@ sv_importance(object, ...)
   object,
   kind = c("bar", "beeswarm", "both", "no"),
   max_display = 15L,
-  show_other = NULL,
   fill = "#fca50a",
   bar_width = 2/3,
   bee_width = 0.4,
@@ -41,8 +40,6 @@ SHAP feature importances of all variables are returned.}
 
 \item{max_display}{Maximum number of features (with highest importance) to plot.
 Set to \code{Inf} to show all features. Has no effect if \code{kind = "no"}.}
-
-\item{show_other}{Deprecated.}
 
 \item{fill}{Color used to fill the bars (only used if bars are shown).}
 

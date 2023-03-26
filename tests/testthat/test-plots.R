@@ -84,9 +84,9 @@ test_that("there are no default sv_*() methods", {
 })
 
 test_that("sv_importance() and sv_interaction() and kind = 'no' gives numeric output", {
-  X_pred <- data.matrix(iris[, -1])
+  X_pred <- data.matrix(iris[, -1L])
   dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1L])
-  fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1L)
+  fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
   x <- shapviz(fit, X_pred = X_pred, interactions = TRUE)
 
   imp <- sv_importance(x, kind = "no")

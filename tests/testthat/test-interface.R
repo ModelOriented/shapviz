@@ -144,17 +144,17 @@ X_pred <- data.matrix(iris[, -5L])
 dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5L]) - 1L)
 fit <- xgboost::xgb.train(
   data = dtrain,
-  nrounds = 50,
+  nrounds = 50L,
   nthread = 1L,
   objective="multi:softprob",
   num_class=3L
 )
 
-test_that("initialization of multiclass xgb model requires which_class", {
+test_that("initialization of multiclass xgb model fails without 'which_class'", {
   expect_error(shapviz(fit, X_pred = X_pred))
 })
 
-test_that("initialization of multiclass xgb model gives no error with which_class", {
+test_that("initialization of multiclass xgb model succeeds with 'which_class'", {
   expect_true(
     is.shapviz(shapviz(fit, X_pred = X_pred, which_class = 3L, interactions = TRUE))
   )

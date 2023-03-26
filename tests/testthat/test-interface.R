@@ -42,7 +42,7 @@ test_that("concatenating with rbind works", {
 })
 
 test_that("print() gives no error", {
-  expect_no_error(print(shp))
+  capture_output(expect_no_error(print(shp)))
 })
 
 
@@ -133,6 +133,6 @@ test_that("get_shap_interactions, +, rbind works for interactions", {
 })
 
 test_that("print() gives no error (with interactions)", {
-  expect_no_error(print(shp_inter))
+  capture_output(expect_no_error(print(shp_inter)))
 })
 

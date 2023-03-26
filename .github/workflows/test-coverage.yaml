@@ -41,7 +41,7 @@ jobs:
               "shapviz\\.kernelshap",
               "shapviz\\.H2ORegressionModel",
               "shapviz\\.H2OBinomialModel",
-              "shapviz\\.H2OModel",
+              "shapviz\\.H2OModel"
             )
           )
         shell: Rscript {0}

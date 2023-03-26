@@ -6,6 +6,7 @@ test_that("plots work for basic example", {
   expect_s3_class(sv_waterfall(x, 2), "ggplot")
   expect_s3_class(sv_force(x, 2), "ggplot")
   expect_s3_class(sv_importance(x), "ggplot")
+  expect_s3_class(sv_importance(x, show_numbers = TRUE), "ggplot")
   expect_s3_class(sv_importance(x, kind = "beeswarm"), "ggplot")
   expect_s3_class(sv_dependence(x, "Petal.Length"), "ggplot")
 })
@@ -14,6 +15,7 @@ test_that("using 'max_display' gives no error", {
   expect_s3_class(sv_waterfall(x, 2, max_display = 2L), "ggplot")
   expect_s3_class(sv_force(x, 2, max_display = 2L), "ggplot")
   expect_s3_class(sv_importance(x, max_display = 2L), "ggplot")
+  expect_s3_class(sv_importance(x, max_display = 2L, show_numbers = TRUE), "ggplot")
 })
 
 # SHAP interactions
@@ -65,6 +67,7 @@ test_that("plots work for non-syntactic column names", {
   expect_s3_class(sv_waterfall(x, 2), "ggplot")
   expect_s3_class(sv_force(x, 2), "ggplot")
   expect_s3_class(sv_importance(x), "ggplot")
+  expect_s3_class(sv_importance(x, show_numbers = TRUE), "ggplot")
   expect_s3_class(sv_importance(x, max_display = 2, kind = "beeswarm"), "ggplot")
   expect_s3_class(sv_importance(x, kind = "beeswarm"), "ggplot")
   expect_s3_class(sv_dependence(x, "strange name"), "ggplot")

@@ -31,7 +31,18 @@ jobs:
           covr::codecov(
             quiet = FALSE,
             clean = FALSE,
-            install_path = file.path(Sys.getenv("RUNNER_TEMP"), "package")
+            install_path = file.path(Sys.getenv("RUNNER_TEMP"), "package"),
+            function_exclusions = c(
+              "shapviz\\.lgb.Booster",
+              "shapviz\\.explain",
+              "shapviz\\.treeshap",
+              "shapviz\\.predict_parts",
+              "shapviz\\.shapr",
+              "shapviz\\.kernelshap",
+              "shapviz\\.H2ORegressionModel",
+              "shapviz\\.H2OBinomialModel",
+              "shapviz\\.H2OModel"
+            )
           )
         shell: Rscript {0}
 

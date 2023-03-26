@@ -13,8 +13,8 @@ Visualizations for SHAP (SHapley Additive exPlanations), such as waterfall plots
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/mayer79/shapviz}
-  \item Report bugs at \url{https://github.com/mayer79/shapviz/issues}
+  \item \url{https://github.com/ModelOriented/shapviz}
+  \item Report bugs at \url{https://github.com/ModelOriented/shapviz/issues}
 }
 
 }

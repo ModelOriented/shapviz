@@ -115,7 +115,7 @@ Note: If `X_pred` would contain one-hot-encoded dummy variables, their SHAP valu
 
 The main idea behind SHAP values is to decompose, in a fair way, a prediction into additive contributions of each feature. Typical visualizations include waterfall plots and force plots:
 
-```{r, dev = 'svg'}
+```{r}
 sv_waterfall(shp, row_id = 1L) +
   theme(axis.text = element_text(size = 11))
 ```
@@ -123,7 +123,7 @@ Works pretty sweet, and factor input is respected!
 
 Alternatively, we can study a force plot:
 
-```{r, fig.asp = .5, dev = 'svg'}
+```{r, fig.asp = .5}
 sv_force(shp, row_id = 1L)
 ```
 
@@ -148,7 +148,7 @@ A SHAP beeswarm importance plot gives first hints on whether high feature values
 
 On the color axis, the feature with (heuristically) strongest interaction is shown by default. Use `color_var` to use another feature (or `NULL` for no coloring).
 
-```{r, dev = 'svg'}
+```{r}
 sv_dependence(shp, v = "color")
 
 sv_dependence(shp, v = "carat", alpha = 0.2, size = 1) +

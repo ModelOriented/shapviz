@@ -59,9 +59,9 @@ sv_force.shapviz <- function(object, row_id = 1L, max_display = 6L,
     "format_shap must be a function" = is.function(format_shap),
     "format_feat must be a function" = is.function(format_feat)
   )
-
-  X <- get_feature_values(object)[row_id, ]
-  S <- get_shap_values(object)[row_id, ]
+  object <- object[row_id, ]
+  X <- get_feature_values(object)
+  S <- drop(get_shap_values(object))
   b <- get_baseline(object)
   dat <- data.frame(S = S, label = paste(names(X), format_feat(X), sep = "="))
 

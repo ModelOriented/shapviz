@@ -60,10 +60,11 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
   S <- get_shap_values(object)
   X <- get_feature_values(object)
   S_inter <- get_shap_interactions(object)
+  nms <- colnames(object)
   stopifnot(
-    length(v) <= 1L,
-    v %in% colnames(S),
-    is.null(color_var) || (color_var %in% c("auto", colnames(S)))
+    length(v) == 1L,
+    v %in% nms,
+    is.null(color_var) || (color_var %in% c("auto", nms))
   )
   if (interactions && is.null(S_inter)) {
     stop("No SHAP interaction values available in 'object'.")
@@ -75,7 +76,7 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
   }
 
   # Set color value
-  if (!is.null(color_var) && color_var == "auto" && !("auto" %in% colnames(S))) {
+  if (!is.null(color_var) && color_var == "auto" && !("auto" %in% nms)) {
     scores <- potential_interactions(object, v)
     color_var <- names(scores)[1L]  # NULL if p = 1L
   }
@@ -146,10 +147,11 @@ potential_interactions <- function(obj, v) {
   S <- get_shap_values(obj)
   S_inter <- get_shap_interactions(obj)
   X <- get_feature_values(obj)
-  v_other <- setdiff(colnames(X), v)
-  stopifnot(v %in% colnames(X))
+  nms <- colnames(obj)
+  v_other <- setdiff(nms, v)
+  stopifnot(v %in% nms)
 
-  if (ncol(S) < 2L) {
+  if (ncol(obj) <= 1L) {
     return(NULL)
   }
 

@@ -78,19 +78,18 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
                                   number_size = 3.2, ...) {
   stopifnot("format_fun must be a function" = is.function(format_fun))
   kind <- match.arg(kind)
-  S <- get_shap_values(object)
-  imp <- .get_imp(S)
+  imp <- .get_imp(get_shap_values(object))
 
   if (kind == "no") {
     return(imp)
   }
 
   # Deal with too many features
-  if (ncol(S) > max_display) {
+  if (ncol(object) > max_display) {
     imp <- imp[seq_len(max_display)]
   }
-
   ord <- names(imp)
+  object <- object[, ord]  # not required for kind = "bar"
 
   # ggplot will need to work with data.frame
   imp_df <- data.frame(feature = factor(ord, rev(ord)), value = imp)
@@ -101,8 +100,8 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
       labs(x = "mean(|SHAP value|)", y = element_blank())
   } else {
     # Prepare data.frame for beeswarm plot
-    S <- S[, ord, drop = FALSE]
-    X <- .scale_X(get_feature_values(object)[ord])
+    S <- get_shap_values(object)
+    X <- .scale_X(get_feature_values(object))
     df <- transform(
       as.data.frame.table(S, responseName = "value"),
       feature = factor(Var2, levels = rev(ord)),

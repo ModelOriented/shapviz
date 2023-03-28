@@ -71,9 +71,9 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
     "format_feat must be a function" = is.function(format_feat),
     "order_fun must be a function" = is.function(order_fun)
   )
-
-  X <- get_feature_values(object)[row_id, ]
-  S <- get_shap_values(object)[row_id, ]
+  object <- object[row_id, ]
+  X <- get_feature_values(object)
+  S <- drop(get_shap_values(object))
   b <- get_baseline(object)
   dat <- data.frame(S = S, label = paste(names(X), format_feat(X), sep = " = "))
 

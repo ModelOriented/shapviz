@@ -54,26 +54,27 @@ sv_interaction.shapviz <- function(object, kind = c("beeswarm", "no"),
                                    viridis_args = getOption("shapviz.viridis_args"),
                                    color_bar_title = "Row feature value", ...) {
   kind <- match.arg(kind)
-  S_inter <- get_shap_interactions(object)
-  if (is.null(S_inter)) {
+  if (is.null(get_shap_interactions(object))) {
     stop("No SHAP interaction values available.")
   }
   ord <- names(.get_imp(get_shap_values(object)))
+  object <- object[, ord]
 
   if (kind == "no") {
-    mat <- apply(abs(S_inter), 2:3, mean)[ord, ord]
+    mat <- apply(abs(get_shap_interactions(object)), 2:3, mean)
     off_diag <- row(mat) != col(mat)
     mat[off_diag] <- mat[off_diag] * 2  # compensate symmetry
     return(mat)
   }
 
-  if (ncol(S_inter) > max_display) {
+  if (ncol(object) > max_display) {
     ord <- ord[seq_len(max_display)]
+    object <- object[, ord]
   }
 
   # Prepare data.frame for beeswarm
-  S_inter <- S_inter[, ord, ord, drop = FALSE]
-  X <- .scale_X(get_feature_values(object)[ord])
+  S_inter <- get_shap_interactions(object)
+  X <- .scale_X(get_feature_values(object))
   X_long <- as.data.frame.table(X)
   df <- transform(
     as.data.frame.table(S_inter, responseName = "value"),

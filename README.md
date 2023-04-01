@@ -114,6 +114,8 @@ sv_force(shp, row_id = 1)
 
 ![](man/figures/README-force.svg)
 
+If more than one value is passed to `row_id`, average SHAP values are shown.
+
 ### Importance
 
 We have decomposed 2000 predictions, not just one. This allows us to study variable importance at a global model level by studying average absolute SHAP values or by looking at beeswarm "summary" plots of SHAP values.

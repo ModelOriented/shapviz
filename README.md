@@ -18,7 +18,7 @@ SHAP (SHapley Additive exPlanations, [1]) is an ingenious way to study black box
 - `sv_dependence()`: Dependence plots to study feature effects and interactions.
 - `sv_importance()`: Importance plots (bar plots and/or beeswarm "summary" plots) to study variable importance.
 - `sv_interaction()`: Interaction plots.
-- `sv_waterfall()`: Waterfall plots to study single predictions.
+- `sv_waterfall()`: Waterfall plots.
 - `sv_force()`: Force plots as an alternative to waterfall plots.
 
 These plots require a "shapviz" object, which is built from two things only:
@@ -113,6 +113,16 @@ sv_force(shp, row_id = 1)
 ```
 
 ![](man/figures/README-force.svg)
+
+### Aggregated SHAP values
+
+Also multiple `row_id` can be passed to `sv_waterfall()` and `sv_force()`: The SHAP values of the selected observations are averaged and then plotted as *aggregated SHAP values*: The prediction profile for beautiful color "D" diamonds:
+
+``` r
+sv_waterfall(shp, shp$X$color == "D")
+```
+
+![](man/figures/README-waterfall-agg.svg)
 
 ### Importance
 

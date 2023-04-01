@@ -8,7 +8,7 @@ test_that("get_* functions work", {
   expect_equal(X, get_feature_values(shp))
 })
 
-test_that("dim, nrow, ncol, colnames  work", {
+test_that("dim, nrow, ncol, colnames work", {
   expect_equal(dim(shp), c(2L, 2L))
   expect_equal(nrow(shp), 2L)
   expect_equal(ncol(shp), 2L)
@@ -101,6 +101,15 @@ test_that("shapviz accepts correct S_inter", {
     )
   )
   expect_silent(
+    shapviz(S, X = X, baseline = 4, S_inter = S_inter[, c("y", "x"), c("y", "x")])
+  )
+  expect_identical(
+    get_shap_interactions(
+      shapviz(S, X = X, baseline = 4, S_inter = S_inter[, c("y", "x"), c("y", "x")])
+    ),
+    S_inter
+  )
+  expect_silent(
     shapviz(
       S[, "x", drop = FALSE],
       X = X["x"],
@@ -113,9 +122,16 @@ test_that("shapviz accepts correct S_inter", {
   expect_equal(dim(shp_inter[1, "x"]$S_inter), c(1L, 1L, 1L))
 })
 
-test_that("shapviz does not accept bad S_inter", {
+test_that("shapviz does not accept S_inter with bad colnames", {
   S_inter_noname <- array(c(1, -1, 0, 0, 0, 0, -1, 1), dim = c(2L, 2L, 2L))
   expect_error(shapviz(S, X = X, baseline = 4, S_inter = S_inter_noname))
+
+  S_inter_badname <- S_inter_noname
+  dimnames(S_inter_badname) <- list(NULL, c("x", "z"), c("x", "z"))
+  expect_error(shapviz(S, X = X, baseline = 4, S_inter = S_inter_badname))
+
+  dimnames(S_inter_badname) <- list(NULL, c("x", "y"), c("y", "x"))
+  expect_error(shapviz(S, X = X, baseline = 4, S_inter = S_inter_badname))
 })
 
 # More tests on interactions

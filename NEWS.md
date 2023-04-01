@@ -20,6 +20,10 @@
 
 - As announced, the argument `show_other` of `sv_importance()` has been removed.
 
+## Small changes
+
+- Slightly less picky checks on `S_inter`.
+
 # shapviz 0.6.0
 
 ## Change in defaults

@@ -86,13 +86,16 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
     }
   }
   .input_checks(object = object, X = X, baseline = baseline, S_inter = S_inter)
+
+  # Select and align columns according to SHAP matrix ('object')
   nms <- colnames(object)
-  out <- list(
-    S = object,
-    X = as.data.frame(X)[nms],
-    baseline = baseline,
-    S_inter = S_inter[, nms, nms, drop = FALSE]
-  )
+  X <- as.data.frame(X)[nms]
+  if (!is.null(S_inter)) {
+    S_inter <- S_inter[, nms, nms, drop = FALSE]
+  }
+
+  # Organize output
+  out <- list(S = object, X = X, baseline = baseline, S_inter = S_inter)
   class(out) <- "shapviz"
   out
 }

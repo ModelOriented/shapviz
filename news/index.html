@@ -62,28 +62,26 @@
 <h2 class="page-header" data-toc-text="0.7.0" id="shapviz-070">shapviz 0.7.0<a class="anchor" aria-label="anchor" href="#shapviz-070"></a></h2>
 <div class="section level3">
 <h3 id="new-features-0-7-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-7-0"></a></h3>
-<ul><li>Support for “predict_parts” objects from “DALEX” package, thanks to Adrian Stando.</li>
-<li>“shapviz” objects <code>x1</code>, <code>x2</code> can now be concatenated using <code>x1 + x2</code> or <code>rbind(x1, x2)</code>, again thanks to Adrian.</li>
-<li>“shapviz” objects <code>x</code> have received a <code><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames()</a></code> function, so you can now, e.g., use <code>colnames(x)</code> to see the feature names.</li>
-<li>“shapviz” objects <code>x</code> can now be subsetted using <code>x[cond, features]</code>.</li>
+<ul><li>{DALEX}: Support for “predict_parts” objects from {DALEX}, thanks to Adrian Stando.</li>
+<li>Aggregated SHAP values: The argument <code>row_id</code> of <code><a href="../reference/sv_waterfall.html">sv_waterfall()</a></code> and <code><a href="../reference/sv_force.html">sv_force()</a></code> now also allows a vector of integers or a logical vector. If more than one row is selected, SHAP values and predictions are averaged before plotting (<em>aggregated SHAP values</em> in {DALEX}).</li>
+<li>Combination: “shapviz” objects <code>x1</code>, <code>x2</code> can now be concatenated using <code>x1 + x2</code> or <code>rbind(x1, x2)</code>, again thanks to Adrian.</li>
+<li>
+<code><a href="https://rdrr.io/pkg/h2o/man/colnames.html" class="external-link">colnames()</a></code>: “shapviz” objects <code>x</code> have received a <code><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames()</a></code> function, so you can now, e.g., use <code>colnames(x)</code> to see the feature names.</li>
+<li>Subsetting: “shapviz” objects <code>x</code> can now be subsetted using <code>x[cond, features]</code>.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="new-contributor-0-7-0">New contributor<a class="anchor" aria-label="anchor" href="#new-contributor-0-7-0"></a></h3>
-<ul><li>Adrian Stando - welcome on the SHAP board.</li>
-</ul></div>
-<div class="section level3">
-<h3 id="github-repository-0-7-0">Github repository<a class="anchor" aria-label="anchor" href="#github-repository-0-7-0"></a></h3>
-<ul><li>To be close to my sister package {kernelshap}, I have moved to <a href="https://github.com/ModelOriented/shapviz" class="external-link uri">https://github.com/ModelOriented/shapviz</a>
+<h3 id="maintenance-0-7-0">Maintenance<a class="anchor" aria-label="anchor" href="#maintenance-0-7-0"></a></h3>
+<ul><li>We have a new contributor: Adrian Stando - welcome on the SHAP board.</li>
+<li>To be close to my sister package {kernelshap}, I have moved to <a href="https://github.com/ModelOriented/shapviz" class="external-link uri">https://github.com/ModelOriented/shapviz</a>
 </li>
 <li>Webpage created with “pgkdown”</li>
 </ul></div>
 <div class="section level3">
-<h3 id="deprecated-0-7-0">Deprecated<a class="anchor" aria-label="anchor" href="#deprecated-0-7-0"></a></h3>
+<h3 id="other-changes-and-bug-fixes-0-7-0">Other changes and bug fixes<a class="anchor" aria-label="anchor" href="#other-changes-and-bug-fixes-0-7-0"></a></h3>
 <ul><li>As announced, the argument <code>show_other</code> of <code><a href="../reference/sv_importance.html">sv_importance()</a></code> has been removed.</li>
-</ul></div>
-<div class="section level3">
-<h3 id="small-changes-0-7-0">Small changes<a class="anchor" aria-label="anchor" href="#small-changes-0-7-0"></a></h3>
-<ul><li>Slightly less picky checks on <code>S_inter</code>.</li>
+<li>Slightly less picky checks on <code>S_inter</code>.</li>
+<li>
+<code><a href="../reference/sv_waterfall.html">sv_waterfall()</a></code>: Using <code>order_fun()</code> would not work as expected with <code>max_display</code>.</li>
 </ul></div>
 </div>
     <div class="section level2">

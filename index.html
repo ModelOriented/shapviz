@@ -114,7 +114,7 @@
 <li>
 <code><a href="reference/sv_interaction.html">sv_interaction()</a></code>: Interaction plots.</li>
 <li>
-<code><a href="reference/sv_waterfall.html">sv_waterfall()</a></code>: Waterfall plots to study single predictions.</li>
+<code><a href="reference/sv_waterfall.html">sv_waterfall()</a></code>: Waterfall plots.</li>
 <li>
 <code><a href="reference/sv_force.html">sv_force()</a></code>: Force plots as an alternative to waterfall plots.</li>
 </ul>
@@ -203,27 +203,35 @@
 <p><img src="reference/figures/README-force.svg"></p>
 </div>
 <div class="section level3">
+<h3 id="aggregated-shap-values">Aggregated SHAP values<a class="anchor" aria-label="anchor" href="#aggregated-shap-values"></a>
+</h3>
+<p>Also multiple <code>row_id</code> can be passed to <code><a href="reference/sv_waterfall.html">sv_waterfall()</a></code> and <code><a href="reference/sv_force.html">sv_force()</a></code>: The SHAP values of the selected observations are averaged and then plotted as <em>aggregated SHAP values</em>: The prediction profile for beautiful color “D” diamonds:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/sv_waterfall.html">sv_waterfall</a></span><span class="op">(</span><span class="va">shp</span>, <span class="va">shp</span><span class="op">$</span><span class="va">X</span><span class="op">$</span><span class="va">color</span> <span class="op">==</span> <span class="st">"D"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-waterfall-agg.svg"></p>
+</div>
+<div class="section level3">
 <h3 id="importance">Importance<a class="anchor" aria-label="anchor" href="#importance"></a>
 </h3>
 <p>We have decomposed 2000 predictions, not just one. This allows us to study variable importance at a global model level by studying average absolute SHAP values or by looking at beeswarm “summary” plots of SHAP values.</p>
 <div class="section level4">
 <h4 id="bar-plot">Bar plot<a class="anchor" aria-label="anchor" href="#bar-plot"></a>
 </h4>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">shp</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-imp1.svg"></p>
 </div>
 <div class="section level4">
 <h4 id="beeswarm-plot">Beeswarm plot<a class="anchor" aria-label="anchor" href="#beeswarm-plot"></a>
 </h4>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">shp</span>, kind <span class="op">=</span> <span class="st">"beeswarm"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-imp2.png"></p>
 </div>
 <div class="section level4">
 <h4 id="or-both-combined">Or both combined<a class="anchor" aria-label="anchor" href="#or-both-combined"></a>
 </h4>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">shp</span>, kind <span class="op">=</span> <span class="st">"both"</span>, show_numbers <span class="op">=</span> <span class="cn">TRUE</span>, bee_width <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-imp3.png"></p>
 </div>
@@ -232,7 +240,7 @@
 <h3 id="dependence-plot">Dependence plot<a class="anchor" aria-label="anchor" href="#dependence-plot"></a>
 </h3>
 <p>A scatterplot of SHAP values of a feature like <code>color</code> against its observed values gives a great impression on the feature effect on the response. Vertical scatter gives additional info on interaction effects (using a heuristic to select the feature on the color axis).</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp</span>, v <span class="op">=</span> <span class="st">"color"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-dep.svg"></p>
 </div>
@@ -240,7 +248,7 @@
 <h3 id="interactions">Interactions<a class="anchor" aria-label="anchor" href="#interactions"></a>
 </h3>
 <p>If SHAP interaction values have been computed (via XGBoost or {treeshap}), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry):</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">shp_with_inter</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/shapviz.html">shapviz</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit</span>, X_pred <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">dia_small</span><span class="op">[</span><span class="va">x</span><span class="op">]</span><span class="op">)</span>, X <span class="op">=</span> <span class="va">dia_small</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>

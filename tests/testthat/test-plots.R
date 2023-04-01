@@ -4,7 +4,9 @@ x <- shapviz(fit, X_pred = dtrain, X = iris[, -1L])
 
 test_that("plots work for basic example", {
   expect_s3_class(sv_waterfall(x, 2), "ggplot")
+  suppressMessages(expect_s3_class(sv_waterfall(x, 2:3), "ggplot"))
   expect_s3_class(sv_force(x, 2), "ggplot")
+  suppressMessages(expect_s3_class(sv_force(x, 2:3), "ggplot"))
   expect_s3_class(sv_importance(x), "ggplot")
   expect_s3_class(sv_importance(x, show_numbers = TRUE), "ggplot")
   expect_s3_class(sv_importance(x, kind = "beeswarm"), "ggplot")
@@ -13,7 +15,9 @@ test_that("plots work for basic example", {
 
 test_that("using 'max_display' gives no error", {
   expect_s3_class(sv_waterfall(x, 2, max_display = 2L), "ggplot")
+  suppressMessages(expect_s3_class(sv_waterfall(x, 2:10, max_display = 2L), "ggplot"))
   expect_s3_class(sv_force(x, 2, max_display = 2L), "ggplot")
+  suppressMessages(expect_s3_class(sv_force(x, 2:10, max_display = 2L), "ggplot"))
   expect_s3_class(sv_importance(x, max_display = 2L), "ggplot")
   expect_s3_class(sv_importance(x, max_display = 2L, show_numbers = TRUE), "ggplot")
 })

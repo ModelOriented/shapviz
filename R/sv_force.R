@@ -66,7 +66,9 @@ sv_force.shapviz <- function(object, row_id = 1L, max_display = 6L,
   dat <- data.frame(S = S, label = paste(names(X), format_feat(X), sep = "="))
 
   # Collapse unimportant features
-  dat <- .collapse(dat, S, max_display = max_display)
+  if (ncol(object) > max_display) {
+    dat <- .collapse(dat, S, max_display = max_display)
+  }
 
   # Reorder rows and calculate order dependent columns
   .sorter <- function(y, p) {

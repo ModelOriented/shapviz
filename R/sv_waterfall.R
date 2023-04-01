@@ -78,7 +78,9 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
   dat <- data.frame(S = S, label = paste(names(X), format_feat(X), sep = " = "))
 
   # Collapse unimportant features
-  dat <- .collapse(dat, S, max_display = max_display)
+  if (ncol(object) > max_display) {
+    dat <- .collapse(dat, S, max_display = max_display)
+  }
   m <- nrow(dat)
 
   # Add order dependent columns
@@ -168,19 +170,31 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
   c(default, z[1L:(n - 1L)])
 }
 
+
+# rownames(dat) = names(S) (= colnames(object))
 .collapse <- function(dat, S, max_display) {
-  ok <- utils::head(names(sort(abs(S), decreasing = TRUE)), max_display - 1L)
-  if (length(ok) < nrow(dat) - 1L) {
-    bad <- setdiff(names(S), ok)
-    dat <- rbind(
-      dat[ok, ],
-      data.frame(
-        S = sum(dat[bad, "S"]),
-        label = paste(length(bad), "other features"),
-        row.names = "other"
-      )
+  imp <- sort(abs(S), decreasing = TRUE)
+  drop_cols <- utils::tail(names(imp), nrow(dat) - max_display + 1L)
+  keep_cols <- setdiff(names(S), drop_cols)
+  rbind(
+    dat[keep_cols, ],
+    data.frame(
+      S = sum(dat[drop_cols, "S"]),
+      label = paste(length(drop_cols), "other features"),
+      row.names = "other"
     )
-  }
-  dat
+  )
 }
 
+# # Alternative to .collapse(), directly modifying the shapviz object
+# .collapse_shapviz <- function(x, max_display) {
+#   imp <- .get_imp(get_shap_values(x))
+#   keep_cols <- names(imp[seq_len(max_display - 1L)])
+#   drop_cols <- setdiff(colnames(x), keep_cols)
+#   new_col <- paste(length(drop_cols), "other features")
+#   X <- get_feature_values(x)[keep_cols]
+#   X[new_col] <- "other"
+#   S <- get_shap_values(x)
+#   S <- collapse_shap(S, collapse = stats::setNames(list(drop_cols), new_col))
+#   shapviz(object = S, X = X, baseline = get_baseline(x))
+# }

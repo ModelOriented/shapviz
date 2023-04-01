@@ -95,12 +95,9 @@ sv_waterfall(
   x[, sort(colnames(x))], order_fun = function(s) length(s):1, max_display = 3L
 )
 
-<<<<<<< HEAD
 # Aggregate over all observations with Petal.Length == 1.4
 sv_waterfall(x, row_id = x$X$Petal.Length == 1.4)
 
-=======
->>>>>>> 637064396683c34798361879e63bb8824483e706
 X <- as.data.frame(matrix(1:100, nrow = 10))
 S <- as.matrix(X)
 shp <- shapviz(S, X)

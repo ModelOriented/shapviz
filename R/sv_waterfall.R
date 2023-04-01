@@ -193,7 +193,7 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
       label[J] <- paste(label[J], format_feat(X[1L, J]), sep = sep)
     }
   }
-  dat <- data.frame(S = S, label = label)
+  data.frame(S = S, label = label)
 }
 
 # Used to combine unimportant rows in dat. dat has two columns: S and label

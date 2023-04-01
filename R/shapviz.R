@@ -86,11 +86,12 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
     }
   }
   .input_checks(object = object, X = X, baseline = baseline, S_inter = S_inter)
+  nms <- colnames(object)
   out <- list(
     S = object,
-    X = as.data.frame(X)[colnames(object)],
+    X = as.data.frame(X)[nms],
     baseline = baseline,
-    S_inter = S_inter
+    S_inter = S_inter[, nms, nms, drop = FALSE]
   )
   class(out) <- "shapviz"
   out
@@ -361,9 +362,9 @@ shapviz.H2OModel = function(object, X_pred, X = as.data.frame(X_pred),
         dim(S_inter) == c(dim(object), ncol(object)),
       "Dimensions 2 and 3 of 'S_inter' must have names" =
         !is.null(nms[[2L]]) && !is.null(nms[[3L]]),
-      "Dimnames 2 and 3 of 'S_inter' must be consistent" = nms[[2L]] == nms[[3L]],
+      "Dimnames 2 and 3 of 'S_inter' must be equal" = nms[[2L]] == nms[[3L]],
       "Dimnames of 'S_inter' must be consistent with those of 'object'" =
-        nms[[2L]] == colnames(object),
+        all(colnames(object) %in% nms[[2L]]),
       "No missing SHAP interaction values allowed" = !anyNA(S_inter)
       # "SHAP interactions must sum up to SHAP values" =
       #   max(abs(object - apply(S_inter, 1:2, FUN = sum))) <= 1e-4,

@@ -87,6 +87,11 @@ x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
 sv_waterfall(x)
 sv_waterfall(x, row_id = 123, max_display = 2, size = 9, fill_colors = 4:5)
 
+# Ordered by colnames(x), combined with max_display
+sv_waterfall(
+  x[, sort(colnames(x))], order_fun = function(s) length(s):1, max_display = 3L
+)
+
 X <- as.data.frame(matrix(1:100, nrow = 10))
 S <- as.matrix(X)
 shp <- shapviz(S, X)

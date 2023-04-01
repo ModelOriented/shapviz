@@ -32,7 +32,9 @@ sv_waterfall(object, ...)
 For example, \code{size = 9} will use fixed text size in the bars and \code{size = 0}
 will altogether suppress adding text to the bars.}
 
-\item{row_id}{A single row number to plot.}
+\item{row_id}{Subset of observations to plot, typically a single row number.
+If more than one rows are selected, SHAP values are averaged, and feature values
+are shown only when they are unique.}
 
 \item{max_display}{Maximum number of features (with largest absolute SHAP values)
 should be plotted? If there are more features, they will be collapsed to one feature.
@@ -69,9 +71,10 @@ Default is \code{TRUE}.}
 An object of class "ggplot" representing a waterfall plot.
 }
 \description{
-Creates a waterfall plot of SHAP values of one single observation. The value of
+Creates a waterfall plot of SHAP values of one observation. The value of
 f(x) denotes the prediction on the SHAP scale, while E(f(x)) refers to the baseline
 SHAP value. The plot has to be read from bottom to top.
+If multiple observations are selected, their SHAP values and predictions are averaged.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -86,6 +89,14 @@ fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
 x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
 sv_waterfall(x)
 sv_waterfall(x, row_id = 123, max_display = 2, size = 9, fill_colors = 4:5)
+
+# Ordered by colnames(x), combined with max_display
+sv_waterfall(
+  x[, sort(colnames(x))], order_fun = function(s) length(s):1, max_display = 3L
+)
+
+# Aggregate over all observations with Petal.Length == 1.4
+sv_waterfall(x, row_id = x$X$Petal.Length == 1.4)
 
 X <- as.data.frame(matrix(1:100, nrow = 10))
 S <- as.matrix(X)

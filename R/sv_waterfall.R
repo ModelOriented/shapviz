@@ -1,11 +1,14 @@
 #' SHAP Waterfall Plot
 #'
-#' Creates a waterfall plot of SHAP values of one single observation. The value of
+#' Creates a waterfall plot of SHAP values of one observation. The value of
 #' f(x) denotes the prediction on the SHAP scale, while E(f(x)) refers to the baseline
 #' SHAP value. The plot has to be read from bottom to top.
+#' If multiple observations are selected, their SHAP values and predictions are averaged.
 #'
 #' @param object An object of class "shapviz".
-#' @param row_id A single row number to plot.
+#' @param row_id Subset of observations to plot, typically a single row number.
+#' If more than one rows are selected, SHAP values are averaged, and feature values
+#' are shown only when they are unique.
 #' @param max_display Maximum number of features (with largest absolute SHAP values)
 #' should be plotted? If there are more features, they will be collapsed to one feature.
 #' The default is ten in order to not overload the plot. Set to \code{Inf} to show
@@ -46,6 +49,9 @@
 #'   x[, sort(colnames(x))], order_fun = function(s) length(s):1, max_display = 3L
 #' )
 #'
+#' # Aggregate over all observations with Petal.Length == 1.4
+#' sv_waterfall(x, row_id = x$X$Petal.Length == 1.4)
+#'
 #' X <- as.data.frame(matrix(1:100, nrow = 10))
 #' S <- as.matrix(X)
 #' shp <- shapviz(S, X)
@@ -70,21 +76,16 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
                                  contrast = TRUE, show_connection = TRUE,
                                  show_annotation = TRUE, annotation_size = 3.2, ...) {
   stopifnot(
-    "Only one row number can be passed" = length(row_id) == 1L,
     "Exactly two fill colors must be passed" = length(fill_colors) == 2L,
     "format_shap must be a function" = is.function(format_shap),
     "format_feat must be a function" = is.function(format_feat),
     "order_fun must be a function" = is.function(order_fun)
   )
   object <- object[row_id, ]
-  X <- get_feature_values(object)
-  S <- drop(get_shap_values(object))
   b <- get_baseline(object)
-  dat <- data.frame(S = S, label = paste(names(X), format_feat(X), sep = " = "))
-
-  # Collapse unimportant features
+  dat <- .make_dat(object, format_feat = format_feat, sep = " = ")
   if (ncol(object) > max_display) {
-    dat <- .collapse(dat, S, max_display = max_display)
+    dat <- .collapse(dat, max_display = max_display)
   }
   m <- nrow(dat)
 
@@ -164,6 +165,7 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
   p
 }
 
+# Helper functions for sv_waterfall() and sv_force()
 .lag <- function(z, default = NA, lead = FALSE) {
   n <- length(z)
   if (n < 2L) {
@@ -175,12 +177,31 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
   c(default, z[1L:(n - 1L)])
 }
 
+# Turns "shapviz" object into a two-column data.frame
+.make_dat <- function(object, format_feat, sep = " = ") {
+  X <- get_feature_values(object)
+  S <- get_shap_values(object)
+  if (nrow(object) == 1L) {
+    S <- drop(S)
+    label <- paste(colnames(X), format_feat(X), sep = sep)
+  } else {
+    message("Aggregating SHAP values over ", nrow(object), " observations")
+    S <- colMeans(S)
+    J <- vapply(X, function(z) length(unique(z)) <= 1L, FUN.VALUE = TRUE)
+    label <- colnames(X)
+    if (any(J)) {
+      label[J] <- paste(label[J], format_feat(X[1L, J]), sep = sep)
+    }
+  }
+  dat <- data.frame(S = S, label = label)
+}
 
-# rownames(dat) = names(S) (= colnames(object))
-.collapse <- function(dat, S, max_display) {
-  imp <- sort(abs(S), decreasing = TRUE)
-  drop_cols <- utils::tail(names(imp), nrow(dat) - max_display + 1L)
-  keep_cols <- setdiff(names(S), drop_cols)
+# Used to combine unimportant rows in dat. dat has two columns: S and label
+# Note: rownames(dat) = colnames(object)
+.collapse <- function(dat, max_display) {
+  m_drop <- nrow(dat) - max_display + 1L
+  drop_cols <- rownames(dat)[order(abs(dat$S))[seq_len(m_drop)]]
+  keep_cols <- setdiff(rownames(dat), drop_cols)
   rbind(
     dat[keep_cols, ],
     data.frame(
@@ -190,16 +211,3 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
     )
   )
 }
-
-# # Alternative to .collapse(), directly modifying the shapviz object
-# .collapse_shapviz <- function(x, max_display) {
-#   imp <- .get_imp(get_shap_values(x))
-#   keep_cols <- names(imp[seq_len(max_display - 1L)])
-#   drop_cols <- setdiff(colnames(x), keep_cols)
-#   new_col <- paste(length(drop_cols), "other features")
-#   X <- get_feature_values(x)[keep_cols]
-#   X[new_col] <- "other"
-#   S <- get_shap_values(x)
-#   S <- collapse_shap(S, collapse = stats::setNames(list(drop_cols), new_col))
-#   shapviz(object = S, X = X, baseline = get_baseline(x))
-# }

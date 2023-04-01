@@ -104,7 +104,9 @@ test_that("shapviz accepts correct S_inter", {
     shapviz(S, X = X, baseline = 4, S_inter = S_inter[, c("y", "x"), c("y", "x")])
   )
   expect_identical(
-    shapviz(S, X = X, baseline = 4, S_inter = S_inter[, c("y", "x"), c("y", "x")]),
+    get_shap_interactions(
+      shapviz(S, X = X, baseline = 4, S_inter = S_inter[, c("y", "x"), c("y", "x")])
+    ),
     S_inter
   )
   expect_silent(

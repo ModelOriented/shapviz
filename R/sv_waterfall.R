@@ -7,7 +7,7 @@
 #'
 #' @param object An object of class "shapviz".
 #' @param row_id Subset of observations to plot, typically a single row number.
-#' If more than one rows are selected, SHAP values are averaged, and feature values
+#' If more than one row is selected, SHAP values are averaged, and feature values
 #' are shown only when they are unique.
 #' @param max_display Maximum number of features (with largest absolute SHAP values)
 #' should be plotted? If there are more features, they will be collapsed to one feature.

@@ -33,7 +33,7 @@ For example, \code{size = 9} will use fixed text size in the bars and \code{size
 will altogether suppress adding text to the bars.}
 
 \item{row_id}{Subset of observations to plot, typically a single row number.
-If more than one rows are selected, SHAP values are averaged, and feature values
+If more than one row is selected, SHAP values are averaged, and feature values
 are shown only when they are unique.}
 
 \item{max_display}{Maximum number of features (with largest absolute SHAP values)
@@ -95,12 +95,9 @@ sv_waterfall(
   x[, sort(colnames(x))], order_fun = function(s) length(s):1, max_display = 3L
 )
 
-<<<<<<< HEAD
 # Aggregate over all observations with Petal.Length == 1.4
 sv_waterfall(x, row_id = x$X$Petal.Length == 1.4)
 
-=======
->>>>>>> 637064396683c34798361879e63bb8824483e706
 X <- as.data.frame(matrix(1:100, nrow = 10))
 S <- as.matrix(X)
 shp <- shapviz(S, X)

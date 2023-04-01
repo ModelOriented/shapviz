@@ -2,31 +2,22 @@
 
 ## New features
 
-- **{DALEX}**: Support for "predict_parts" objects from {DALEX}, thanks to Adrian Stando.
-- **SHAP aggregated values**: The argument `row_id` of `sv_waterfall()` and `sv_force()` now accepts not only a single integer, but rather a vector of integers or a logical vector. If more than one row is selected, their SHAP values and predictions are averaged before plotting (*SHAP aggregated values* in {DALEX}).
-- **Concatenation**: "shapviz" objects `x1`, `x2` can now be concatenated using `x1 + x2` or `rbind(x1, x2)`, again thanks to Adrian.
-- **colnames()**: "shapviz" objects `x` have received a `dimnames()` function, so you can now, e.g., use `colnames(x)` to see the feature names.
-- **Subsetting**: "shapviz" objects `x` can now be subsetted using `x[cond, features]`.
+- {DALEX}: Support for "predict_parts" objects from {DALEX}, thanks to Adrian Stando.
+- Aggregated SHAP values: The argument `row_id` of `sv_waterfall()` and `sv_force()` now also allows a vector of integers or a logical vector. If more than one row is selected, SHAP values and predictions are averaged before plotting (*aggregated SHAP values* in {DALEX}).
+- Combination: "shapviz" objects `x1`, `x2` can now be concatenated using `x1 + x2` or `rbind(x1, x2)`, again thanks to Adrian.
+- `colnames()`: "shapviz" objects `x` have received a `dimnames()` function, so you can now, e.g., use `colnames(x)` to see the feature names.
+- Subsetting: "shapviz" objects `x` can now be subsetted using `x[cond, features]`.
 
-## New contributor
+## Maintenance
 
-- Adrian Stando - welcome on the SHAP board.
-
-## Github repository
-
+- We have a new contributor: Adrian Stando - welcome on the SHAP board.
 - To be close to my sister package {kernelshap}, I have moved to https://github.com/ModelOriented/shapviz
 - Webpage created with "pgkdown"
 
-## Deprecated
+## Other changes and bug fixes
 
 - As announced, the argument `show_other` of `sv_importance()` has been removed.
-
-## Other changes
-
 - Slightly less picky checks on `S_inter`.
-
-## Bug fixes
-
 - `sv_waterfall()`: Using `order_fun()` would not work as expected with `max_display`.
 
 # shapviz 0.6.0

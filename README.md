@@ -114,7 +114,16 @@ sv_force(shp, row_id = 1)
 
 ![](man/figures/README-force.svg)
 
-If more than one value is passed to `row_id`, average SHAP values are shown.
+### Aggregated SHAP values
+
+Also multiple `row_id` can be passed to `sv_waterfall()` and `sv_force()`: The SHAP values of the selected observations are averaged and then plotted as *aggregated SHAP values*: The prediction profile for beautiful color "D" diamonds:
+
+``` r
+sv_waterfall(shp, shp$X$color == "D")
+```
+
+![](man/figures/README-waterfall-agg.svg)
+
 
 ### Importance
 

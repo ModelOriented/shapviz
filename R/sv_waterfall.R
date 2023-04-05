@@ -5,7 +5,7 @@
 #' SHAP value. The plot has to be read from bottom to top.
 #' If multiple observations are selected, their SHAP values and predictions are averaged.
 #'
-#' @param object An object of class "shapviz".
+#' @param object An object of class "(m)shapviz".
 #' @param row_id Subset of observations to plot, typically a single row number.
 #' If more than one row is selected, SHAP values are averaged, and feature values
 #' are shown only when they are unique.
@@ -164,6 +164,35 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
   }
   p
 }
+
+#' @describeIn sv_waterfall SHAP waterfall plot for an object of class "mshapviz".
+#' @export
+sv_waterfall.mshapviz <- function(object, row_id = 1L, max_display = 10L,
+                                  order_fun = function(s) order(abs(s)),
+                                  fill_colors = c("#f7d13d", "#a52c60"),
+                                  format_shap = getOption("shapviz.format_shap"),
+                                  format_feat = getOption("shapviz.format_feat"),
+                                  contrast = TRUE, show_connection = TRUE,
+                                  show_annotation = TRUE, annotation_size = 3.2, ...) {
+  plot_list <- lapply(
+    object,
+    FUN = sv_waterfall,
+    # Argument list (simplify via match.call() or some rlang magic?)
+    row_id = row_id,
+    max_display = max_display,
+    order_fun = order_fun,
+    fill_colors = fill_colors,
+    format_shap = format_shap,
+    format_feat = format_feat,
+    contrast = contrast,
+    show_connection = show_connection,
+    show_annotation = show_annotation,
+    annotation_size = annotation_size,
+    ...
+  )
+  patchwork::wrap_plots(plot_list)
+}
+
 
 # Helper functions for sv_waterfall() and sv_force()
 .lag <- function(z, default = NA, lead = FALSE) {

@@ -5,7 +5,7 @@
 #' SHAP value.
 #' If multiple observations are selected, their SHAP values and predictions are averaged.
 #'
-#' @param object An object of class "shapviz".
+#' @param object An object of class "(m)shapviz".
 #' @param row_id Subset of observations to plot, typically a single row number.
 #' If more than one row is selected, SHAP values are averaged, and feature values
 #' are shown only when they are unique.
@@ -150,3 +150,30 @@ sv_force.shapviz <- function(object, row_id = 1L, max_display = 6L,
   }
   p
 }
+
+#' @describeIn sv_force SHAP force plot for object of class "mshapviz".
+#' @export
+sv_force.mshapviz <- function(object, row_id = 1L, max_display = 6L,
+                              fill_colors = c("#f7d13d", "#a52c60"),
+                              format_shap = getOption("shapviz.format_shap"),
+                              format_feat = getOption("shapviz.format_feat"),
+                              contrast = TRUE, bar_label_size = 3.2,
+                              show_annotation = TRUE, annotation_size = 3.2, ...) {
+  plot_list <- lapply(
+    object,
+    FUN = sv_force,
+    # Argument list (simplify via match.call() or some rlang magic?)
+    row_id = row_id,
+    max_display = max_display,
+    fill_colors = fill_colors,
+    format_shap = format_shap,
+    format_feat = format_feat,
+    contrast = contrast,
+    bar_label_size = bar_label_size,
+    show_annotation = show_annotation,
+    annotation_size = annotation_size,
+    ...
+  )
+  patchwork::wrap_plots(plot_list)
+}
+

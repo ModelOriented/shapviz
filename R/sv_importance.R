@@ -10,7 +10,7 @@
 #' For both types of plots, the features are sorted in decreasing
 #' order of importance. The two types of plots can also be combined.
 #'
-#' @param object An object of class "shapviz".
+#' @param object An object of class "(m)shapviz".
 #' @param kind Should a "bar" plot (the default), a "beeswarm" plot, or "both" be shown?
 #' Set to "no" in order to suppress plotting. In that case, the sorted
 #' SHAP feature importances of all variables are returned.
@@ -41,7 +41,8 @@
 #' For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms,
 #' and setting \code{size = 3} will produce larger dots.
 #' @return A "ggplot" object representing an importance plot, or - if
-#' \code{kind = "no"} - a named numeric vector of sorted SHAP feature importances.
+#' \code{kind = "no"} - a named numeric vector of sorted SHAP feature importances
+#' (or a list of such vectors in case of an object of class "mshapviz").
 #' @export
 #' @examples
 #' X_train <- data.matrix(iris[, -1])
@@ -144,6 +145,38 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
       )
   }
   p
+}
+
+#' @describeIn sv_importance SHAP importance plot for an object of class "mshapviz".
+#' @export
+sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "no"),
+                                   max_display = 15L, fill = "#fca50a", bar_width = 2/3,
+                                   bee_width = 0.4, bee_adjust = 0.5,
+                                   viridis_args = getOption("shapviz.viridis_args"),
+                                   color_bar_title = "Feature value",
+                                   show_numbers = FALSE, format_fun = format_max,
+                                   number_size = 3.2, ...) {
+  plot_list <- lapply(
+    object,
+    FUN = sv_importance,
+    # Argument list (simplify via match.call() or some rlang magic?)
+    kind = kind,
+    max_display = max_display,
+    fill = fill,
+    bar_width = bar_width,
+    bee_width = bee_width,
+    bee_adjust = bee_adjust,
+    viridis_args = viridis_args,
+    color_bar_title = color_bar_title,
+    show_numbers = show_numbers,
+    format_fun = format_fun,
+    number_size = number_size,
+    ...
+  )
+  if (kind == "no") {
+    return(plot_list)
+  }
+  patchwork::wrap_plots(plot_list)
 }
 
 # Helper functions

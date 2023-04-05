@@ -5,7 +5,7 @@
 #' to focus on pure interaction effects (multiplied by two) or on pure main effects.
 #'
 #' @importFrom rlang .data
-#' @param object An object of class "shapviz".
+#' @param object An object of class "(m)shapviz".
 #' @param v Column name of feature to be plotted.
 #' @param color_var Feature name to be used on the color scale to investigate interactions.
 #' The default ("auto") uses SHAP interaction values (if available) or a heuristic to
@@ -52,7 +52,7 @@ sv_dependence.default <- function(object, ...) {
   stop("No default method available.")
 }
 
-#' @describeIn sv_dependence SHAP dependence plot for shp object.
+#' @describeIn sv_dependence SHAP dependence plot for "shapviz" object.
 #' @export
 sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528b",
                                   viridis_args = getOption("shapviz.viridis_args"),
@@ -120,6 +120,25 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
     do.call(vir, viridis_args)
 }
 
+#' @describeIn sv_dependence SHAP dependence plot for "mshapviz" object.
+#' @export
+sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b528b",
+                                   viridis_args = getOption("shapviz.viridis_args"),
+                                   jitter_width = NULL, interactions = FALSE, ...) {
+  plot_list <- lapply(
+    object,
+    FUN = sv_dependence,
+    # Argument list (simplify via match.call() or some rlang magic?)
+    v = v,
+    color_var = color_var,
+    color = color,
+    viridis_args = viridis_args,
+    jitter_width = jitter_width,
+    interactions = interactions,
+    ...
+  )
+  patchwork::wrap_plots(plot_list)
+}
 
 #' Interaction Strength
 #'

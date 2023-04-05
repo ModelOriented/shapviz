@@ -4,6 +4,7 @@
 \alias{sv_force}
 \alias{sv_force.default}
 \alias{sv_force.shapviz}
+\alias{sv_force.mshapviz}
 \title{SHAP Force Plot}
 \usage{
 sv_force(object, ...)
@@ -23,9 +24,23 @@ sv_force(object, ...)
   annotation_size = 3.2,
   ...
 )
+
+\method{sv_force}{mshapviz}(
+  object,
+  row_id = 1L,
+  max_display = 6L,
+  fill_colors = c("#f7d13d", "#a52c60"),
+  format_shap = getOption("shapviz.format_shap"),
+  format_feat = getOption("shapviz.format_feat"),
+  contrast = TRUE,
+  bar_label_size = 3.2,
+  show_annotation = TRUE,
+  annotation_size = 3.2,
+  ...
+)
 }
 \arguments{
-\item{object}{An object of class "shapviz".}
+\item{object}{An object of class "(m)shapviz".}
 
 \item{...}{Arguments passed to \code{ggfittext::geom_fit_text()}.
 For example, \code{size = 9} will use fixed text size in the bars and \code{size = 0}
@@ -74,6 +89,8 @@ If multiple observations are selected, their SHAP values and predictions are ave
 \item \code{sv_force(default)}: Default method.
 
 \item \code{sv_force(shapviz)}: SHAP force plot for object of class "shapviz".
+
+\item \code{sv_force(mshapviz)}: SHAP force plot for object of class "mshapviz".
 
 }}
 \examples{

@@ -4,6 +4,7 @@
 \alias{sv_waterfall}
 \alias{sv_waterfall.default}
 \alias{sv_waterfall.shapviz}
+\alias{sv_waterfall.mshapviz}
 \title{SHAP Waterfall Plot}
 \usage{
 sv_waterfall(object, ...)
@@ -24,9 +25,24 @@ sv_waterfall(object, ...)
   annotation_size = 3.2,
   ...
 )
+
+\method{sv_waterfall}{mshapviz}(
+  object,
+  row_id = 1L,
+  max_display = 10L,
+  order_fun = function(s) order(abs(s)),
+  fill_colors = c("#f7d13d", "#a52c60"),
+  format_shap = getOption("shapviz.format_shap"),
+  format_feat = getOption("shapviz.format_feat"),
+  contrast = TRUE,
+  show_connection = TRUE,
+  show_annotation = TRUE,
+  annotation_size = 3.2,
+  ...
+)
 }
 \arguments{
-\item{object}{An object of class "shapviz".}
+\item{object}{An object of class "(m)shapviz".}
 
 \item{...}{Arguments passed to \code{ggfittext::geom_fit_text()}.
 For example, \code{size = 9} will use fixed text size in the bars and \code{size = 0}
@@ -81,6 +97,8 @@ If multiple observations are selected, their SHAP values and predictions are ave
 \item \code{sv_waterfall(default)}: Default method.
 
 \item \code{sv_waterfall(shapviz)}: SHAP waterfall plot for an object of class "shapviz".
+
+\item \code{sv_waterfall(mshapviz)}: SHAP waterfall plot for an object of class "mshapviz".
 
 }}
 \examples{

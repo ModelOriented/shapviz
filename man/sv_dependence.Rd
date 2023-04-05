@@ -4,6 +4,7 @@
 \alias{sv_dependence}
 \alias{sv_dependence.default}
 \alias{sv_dependence.shapviz}
+\alias{sv_dependence.mshapviz}
 \title{SHAP Dependence Plot}
 \usage{
 sv_dependence(object, ...)
@@ -20,9 +21,20 @@ sv_dependence(object, ...)
   interactions = FALSE,
   ...
 )
+
+\method{sv_dependence}{mshapviz}(
+  object,
+  v,
+  color_var = "auto",
+  color = "#3b528b",
+  viridis_args = getOption("shapviz.viridis_args"),
+  jitter_width = NULL,
+  interactions = FALSE,
+  ...
+)
 }
 \arguments{
-\item{object}{An object of class "shapviz".}
+\item{object}{An object of class "(m)shapviz".}
 
 \item{...}{Arguments passed to \code{geom_jitter()}.}
 
@@ -64,7 +76,9 @@ to focus on pure interaction effects (multiplied by two) or on pure main effects
 \itemize{
 \item \code{sv_dependence(default)}: Default method.
 
-\item \code{sv_dependence(shapviz)}: SHAP dependence plot for shp object.
+\item \code{sv_dependence(shapviz)}: SHAP dependence plot for "shapviz" object.
+
+\item \code{sv_dependence(mshapviz)}: SHAP dependence plot for "mshapviz" object.
 
 }}
 \examples{

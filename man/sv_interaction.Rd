@@ -4,6 +4,7 @@
 \alias{sv_interaction}
 \alias{sv_interaction.default}
 \alias{sv_interaction.shapviz}
+\alias{sv_interaction.mshapviz}
 \title{SHAP Interaction Plot}
 \usage{
 sv_interaction(object, ...)
@@ -21,15 +22,28 @@ sv_interaction(object, ...)
   color_bar_title = "Row feature value",
   ...
 )
+
+\method{sv_interaction}{mshapviz}(
+  object,
+  kind = c("beeswarm", "no"),
+  max_display = 7L,
+  alpha = 0.3,
+  bee_width = 0.3,
+  bee_adjust = 0.5,
+  viridis_args = getOption("shapviz.viridis_args"),
+  color_bar_title = "Row feature value",
+  ...
+)
 }
 \arguments{
-\item{object}{An object of class "shapviz" containing element \code{S_inter}.}
+\item{object}{An object of class "(m)shapviz" containing element \code{S_inter}.}
 
 \item{...}{Arguments passed to \code{geom_point()}.
 For instance, passing \code{size = 1} will produce smaller dots.}
 
 \item{kind}{Set to "no" to simply return the matrix of average absolute SHAP
-interactions. The default is "beeswarm".}
+interactions (or a list of such matrices in case of object of class "mshapviz").
+The default is "beeswarm".}
 
 \item{max_display}{Maximum number of features (with highest SHAP importance) to plot.
 Set to \code{Inf} to show all features. Has no effect if \code{kind = "no"}.}
@@ -54,7 +68,8 @@ Set to \code{NULL} to hide the color bar altogether.}
 }
 \value{
 A "ggplot" object, or - if \code{kind = "no"} - a named numeric matrix
-of average absolute SHAP interactions sorted by the average absolute SHAP values.
+of average absolute SHAP interactions sorted by the average absolute SHAP values
+(or a list of such matrices in case of "mshapviz" object).
 }
 \description{
 Plots a beeswarm plot for each feature pair. Diagonals represent the main effects,
@@ -68,6 +83,8 @@ The features are sorted in decreasing order of usual SHAP importance.
 \item \code{sv_interaction(default)}: Default method.
 
 \item \code{sv_interaction(shapviz)}: SHAP interaction plot for an object of class "shapviz".
+
+\item \code{sv_interaction(mshapviz)}: SHAP interaction plot for an object of class "mshapviz".
 
 }}
 \examples{

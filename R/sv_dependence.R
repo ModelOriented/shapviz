@@ -137,6 +137,7 @@ sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b52
     interactions = interactions,
     ...
   )
+  plot_list <- add_titles(plot_list, names(object))  # see sv_waterfall()
   patchwork::wrap_plots(plot_list)
 }
 

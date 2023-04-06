@@ -134,5 +134,6 @@ sv_interaction.mshapviz <- function(object, kind = c("beeswarm", "no"),
   if (kind == "no") {
     return(plot_list)
   }
+  plot_list <- add_titles(plot_list, names(object))  # see sv_waterfall()
   patchwork::wrap_plots(plot_list)
 }

@@ -27,7 +27,7 @@
 #' Set to \code{NULL} to hide the color bar altogether.
 #' @param ... Arguments passed to \code{geom_point()}.
 #' For instance, passing \code{size = 1} will produce smaller dots.
-#' @return A "ggplot" object, or - if \code{kind = "no"} - a named numeric matrix
+#' @return A "ggplot" (or "patchwork") object, or - if \code{kind = "no"} - a named numeric matrix
 #' of average absolute SHAP interactions sorted by the average absolute SHAP values
 #' (or a list of such matrices in case of "mshapviz" object).
 #' @export

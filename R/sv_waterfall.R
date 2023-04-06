@@ -34,7 +34,7 @@
 #' @param ... Arguments passed to \code{ggfittext::geom_fit_text()}.
 #' For example, \code{size = 9} will use fixed text size in the bars and \code{size = 0}
 #' will altogether suppress adding text to the bars.
-#' @return An object of class "ggplot" representing a waterfall plot.
+#' @return An object of class "ggplot" (or "patchwork") representing a waterfall plot.
 #' @export
 #' @seealso \code{\link{sv_force}}
 #' @examples
@@ -192,7 +192,6 @@ sv_waterfall.mshapviz <- function(object, row_id = 1L, max_display = 10L,
   )
   patchwork::wrap_plots(plot_list)
 }
-
 
 # Helper functions for sv_waterfall() and sv_force()
 .lag <- function(z, default = NA, lead = FALSE) {

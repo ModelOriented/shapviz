@@ -27,7 +27,7 @@
 #' \code{v}), the pure main effect of \code{v} is visualized. Otherwise, twice the SHAP
 #' interaction values between \code{v} and the \code{color_var} are plotted.
 #' @param ... Arguments passed to \code{geom_jitter()}.
-#' @return An object of class \code{ggplot} representing a dependence plot.
+#' @return An object of class \code{ggplot} (or "patchwork") representing a dependence plot.
 #' @export
 #' @seealso \code{\link{potential_interactions}}
 #' @examples

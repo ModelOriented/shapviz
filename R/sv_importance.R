@@ -40,7 +40,7 @@
 #' to \code{geom_point()} otherwise.
 #' For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms,
 #' and setting \code{size = 3} will produce larger dots.
-#' @return A "ggplot" object representing an importance plot, or - if
+#' @return A "ggplot" (or "patchwork") object representing an importance plot, or - if
 #' \code{kind = "no"} - a named numeric vector of sorted SHAP feature importances
 #' (or a list of such vectors in case of an object of class "mshapviz").
 #' @export

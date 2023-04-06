@@ -44,6 +44,7 @@ use_package("ggplot2", "Imports", min_version = "3.4.0")
 use_package("gggenes", "Imports")
 use_package("ggfittext", "Imports", min_version = "0.8.0")
 use_package("ggrepel", "Imports")
+use_package("patchwork", "Imports")
 use_package("xgboost", "Imports")
 
 use_package("lightgbm", "Enhances")

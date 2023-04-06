@@ -36,6 +36,7 @@
 #' (only if \code{show_numbers = TRUE}). To change to scientific notation, use e.g.
 #' \code{function(x) = prettyNum(x, scientific = TRUE)}.
 #' @param number_size Text size of the numbers (if \code{show_numbers = TRUE}).
+#' @param titles Titles added to patchwork subplots via \code{ggplot2::ggtitle()}.
 #' @param ... Arguments passed to \code{geom_bar()} (if \code{kind = "bar"}) or
 #' to \code{geom_point()} otherwise.
 #' For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms,
@@ -155,7 +156,7 @@ sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "
                                    viridis_args = getOption("shapviz.viridis_args"),
                                    color_bar_title = "Feature value",
                                    show_numbers = FALSE, format_fun = format_max,
-                                   number_size = 3.2, ...) {
+                                   number_size = 3.2, titles = names(object), ...) {
   plot_list <- lapply(
     object,
     FUN = sv_importance,
@@ -176,7 +177,7 @@ sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "
   if (kind == "no") {
     return(plot_list)
   }
-  plot_list <- add_titles(plot_list, names(object))  # see sv_waterfall()
+  plot_list <- add_titles(plot_list, nms = titles)  # see sv_waterfall()
   patchwork::wrap_plots(plot_list)
 }
 

@@ -26,6 +26,7 @@
 #' Requires SHAP interaction values. If \code{color_var = NULL} (or it is equal to
 #' \code{v}), the pure main effect of \code{v} is visualized. Otherwise, twice the SHAP
 #' interaction values between \code{v} and the \code{color_var} are plotted.
+#' @param titles Titles added to patchwork subplots via \code{ggplot2::ggtitle()}.
 #' @param ... Arguments passed to \code{geom_jitter()}.
 #' @return An object of class \code{ggplot} (or "patchwork") representing a dependence plot.
 #' @export
@@ -124,7 +125,8 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
 #' @export
 sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b528b",
                                    viridis_args = getOption("shapviz.viridis_args"),
-                                   jitter_width = NULL, interactions = FALSE, ...) {
+                                   jitter_width = NULL, interactions = FALSE,
+                                   titles = names(object), ...) {
   plot_list <- lapply(
     object,
     FUN = sv_dependence,
@@ -137,7 +139,7 @@ sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b52
     interactions = interactions,
     ...
   )
-  plot_list <- add_titles(plot_list, names(object))  # see sv_waterfall()
+  plot_list <- add_titles(plot_list, nms = titles)  # see sv_waterfall()
   patchwork::wrap_plots(plot_list)
 }
 

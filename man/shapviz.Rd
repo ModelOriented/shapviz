@@ -121,8 +121,11 @@ which is used only for visualization. It can therefore contain character or fact
 variables, even if the SHAP values were calculated from a purely numerical feature
 matrix. In addition, to improve visualization, it can sometimes be useful to truncate
 gross outliers, logarithmize certain columns, or replace missing values with an
-explicit value. SHAP values of dummy variables can be combined using the convenient
+explicit value.
+SHAP values of dummy variables can be combined using the convenient
 \code{collapse} argument.
+Multi-output models created from XGBoost, LightGBM, or kernelshap
+return a "mshapviz" object, containing a "shapviz" object per output.
 }
 \section{Methods (by class)}{
 \itemize{

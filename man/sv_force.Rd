@@ -36,6 +36,7 @@ sv_force(object, ...)
   bar_label_size = 3.2,
   show_annotation = TRUE,
   annotation_size = 3.2,
+  titles = names(object),
   ...
 )
 }
@@ -74,9 +75,11 @@ Default is \code{TRUE}.}
 \item{show_annotation}{Should "f(x)" and "E(f(x))" be plotted? Default is \code{TRUE}.}
 
 \item{annotation_size}{Size of the annotation text (f(x)=... and E(f(x))=...).}
+
+\item{titles}{Titles added to patchwork subplots via \code{ggplot2::ggtitle()}.}
 }
 \value{
-An object of class "ggplot" representing a force plot.
+An object of class "ggplot" (or "patchwork") representing a force plot.
 }
 \description{
 Creates a force plot of SHAP values of one observation. The value of

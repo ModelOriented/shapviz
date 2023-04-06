@@ -32,6 +32,7 @@ sv_interaction(object, ...)
   bee_adjust = 0.5,
   viridis_args = getOption("shapviz.viridis_args"),
   color_bar_title = "Row feature value",
+  titles = names(object),
   ...
 )
 }
@@ -65,9 +66,11 @@ with \code{options(shapviz.viridis_args = NULL)} or set \code{viridis_args = NUL
 
 \item{color_bar_title}{Title of color bar of the beeswarm plot.
 Set to \code{NULL} to hide the color bar altogether.}
+
+\item{titles}{Titles added to patchwork subplots via \code{ggplot2::ggtitle()}.}
 }
 \value{
-A "ggplot" object, or - if \code{kind = "no"} - a named numeric matrix
+A "ggplot" (or "patchwork") object, or - if \code{kind = "no"} - a named numeric matrix
 of average absolute SHAP interactions sorted by the average absolute SHAP values
 (or a list of such matrices in case of "mshapviz" object).
 }

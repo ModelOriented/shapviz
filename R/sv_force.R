@@ -26,6 +26,7 @@
 #' (via \code{ggrepel::geom_text_repel()}).
 #' @param show_annotation Should "f(x)" and "E(f(x))" be plotted? Default is \code{TRUE}.
 #' @param annotation_size Size of the annotation text (f(x)=... and E(f(x))=...).
+#' @param titles Titles added to patchwork subplots via \code{ggplot2::ggtitle()}.
 #' @param ... Arguments passed to \code{ggfittext::geom_fit_text()}.
 #' For example, \code{size = 9} will use fixed text size in the bars and \code{size = 0}
 #' will altogether suppress adding text to the bars.
@@ -158,7 +159,8 @@ sv_force.mshapviz <- function(object, row_id = 1L, max_display = 6L,
                               format_shap = getOption("shapviz.format_shap"),
                               format_feat = getOption("shapviz.format_feat"),
                               contrast = TRUE, bar_label_size = 3.2,
-                              show_annotation = TRUE, annotation_size = 3.2, ...) {
+                              show_annotation = TRUE, annotation_size = 3.2,
+                              titles = names(object), ...) {
   plot_list <- lapply(
     object,
     FUN = sv_force,
@@ -174,7 +176,7 @@ sv_force.mshapviz <- function(object, row_id = 1L, max_display = 6L,
     annotation_size = annotation_size,
     ...
   )
-  plot_list <- add_titles(plot_list, names(object))  # see sv_waterfall()
+  plot_list <- add_titles(plot_list, nms = titles)  # see sv_waterfall()
   patchwork::wrap_plots(plot_list) +
     patchwork::plot_layout(ncol = 1L)
 }

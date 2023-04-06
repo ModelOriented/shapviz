@@ -18,8 +18,11 @@
 #' variables, even if the SHAP values were calculated from a purely numerical feature
 #' matrix. In addition, to improve visualization, it can sometimes be useful to truncate
 #' gross outliers, logarithmize certain columns, or replace missing values with an
-#' explicit value. SHAP values of dummy variables can be combined using the convenient
+#' explicit value.
+#' SHAP values of dummy variables can be combined using the convenient
 #' \code{collapse} argument.
+#' Multi-output models created from XGBoost, LightGBM, or kernelshap
+#' return a "mshapviz" object, containing a "shapviz" object per output.
 #' @importFrom xgboost xgb.train
 #' @param object For XGBoost, LightGBM, and H2O, this is the fitted model used to
 #' calculate SHAP values from \code{X_pred}.
@@ -166,7 +169,20 @@ shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL,
 
   # Multiclass
   if (is.list(S)) {
-    stopifnot(!is.null(which_class), which_class <= length(S))
+    if (is.null(which_class)) {
+      nms <- setdiff(colnames(S[[1L]]), "BIAS")
+      shapviz_list <- mapply(
+        FUN = shapviz.matrix,
+        object = lapply(S, function(s) s[, nms, drop = FALSE]),
+        baseline = lapply(S, function(s) unname(s[1L, "BIAS"])),
+        S_inter = if (interactions) S_inter else replicate(length(S), NULL),
+        MoreArgs = list(X = X, collapse = collapse),
+        SIMPLIFY = FALSE
+      )
+      names(shapviz_list) <- paste0("C", seq_along(S))
+      return(mshapviz(shapviz_list))
+    }
+    # Old way: select just one class
     S <- S[[which_class]]
     if (interactions) {
       S_inter <- S_inter[[which_class]]
@@ -176,7 +192,7 @@ shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL,
   # Call matrix method
   nms <- setdiff(colnames(S), "BIAS")
   shapviz.matrix(
-    S[, nms, drop = FALSE],
+    object = S[, nms, drop = FALSE],
     X = X,
     baseline = unname(S[1L, "BIAS"]),
     S_inter = if (interactions) S_inter[, nms, nms, drop = FALSE],

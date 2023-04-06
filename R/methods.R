@@ -43,10 +43,8 @@ print.mshapviz <- function(x, ...) {
   cat("'mshapviz' object representing", length(x), "'shapviz' objects:")
   for (i in seq_along(x)) {
     d <- dim(S_list[[i]])
-    cat(
-      "\n  -", if (is.null(nms)) i else paste0("'", nms[i], "'"),
-      "with", d[1L], "x", d[2L], "SHAP matrix"
-    )
+    nm <- if (is.null(nms)) i else paste0("'", nms[i], "'")
+    cat("\n  ", paste0(nm, ":"), d[1L], "x", d[2L], "SHAP matrix")
   }
   cat("\n")
   invisible(x)
@@ -124,7 +122,6 @@ is.mshapviz <- function(object){
     S_inter = if (!is.null(inter)) inter[i, j, j, drop = FALSE]
   )
 }
-
 
 
 #' Dimnames of "shapviz" Object

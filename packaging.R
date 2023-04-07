@@ -65,7 +65,8 @@ use_build_ignore(c("^packaging.R$", "[.]Rproj$", "^logo.png$"), escape = FALSE)
 use_readme_md()
 
 # Longer docu in RMarkdown (with running R code). Often quite similar to readme.
-use_vignette("shapviz")
+use_vignette("basic_use")
+use_vignette("multiple_output")
 
 # If you want to add unit tests
 use_testthat()

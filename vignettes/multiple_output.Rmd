@@ -1,13 +1,14 @@
 ---
-title: "shapviz"
+title: "Multiple shapviz objects"
 bibliography: "biblio.bib"
 link-citations: true
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Using 'shapviz'}
-  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{Multiple shapviz objects}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
+
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -367,11 +368,6 @@ shp <- shapviz(fit, X_pred = dia_small[x])
 sv_importance(shp)
 sv_dependence(shp, "clarity", alpha = 0.2, size = 1)
 ```
-
-## Classification models
-
-The plot functions work with one-dimensional model predictions only. However, the wrappers
-for {xgboost}, {lightgbm}, and {kernelshap} allow to select the category of interest.
 
 ## References
 

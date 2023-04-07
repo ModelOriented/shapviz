@@ -5,7 +5,7 @@
 #' to focus on pure interaction effects (multiplied by two) or on pure main effects.
 #'
 #' @importFrom rlang .data
-#' @param object An object of class "shapviz".
+#' @param object An object of class "(m)shapviz".
 #' @param v Column name of feature to be plotted.
 #' @param color_var Feature name to be used on the color scale to investigate interactions.
 #' The default ("auto") uses SHAP interaction values (if available) or a heuristic to
@@ -27,12 +27,10 @@
 #' \code{v}), the pure main effect of \code{v} is visualized. Otherwise, twice the SHAP
 #' interaction values between \code{v} and the \code{color_var} are plotted.
 #' @param ... Arguments passed to \code{geom_jitter()}.
-#' @return An object of class \code{ggplot} representing a dependence plot.
-#' @export
-#' @seealso \code{\link{potential_interactions}}
+#' @return An object of class \code{ggplot} (or "patchwork") representing a dependence plot.
 #' @examples
-#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
 #' x <- shapviz(fit, X_pred = dtrain, X = iris)
 #' sv_dependence(x, "Petal.Length")
 #' sv_dependence(x, "Petal.Length", color_var = "Species")
@@ -42,6 +40,15 @@
 #' x2 <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 #' sv_dependence(x2, "Petal.Length", interactions = TRUE)
 #' sv_dependence(x2, "Petal.Length", color_var = NULL, interactions = TRUE)
+#'
+#' # Show main effect of "Petal.Length" for setosa and virginica separately
+#' mx <- c(
+#'   setosa = x2[x2$X$Species == "setosa"],
+#'   virginica = x2[x2$X$Species == "virginica"]
+#' )
+#' sv_dependence(mx, "Petal.Length", color_var = NULL, interactions = TRUE)
+#' @export
+#' @seealso \code{\link{potential_interactions}}
 sv_dependence <- function(object, ...) {
   UseMethod("sv_dependence")
 }
@@ -52,7 +59,7 @@ sv_dependence.default <- function(object, ...) {
   stop("No default method available.")
 }
 
-#' @describeIn sv_dependence SHAP dependence plot for shp object.
+#' @describeIn sv_dependence SHAP dependence plot for "shapviz" object.
 #' @export
 sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528b",
                                   viridis_args = getOption("shapviz.viridis_args"),
@@ -120,6 +127,26 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
     do.call(vir, viridis_args)
 }
 
+#' @describeIn sv_dependence SHAP dependence plot for "mshapviz" object.
+#' @export
+sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b528b",
+                                   viridis_args = getOption("shapviz.viridis_args"),
+                                   jitter_width = NULL, interactions = FALSE, ...) {
+  plot_list <- lapply(
+    object,
+    FUN = sv_dependence,
+    # Argument list (simplify via match.call() or some rlang magic?)
+    v = v,
+    color_var = color_var,
+    color = color,
+    viridis_args = viridis_args,
+    jitter_width = jitter_width,
+    interactions = interactions,
+    ...
+  )
+  plot_list <- add_titles(plot_list, nms = names(object))  # see sv_waterfall()
+  patchwork::wrap_plots(plot_list)
+}
 
 #' Interaction Strength
 #'

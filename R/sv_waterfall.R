@@ -5,7 +5,7 @@
 #' SHAP value. The plot has to be read from bottom to top.
 #' If multiple observations are selected, their SHAP values and predictions are averaged.
 #'
-#' @param object An object of class "shapviz".
+#' @param object An object of class "(m)shapviz".
 #' @param row_id Subset of observations to plot, typically a single row number.
 #' If more than one row is selected, SHAP values are averaged, and feature values
 #' are shown only when they are unique.
@@ -34,15 +34,13 @@
 #' @param ... Arguments passed to \code{ggfittext::geom_fit_text()}.
 #' For example, \code{size = 9} will use fixed text size in the bars and \code{size = 0}
 #' will altogether suppress adding text to the bars.
-#' @return An object of class "ggplot" representing a waterfall plot.
-#' @export
-#' @seealso \code{\link{sv_force}}
+#' @return An object of class "ggplot" (or "patchwork") representing a waterfall plot.
 #' @examples
-#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
 #' x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
 #' sv_waterfall(x)
-#' sv_waterfall(x, row_id = 123, max_display = 2, size = 9, fill_colors = 4:5)
+#' sv_waterfall(x, row_id = 123, max_display = 2L, size = 9, fill_colors = 4:5)
 #'
 #' # Ordered by colnames(x), combined with max_display
 #' sv_waterfall(
@@ -52,10 +50,17 @@
 #' # Aggregate over all observations with Petal.Length == 1.4
 #' sv_waterfall(x, row_id = x$X$Petal.Length == 1.4)
 #'
-#' X <- as.data.frame(matrix(1:100, nrow = 10))
+#' # More features
+#' X <- as.data.frame(matrix(1:100, nrow = 10L))
 #' S <- as.matrix(X)
 #' shp <- shapviz(S, X)
 #' sv_waterfall(shp)
+#'
+#' # Combine two waterfall plots via {patchwork}
+#' sv_waterfall(c(Obs1 = x[1L], Obs2 = x[2L])) +
+#'   patchwork::plot_layout(ncol = 1L)
+#' @export
+#' @seealso \code{\link{sv_force}}
 sv_waterfall <- function(object, ...) {
   UseMethod("sv_waterfall")
 }
@@ -165,6 +170,35 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
   p
 }
 
+#' @describeIn sv_waterfall SHAP waterfall plot for an object of class "mshapviz".
+#' @export
+sv_waterfall.mshapviz <- function(object, row_id = 1L, max_display = 10L,
+                                  order_fun = function(s) order(abs(s)),
+                                  fill_colors = c("#f7d13d", "#a52c60"),
+                                  format_shap = getOption("shapviz.format_shap"),
+                                  format_feat = getOption("shapviz.format_feat"),
+                                  contrast = TRUE, show_connection = TRUE,
+                                  show_annotation = TRUE, annotation_size = 3.2, ...) {
+  plot_list <- lapply(
+    object,
+    FUN = sv_waterfall,
+    # Argument list (simplify via match.call() or some rlang magic?)
+    row_id = row_id,
+    max_display = max_display,
+    order_fun = order_fun,
+    fill_colors = fill_colors,
+    format_shap = format_shap,
+    format_feat = format_feat,
+    contrast = contrast,
+    show_connection = show_connection,
+    show_annotation = show_annotation,
+    annotation_size = annotation_size,
+    ...
+  )
+  plot_list <- add_titles(plot_list, nms = names(object))
+  patchwork::wrap_plots(plot_list)
+}
+
 # Helper functions for sv_waterfall() and sv_force()
 .lag <- function(z, default = NA, lead = FALSE) {
   n <- length(z)
@@ -210,4 +244,12 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
       row.names = "other"
     )
   )
+}
+
+# Adds non-null titles "nms" to list of ggplots
+add_titles <- function(a_list, nms = NULL) {
+  if (is.null(nms)) {
+    return(a_list)
+  }
+  mapply(function(p, nm) p + ggplot2::ggtitle(nm), a_list, nms, SIMPLIFY = FALSE)
 }

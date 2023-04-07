@@ -1,13 +1,14 @@
 ---
-title: "shapviz"
+title: "Using 'shapviz'"
 bibliography: "biblio.bib"
 link-citations: true
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Using 'shapviz'}
-  %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
+
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -56,6 +57,8 @@ For XGBoost, LightGBM, and H2O, the SHAP values are directly calculated from the
 
 [`CatBoost`](https://github.com/catboost) is not included, but see Section "Any other package" how to use its SHAP calculation backend with {shapviz}.
 
+See vignette "Multiple shapviz objects" for how to deal with multiple models or multiclass models.
+
 ## Installation
 
 ``` r
@@ -80,9 +83,12 @@ library(xgboost)
 
 set.seed(3653)
 
-# Turn ordinal factors into normal ones
+# Turn ordinal factors into normal ones (required for some of the examples)
 ord <- c("clarity", "cut", "color")
 diamonds[, ord] <- lapply(diamonds[, ord], factor, ordered = FALSE)
+
+# Explanation data
+dia_small <- diamonds[sample(nrow(diamonds), 2000L), ]
 
 # Fit XGBoost model
 x <- c("carat", "clarity", "cut", "color")
@@ -102,10 +108,6 @@ One line of code creates a "shapviz" object. It contains SHAP values and feature
 In this example we construct the "shapviz" object directly from the fitted XGBoost model. Thus we also need to pass a corresponding prediction dataset `X_pred` used for calculating SHAP values by XGBoost.
 
 ```{r}
-# Pick explanation data
-dia_small <- diamonds[sample(nrow(diamonds), 2000L), ]
-
-# We also pass feature data X with originally encoded values
 shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
 ```
 
@@ -204,6 +206,7 @@ fit <- lgb.train(
 shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
 sv_importance(shp)
 ```
+
 ### fastshap
 
 ```r
@@ -230,12 +233,12 @@ sv_dependence(sv, "Sepal.Width", color_var = NULL)
 library(shapr)
 
 fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
-dia_smaller <- diamonds[sample(nrow(diamonds), 20L), ]
+background <- diamonds[sample(nrow(diamonds), 100L), ]
 
-explainer <- shapr(dia_smaller, fit)
+explainer <- shapr(background, fit)
 
-explanation <- explain(
-  dia_smaller,
+explanation <- shapr::explain(
+  as.data.frame(dia_small)[1:200, ],
   approach = "ctree",
   explainer = explainer,
   prediction_zero = mean(diamonds$price)
@@ -287,7 +290,7 @@ library(DALEX)
 library(ranger)
 
 fit <- ranger(reformulate(x, "price"), data = diamonds, max.depth = 6, num.trees = 100)
-explainer <- explain(fit, data = diamonds[x], y = diamonds$price, label = "RF")
+explainer <- DALEX::explain(fit, data = diamonds[x], y = diamonds$price, label = "RF")
 breakdown <- predict_parts(explainer, diamonds[10000, ], keep_distributions = FALSE)
 
 sv_force(shapviz(breakdown)) +
@@ -299,9 +302,9 @@ sv_force(shapviz(breakdown)) +
 ```r
 library(kernelshap)
 
-dia_smaller <- diamonds[sample(nrow(diamonds), 100L), ]
+background <- diamonds[sample(nrow(diamonds), 200L), ]
 fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
-ks <- kernelshap(fit, dia_small[x], bg_X = dia_smaller)
+ks <- kernelshap(fit, dia_small[x], bg_X = background)
 
 shp <- shapviz(ks)
 sv_importance(shp)
@@ -367,11 +370,6 @@ shp <- shapviz(fit, X_pred = dia_small[x])
 sv_importance(shp)
 sv_dependence(shp, "clarity", alpha = 0.2, size = 1)
 ```
-
-## Classification models
-
-The plot functions work with one-dimensional model predictions only. However, the wrappers
-for {xgboost}, {lightgbm}, and {kernelshap} allow to select the category of interest.
 
 ## References
 

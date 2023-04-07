@@ -10,7 +10,7 @@
 #' For both types of plots, the features are sorted in decreasing
 #' order of importance. The two types of plots can also be combined.
 #'
-#' @param object An object of class "shapviz".
+#' @param object An object of class "(m)shapviz".
 #' @param kind Should a "bar" plot (the default), a "beeswarm" plot, or "both" be shown?
 #' Set to "no" in order to suppress plotting. In that case, the sorted
 #' SHAP feature importances of all variables are returned.
@@ -40,23 +40,25 @@
 #' to \code{geom_point()} otherwise.
 #' For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms,
 #' and setting \code{size = 3} will produce larger dots.
-#' @return A "ggplot" object representing an importance plot, or - if
-#' \code{kind = "no"} - a named numeric vector of sorted SHAP feature importances.
-#' @export
+#' @return A "ggplot" (or "patchwork") object representing an importance plot, or - if
+#' \code{kind = "no"} - a named numeric vector of sorted SHAP feature importances
+#' (or a list of such vectors in case of an object of class "mshapviz").
 #' @examples
-#' X_train <- data.matrix(iris[, -1])
-#' dtrain <- xgboost::xgb.DMatrix(X_train, label = iris[, 1])
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+#' X_train <- data.matrix(iris[, -1L])
+#' dtrain <- xgboost::xgb.DMatrix(X_train, label = iris[, 1L])
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
 #' x <- shapviz(fit, X_pred = X_train)
 #' sv_importance(x)
 #' sv_importance(x, kind = "beeswarm", show_numbers = TRUE)
 #' sv_importance(x, kind = "no")
 #'
-#' X <- data.frame(matrix(rnorm(1000), ncol = 20))
+#' X <- data.frame(matrix(rnorm(1000), ncol = 20L))
 #' S <- as.matrix(X)
 #' x2 <- shapviz(S, X)
 #' sv_importance(x2)
-#' sv_importance(x2, max_display = 5)
+#' sv_importance(x2, max_display = 5L)
+#' @seealso \code{\link{sv_interaction}}
+#' @export
 sv_importance <- function(object, ...) {
   UseMethod("sv_importance")
 }
@@ -144,6 +146,41 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
       )
   }
   p
+}
+
+#' @describeIn sv_importance SHAP importance plot for an object of class "mshapviz".
+#' @export
+sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "no"),
+                                   max_display = 15L, fill = "#fca50a", bar_width = 2/3,
+                                   bee_width = 0.4, bee_adjust = 0.5,
+                                   viridis_args = getOption("shapviz.viridis_args"),
+                                   color_bar_title = "Feature value",
+                                   show_numbers = FALSE, format_fun = format_max,
+                                   number_size = 3.2, ...) {
+  kind <- match.arg(kind)
+
+  plot_list <- lapply(
+    object,
+    FUN = sv_importance,
+    # Argument list (simplify via match.call() or some rlang magic?)
+    kind = kind,
+    max_display = max_display,
+    fill = fill,
+    bar_width = bar_width,
+    bee_width = bee_width,
+    bee_adjust = bee_adjust,
+    viridis_args = viridis_args,
+    color_bar_title = color_bar_title,
+    show_numbers = show_numbers,
+    format_fun = format_fun,
+    number_size = number_size,
+    ...
+  )
+  if (kind == "no") {
+    return(plot_list)
+  }
+  plot_list <- add_titles(plot_list, nms = names(object))  # see sv_waterfall()
+  patchwork::wrap_plots(plot_list)
 }
 
 # Helper functions

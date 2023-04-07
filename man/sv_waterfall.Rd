@@ -4,6 +4,7 @@
 \alias{sv_waterfall}
 \alias{sv_waterfall.default}
 \alias{sv_waterfall.shapviz}
+\alias{sv_waterfall.mshapviz}
 \title{SHAP Waterfall Plot}
 \usage{
 sv_waterfall(object, ...)
@@ -24,9 +25,24 @@ sv_waterfall(object, ...)
   annotation_size = 3.2,
   ...
 )
+
+\method{sv_waterfall}{mshapviz}(
+  object,
+  row_id = 1L,
+  max_display = 10L,
+  order_fun = function(s) order(abs(s)),
+  fill_colors = c("#f7d13d", "#a52c60"),
+  format_shap = getOption("shapviz.format_shap"),
+  format_feat = getOption("shapviz.format_feat"),
+  contrast = TRUE,
+  show_connection = TRUE,
+  show_annotation = TRUE,
+  annotation_size = 3.2,
+  ...
+)
 }
 \arguments{
-\item{object}{An object of class "shapviz".}
+\item{object}{An object of class "(m)shapviz".}
 
 \item{...}{Arguments passed to \code{ggfittext::geom_fit_text()}.
 For example, \code{size = 9} will use fixed text size in the bars and \code{size = 0}
@@ -68,7 +84,7 @@ Default is \code{TRUE}.}
 \item{annotation_size}{Size of the annotation text (f(x)=... and E(f(x))=...).}
 }
 \value{
-An object of class "ggplot" representing a waterfall plot.
+An object of class "ggplot" (or "patchwork") representing a waterfall plot.
 }
 \description{
 Creates a waterfall plot of SHAP values of one observation. The value of
@@ -82,13 +98,15 @@ If multiple observations are selected, their SHAP values and predictions are ave
 
 \item \code{sv_waterfall(shapviz)}: SHAP waterfall plot for an object of class "shapviz".
 
+\item \code{sv_waterfall(mshapviz)}: SHAP waterfall plot for an object of class "mshapviz".
+
 }}
 \examples{
-dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
 x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
 sv_waterfall(x)
-sv_waterfall(x, row_id = 123, max_display = 2, size = 9, fill_colors = 4:5)
+sv_waterfall(x, row_id = 123, max_display = 2L, size = 9, fill_colors = 4:5)
 
 # Ordered by colnames(x), combined with max_display
 sv_waterfall(
@@ -98,10 +116,15 @@ sv_waterfall(
 # Aggregate over all observations with Petal.Length == 1.4
 sv_waterfall(x, row_id = x$X$Petal.Length == 1.4)
 
-X <- as.data.frame(matrix(1:100, nrow = 10))
+# More features
+X <- as.data.frame(matrix(1:100, nrow = 10L))
 S <- as.matrix(X)
 shp <- shapviz(S, X)
 sv_waterfall(shp)
+
+# Combine two waterfall plots via {patchwork}
+sv_waterfall(c(Obs1 = x[1L], Obs2 = x[2L])) +
+  patchwork::plot_layout(ncol = 1L)
 }
 \seealso{
 \code{\link{sv_force}}

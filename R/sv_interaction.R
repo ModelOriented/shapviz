@@ -6,9 +6,10 @@
 #' Non-numeric features are transformed to numeric by calling \code{data.matrix()} first.
 #' The features are sorted in decreasing order of usual SHAP importance.
 #'
-#' @param object An object of class "shapviz" containing element \code{S_inter}.
+#' @param object An object of class "(m)shapviz" containing element \code{S_inter}.
 #' @param kind Set to "no" to simply return the matrix of average absolute SHAP
-#' interactions. The default is "beeswarm".
+#' interactions (or a list of such matrices in case of object of class "mshapviz").
+#' The default is "beeswarm".
 #' @param max_display Maximum number of features (with highest SHAP importance) to plot.
 #' Set to \code{Inf} to show all features. Has no effect if \code{kind = "no"}.
 #' @param alpha Transparency of the beeswarm dots. Defaults to 0.3.
@@ -26,16 +27,18 @@
 #' Set to \code{NULL} to hide the color bar altogether.
 #' @param ... Arguments passed to \code{geom_point()}.
 #' For instance, passing \code{size = 1} will produce smaller dots.
-#' @return A "ggplot" object, or - if \code{kind = "no"} - a named numeric matrix
-#' of average absolute SHAP interactions sorted by the average absolute SHAP values.
-#' @export
+#' @return A "ggplot" (or "patchwork") object, or - if \code{kind = "no"} - a named numeric matrix
+#' of average absolute SHAP interactions sorted by the average absolute SHAP values
+#' (or a list of such matrices in case of "mshapviz" object).
 #' @examples
-#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
 #' x <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 #' sv_interaction(x)
-#' sv_interaction(x, max_display = 2, size = 3, alpha = 0.1)
+#' sv_interaction(x, max_display = 2L, size = 3, alpha = 0.1)
 #' sv_interaction(x, kind = "no")
+#' @seealso \code{\link{sv_importance}}
+#' @export
 sv_interaction <- function(object, ...) {
   UseMethod("sv_interaction")
 }
@@ -107,4 +110,33 @@ sv_interaction.shapviz <- function(object, kind = c("beeswarm", "no"),
       axis.ticks.y = element_blank(),
       axis.text.y = element_blank()
     )
+}
+
+#' @describeIn sv_interaction SHAP interaction plot for an object of class "mshapviz".
+#' @export
+sv_interaction.mshapviz <- function(object, kind = c("beeswarm", "no"),
+                                    max_display = 7L, alpha = 0.3,
+                                    bee_width = 0.3, bee_adjust = 0.5,
+                                    viridis_args = getOption("shapviz.viridis_args"),
+                                    color_bar_title = "Row feature value", ...) {
+  kind <- match.arg(kind)
+
+  plot_list <- lapply(
+    object,
+    FUN = sv_interaction,
+    # Argument list (simplify via match.call() or some rlang magic?)
+    kind = kind,
+    max_display = max_display,
+    alpha = alpha,
+    bee_width = bee_width,
+    bee_adjust = bee_adjust,
+    viridis_args = viridis_args,
+    color_bar_title = color_bar_title,
+    ...
+  )
+  if (kind == "no") {
+    return(plot_list)
+  }
+  plot_list <- add_titles(plot_list, nms = names(object))  # see sv_waterfall()
+  patchwork::wrap_plots(plot_list)
 }

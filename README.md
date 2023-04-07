@@ -46,6 +46,8 @@ For XGBoost, LightGBM, and H2O, the SHAP values are directly calculated from the
 
 [`CatBoost`](https://github.com/catboost) is not included, but see the vignette how to use its SHAP calculation backend with {shapviz}.
 
+Multiple "shapviz" objects can be glued together, see Vignette "Multiple shapviz objects".
+
 ## Installation
 
 ``` r
@@ -70,6 +72,10 @@ library(xgboost)
 
 set.seed(3653)
 
+# Explanation data
+dia_small <- diamonds[sample(nrow(diamonds), 2000L), ]
+
+# XGBoost model
 x <- c("carat", "cut", "color", "clarity")
 dtrain <- xgb.DMatrix(data.matrix(diamonds[x]), label = diamonds$price)
 
@@ -87,8 +93,6 @@ One line of code creates a "shapviz" object. It contains SHAP values and feature
 In this example, we construct the "shapviz" object directly from the fitted XGBoost model. Thus we also need to pass a corresponding prediction dataset `X_pred` used for calculating SHAP values by XGBoost.
 
 ``` r
-dia_small <- diamonds[sample(nrow(diamonds), 2000L), ]
-
 shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
 ```
 
@@ -149,6 +153,7 @@ sv_importance(shp, kind = "beeswarm")
 ``` r
 sv_importance(shp, kind = "both", show_numbers = TRUE, bee_width = 0.2)
 ```
+
 ![](man/figures/README-imp3.png)
 
 ### Dependence plot
@@ -163,7 +168,7 @@ sv_dependence(shp, v = "color")
 
 ### Interactions
 
-If SHAP interaction values have been computed (via XGBoost or {treeshap}), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry):
+If SHAP interaction values have been computed (via {xgboost} or {treeshap}), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry):
 
 ``` r
 shp_with_inter <- shapviz(
@@ -184,10 +189,9 @@ sv_interaction(shp_with_inter) +
 
 ![](man/figures/README-interactions.png)
 
-
 ## More
 
-Check out the package help and the vignette for further information.
+Check out the package help and the vignettes for further information.
 
 ## References
 

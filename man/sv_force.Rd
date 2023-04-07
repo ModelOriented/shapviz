@@ -4,6 +4,7 @@
 \alias{sv_force}
 \alias{sv_force.default}
 \alias{sv_force.shapviz}
+\alias{sv_force.mshapviz}
 \title{SHAP Force Plot}
 \usage{
 sv_force(object, ...)
@@ -23,9 +24,23 @@ sv_force(object, ...)
   annotation_size = 3.2,
   ...
 )
+
+\method{sv_force}{mshapviz}(
+  object,
+  row_id = 1L,
+  max_display = 6L,
+  fill_colors = c("#f7d13d", "#a52c60"),
+  format_shap = getOption("shapviz.format_shap"),
+  format_feat = getOption("shapviz.format_feat"),
+  contrast = TRUE,
+  bar_label_size = 3.2,
+  show_annotation = TRUE,
+  annotation_size = 3.2,
+  ...
+)
 }
 \arguments{
-\item{object}{An object of class "shapviz".}
+\item{object}{An object of class "(m)shapviz".}
 
 \item{...}{Arguments passed to \code{ggfittext::geom_fit_text()}.
 For example, \code{size = 9} will use fixed text size in the bars and \code{size = 0}
@@ -61,7 +76,7 @@ Default is \code{TRUE}.}
 \item{annotation_size}{Size of the annotation text (f(x)=... and E(f(x))=...).}
 }
 \value{
-An object of class "ggplot" representing a force plot.
+An object of class "ggplot" (or "patchwork") representing a force plot.
 }
 \description{
 Creates a force plot of SHAP values of one observation. The value of
@@ -75,16 +90,21 @@ If multiple observations are selected, their SHAP values and predictions are ave
 
 \item \code{sv_force(shapviz)}: SHAP force plot for object of class "shapviz".
 
+\item \code{sv_force(mshapviz)}: SHAP force plot for object of class "mshapviz".
+
 }}
 \examples{
-dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
-x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
+dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
+x <- shapviz(fit, X_pred = dtrain, X = iris[, -1L])
 sv_force(x)
-sv_force(x, row_id = 65, max_display = 3, size = 9, fill_colors = 4:5)
+sv_force(x, row_id = 65L, max_display = 3, size = 9, fill_colors = 4:5)
 
 # Aggregate over all observations with Petal.Length == 1.4
 sv_force(x, row_id = x$X$Petal.Length == 1.4)
+
+# Combine two force plots via {patchwork}
+sv_force(c(Obs1 = x[1L], Obs2 = x[2L]))
 }
 \seealso{
 \code{\link{sv_waterfall}}

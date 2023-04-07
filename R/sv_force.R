@@ -5,7 +5,7 @@
 #' SHAP value.
 #' If multiple observations are selected, their SHAP values and predictions are averaged.
 #'
-#' @param object An object of class "shapviz".
+#' @param object An object of class "(m)shapviz".
 #' @param row_id Subset of observations to plot, typically a single row number.
 #' If more than one row is selected, SHAP values are averaged, and feature values
 #' are shown only when they are unique.
@@ -29,18 +29,21 @@
 #' @param ... Arguments passed to \code{ggfittext::geom_fit_text()}.
 #' For example, \code{size = 9} will use fixed text size in the bars and \code{size = 0}
 #' will altogether suppress adding text to the bars.
-#' @return An object of class "ggplot" representing a force plot.
-#' @export
-#' @seealso \code{\link{sv_waterfall}}
+#' @return An object of class "ggplot" (or "patchwork") representing a force plot.
 #' @examples
-#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
-#' x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
+#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
+#' x <- shapviz(fit, X_pred = dtrain, X = iris[, -1L])
 #' sv_force(x)
-#' sv_force(x, row_id = 65, max_display = 3, size = 9, fill_colors = 4:5)
+#' sv_force(x, row_id = 65L, max_display = 3, size = 9, fill_colors = 4:5)
 #'
 #' # Aggregate over all observations with Petal.Length == 1.4
 #' sv_force(x, row_id = x$X$Petal.Length == 1.4)
+#'
+#' # Combine two force plots via {patchwork}
+#' sv_force(c(Obs1 = x[1L], Obs2 = x[2L]))
+#' @export
+#' @seealso \code{\link{sv_waterfall}}
 sv_force <- function(object, ...) {
   UseMethod("sv_force")
 }
@@ -150,3 +153,34 @@ sv_force.shapviz <- function(object, row_id = 1L, max_display = 6L,
   }
   p
 }
+
+#' @describeIn sv_force SHAP force plot for object of class "mshapviz".
+#' @export
+sv_force.mshapviz <- function(object, row_id = 1L, max_display = 6L,
+                              fill_colors = c("#f7d13d", "#a52c60"),
+                              format_shap = getOption("shapviz.format_shap"),
+                              format_feat = getOption("shapviz.format_feat"),
+                              contrast = TRUE, bar_label_size = 3.2,
+                              show_annotation = TRUE, annotation_size = 3.2, ...) {
+  plot_list <- lapply(
+    object,
+    FUN = sv_force,
+    # Argument list (simplify via match.call() or some rlang magic?)
+    row_id = row_id,
+    max_display = max_display,
+    fill_colors = fill_colors,
+    format_shap = format_shap,
+    format_feat = format_feat,
+    contrast = contrast,
+    bar_label_size = bar_label_size,
+    show_annotation = show_annotation,
+    annotation_size = annotation_size,
+    ...
+  )
+  plot_list <- add_titles(plot_list, nms = names(object))  # see sv_waterfall()
+  patchwork::wrap_plots(plot_list) +
+    patchwork::plot_layout(ncol = 1L)
+}
+
+
+

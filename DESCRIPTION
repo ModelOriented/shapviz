@@ -28,6 +28,7 @@ Imports:
     ggplot2 (>= 3.4.0),
     ggrepel,
     grid,
+    patchwork,
     rlang (>= 0.3.0),
     stats,
     utils,

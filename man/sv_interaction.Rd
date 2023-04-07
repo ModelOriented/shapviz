@@ -4,6 +4,7 @@
 \alias{sv_interaction}
 \alias{sv_interaction.default}
 \alias{sv_interaction.shapviz}
+\alias{sv_interaction.mshapviz}
 \title{SHAP Interaction Plot}
 \usage{
 sv_interaction(object, ...)
@@ -21,15 +22,28 @@ sv_interaction(object, ...)
   color_bar_title = "Row feature value",
   ...
 )
+
+\method{sv_interaction}{mshapviz}(
+  object,
+  kind = c("beeswarm", "no"),
+  max_display = 7L,
+  alpha = 0.3,
+  bee_width = 0.3,
+  bee_adjust = 0.5,
+  viridis_args = getOption("shapviz.viridis_args"),
+  color_bar_title = "Row feature value",
+  ...
+)
 }
 \arguments{
-\item{object}{An object of class "shapviz" containing element \code{S_inter}.}
+\item{object}{An object of class "(m)shapviz" containing element \code{S_inter}.}
 
 \item{...}{Arguments passed to \code{geom_point()}.
 For instance, passing \code{size = 1} will produce smaller dots.}
 
 \item{kind}{Set to "no" to simply return the matrix of average absolute SHAP
-interactions. The default is "beeswarm".}
+interactions (or a list of such matrices in case of object of class "mshapviz").
+The default is "beeswarm".}
 
 \item{max_display}{Maximum number of features (with highest SHAP importance) to plot.
 Set to \code{Inf} to show all features. Has no effect if \code{kind = "no"}.}
@@ -53,8 +67,9 @@ with \code{options(shapviz.viridis_args = NULL)} or set \code{viridis_args = NUL
 Set to \code{NULL} to hide the color bar altogether.}
 }
 \value{
-A "ggplot" object, or - if \code{kind = "no"} - a named numeric matrix
-of average absolute SHAP interactions sorted by the average absolute SHAP values.
+A "ggplot" (or "patchwork") object, or - if \code{kind = "no"} - a named numeric matrix
+of average absolute SHAP interactions sorted by the average absolute SHAP values
+(or a list of such matrices in case of "mshapviz" object).
 }
 \description{
 Plots a beeswarm plot for each feature pair. Diagonals represent the main effects,
@@ -69,12 +84,17 @@ The features are sorted in decreasing order of usual SHAP importance.
 
 \item \code{sv_interaction(shapviz)}: SHAP interaction plot for an object of class "shapviz".
 
+\item \code{sv_interaction(mshapviz)}: SHAP interaction plot for an object of class "mshapviz".
+
 }}
 \examples{
-dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
 x <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 sv_interaction(x)
-sv_interaction(x, max_display = 2, size = 3, alpha = 0.1)
+sv_interaction(x, max_display = 2L, size = 3, alpha = 0.1)
 sv_interaction(x, kind = "no")
+}
+\seealso{
+\code{\link{sv_importance}}
 }

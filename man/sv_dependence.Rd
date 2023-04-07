@@ -4,6 +4,7 @@
 \alias{sv_dependence}
 \alias{sv_dependence.default}
 \alias{sv_dependence.shapviz}
+\alias{sv_dependence.mshapviz}
 \title{SHAP Dependence Plot}
 \usage{
 sv_dependence(object, ...)
@@ -20,9 +21,20 @@ sv_dependence(object, ...)
   interactions = FALSE,
   ...
 )
+
+\method{sv_dependence}{mshapviz}(
+  object,
+  v,
+  color_var = "auto",
+  color = "#3b528b",
+  viridis_args = getOption("shapviz.viridis_args"),
+  jitter_width = NULL,
+  interactions = FALSE,
+  ...
+)
 }
 \arguments{
-\item{object}{An object of class "shapviz".}
+\item{object}{An object of class "(m)shapviz".}
 
 \item{...}{Arguments passed to \code{geom_jitter()}.}
 
@@ -53,7 +65,7 @@ Requires SHAP interaction values. If \code{color_var = NULL} (or it is equal to
 interaction values between \code{v} and the \code{color_var} are plotted.}
 }
 \value{
-An object of class \code{ggplot} representing a dependence plot.
+An object of class \code{ggplot} (or "patchwork") representing a dependence plot.
 }
 \description{
 Scatter plot of the SHAP values of a feature against its feature values.
@@ -64,12 +76,14 @@ to focus on pure interaction effects (multiplied by two) or on pure main effects
 \itemize{
 \item \code{sv_dependence(default)}: Default method.
 
-\item \code{sv_dependence(shapviz)}: SHAP dependence plot for shp object.
+\item \code{sv_dependence(shapviz)}: SHAP dependence plot for "shapviz" object.
+
+\item \code{sv_dependence(mshapviz)}: SHAP dependence plot for "mshapviz" object.
 
 }}
 \examples{
-dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
 x <- shapviz(fit, X_pred = dtrain, X = iris)
 sv_dependence(x, "Petal.Length")
 sv_dependence(x, "Petal.Length", color_var = "Species")
@@ -79,6 +93,13 @@ sv_dependence(x, "Petal.Length", color_var = NULL)
 x2 <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 sv_dependence(x2, "Petal.Length", interactions = TRUE)
 sv_dependence(x2, "Petal.Length", color_var = NULL, interactions = TRUE)
+
+# Show main effect of "Petal.Length" for setosa and virginica separately
+mx <- c(
+  setosa = x2[x2$X$Species == "setosa"],
+  virginica = x2[x2$X$Species == "virginica"]
+)
+sv_dependence(mx, "Petal.Length", color_var = NULL, interactions = TRUE)
 }
 \seealso{
 \code{\link{potential_interactions}}

@@ -12,14 +12,17 @@
 #'   \item The result of calling \code{predict_parts()} from the "DALEX" package
 #'   \item "kernelshap" object from the "kernelshap" package
 #' }
-#' The "shapviz" vignette explains how to use each of them.
+#' The vignettes explain how to use them.
 #' Together with the main input, a data set \code{X} of feature values is required,
 #' which is used only for visualization. It can therefore contain character or factor
 #' variables, even if the SHAP values were calculated from a purely numerical feature
 #' matrix. In addition, to improve visualization, it can sometimes be useful to truncate
 #' gross outliers, logarithmize certain columns, or replace missing values with an
-#' explicit value. SHAP values of dummy variables can be combined using the convenient
+#' explicit value.
+#' SHAP values of dummy variables can be combined using the convenient
 #' \code{collapse} argument.
+#' Multi-output models created from XGBoost, LightGBM, or kernelshap
+#' return a "mshapviz" object, containing a "shapviz" object per output.
 #' @importFrom xgboost xgb.train
 #' @param object For XGBoost, LightGBM, and H2O, this is the fitted model used to
 #' calculate SHAP values from \code{X_pred}.
@@ -70,9 +73,7 @@ shapviz <- function(object, ...){
 #' @describeIn shapviz Default method to initialize a "shapviz" object.
 #' @export
 shapviz.default = function(object, ...) {
-  stop("No default method available. shapviz() is available for objects
-       of class 'matrix', 'xgb.Booster', 'lgb.Booster', 'treeshap', 'predict_parts',
-       'shapr', 'H2OModel', 'explain' (from fastshap package), and 'kernelshap'.")
+  stop("No default method available.")
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from a matrix of SHAP values.
@@ -94,18 +95,17 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
     S_inter <- S_inter[, nms, nms, drop = FALSE]
   }
 
-  # Organize output
-  out <- list(S = object, X = X, baseline = baseline, S_inter = S_inter)
-  class(out) <- "shapviz"
-  out
+  structure(
+    list(S = object, X = X, baseline = baseline, S_inter = S_inter), class = "shapviz"
+  )
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from an XGBoost model.
 #' @export
 #' @examples
-#' X_pred <- data.matrix(iris[, -1])
-#' dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1])
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+#' X_pred <- data.matrix(iris[, -1L])
+#' dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1L])
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
 #'
 #' # Will use numeric matrix "X_pred" as feature matrix
 #' x <- shapviz(fit, X_pred = X_pred)
@@ -119,35 +119,60 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
 #' # "X_pred" can also be passed as xgb.DMatrix, but only if X is passed as well!
 #' x <- shapviz(fit, X_pred = dtrain, X = iris)
 #'
-#' # Similarly with LightGBM
-#' if (requireNamespace("lightgbm", quietly = TRUE)) {
-#'   fit <- lightgbm::lgb.train(
-#'     params = list(objective = "regression"),
-#'     data = lightgbm::lgb.Dataset(X_pred, label = iris[, 1]),
-#'     nrounds = 50,
-#'     verbose = -2
-#'   )
-#'   x <- shapviz(fit, X_pred = X_pred)
-#' }
+#' # Multiclass setting
+#' params <- list(objective = "multi:softprob", num_class = 3L)
+#' X_pred <- data.matrix(iris[, -5L])
+#' dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5L]) - 1L)
+#' fit <- xgboost::xgb.train(
+#'   params = params, data = dtrain, nrounds = 50L, nthread = 1L
+#' )
 #'
-#' # In multiclass setting, we need to specify which_class (integer starting at 1)
-#' params <- list(objective = "multi:softprob", num_class = 3)
-#' X_pred <- data.matrix(iris[, -5])
-#' dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5]) - 1L)
-#' fit <- xgboost::xgb.train(params = params, data = dtrain, nrounds = 50)
-#' x <- shapviz(fit, X_pred = X_pred, which_class = 3)
+#' # Select specific class
+#' x <- shapviz(fit, X_pred = X_pred, which_class = 3L)
+#' x
+#'
+#' # Or combine all classes to "mshapviz" object
+#' x <- shapviz(fit, X_pred = X_pred)
+#' x
 #'
 #' # What if we would have one-hot-encoded values and want to explain the original column?
-#' X_pred <- stats::model.matrix(~ . -1, iris[, -1])
-#' dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 1]))
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50)
+#' X_pred <- stats::model.matrix(~ . -1, iris[, -1L])
+#' dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 1L]))
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L)
 #' x <- shapviz(
 #'   fit,
 #'   X_pred = X_pred,
 #'   X = iris,
 #'   collapse = list(Species = c("Speciessetosa", "Speciesversicolor", "Speciesvirginica"))
 #' )
-#' x
+#' summary(x)
+#'
+#' # Similarly with LightGBM
+#' if (requireNamespace("lightgbm", quietly = TRUE)) {
+#'   fit <- lightgbm::lgb.train(
+#'     params = list(objective = "regression", num_thread = 1L),
+#'     data = lightgbm::lgb.Dataset(X_pred, label = iris[, 1L]),
+#'     nrounds = 50L,
+#'     verbose = -2L
+#'   )
+#'   x <- shapviz(fit, X_pred = X_pred)
+#'   x
+#'
+#'   # Multiclass
+#'   params <- list(objective = "multiclass", num_class = 3L, num_thread = 1L)
+#'   X_pred <- data.matrix(iris[, -5L])
+#'   dtrain <- lightgbm::lgb.Dataset(X_pred, label = as.integer(iris[, 5L]) - 1L)
+#'   fit <- lightgbm::lgb.train(params = params, data = dtrain, nrounds = 50L)
+#'
+#'   # Select specific class
+#'   x <- shapviz(fit, X_pred = X_pred, which_class = 3L)
+#'   x
+#'
+#'   # Or combine all classes to a "mshapviz" object
+#'   mx <- shapviz(fit, X_pred = X_pred)
+#'   mx
+#'   all.equal(mx[[3L]], x)
+#' }
 shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL,
                                collapse = NULL, interactions = FALSE, ...) {
   stopifnot(
@@ -166,7 +191,26 @@ shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL,
 
   # Multiclass
   if (is.list(S)) {
-    stopifnot(!is.null(which_class), which_class <= length(S))
+    if (is.null(which_class)) {
+      nms <- setdiff(colnames(S[[1L]]), "BIAS")
+      if (interactions) {
+        S_inter <- lapply(S_inter, function(s) s[, nms, nms, drop = FALSE])
+      } else {
+        # mapply() does not want to see a length 0 object like NULL
+        S_inter <- replicate(length(S), NULL)
+      }
+      shapviz_list <- mapply(
+        FUN = shapviz.matrix,
+        object = lapply(S, function(s) s[, nms, drop = FALSE]),
+        baseline = lapply(S, function(s) unname(s[1L, "BIAS"])),
+        S_inter = S_inter,
+        MoreArgs = list(X = X, collapse = collapse),
+        SIMPLIFY = FALSE
+      )
+      names(shapviz_list) <- .make_class_names(length(S))
+      return(mshapviz(shapviz_list))
+    }
+    # Old way: select just one class
     S <- S[[which_class]]
     if (interactions) {
       S_inter <- S_inter[[which_class]]
@@ -176,7 +220,7 @@ shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL,
   # Call matrix method
   nms <- setdiff(colnames(S), "BIAS")
   shapviz.matrix(
-    S[, nms, drop = FALSE],
+    object = S[, nms, drop = FALSE],
     X = X,
     baseline = unname(S[1L, "BIAS"]),
     S_inter = if (interactions) S_inter[, nms, nms, drop = FALSE],
@@ -211,21 +255,36 @@ shapviz.lgb.Booster = function(object, X_pred, X = X_pred,
   # Reduce multiclass setting
   m <- ncol(S) %/% pp
   if (m >= 2L) {
-    stopifnot(!is.null(which_class), which_class <= m)
-    S <- S[, 1:pp + pp * (which_class - 1), drop = FALSE]
+    if (is.null(which_class)) {
+      S_list <- lapply(1:m, function(j) S[, 1:(pp - 1L) + pp * (j - 1L), drop = FALSE])
+      S_list <- lapply(S_list, function(s) {colnames(s) <- colnames(X_pred); s})
+      shapviz_list <- mapply(
+        FUN = shapviz.matrix,
+        object = S_list,
+        baseline = S[1L, pp * (1:m)],
+        MoreArgs = list(X = X, collapse = collapse),
+        SIMPLIFY = FALSE
+      )
+      names(shapviz_list) <- .make_class_names(m)
+      return(mshapviz(shapviz_list))
+    }
+    # Old way: select just one class
+    S <- S[, 1:pp + pp * (which_class - 1L), drop = FALSE]
   }
 
   # Call matrix method
   baseline <- S[1L, pp]
   S <- S[, -pp, drop = FALSE]
   colnames(S) <- colnames(X_pred)
-  shapviz.matrix(S, X = X, baseline = baseline, collapse = collapse)
+  shapviz.matrix(object = S, X = X, baseline = baseline, collapse = collapse)
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from fastshap's "explain()" method.
 #' @export
 shapviz.explain <- function(object, X, baseline = 0, collapse = NULL, ...) {
-  shapviz.matrix(as.matrix(object), X = X, baseline = baseline, collapse = collapse)
+  shapviz.matrix(
+    object = as.matrix(object), X = X, baseline = baseline, collapse = collapse
+  )
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from treeshap's "treeshap()" method.
@@ -237,7 +296,7 @@ shapviz.treeshap <- function(object, X = object[["observations"]],
     S_inter <- aperm(S_inter, c(3L, 1:2))
   }
   shapviz.matrix(
-    as.matrix(object[["shaps"]]),
+    object = as.matrix(object[["shaps"]]),
     X = X,
     baseline = baseline,
     collapse = collapse,
@@ -270,7 +329,7 @@ shapviz.predict_parts <- function(object, ...) {
   S <- t(agg[["contribution"]])
   colnames(X) <- colnames(S) <- agg[["variable_name"]]
 
-  shapviz(S, X = X, baseline = baseline, ...)
+  shapviz(object = S, X = X, baseline = baseline, ...)
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from shapr's "explain()" method.
@@ -278,7 +337,7 @@ shapviz.predict_parts <- function(object, ...) {
 shapviz.shapr <- function(object, X = object[["x_test"]], collapse = NULL, ...) {
   dt <- as.matrix(object[["dt"]])
   shapviz.matrix(
-    dt[, setdiff(colnames(dt), "none"), drop = FALSE],
+    object = dt[, setdiff(colnames(dt), "none"), drop = FALSE],
     X = X,
     baseline = dt[1L, "none"],
     collapse = collapse
@@ -294,12 +353,23 @@ shapviz.kernelshap <- function(object, X = object[["X"]],
 
   # Multiclass/multioutput
   if (is.list(S)) {
-    stopifnot(!is.null(which_class), which_class <= length(S))
+    if (is.null(which_class)) {
+      shapviz_list <- mapply(
+        FUN = shapviz.matrix,
+        object = S,
+        baseline = b,
+        MoreArgs = list(X = X, collapse = collapse),
+        SIMPLIFY = FALSE
+      )
+      names(shapviz_list) <- .make_class_names(length(S))
+      return(mshapviz(shapviz_list))
+    }
+    # Old way: select just one class
     S <- S[[which_class]]
     b <- b[which_class]
   }
 
-  shapviz.matrix(S, X = X, baseline = b, collapse = collapse)
+  shapviz.matrix(object = S, X = X, baseline = b, collapse = collapse)
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from a (tree-based) H2O regression model.
@@ -333,14 +403,43 @@ shapviz.H2OModel = function(object, X_pred, X = as.data.frame(X_pred),
   }
   S <- as.matrix(h2o::h2o.predict_contributions(object, newdata = X_pred, ...))
   shapviz.matrix(
-    S[, setdiff(colnames(S), "BiasTerm"), drop = FALSE],
+    object = S[, setdiff(colnames(S), "BiasTerm"), drop = FALSE],
     X = X,
     baseline = unname(S[1L, "BiasTerm"]),
     collapse = collapse
   )
 }
 
+#' Concatenates "shapviz" Objects
+#'
+#' This function combines a list of "shapviz" objects to an object of class
+#' "mshapviz". The elements can be named.
+#'
+#' @param object List of "shapviz" objects to be concatenated.
+#' @param ... Not used.
+#' @return A "mshapviz" object.
+#' @export
+#' @examples
+#' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' s1 <- shapviz(S, X, baseline = 4)[1L]
+#' s2 <- shapviz(S, X, baseline = 4)[2L]
+#' s <- mshapviz(c(shp1 = s1, shp2 = s2))
+#' s
+mshapviz <- function(object, ...) {
+  stopifnot("'object' must be a list of 'shapviz' objects" = is.list(object))
+  if (!all(vapply(object, is.shapviz, FUN.VALUE = logical(1)))) {
+    stop("Must pass list of 'shapviz' objects")
+  }
+  structure(object, class = "mshapviz")
+}
+
+
 # Helper function
+.make_class_names <- function(m) {
+  paste("Class", seq_len(m), sep = "_")
+}
+
 .input_checks <- function(object, X, baseline = 0, S_inter = NULL) {
   stopifnot(
     "'X' must be a matrix or data.frame" = is.matrix(X) || is.data.frame(X),

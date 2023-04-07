@@ -18,8 +18,12 @@ Invisibly, the input is returned.
 Prints "mshapviz" Object
 }
 \examples{
-TODO
+S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+X <- data.frame(x = c("a", "b"), y = c(100, 10))
+s1 <- shapviz(S, X, baseline = 4)
+s2 <- shapviz(S, X, baseline = 4)
+c(s1 = s1, s2 = s2)
 }
 \seealso{
-\code{\link{mshapviz}}.
+\code{\link{shapviz}}.
 }

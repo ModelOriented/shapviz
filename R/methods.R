@@ -35,7 +35,18 @@ print.shapviz <- function(x, n = 2L, ...) {
 }
 
 #' Prints "mshapviz" Object
+#'
+#' @param x An object of class "mshapviz".
+#' @param ... Further arguments passed from other methods.
+#' @return Invisibly, the input is returned.
 #' @export
+#' @examples
+#' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' s1 <- shapviz(S, X, baseline = 4)
+#' s2 <- shapviz(S, X, baseline = 4)
+#' c(s1 = s1, s2 = s2)
+#' @seealso \code{\link{shapviz}}.
 print.mshapviz <- function(x, ...) {
   nms <- names(x)
   S_list <- get_shap_values(x)
@@ -90,7 +101,15 @@ is.shapviz <- function(object){
 #' @return Returns \code{TRUE} if \code{object} has "\code{mshapviz}" among its classes, and \code{FALSE} otherwise.
 #' @export
 #' @examples
-#' TODO
+#' S1 <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' S2 <- matrix(c(-1, 1, 1, -1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X1 <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' X2 <- data.frame(x = c("b", "a"), y = c(100, 10))
+#' x1 <- shapviz(S1, X1, baseline = 4)
+#' x2 <- shapviz(S2, X2, baseline = 4)
+#' x <- c(Model_1 = x1, Model_2 = x2)
+#' is.mshapviz(x)
+#' is.mshapviz(x1)
 is.mshapviz <- function(object){
   inherits(object, "mshapviz")
 }
@@ -123,6 +142,32 @@ is.mshapviz <- function(object){
   )
 }
 
+#' Subsets "mshapviz" Object
+#'
+#' Use standard square bracket subsetting to select rows and/or columns of
+#' SHAP values, feature values, and SHAP interaction values of a "mshapviz" object.
+#'
+#' @param x An object of class "mshapviz".
+#' @param i Row subsetting.
+#' @param j Column subsetting.
+#' @param ... Currently unused.
+#' @return A new object of class "mshapviz".
+#' @export
+#' @examples
+#' S1 <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' S2 <- matrix(c(-1, 1, 1, -1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X1 <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' X2 <- data.frame(x = c("b", "a"), y = c(100, 10))
+#' x1 <- shapviz(S1, X1, baseline = 4)
+#' x2 <- shapviz(S2, X2, baseline = 4)
+#' x <- c(Model_1 = x1, Model_2 = x2)
+#' x
+#' x[1, ]
+#' @seealso \code{\link{shapviz}}.
+#' @export
+`[.mshapviz` <- function(x, i, j, ...) {
+  mshapviz(lapply(x, FUN = `[.shapviz`, i = i, j = j, ...))
+}
 
 #' Dimnames of "shapviz" Object
 #'
@@ -143,9 +188,9 @@ dimnames.shapviz <- function(x) {
   dimnames(get_shap_values(x))
 }
 
-#' Concatenates "shapviz" Object
+#' Rowbinds two "shapviz" Objects
 #'
-#' Use standard plus operator to concatenate two "shapviz" objects.
+#' Rowbinds two "shapviz" objects using \code{+}.
 #'
 #' @param e1 The first object of class "shapviz".
 #' @param e2 The second object of class "shapviz".
@@ -183,11 +228,11 @@ dimnames.shapviz <- function(x) {
   )
 }
 
-#' Concatenates "shapviz" Objects
+#' Rowbinds Multiple "shapviz" Objects
 #'
-#' It is based on the `+.shapviz` operator
+#' It is based on the \code{+} operator for "shapviz" objects.
 #'
-#' @param ... "shapviz" objects to be concatenated.
+#' @param ... Any number of "shapviz" objects.
 #' @return A new object of class "shapviz".
 #' @export
 #' @examples
@@ -202,6 +247,29 @@ dimnames.shapviz <- function(x) {
 #' @export
 rbind.shapviz <- function(...) {
   Reduce(`+`, list(...))
+}
+
+#' Concatenates "shapviz" Objects
+#'
+#' This function combines two or more "shapviz" objects to an object of class
+#' "mshapviz". The objects can be named.
+#'
+#' @param ... Any number of (optionally named) "shapviz" objects.
+#' @return A "mshapviz" object.
+#' @export
+#' @examples
+#' S1 <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' S2 <- matrix(c(-1, 1, 1, -1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X1 <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' X2 <- data.frame(x = c("b", "a"), y = c(100, 10))
+#' x1 <- shapviz(S1, X1, baseline = 4)
+#' x2 <- shapviz(S2, X2, baseline = 4)
+#' x <- c(Model_1 = x1, Model_2 = x2)
+#' x
+c.shapviz <- function(...) {
+  out <- list(...)
+  class(out) <- "mshapviz"
+  out
 }
 
 # Helper functions

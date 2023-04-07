@@ -166,11 +166,11 @@ fit <- xgboost::xgb.train(
   num_class=3L
 )
 
-test_that("initialization of multiclass xgb model fails without 'which_class'", {
-  expect_error(shapviz(fit, X_pred = X_pred))
+test_that("multiclass xgb model gives 'mshapviz' object", {
+  expect_true(is.mshapviz(shapviz(fit, X_pred = X_pred, interactions = TRUE)))
 })
 
-test_that("initialization of multiclass xgb model succeeds with 'which_class'", {
+test_that("multiclass xgb model with 'which_class' gives 'shapviz' object", {
   expect_true(
     is.shapviz(shapviz(fit, X_pred = X_pred, which_class = 3L, interactions = TRUE))
   )

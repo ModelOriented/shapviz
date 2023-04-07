@@ -2,7 +2,7 @@
 % Please edit documentation in R/methods.R
 \name{+.shapviz}
 \alias{+.shapviz}
-\title{Concatenates "shapviz" Object}
+\title{Rowbinds two "shapviz" Objects}
 \usage{
 \method{+}{shapviz}(e1, e2)
 }
@@ -15,7 +15,7 @@
 A new object of class "shapviz".
 }
 \description{
-Use standard plus operator to concatenate two "shapviz" objects.
+Rowbinds two "shapviz" objects using \code{+}.
 }
 \examples{
 S1 <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))

@@ -1,6 +1,7 @@
 dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
 fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L)
 x <- shapviz(fit, X_pred = dtrain, X = iris[, -1L])
+# mx <- c(x, x)
 
 test_that("plots work for basic example", {
   expect_s3_class(sv_waterfall(x, 2), "ggplot")

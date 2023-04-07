@@ -16,5 +16,13 @@ Returns \code{TRUE} if \code{object} has "\code{mshapviz}" among its classes, an
 Is object of class "mshapviz"?
 }
 \examples{
-TODO
+S1 <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+S2 <- matrix(c(-1, 1, 1, -1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+X1 <- data.frame(x = c("a", "b"), y = c(100, 10))
+X2 <- data.frame(x = c("b", "a"), y = c(100, 10))
+x1 <- shapviz(S1, X1, baseline = 4)
+x2 <- shapviz(S2, X2, baseline = 4)
+x <- c(Model_1 = x1, Model_2 = x2)
+is.mshapviz(x)
+is.mshapviz(x1)
 }

@@ -171,15 +171,21 @@ shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL,
   if (is.list(S)) {
     if (is.null(which_class)) {
       nms <- setdiff(colnames(S[[1L]]), "BIAS")
+      if (interactions) {
+        S_inter <- lapply(S_inter, function(s) s[, nms, nms, drop = FALSE])
+      } else {
+        # mapply() does not want to see a length 0 object like NULL
+        S_inter <- replicate(length(S), NULL)
+      }
       shapviz_list <- mapply(
         FUN = shapviz.matrix,
         object = lapply(S, function(s) s[, nms, drop = FALSE]),
         baseline = lapply(S, function(s) unname(s[1L, "BIAS"])),
-        S_inter = if (interactions) S_inter else replicate(length(S), NULL),
+        S_inter = S_inter,
         MoreArgs = list(X = X, collapse = collapse),
         SIMPLIFY = FALSE
       )
-      names(shapviz_list) <- paste0("C", seq_along(S))
+      names(shapviz_list) <- .make_class_names(length(S))
       return(mshapviz(shapviz_list))
     }
     # Old way: select just one class
@@ -227,7 +233,20 @@ shapviz.lgb.Booster = function(object, X_pred, X = X_pred,
   # Reduce multiclass setting
   m <- ncol(S) %/% pp
   if (m >= 2L) {
-    stopifnot(!is.null(which_class), which_class <= m)
+    if (!is.null(which_class)) {
+      S_list <- lapply(1:m, function(j) S[, 1:(pp - 1L) + pp * (j - 1L), drop = FALSE])
+      S_list <- lapply(S_list, function(s) {colnames(s) <- colnames(X_pred); s})
+      shapviz_list <- mapply(
+        FUN = shapviz.matrix,
+        object = S_list,
+        baseline = S[1L, pp * (1:m)],
+        MoreArgs = list(X = X, collapse = collapse),
+        SIMPLIFY = FALSE
+      )
+      names(shapviz_list) <- .make_class_names(m)
+      return(mshapviz(shapviz_list))
+    }
+    # Old way: select just one class
     S <- S[, 1:pp + pp * (which_class - 1), drop = FALSE]
   }
 
@@ -310,7 +329,18 @@ shapviz.kernelshap <- function(object, X = object[["X"]],
 
   # Multiclass/multioutput
   if (is.list(S)) {
-    stopifnot(!is.null(which_class), which_class <= length(S))
+    if (is.null(which_class)) {
+      shapviz_list <- mapply(
+        FUN = shapviz.matrix,
+        object = S,
+        baseline = b,
+        MoreArgs = list(X = X, collapse = collapse),
+        SIMPLIFY = FALSE
+      )
+      names(shapviz_list) <- .make_class_names(length(S))
+      return(mshapviz(shapviz_list))
+    }
+    # Old way: select just one class
     S <- S[[which_class]]
     b <- b[which_class]
   }
@@ -356,7 +386,39 @@ shapviz.H2OModel = function(object, X_pred, X = as.data.frame(X_pred),
   )
 }
 
+#' Concatenates "shapviz" Objects
+#'
+#' This function combines a list of "shapviz" objects to an object of class
+#' "mshapviz". The elements can be named.
+#'
+#' @param object List of "shapviz" objects to be concatenated.
+#' @param ... Not used.
+#' @return A "mshapviz" object.
+#' @export
+#' @examples
+#' S1 <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' S2 <- matrix(c(-1, 1, 1, -1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X1 <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' X2 <- data.frame(x = c("b", "a"), y = c(100, 10))
+#' x1 <- shapviz(S1, X1, baseline = 4)
+#' x2 <- shapviz(S2, X2, baseline = 4)
+#' x <- c(Model_1 = x1, Model_2 = x2)
+#' x
+mshapviz <- function(object, ...) {
+  stopifnot("'object' must be a list of 'shapviz' objects" = is.list(object))
+  if (!all(vapply(object, is.shapviz, FUN.VALUE = logical(1)))) {
+    stop("Must pass list of 'shapviz' objects")
+  }
+  class(object) <- "mshapviz"
+  object
+}
+
+
 # Helper function
+.make_class_names <- function(m) {
+  paste("Class", seq_len(m), sep = "_")
+}
+
 .input_checks <- function(object, X, baseline = 0, S_inter = NULL) {
   stopifnot(
     "'X' must be a matrix or data.frame" = is.matrix(X) || is.data.frame(X),

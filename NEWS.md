@@ -2,17 +2,20 @@
 
 ## New features
 
+- Multiple models: Use `c(xgb = s1, rf = s2, ...)` or `mshapviz(list(xgb = s1, rf = s2, ...))` to combine multiple "shapviz" objects to a "mshapviz" object. Their plots are glued together by the {patchwork} package and can modified, e.g., using `&` and other {patchwork} functionalities.
+- Multiclass: Another way to create a "mshapviz" object is to call `shapviz()` to multiclass XGBoost/LightGBM/kernelshap objects.
 - {DALEX}: Support for "predict_parts" objects from {DALEX}, thanks to Adrian Stando.
 - Aggregated SHAP values: The argument `row_id` of `sv_waterfall()` and `sv_force()` now also allows a vector of integers or a logical vector. If more than one row is selected, SHAP values and predictions are averaged before plotting (*aggregated SHAP values* in {DALEX}).
-- Combination: "shapviz" objects `x1`, `x2` can now be concatenated using `x1 + x2` or `rbind(x1, x2)`, again thanks to Adrian.
+- Rowbinding: "shapviz" objects `x1`, `x2` can now be concatenated in rowwise manner using `x1 + x2` or `rbind(x1, x2)`, again thanks to Adrian.
 - `colnames()`: "shapviz" objects `x` have received a `dimnames()` function, so you can now, e.g., use `colnames(x)` to see the feature names.
-- Subsetting: "shapviz" objects `x` can now be subsetted using `x[cond, features]`.
+- Subsetting: "shapviz" and "mshapviz" objects `x` can now be subsetted using `x[cond, features]`.
 
 ## Maintenance
 
 - We have a new contributor: Adrian Stando - welcome on the SHAP board.
 - To be close to my sister package {kernelshap}, I have moved to https://github.com/ModelOriented/shapviz
 - Webpage created with "pgkdown"
+- New dependency: {patchwork}
 
 ## Other changes and bug fixes
 

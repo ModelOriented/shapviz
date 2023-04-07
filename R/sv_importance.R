@@ -43,7 +43,6 @@
 #' @return A "ggplot" (or "patchwork") object representing an importance plot, or - if
 #' \code{kind = "no"} - a named numeric vector of sorted SHAP feature importances
 #' (or a list of such vectors in case of an object of class "mshapviz").
-#' @export
 #' @examples
 #' X_train <- data.matrix(iris[, -1L])
 #' dtrain <- xgboost::xgb.DMatrix(X_train, label = iris[, 1L])
@@ -58,6 +57,8 @@
 #' x2 <- shapviz(S, X)
 #' sv_importance(x2)
 #' sv_importance(x2, max_display = 5L)
+#' @seealso \code{\link{sv_interaction}}
+#' @export
 sv_importance <- function(object, ...) {
   UseMethod("sv_importance")
 }

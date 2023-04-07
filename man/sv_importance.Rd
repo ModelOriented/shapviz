@@ -127,3 +127,6 @@ x2 <- shapviz(S, X)
 sv_importance(x2)
 sv_importance(x2, max_display = 5L)
 }
+\seealso{
+\code{\link{sv_interaction}}
+}

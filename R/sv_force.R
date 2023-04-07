@@ -30,8 +30,6 @@
 #' For example, \code{size = 9} will use fixed text size in the bars and \code{size = 0}
 #' will altogether suppress adding text to the bars.
 #' @return An object of class "ggplot" (or "patchwork") representing a force plot.
-#' @export
-#' @seealso \code{\link{sv_waterfall}}
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
@@ -44,6 +42,8 @@
 #'
 #' # Combine two force plots via {patchwork}
 #' sv_force(c(Obs1 = x[1L], Obs2 = x[2L]))
+#' @export
+#' @seealso \code{\link{sv_waterfall}}
 sv_force <- function(object, ...) {
   UseMethod("sv_force")
 }

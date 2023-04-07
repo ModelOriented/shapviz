@@ -234,7 +234,7 @@ dimnames.shapviz <- function(x) {
 #' s2 <- shapviz(S, X, baseline = 4)[2L]
 #' s <- rbind(s1, s2)
 #' s
-#' @seealso \code{\link{shapviz}}, \code{\link{`+.shapviz`}}.
+#' @seealso \code{\link{shapviz}}
 #' @export
 rbind.shapviz <- function(...) {
   Reduce(`+`, list(...))

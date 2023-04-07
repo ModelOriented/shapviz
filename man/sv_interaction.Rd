@@ -95,3 +95,6 @@ sv_interaction(x)
 sv_interaction(x, max_display = 2L, size = 3, alpha = 0.1)
 sv_interaction(x, kind = "no")
 }
+\seealso{
+\code{\link{sv_importance}}
+}

@@ -30,7 +30,6 @@
 #' @return A "ggplot" (or "patchwork") object, or - if \code{kind = "no"} - a named numeric matrix
 #' of average absolute SHAP interactions sorted by the average absolute SHAP values
 #' (or a list of such matrices in case of "mshapviz" object).
-#' @export
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
@@ -38,6 +37,8 @@
 #' sv_interaction(x)
 #' sv_interaction(x, max_display = 2L, size = 3, alpha = 0.1)
 #' sv_interaction(x, kind = "no")
+#' @seealso \code{\link{sv_importance}}
+#' @export
 sv_interaction <- function(object, ...) {
   UseMethod("sv_interaction")
 }

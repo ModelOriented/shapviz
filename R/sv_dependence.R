@@ -28,8 +28,6 @@
 #' interaction values between \code{v} and the \code{color_var} are plotted.
 #' @param ... Arguments passed to \code{geom_jitter()}.
 #' @return An object of class \code{ggplot} (or "patchwork") representing a dependence plot.
-#' @export
-#' @seealso \code{\link{potential_interactions}}
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
@@ -49,6 +47,8 @@
 #'   virginica = x2[x2$X$Species == "virginica"]
 #' )
 #' sv_dependence(mx, "Petal.Length", color_var = NULL, interactions = TRUE)
+#' @export
+#' @seealso \code{\link{potential_interactions}}
 sv_dependence <- function(object, ...) {
   UseMethod("sv_dependence")
 }

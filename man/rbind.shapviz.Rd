@@ -24,5 +24,5 @@ s <- rbind(s1, s2)
 s
 }
 \seealso{
-\code{\link{shapviz}}, \code{\link{`+.shapviz`}}.
+\code{\link{shapviz}}
 }

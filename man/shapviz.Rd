@@ -115,7 +115,7 @@ This function creates an object of class "shapviz" from one of the following inp
 \item The result of calling \code{predict_parts()} from the "DALEX" package
 \item "kernelshap" object from the "kernelshap" package
 }
-The "shapviz" vignette explains how to use each of them.
+The vignettes explain how to use them.
 Together with the main input, a data set \code{X} of feature values is required,
 which is used only for visualization. It can therefore contain character or factor
 variables, even if the SHAP values were calculated from a purely numerical feature

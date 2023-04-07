@@ -94,11 +94,11 @@ If multiple observations are selected, their SHAP values and predictions are ave
 
 }}
 \examples{
-dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
-x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
+dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
+x <- shapviz(fit, X_pred = dtrain, X = iris[, -1L])
 sv_force(x)
-sv_force(x, row_id = 65, max_display = 3, size = 9, fill_colors = 4:5)
+sv_force(x, row_id = 65L, max_display = 3, size = 9, fill_colors = 4:5)
 
 # Aggregate over all observations with Petal.Length == 1.4
 sv_force(x, row_id = x$X$Petal.Length == 1.4)

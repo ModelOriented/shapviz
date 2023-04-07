@@ -113,17 +113,17 @@ order of importance. The two types of plots can also be combined.
 
 }}
 \examples{
-X_train <- data.matrix(iris[, -1])
-dtrain <- xgboost::xgb.DMatrix(X_train, label = iris[, 1])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+X_train <- data.matrix(iris[, -1L])
+dtrain <- xgboost::xgb.DMatrix(X_train, label = iris[, 1L])
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
 x <- shapviz(fit, X_pred = X_train)
 sv_importance(x)
 sv_importance(x, kind = "beeswarm", show_numbers = TRUE)
 sv_importance(x, kind = "no")
 
-X <- data.frame(matrix(rnorm(1000), ncol = 20))
+X <- data.frame(matrix(rnorm(1000), ncol = 20L))
 S <- as.matrix(X)
 x2 <- shapviz(S, X)
 sv_importance(x2)
-sv_importance(x2, max_display = 5)
+sv_importance(x2, max_display = 5L)
 }

@@ -206,6 +206,7 @@ fit <- lgb.train(
 shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
 sv_importance(shp)
 ```
+
 ### fastshap
 
 ```r
@@ -237,7 +238,7 @@ background <- diamonds[sample(nrow(diamonds), 100L), ]
 explainer <- shapr(background, fit)
 
 explanation <- shapr::explain(
-  dia_small,
+  as.data.frame(dia_small)[1:200, ],
   approach = "ctree",
   explainer = explainer,
   prediction_zero = mean(diamonds$price)

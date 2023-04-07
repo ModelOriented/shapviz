@@ -19,12 +19,10 @@ This function combines a list of "shapviz" objects to an object of class
 "mshapviz". The elements can be named.
 }
 \examples{
-S1 <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-S2 <- matrix(c(-1, 1, 1, -1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-X1 <- data.frame(x = c("a", "b"), y = c(100, 10))
-X2 <- data.frame(x = c("b", "a"), y = c(100, 10))
-x1 <- shapviz(S1, X1, baseline = 4)
-x2 <- shapviz(S2, X2, baseline = 4)
-x <- c(Model_1 = x1, Model_2 = x2)
-x
+S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+X <- data.frame(x = c("a", "b"), y = c(100, 10))
+s1 <- shapviz(S, X, baseline = 4)[1L]
+s2 <- shapviz(S, X, baseline = 4)[2L]
+s <- mshapviz(c(shp1 = s1, shp2 = s2))
+s
 }

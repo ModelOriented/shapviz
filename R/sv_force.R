@@ -41,6 +41,9 @@
 #'
 #' # Aggregate over all observations with Petal.Length == 1.4
 #' sv_force(x, row_id = x$X$Petal.Length == 1.4)
+#'
+#' # Combine two force plots via {patchwork}
+#' sv_force(c(Obs1 = x[1L], Obs2 = x[2L]))
 sv_force <- function(object, ...) {
   UseMethod("sv_force")
 }

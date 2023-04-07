@@ -52,10 +52,15 @@
 #' # Aggregate over all observations with Petal.Length == 1.4
 #' sv_waterfall(x, row_id = x$X$Petal.Length == 1.4)
 #'
+#' # More features
 #' X <- as.data.frame(matrix(1:100, nrow = 10L))
 #' S <- as.matrix(X)
 #' shp <- shapviz(S, X)
 #' sv_waterfall(shp)
+#'
+#' # Combine two waterfall plots via {patchwork}
+#' sv_waterfall(c(Obs1 = x[1L], Obs2 = x[2L])) +
+#'   patchwork::plot_layout(ncol = 1L)
 sv_waterfall <- function(object, ...) {
   UseMethod("sv_waterfall")
 }

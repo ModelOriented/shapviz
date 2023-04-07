@@ -3,12 +3,13 @@
 #' @param x An object of class "shapviz".
 #' @param ... Further arguments passed from other methods.
 #' @return Invisibly, the input is returned.
-#' @export
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
-#' shapviz(S, X, baseline = 4)
-#' @seealso \code{\link{shapviz}}.
+#' x <- shapviz(S, X, baseline = 4)
+#' x
+#' @seealso \code{\link{shapviz}}
+#' @export
 print.shapviz <- function(x, ...) {
   cat("'shapviz' object representing", .print_dim(get_shap_values(x)), "SHAP matrix\n")
   invisible(x)
@@ -19,15 +20,15 @@ print.shapviz <- function(x, ...) {
 #' @param x An object of class "mshapviz".
 #' @param ... Further arguments passed from other methods.
 #' @return Invisibly, the input is returned.
-#' @export
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
-#' s1 <- shapviz(S, X, baseline = 4)
+#' s1 <- shapviz(S, X, baseline = 4)[1L]
 #' s2 <- shapviz(S, X, baseline = 4)
 #' x <- c(s1 = s1, s2 = s2)
 #' x
-#' @seealso \code{\link{shapviz}}.
+#' @seealso \code{\link{mshapviz}}
+#' @export
 print.mshapviz <- function(x, ...) {
   nms <- names(x)
   S_list <- get_shap_values(x)
@@ -47,13 +48,13 @@ print.mshapviz <- function(x, ...) {
 #' @param n Maximum number of rows of SHAP values and feature values to show.
 #' @param ... Further arguments passed from other methods.
 #' @return Invisibly, the input is returned.
-#' @export
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
 #' object <- shapviz(S, X, baseline = 4)
 #' summary(object)
-#' @seealso \code{\link{shapviz}}.
+#' @seealso \code{\link{shapviz}}
+#' @export
 summary.shapviz <- function(object, n = 2L, ...) {
   S <- get_shap_values(object)
   X <- get_feature_values(object)
@@ -76,19 +77,22 @@ summary.shapviz <- function(object, n = 2L, ...) {
   invisible(object)
 }
 
-# TODO: summary.mshapviz()
+# TODO?: summary.mshapviz()
 
 #' Dimensions of "shapviz" Object
 #'
 #' @param x An object of class "shapviz".
 #' @return A numeric vector of length two providing the number of rows and columns
 #' of the SHAP matrix stored in \code{x}.
-#' @export
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
-#' dim(shapviz(S, X))
-#' @seealso \code{\link{shapviz}}.
+#' x <- shapviz(S, X)
+#' dim(x)
+#' nrow(x)
+#' ncol(x)
+#' @seealso \code{\link{shapviz}}
+#' @export
 dim.shapviz <- function(x) {
   dim(get_shap_values(x))
 }
@@ -98,14 +102,16 @@ dim.shapviz <- function(x) {
 #' Is object of class "shapviz"?
 #'
 #' @param object An R object.
-#' @return Returns \code{TRUE} if \code{object} has "\code{shapviz}" among its classes, and \code{FALSE} otherwise.
-#' @export
+#' @return Returns \code{TRUE} if \code{object} has "\code{shapviz}" among its classes,
+#' and \code{FALSE} otherwise.
 #' @examples
-#' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' S <- matrix(c(1, -1, -1, 1), ncol = 2L, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
 #' shp <- shapviz(S, X)
 #' is.shapviz(shp)
 #' is.shapviz("a")
+#' @seealso \code{\link{mshapviz}}
+#' @export
 is.shapviz <- function(object){
   inherits(object, "shapviz")
 }
@@ -115,18 +121,18 @@ is.shapviz <- function(object){
 #' Is object of class "mshapviz"?
 #'
 #' @param object An R object.
-#' @return Returns \code{TRUE} if \code{object} has "\code{mshapviz}" among its classes, and \code{FALSE} otherwise.
-#' @export
+#' @return Returns \code{TRUE} if \code{object} has "\code{mshapviz}" among its classes,
+#' and \code{FALSE} otherwise.
 #' @examples
-#' S1 <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-#' S2 <- matrix(c(-1, 1, 1, -1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-#' X1 <- data.frame(x = c("a", "b"), y = c(100, 10))
-#' X2 <- data.frame(x = c("b", "a"), y = c(100, 10))
-#' x1 <- shapviz(S1, X1, baseline = 4)
-#' x2 <- shapviz(S2, X2, baseline = 4)
-#' x <- c(Model_1 = x1, Model_2 = x2)
+#' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' s1 <- shapviz(S, X, baseline = 4)[1L]
+#' s2 <- shapviz(S, X, baseline = 4)
+#' x <- c(s1 = s1, s2 = s2)
 #' is.mshapviz(x)
-#' is.mshapviz(x1)
+#' is.mshapviz(s1)
+#' @seealso \code{\link{mshapviz}}
+#' @export
 is.mshapviz <- function(object){
   inherits(object, "mshapviz")
 }
@@ -146,8 +152,11 @@ is.mshapviz <- function(object){
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
 #' x <- shapviz(S, X, baseline = 4)
-#' x[1, "x"]
-#' @seealso \code{\link{shapviz}}.
+#' x[1L, "x"]
+#' x[1L]
+#' x[c(FALSE, TRUE), ]
+#' x[, "x"]
+#' @seealso \code{\link{shapviz}}
 #' @export
 `[.shapviz` <- function(x, i, j, ...) {
   inter <- get_shap_interactions(x)
@@ -163,16 +172,13 @@ is.mshapviz <- function(object){
 #'
 #' @param x An object of class "shapviz".
 #' @return Dimnames of the SHAP matrix.
-#' @export
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
 #' x <- shapviz(S, X, baseline = 4)
 #' dimnames(x)
-#'
-#' # Implies colnames()
 #' colnames(x)
-#' @seealso \code{\link{shapviz}}.
+#' @seealso \code{\link{shapviz}}
 #' @export
 dimnames.shapviz <- function(x) {
   dimnames(get_shap_values(x))
@@ -185,19 +191,16 @@ dimnames.shapviz <- function(x) {
 #' @param e1 The first object of class "shapviz".
 #' @param e2 The second object of class "shapviz".
 #' @return A new object of class "shapviz".
-#' @export
 #' @examples
-#' S1 <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-#' S2 <- matrix(c(-1, 1, 1, -1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-#' X1 <- data.frame(x = c("a", "b"), y = c(100, 10))
-#' X2 <- data.frame(x = c("b", "a"), y = c(100, 10))
-#' x1 <- shapviz(S1, X1, baseline = 4)
-#' x2 <- shapviz(S2, X2, baseline = 4)
-#' x1 + x2
-#' @seealso \code{\link{shapviz}}.
+#' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' s1 <- shapviz(S, X, baseline = 4)[1L]
+#' s2 <- shapviz(S, X, baseline = 4)[2L]
+#' s <- s1 + s2
+#' s
+#' @seealso \code{\link{shapviz}}, \code{\link{rbind.shapviz}}.
 #' @export
-`+.shapviz` <- function(e1, e2){
-  # input checks
+`+.shapviz` <- function(e1, e2) {
   stopifnot(
     is.shapviz(e1),
     is.shapviz(e2),
@@ -224,16 +227,14 @@ dimnames.shapviz <- function(x) {
 #'
 #' @param ... Any number of "shapviz" objects.
 #' @return A new object of class "shapviz".
-#' @export
 #' @examples
-#' S1 <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-#' S2 <- matrix(c(-1, 1, 1, -1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-#' X1 <- data.frame(x = c("a", "b"), y = c(100, 10))
-#' X2 <- data.frame(x = c("b", "a"), y = c(100, 10))
-#' x1 <- shapviz(S1, X1, baseline = 4)
-#' x2 <- shapviz(S2, X2, baseline = 4)
-#' rbind(x1, x2)
-#' @seealso \code{\link{shapviz}}.
+#' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' s1 <- shapviz(S, X, baseline = 4)[1L]
+#' s2 <- shapviz(S, X, baseline = 4)[2L]
+#' s <- rbind(s1, s2)
+#' s
+#' @seealso \code{\link{shapviz}}, \code{\link{`+.shapviz`}}.
 #' @export
 rbind.shapviz <- function(...) {
   Reduce(`+`, list(...))
@@ -241,21 +242,20 @@ rbind.shapviz <- function(...) {
 
 #' Concatenates "shapviz" Objects
 #'
-#' This function combines two or more "shapviz" objects to an object of class
-#' "mshapviz". The objects can be named.
+#' This function combines two or more (usually named) "shapviz" objects
+#' to an object of class "mshapviz".
 #'
 #' @param ... Any number of (optionally named) "shapviz" objects.
 #' @return A "mshapviz" object.
-#' @export
 #' @examples
-#' S1 <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-#' S2 <- matrix(c(-1, 1, 1, -1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-#' X1 <- data.frame(x = c("a", "b"), y = c(100, 10))
-#' X2 <- data.frame(x = c("b", "a"), y = c(100, 10))
-#' x1 <- shapviz(S1, X1, baseline = 4)
-#' x2 <- shapviz(S2, X2, baseline = 4)
-#' x <- c(Model_1 = x1, Model_2 = x2)
-#' x
+#' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' s1 <- shapviz(S, X, baseline = 4)[1L]
+#' s2 <- shapviz(S, X, baseline = 4)[2L]
+#' s <- c(shp1 = s1, shp2 = s2)
+#' s
+#' @export
+#' @seealso \code{\link{mshapviz}}
 c.shapviz <- function(...) {
   mshapviz(list(...))
 }

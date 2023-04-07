@@ -26,5 +26,5 @@ object <- shapviz(S, X, baseline = 4)
 summary(object)
 }
 \seealso{
-\code{\link{shapviz}}.
+\code{\link{shapviz}}
 }

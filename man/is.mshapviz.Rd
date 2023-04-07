@@ -10,19 +10,21 @@ is.mshapviz(object)
 \item{object}{An R object.}
 }
 \value{
-Returns \code{TRUE} if \code{object} has "\code{mshapviz}" among its classes, and \code{FALSE} otherwise.
+Returns \code{TRUE} if \code{object} has "\code{mshapviz}" among its classes,
+and \code{FALSE} otherwise.
 }
 \description{
 Is object of class "mshapviz"?
 }
 \examples{
-S1 <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-S2 <- matrix(c(-1, 1, 1, -1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-X1 <- data.frame(x = c("a", "b"), y = c(100, 10))
-X2 <- data.frame(x = c("b", "a"), y = c(100, 10))
-x1 <- shapviz(S1, X1, baseline = 4)
-x2 <- shapviz(S2, X2, baseline = 4)
-x <- c(Model_1 = x1, Model_2 = x2)
+S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+X <- data.frame(x = c("a", "b"), y = c(100, 10))
+s1 <- shapviz(S, X, baseline = 4)[1L]
+s2 <- shapviz(S, X, baseline = 4)
+x <- c(s1 = s1, s2 = s2)
 is.mshapviz(x)
-is.mshapviz(x1)
+is.mshapviz(s1)
+}
+\seealso{
+\code{\link{mshapviz}}
 }

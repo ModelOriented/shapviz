@@ -18,14 +18,13 @@ A new object of class "shapviz".
 Rowbinds two "shapviz" objects using \code{+}.
 }
 \examples{
-S1 <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-S2 <- matrix(c(-1, 1, 1, -1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-X1 <- data.frame(x = c("a", "b"), y = c(100, 10))
-X2 <- data.frame(x = c("b", "a"), y = c(100, 10))
-x1 <- shapviz(S1, X1, baseline = 4)
-x2 <- shapviz(S2, X2, baseline = 4)
-x1 + x2
+S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+X <- data.frame(x = c("a", "b"), y = c(100, 10))
+s1 <- shapviz(S, X, baseline = 4)[1L]
+s2 <- shapviz(S, X, baseline = 4)[2L]
+s <- s1 + s2
+s
 }
 \seealso{
-\code{\link{shapviz}}.
+\code{\link{shapviz}}, \code{\link{rbind.shapviz}}.
 }

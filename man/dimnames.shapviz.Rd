@@ -20,10 +20,8 @@ S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 X <- data.frame(x = c("a", "b"), y = c(100, 10))
 x <- shapviz(S, X, baseline = 4)
 dimnames(x)
-
-# Implies colnames()
 colnames(x)
 }
 \seealso{
-\code{\link{shapviz}}.
+\code{\link{shapviz}}
 }

@@ -38,11 +38,11 @@
 #' @export
 #' @seealso \code{\link{sv_force}}
 #' @examples
-#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
 #' x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
 #' sv_waterfall(x)
-#' sv_waterfall(x, row_id = 123, max_display = 2, size = 9, fill_colors = 4:5)
+#' sv_waterfall(x, row_id = 123, max_display = 2L, size = 9, fill_colors = 4:5)
 #'
 #' # Ordered by colnames(x), combined with max_display
 #' sv_waterfall(
@@ -52,7 +52,7 @@
 #' # Aggregate over all observations with Petal.Length == 1.4
 #' sv_waterfall(x, row_id = x$X$Petal.Length == 1.4)
 #'
-#' X <- as.data.frame(matrix(1:100, nrow = 10))
+#' X <- as.data.frame(matrix(1:100, nrow = 10L))
 #' S <- as.matrix(X)
 #' shp <- shapviz(S, X)
 #' sv_waterfall(shp)

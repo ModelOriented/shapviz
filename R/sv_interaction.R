@@ -32,11 +32,11 @@
 #' (or a list of such matrices in case of "mshapviz" object).
 #' @export
 #' @examples
-#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
 #' x <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 #' sv_interaction(x)
-#' sv_interaction(x, max_display = 2, size = 3, alpha = 0.1)
+#' sv_interaction(x, max_display = 2L, size = 3, alpha = 0.1)
 #' sv_interaction(x, kind = "no")
 sv_interaction <- function(object, ...) {
   UseMethod("sv_interaction")

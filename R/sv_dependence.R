@@ -31,8 +31,8 @@
 #' @export
 #' @seealso \code{\link{potential_interactions}}
 #' @examples
-#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
 #' x <- shapviz(fit, X_pred = dtrain, X = iris)
 #' sv_dependence(x, "Petal.Length")
 #' sv_dependence(x, "Petal.Length", color_var = "Species")

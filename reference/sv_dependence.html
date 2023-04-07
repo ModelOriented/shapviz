@@ -33,11 +33,21 @@ to focus on pure interaction effects (multiplied by two) or on pure main effects
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right"><li>
-  <a href="../articles/shapviz.html">Get started</a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu"><li>
+      <a href="../articles/basic_use.html">Using 'shapviz'</a>
+    </li>
+    <li>
+      <a href="../articles/multiple_output.html">Multiple shapviz objects</a>
+    </li>
+  </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -83,13 +93,25 @@ to focus on pure interaction effects (multiplied by two) or on pure main effects
 <span>  jitter_width <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  interactions <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for mshapviz</span></span>
+<span><span class="fu">sv_dependence</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  <span class="va">v</span>,</span>
+<span>  color_var <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  color <span class="op">=</span> <span class="st">"#3b528b"</span>,</span>
+<span>  viridis_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"shapviz.viridis_args"</span><span class="op">)</span>,</span>
+<span>  jitter_width <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  interactions <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>object</dt>
-<dd><p>An object of class "shapviz".</p></dd>
+<dd><p>An object of class "(m)shapviz".</p></dd>
 
 
 <dt>...</dt>
@@ -138,13 +160,14 @@ interaction values between <code>v</code> and the <code>color_var</code> are plo
     <h2>Value</h2>
     
 
-<p>An object of class <code>ggplot</code> representing a dependence plot.</p>
+<p>An object of class <code>ggplot</code> (or "patchwork") representing a dependence plot.</p>
     </div>
     <div id="methods-by-class-">
     <h2>Methods (by class)</h2>
     
 <ul><li><p><code>sv_dependence(default)</code>: Default method.</p></li>
-<li><p><code>sv_dependence(shapviz)</code>: SHAP dependence plot for shp object.</p></li>
+<li><p><code>sv_dependence(shapviz)</code>: SHAP dependence plot for "shapviz" object.</p></li>
+<li><p><code>sv_dependence(mshapviz)</code>: SHAP dependence plot for "mshapviz" object.</p></li>
 </ul></div>
     <div id="see-also">
     <h2>See also</h2>
@@ -153,8 +176,8 @@ interaction values between <code>v</code> and the <code>color_var</code> are plo
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dtrain</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html" class="external-link">xgb.DMatrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, label <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dtrain</span>, nrounds <span class="op">=</span> <span class="fl">50</span>, nthread <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dtrain</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html" class="external-link">xgb.DMatrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1L</span><span class="op">]</span><span class="op">)</span>, label <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1L</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dtrain</span>, nrounds <span class="op">=</span> <span class="fl">50L</span>, nthread <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">fit</span>, X_pred <span class="op">=</span> <span class="va">dtrain</span>, X <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">sv_dependence</span><span class="op">(</span><span class="va">x</span>, <span class="st">"Petal.Length"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="sv_dependence-1.png" alt="" width="700" height="433"></span>
@@ -169,6 +192,14 @@ interaction values between <code>v</code> and the <code>color_var</code> are plo
 <span class="r-plt img"><img src="sv_dependence-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu">sv_dependence</span><span class="op">(</span><span class="va">x2</span>, <span class="st">"Petal.Length"</span>, color_var <span class="op">=</span> <span class="cn">NULL</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="sv_dependence-5.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Show main effect of "Petal.Length" for setosa and virginica separately</span></span></span>
+<span class="r-in"><span><span class="va">mx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  setosa <span class="op">=</span> <span class="va">x2</span><span class="op">[</span><span class="va">x2</span><span class="op">$</span><span class="va">X</span><span class="op">$</span><span class="va">Species</span> <span class="op">==</span> <span class="st">"setosa"</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>  virginica <span class="op">=</span> <span class="va">x2</span><span class="op">[</span><span class="va">x2</span><span class="op">$</span><span class="va">X</span><span class="op">$</span><span class="va">Species</span> <span class="op">==</span> <span class="st">"virginica"</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">sv_dependence</span><span class="op">(</span><span class="va">mx</span>, <span class="st">"Petal.Length"</span>, color_var <span class="op">=</span> <span class="cn">NULL</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="sv_dependence-6.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </div>

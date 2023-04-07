@@ -31,11 +31,21 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right"><li>
-  <a href="../articles/shapviz.html">Get started</a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu"><li>
+      <a href="../articles/basic_use.html">Using 'shapviz'</a>
+    </li>
+    <li>
+      <a href="../articles/multiple_output.html">Multiple shapviz objects</a>
+    </li>
+  </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -62,12 +72,15 @@
 <h2 class="page-header" data-toc-text="0.7.0" id="shapviz-070">shapviz 0.7.0<a class="anchor" aria-label="anchor" href="#shapviz-070"></a></h2>
 <div class="section level3">
 <h3 id="new-features-0-7-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-7-0"></a></h3>
-<ul><li>{DALEX}: Support for “predict_parts” objects from {DALEX}, thanks to Adrian Stando.</li>
+<ul><li>Multiple models: Use <code>c(xgb = s1, rf = s2, ...)</code> or <code>mshapviz(list(xgb = s1, rf = s2, ...))</code> to combine multiple “shapviz” objects to a “mshapviz” object. Their plots are glued together by the {patchwork} package and can modified, e.g., using <code>&amp;</code> and other {patchwork} functionalities.</li>
+<li>Multiclass: Another way to create a “mshapviz” object is to call <code><a href="../reference/shapviz.html">shapviz()</a></code> to multiclass XGBoost/LightGBM/kernelshap objects.</li>
+<li>{DALEX}: Support for “predict_parts” objects from {DALEX}, thanks to Adrian Stando.</li>
 <li>Aggregated SHAP values: The argument <code>row_id</code> of <code><a href="../reference/sv_waterfall.html">sv_waterfall()</a></code> and <code><a href="../reference/sv_force.html">sv_force()</a></code> now also allows a vector of integers or a logical vector. If more than one row is selected, SHAP values and predictions are averaged before plotting (<em>aggregated SHAP values</em> in {DALEX}).</li>
-<li>Combination: “shapviz” objects <code>x1</code>, <code>x2</code> can now be concatenated using <code>x1 + x2</code> or <code>rbind(x1, x2)</code>, again thanks to Adrian.</li>
+<li>Row bind: “shapviz” objects <code>x1</code>, <code>x2</code> can now be concatenated in rowwise manner using <code>x1 + x2</code> or <code>rbind(x1, x2)</code>, again thanks to Adrian.</li>
 <li>
 <code><a href="https://rdrr.io/pkg/h2o/man/colnames.html" class="external-link">colnames()</a></code>: “shapviz” objects <code>x</code> have received a <code><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames()</a></code> function, so you can now, e.g., use <code>colnames(x)</code> to see the feature names.</li>
-<li>Subsetting: “shapviz” objects <code>x</code> can now be subsetted using <code>x[cond, features]</code>.</li>
+<li>Subsetting: “shapviz” <code>x</code> can now be subsetted using <code>x[cond, features]</code>.</li>
+<li>New vignette on working with multiple “shapviz” objects.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="maintenance-0-7-0">Maintenance<a class="anchor" aria-label="anchor" href="#maintenance-0-7-0"></a></h3>
@@ -75,6 +88,7 @@
 <li>To be close to my sister package {kernelshap}, I have moved to <a href="https://github.com/ModelOriented/shapviz" class="external-link uri">https://github.com/ModelOriented/shapviz</a>
 </li>
 <li>Webpage created with “pgkdown”</li>
+<li>New dependency: {patchwork}</li>
 </ul></div>
 <div class="section level3">
 <h3 id="other-changes-and-bug-fixes-0-7-0">Other changes and bug fixes<a class="anchor" aria-label="anchor" href="#other-changes-and-bug-fixes-0-7-0"></a></h3>
@@ -82,6 +96,8 @@
 <li>Slightly less picky checks on <code>S_inter</code>.</li>
 <li>
 <code><a href="../reference/sv_waterfall.html">sv_waterfall()</a></code>: Using <code>order_fun()</code> would not work as expected with <code>max_display</code>.</li>
+<li>
+<code><a href="../reference/print.shapviz.html">print.shapviz()</a></code> is much more compact, use <code><a href="../reference/summary.shapviz.html">summary.shapviz()</a></code> for more info.</li>
 </ul></div>
 </div>
     <div class="section level2">

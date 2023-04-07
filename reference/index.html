@@ -31,11 +31,21 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right"><li>
-  <a href="../articles/shapviz.html">Get started</a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu"><li>
+      <a href="../articles/basic_use.html">Using 'shapviz'</a>
+    </li>
+    <li>
+      <a href="../articles/multiple_output.html">Multiple shapviz objects</a>
+    </li>
+  </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -62,6 +72,10 @@
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
+          <p><code><a href="c.shapviz.html">c(<i>&lt;shapviz&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Concatenates "shapviz" Objects</p></td>
+      </tr><tr><td>
           <p><code><a href="collapse_shap.html">collapse_shap()</a></code> </p>
         </td>
         <td><p>Collapse SHAP values</p></td>
@@ -82,17 +96,29 @@
         </td>
         <td><p>Number Formatter</p></td>
       </tr><tr><td>
+          <p><code><a href="is.mshapviz.html">is.mshapviz()</a></code> </p>
+        </td>
+        <td><p>Check for mshapviz</p></td>
+      </tr><tr><td>
           <p><code><a href="is.shapviz.html">is.shapviz()</a></code> </p>
         </td>
         <td><p>Check for shapviz</p></td>
       </tr><tr><td>
+          <p><code><a href="mshapviz.html">mshapviz()</a></code> </p>
+        </td>
+        <td><p>Concatenates "shapviz" Objects</p></td>
+      </tr><tr><td>
           <p><code><a href="plus-.shapviz.html">`+`(<i>&lt;shapviz&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Concatenates "shapviz" Object</p></td>
+        <td><p>Rowbinds two "shapviz" Objects</p></td>
       </tr><tr><td>
           <p><code><a href="potential_interactions.html">potential_interactions()</a></code> </p>
         </td>
         <td><p>Interaction Strength</p></td>
+      </tr><tr><td>
+          <p><code><a href="print.mshapviz.html">print(<i>&lt;mshapviz&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Prints "mshapviz" Object</p></td>
       </tr><tr><td>
           <p><code><a href="print.shapviz.html">print(<i>&lt;shapviz&gt;</i>)</a></code> </p>
         </td>
@@ -100,7 +126,7 @@
       </tr><tr><td>
           <p><code><a href="rbind.shapviz.html">rbind(<i>&lt;shapviz&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Concatenates "shapviz" Objects</p></td>
+        <td><p>Rowbinds Multiple "shapviz" Objects</p></td>
       </tr><tr><td>
           <p><code><a href="shapviz-package.html">shapviz-package</a></code> <code><a href="shapviz-package.html">_PACKAGE</a></code> </p>
         </td>
@@ -113,6 +139,10 @@
           <p><code><a href="sub-.shapviz.html">`[`(<i>&lt;shapviz&gt;</i>)</a></code> </p>
         </td>
         <td><p>Subsets "shapviz" Object</p></td>
+      </tr><tr><td>
+          <p><code><a href="summary.shapviz.html">summary(<i>&lt;shapviz&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Summarizes "shapviz" Object</p></td>
       </tr><tr><td>
           <p><code><a href="sv_dependence.html">sv_dependence()</a></code> </p>
         </td>

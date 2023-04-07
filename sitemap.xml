@@ -7,10 +7,13 @@
     <loc>/LICENSE.html</loc>
   </url>
   <url>
+    <loc>/articles/basic_use.html</loc>
+  </url>
+  <url>
     <loc>/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/shapviz.html</loc>
+    <loc>/articles/multiple_output.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>
@@ -20,6 +23,9 @@
   </url>
   <url>
     <loc>/news/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/c.shapviz.html</loc>
   </url>
   <url>
     <loc>/reference/collapse_shap.html</loc>
@@ -40,13 +46,22 @@
     <loc>/reference/index.html</loc>
   </url>
   <url>
+    <loc>/reference/is.mshapviz.html</loc>
+  </url>
+  <url>
     <loc>/reference/is.shapviz.html</loc>
+  </url>
+  <url>
+    <loc>/reference/mshapviz.html</loc>
   </url>
   <url>
     <loc>/reference/plus-.shapviz.html</loc>
   </url>
   <url>
     <loc>/reference/potential_interactions.html</loc>
+  </url>
+  <url>
+    <loc>/reference/print.mshapviz.html</loc>
   </url>
   <url>
     <loc>/reference/print.shapviz.html</loc>
@@ -62,6 +77,9 @@
   </url>
   <url>
     <loc>/reference/sub-.shapviz.html</loc>
+  </url>
+  <url>
+    <loc>/reference/summary.shapviz.html</loc>
   </url>
   <url>
     <loc>/reference/sv_dependence.html</loc>

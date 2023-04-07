@@ -35,11 +35,21 @@ The features are sorted in decreasing order of usual SHAP importance."><meta pro
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right"><li>
-  <a href="../articles/shapviz.html">Get started</a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu"><li>
+      <a href="../articles/basic_use.html">Using 'shapviz'</a>
+    </li>
+    <li>
+      <a href="../articles/multiple_output.html">Multiple shapviz objects</a>
+    </li>
+  </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -88,13 +98,26 @@ The features are sorted in decreasing order of usual SHAP importance.</p>
 <span>  viridis_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"shapviz.viridis_args"</span><span class="op">)</span>,</span>
 <span>  color_bar_title <span class="op">=</span> <span class="st">"Row feature value"</span>,</span>
 <span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for mshapviz</span></span>
+<span><span class="fu">sv_interaction</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  kind <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"beeswarm"</span>, <span class="st">"no"</span><span class="op">)</span>,</span>
+<span>  max_display <span class="op">=</span> <span class="fl">7L</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">0.3</span>,</span>
+<span>  bee_width <span class="op">=</span> <span class="fl">0.3</span>,</span>
+<span>  bee_adjust <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  viridis_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"shapviz.viridis_args"</span><span class="op">)</span>,</span>
+<span>  color_bar_title <span class="op">=</span> <span class="st">"Row feature value"</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>object</dt>
-<dd><p>An object of class "shapviz" containing element <code>S_inter</code>.</p></dd>
+<dd><p>An object of class "(m)shapviz" containing element <code>S_inter</code>.</p></dd>
 
 
 <dt>...</dt>
@@ -104,7 +127,8 @@ For instance, passing <code>size = 1</code> will produce smaller dots.</p></dd>
 
 <dt>kind</dt>
 <dd><p>Set to "no" to simply return the matrix of average absolute SHAP
-interactions. The default is "beeswarm".</p></dd>
+interactions (or a list of such matrices in case of object of class "mshapviz").
+The default is "beeswarm".</p></dd>
 
 
 <dt>max_display</dt>
@@ -144,24 +168,30 @@ Set to <code>NULL</code> to hide the color bar altogether.</p></dd>
     <h2>Value</h2>
     
 
-<p>A "ggplot" object, or - if <code>kind = "no"</code> - a named numeric matrix
-of average absolute SHAP interactions sorted by the average absolute SHAP values.</p>
+<p>A "ggplot" (or "patchwork") object, or - if <code>kind = "no"</code> - a named numeric matrix
+of average absolute SHAP interactions sorted by the average absolute SHAP values
+(or a list of such matrices in case of "mshapviz" object).</p>
     </div>
     <div id="methods-by-class-">
     <h2>Methods (by class)</h2>
     
 <ul><li><p><code>sv_interaction(default)</code>: Default method.</p></li>
 <li><p><code>sv_interaction(shapviz)</code>: SHAP interaction plot for an object of class "shapviz".</p></li>
+<li><p><code>sv_interaction(mshapviz)</code>: SHAP interaction plot for an object of class "mshapviz".</p></li>
 </ul></div>
+    <div id="see-also">
+    <h2>See also</h2>
+    <div class="dont-index"><p><code><a href="sv_importance.html">sv_importance</a></code></p></div>
+    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dtrain</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html" class="external-link">xgb.DMatrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, label <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dtrain</span>, nrounds <span class="op">=</span> <span class="fl">50</span>, nthread <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dtrain</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html" class="external-link">xgb.DMatrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1L</span><span class="op">]</span><span class="op">)</span>, label <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1L</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dtrain</span>, nrounds <span class="op">=</span> <span class="fl">50L</span>, nthread <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">fit</span>, X_pred <span class="op">=</span> <span class="va">dtrain</span>, X <span class="op">=</span> <span class="va">iris</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">sv_interaction</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="sv_interaction-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">sv_interaction</span><span class="op">(</span><span class="va">x</span>, max_display <span class="op">=</span> <span class="fl">2</span>, size <span class="op">=</span> <span class="fl">3</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">sv_interaction</span><span class="op">(</span><span class="va">x</span>, max_display <span class="op">=</span> <span class="fl">2L</span>, size <span class="op">=</span> <span class="fl">3</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="sv_interaction-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu">sv_interaction</span><span class="op">(</span><span class="va">x</span>, kind <span class="op">=</span> <span class="st">"no"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              Petal.Length Sepal.Width Petal.Width     Species</span>

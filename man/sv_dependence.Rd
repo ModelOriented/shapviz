@@ -93,6 +93,13 @@ sv_dependence(x, "Petal.Length", color_var = NULL)
 x2 <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 sv_dependence(x2, "Petal.Length", interactions = TRUE)
 sv_dependence(x2, "Petal.Length", color_var = NULL, interactions = TRUE)
+
+# Show main effect of "Petal.Length" for setosa and virginica separately
+mx <- c(
+  setosa = x2[x2$X$Species == "setosa"],
+  virginica = x2[x2$X$Species == "virginica"]
+)
+sv_dependence(mx, "Petal.Length", color_var = NULL, interactions = TRUE)
 }
 \seealso{
 \code{\link{potential_interactions}}

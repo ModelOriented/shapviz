@@ -10,15 +10,19 @@ is.shapviz(object)
 \item{object}{An R object.}
 }
 \value{
-Returns \code{TRUE} if \code{object} has "\code{shapviz}" among its classes, and \code{FALSE} otherwise.
+Returns \code{TRUE} if \code{object} has "\code{shapviz}" among its classes,
+and \code{FALSE} otherwise.
 }
 \description{
 Is object of class "shapviz"?
 }
 \examples{
-S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+S <- matrix(c(1, -1, -1, 1), ncol = 2L, dimnames = list(NULL, c("x", "y")))
 X <- data.frame(x = c("a", "b"), y = c(100, 10))
 shp <- shapviz(S, X)
 is.shapviz(shp)
 is.shapviz("a")
+}
+\seealso{
+\code{\link{mshapviz}}
 }

@@ -58,11 +58,16 @@ dtrain <- xgb.DMatrix(X_pred, label = as.integer(iris[, 5L]) - 1L)
 fit <- xgb.train(params = params, data = dtrain, nrounds = 50L)
 ```
 
-### Create "mshapviz" object
+### Create "mshapviz" object (logit scale)
+
+Note that TreeSHAP produces SHAP values on link scale, i.e., on logit scale.
 
 ```{r}
 x <- shapviz(fit, X_pred = X_pred, X = iris)
 x
+
+# Contains "shapviz" objects for all classes
+all.equal(x[[3L]], shapviz(fit, X_pred = X_pred, X = iris, which_class = 3L))
 
 # Better names
 names(x) <- levels(iris$Species)
@@ -93,6 +98,49 @@ sv_dependence(x, v = "Petal.Length") +
   xlim(1, 7) &
   ylim(-3, 4)
 ```
+
+### Similar for LightGBM (only code)
+
+```r
+library(lightgbm)
+
+# Model
+params <- list(objective = "multiclass", num_class = 3L)
+X_pred <- data.matrix(iris[, -5L])
+dtrain <- lgb.Dataset(X_pred, label = as.integer(iris[, 5L]) - 1L)
+fit <- lgb.train(params = params, data = dtrain, nrounds = 50L)
+
+# "mshapviz" object
+x <- shapviz(fit, X_pred = X_pred, X = iris)
+all.equal(x[[3L]], shapviz(fit, X_pred = X_pred, X = iris, which_class = 3L))
+
+sv_importance(x, show_numbers = TRUE) +
+  plot_layout(ncol = 1L) &
+  xlim(0, 2.25)
+```
+
+### And for random forest and kernelshap (only code)
+
+Since Kernel SHAP is model agnostic, we can get SHAP values on probability scale.
+
+```r
+library(ranger)
+library(kernelshap)
+
+# Model
+fit <- ranger(Species ~ ., data = iris, num.trees = 100L, probability = TRUE)
+
+# "mshapviz" object
+x <- kernelshap(fit, X = iris, bg_X = iris)
+shp <- setNames(shapviz(x), levels(iris$Species))
+all.equal(shp[[3L]], shapviz(x, which_class = 3L))
+
+sv_dependence(shp, v = "Sepal.Width") +
+  plot_layout(ncol = 1L) &
+  ylim(-0.025, 0.03)
+```
+
+![](../man/figures/VIGNETTE-dep-ranger.png)
 
 ## Example: SHAP subgroup analysis
 

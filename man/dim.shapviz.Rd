@@ -19,8 +19,11 @@ Dimensions of "shapviz" Object
 \examples{
 S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 X <- data.frame(x = c("a", "b"), y = c(100, 10))
-dim(shapviz(S, X))
+x <- shapviz(S, X)
+dim(x)
+nrow(x)
+ncol(x)
 }
 \seealso{
-\code{\link{shapviz}}.
+\code{\link{shapviz}}
 }

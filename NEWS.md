@@ -6,7 +6,7 @@
 - Multiclass: Another way to create a "mshapviz" object is to call `shapviz()` to multiclass XGBoost/LightGBM/kernelshap objects.
 - {DALEX}: Support for "predict_parts" objects from {DALEX}, thanks to Adrian Stando.
 - Aggregated SHAP values: The argument `row_id` of `sv_waterfall()` and `sv_force()` now also allows a vector of integers or a logical vector. If more than one row is selected, SHAP values and predictions are averaged before plotting (*aggregated SHAP values* in {DALEX}).
-- Rowbinding: "shapviz" objects `x1`, `x2` can now be concatenated in rowwise manner using `x1 + x2` or `rbind(x1, x2)`, again thanks to Adrian.
+- Row bind: "shapviz" objects `x1`, `x2` can now be concatenated in rowwise manner using `x1 + x2` or `rbind(x1, x2)`, again thanks to Adrian.
 - `colnames()`: "shapviz" objects `x` have received a `dimnames()` function, so you can now, e.g., use `colnames(x)` to see the feature names.
 - Subsetting: "shapviz" `x` can now be subsetted using `x[cond, features]`.
 - New vignette on working with multiple "shapviz" objects.

@@ -34,7 +34,7 @@ S <- cbind(
 collapse <- list(age = c("age low", "age high"), letter = c("A", "B"))
 out <- collapse_shap(S, collapse)
 
-test_that("collapse_shap work for two groups", {
+test_that("collapse_shap works for two groups", {
   expect_equal(colnames(out), c("x", "age", "letter"))
   expect_equal(out[, "age"], rowSums(S[, c("age low", "age high")]))
 })

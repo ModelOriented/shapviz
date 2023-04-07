@@ -257,9 +257,7 @@ rbind.shapviz <- function(...) {
 #' x <- c(Model_1 = x1, Model_2 = x2)
 #' x
 c.shapviz <- function(...) {
-  out <- list(...)
-  class(out) <- "mshapviz"
-  out
+  mshapviz(list(...))
 }
 
 # Helper functions
@@ -284,6 +282,7 @@ rbind_S_inter <- function(x, y) {
   out
 }
 
+# Produces strings of the form "4 x 5"
 .print_dim <- function(X, sep = " x ") {
   paste(dim(X), collapse = sep)
 }

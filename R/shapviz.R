@@ -269,20 +269,22 @@ shapviz.lgb.Booster = function(object, X_pred, X = X_pred,
       return(mshapviz(shapviz_list))
     }
     # Old way: select just one class
-    S <- S[, 1:pp + pp * (which_class - 1), drop = FALSE]
+    S <- S[, 1:pp + pp * (which_class - 1L), drop = FALSE]
   }
 
   # Call matrix method
   baseline <- S[1L, pp]
   S <- S[, -pp, drop = FALSE]
   colnames(S) <- colnames(X_pred)
-  shapviz.matrix(S, X = X, baseline = baseline, collapse = collapse)
+  shapviz.matrix(object = S, X = X, baseline = baseline, collapse = collapse)
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from fastshap's "explain()" method.
 #' @export
 shapviz.explain <- function(object, X, baseline = 0, collapse = NULL, ...) {
-  shapviz.matrix(as.matrix(object), X = X, baseline = baseline, collapse = collapse)
+  shapviz.matrix(
+    object = as.matrix(object), X = X, baseline = baseline, collapse = collapse
+  )
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from treeshap's "treeshap()" method.
@@ -294,7 +296,7 @@ shapviz.treeshap <- function(object, X = object[["observations"]],
     S_inter <- aperm(S_inter, c(3L, 1:2))
   }
   shapviz.matrix(
-    as.matrix(object[["shaps"]]),
+    object = as.matrix(object[["shaps"]]),
     X = X,
     baseline = baseline,
     collapse = collapse,
@@ -327,7 +329,7 @@ shapviz.predict_parts <- function(object, ...) {
   S <- t(agg[["contribution"]])
   colnames(X) <- colnames(S) <- agg[["variable_name"]]
 
-  shapviz(S, X = X, baseline = baseline, ...)
+  shapviz(object = S, X = X, baseline = baseline, ...)
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from shapr's "explain()" method.
@@ -335,7 +337,7 @@ shapviz.predict_parts <- function(object, ...) {
 shapviz.shapr <- function(object, X = object[["x_test"]], collapse = NULL, ...) {
   dt <- as.matrix(object[["dt"]])
   shapviz.matrix(
-    dt[, setdiff(colnames(dt), "none"), drop = FALSE],
+    object = dt[, setdiff(colnames(dt), "none"), drop = FALSE],
     X = X,
     baseline = dt[1L, "none"],
     collapse = collapse
@@ -367,7 +369,7 @@ shapviz.kernelshap <- function(object, X = object[["X"]],
     b <- b[which_class]
   }
 
-  shapviz.matrix(S, X = X, baseline = b, collapse = collapse)
+  shapviz.matrix(object = S, X = X, baseline = b, collapse = collapse)
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from a (tree-based) H2O regression model.
@@ -401,7 +403,7 @@ shapviz.H2OModel = function(object, X_pred, X = as.data.frame(X_pred),
   }
   S <- as.matrix(h2o::h2o.predict_contributions(object, newdata = X_pred, ...))
   shapviz.matrix(
-    S[, setdiff(colnames(S), "BiasTerm"), drop = FALSE],
+    object = S[, setdiff(colnames(S), "BiasTerm"), drop = FALSE],
     X = X,
     baseline = unname(S[1L, "BiasTerm"]),
     collapse = collapse

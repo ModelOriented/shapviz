@@ -57,7 +57,7 @@ For XGBoost, LightGBM, and H2O, the SHAP values are directly calculated from the
 
 [`CatBoost`](https://github.com/catboost) is not included, but see Section "Any other package" how to use its SHAP calculation backend with {shapviz}.
 
-See vignette "Multiple shapviz objects" how to deal with multiple models or multiclass models.
+See vignette "Multiple shapviz objects" for how to deal with multiple models or multiclass models.
 
 ## Installation
 

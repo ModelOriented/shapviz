@@ -40,7 +40,6 @@ sv_importance(object, ...)
   show_numbers = FALSE,
   format_fun = format_max,
   number_size = 3.2,
-  titles = names(object),
   ...
 )
 }
@@ -87,8 +86,6 @@ Default is \code{FALSE}.}
 \code{function(x) = prettyNum(x, scientific = TRUE)}.}
 
 \item{number_size}{Text size of the numbers (if \code{show_numbers = TRUE}).}
-
-\item{titles}{Titles added to patchwork subplots via \code{ggplot2::ggtitle()}.}
 }
 \value{
 A "ggplot" (or "patchwork") object representing an importance plot, or - if

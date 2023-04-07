@@ -9,6 +9,7 @@
 - Rowbinding: "shapviz" objects `x1`, `x2` can now be concatenated in rowwise manner using `x1 + x2` or `rbind(x1, x2)`, again thanks to Adrian.
 - `colnames()`: "shapviz" objects `x` have received a `dimnames()` function, so you can now, e.g., use `colnames(x)` to see the feature names.
 - Subsetting: "shapviz" and "mshapviz" objects `x` can now be subsetted using `x[cond, features]`.
+- New vignette on working with multiple "shapviz" objects.
 
 ## Maintenance
 

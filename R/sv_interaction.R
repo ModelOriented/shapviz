@@ -25,7 +25,6 @@
 #' with \code{options(shapviz.viridis_args = NULL)} or set \code{viridis_args = NULL}.
 #' @param color_bar_title Title of color bar of the beeswarm plot.
 #' Set to \code{NULL} to hide the color bar altogether.
-#' @param titles Titles added to patchwork subplots via \code{ggplot2::ggtitle()}.
 #' @param ... Arguments passed to \code{geom_point()}.
 #' For instance, passing \code{size = 1} will produce smaller dots.
 #' @return A "ggplot" (or "patchwork") object, or - if \code{kind = "no"} - a named numeric matrix
@@ -118,8 +117,7 @@ sv_interaction.mshapviz <- function(object, kind = c("beeswarm", "no"),
                                     max_display = 7L, alpha = 0.3,
                                     bee_width = 0.3, bee_adjust = 0.5,
                                     viridis_args = getOption("shapviz.viridis_args"),
-                                    color_bar_title = "Row feature value",
-                                    titles = names(object), ...) {
+                                    color_bar_title = "Row feature value", ...) {
   plot_list <- lapply(
     object,
     FUN = sv_interaction,
@@ -136,6 +134,5 @@ sv_interaction.mshapviz <- function(object, kind = c("beeswarm", "no"),
   if (kind == "no") {
     return(plot_list)
   }
-  plot_list <- add_titles(plot_list, nms = titles)  # see sv_waterfall()
   patchwork::wrap_plots(plot_list)
 }

@@ -31,7 +31,6 @@
 #' @param show_connection Should connecting lines be shown? Default is \code{TRUE}.
 #' @param show_annotation Should "f(x)" and "E(f(x))" be plotted? Default is \code{TRUE}.
 #' @param annotation_size Size of the annotation text (f(x)=... and E(f(x))=...).
-#' @param titles Titles added to patchwork subplots via \code{ggplot2::ggtitle()}.
 #' @param ... Arguments passed to \code{ggfittext::geom_fit_text()}.
 #' For example, \code{size = 9} will use fixed text size in the bars and \code{size = 0}
 #' will altogether suppress adding text to the bars.
@@ -174,8 +173,7 @@ sv_waterfall.mshapviz <- function(object, row_id = 1L, max_display = 10L,
                                   format_shap = getOption("shapviz.format_shap"),
                                   format_feat = getOption("shapviz.format_feat"),
                                   contrast = TRUE, show_connection = TRUE,
-                                  show_annotation = TRUE, annotation_size = 3.2,
-                                  titles = names(object), ...) {
+                                  show_annotation = TRUE, annotation_size = 3.2, ...) {
   plot_list <- lapply(
     object,
     FUN = sv_waterfall,
@@ -192,7 +190,6 @@ sv_waterfall.mshapviz <- function(object, row_id = 1L, max_display = 10L,
     annotation_size = annotation_size,
     ...
   )
-  plot_list <- add_titles(plot_list, nms = titles)
   patchwork::wrap_plots(plot_list)
 }
 
@@ -241,12 +238,4 @@ sv_waterfall.mshapviz <- function(object, row_id = 1L, max_display = 10L,
       row.names = "other"
     )
   )
-}
-
-# Adds non-null titles "nms" to list of ggplots
-add_titles <- function(a_list, nms = NULL) {
-  if (is.null(nms)) {
-    return(a_list)
-  }
-  mapply(function(p, nm) p + ggplot2::ggtitle(nm), a_list, nms, SIMPLIFY = FALSE)
 }

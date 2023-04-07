@@ -187,7 +187,6 @@ sv_interaction(shp_with_inter) +
 
 ![](man/figures/README-interactions.png)
 
-
 ## More
 
 Check out the package help and the vignettes for further information.

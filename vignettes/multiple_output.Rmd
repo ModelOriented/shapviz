@@ -1,7 +1,5 @@
 ---
 title: "Multiple shapviz objects"
-bibliography: "biblio.bib"
-link-citations: true
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Multiple shapviz objects}
@@ -16,358 +14,109 @@ knitr::opts_chunk$set(
   comment = "#>",
   warning = FALSE,
   message = FALSE,
-  fig.width = 6, 
-  fig.height = 4,
+  fig.height = 8, 
+  fig.width = 7,
   fig.align = "center"
 )
 ```
 
 ## Introduction
 
-SHAP (SHapley Additive exPlanations, see @lundberg2017) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. {shapviz} offers the latter:
+In certain situations, you will find it necessary to work with several "shapviz" objects at the same time:
 
-- `sv_dependence()`: Dependence plots to study feature effects and interactions.
-- `sv_importance()`: Importance plots (bar plots and/or beeswarm plots) to study variable importance.
-- `sv_interaction()`: Interaction plots.
-- `sv_waterfall()`: Waterfall plots.
-- `sv_force()`: Force plots as an alternative to waterfall plots.
+1. Multiclass models fitted via XGBoost or LightGBM return SHAP values per class.
+2. {kernelshap} returns SHAP values per class/response for corresponding models.
+3. Compare SHAP plots of different models.
+4. Study SHAP plots for different subgroups.
 
-These plots require a "shapviz" object, which is built from two things only:
+The [{patchwork}](https://cran.r-project.org/web/packages/patchwork) package allows to glue together the resulting plots.
 
-1. `S`: Matrix of SHAP values
-2. `X`: Dataset that includes the corresponding feature values
+To simplify the workflow, multiple "shapviz" objects can be combined together to a "mshapviz" object. This object will care about calling {patchwork}. 
 
-Optionally, a `baseline` can be passed to represent an average prediction on the scale of the SHAP values. Also a 3D array of SHAP interaction values can be passed as `S_inter`.
+## How to construct a "mshapviz" object?
 
-A key feature of "shapviz" is that `X` is used for visualization only. Thus it is perfectly fine to use factor variables, even if the underlying model would not accept these.
-Additionally, in order to improve visualization, it can sometimes make sense to clip gross outliers, take logarithms for certain columns, or replace missing values by some explicit value.
+There are different options:
 
-To further simplify the use of {shapviz}, we added direct connectors to:
+- Use `shapviz()` on multiclass XGBoost or LightGBM models.
+- Use `shapviz()` on "kernelshap" objects created from multiclass/multioutput models.
+- Use `c(Mod_1 = s1, Mod_2 = s2, ...)` on "shapviz" objects `s1`, `s2`, ...
+- Or `mshapviz(list(Mod_1 = s1, Mod_2 = s2, ...))`
 
-- [`XGBoost`](https://CRAN.R-project.org/package=xgboost)
-- [`LightGBM`](https://CRAN.R-project.org/package=lightgbm)
-- [`h2o`](https://CRAN.R-project.org/package=h2o)
-- [`kernelshap`](https://CRAN.R-project.org/package=kernelshap)
-- [`fastshap`](https://CRAN.R-project.org/package=fastshap)
-- [`shapr`](https://CRAN.R-project.org/package=shapr)
-- [`treeshap`](https://github.com/ModelOriented/treeshap)
-- [`DALEX`](https://cran.r-project.org/web/packages/DALEX)
+## Example: Multiclass model
 
-For XGBoost, LightGBM, and H2O, the SHAP values are directly calculated from the fitted model.
-
-[`CatBoost`](https://github.com/catboost) is not included, but see Section "Any other package" how to use its SHAP calculation backend with {shapviz}.
-
-## Installation
-
-``` r
-# From CRAN
-install.packages("shapviz")
-
-# Or the newest version from GitHub:
-# install.packages("devtools")
-devtools::install_github("mayer79/shapviz")
-```
-
-## Example: Diamond prices
-
-### Fit model
-
-We start by fitting an XGBoost model to predict diamond prices based on the four "C" features.
+### Fit classification model
 
 ```{r}
-library(shapviz)
-library(ggplot2)
 library(xgboost)
+library(ggplot2)
+library(shapviz)
+library(patchwork)
 
-set.seed(3653)
+params <- list(objective = "multi:softprob", num_class = 3L)
+X_pred <- data.matrix(iris[, -5L])
+dtrain <- xgb.DMatrix(X_pred, label = as.integer(iris[, 5L]) - 1L)
+fit <- xgb.train(params = params, data = dtrain, nrounds = 50L)
+```
 
-# Turn ordinal factors into normal ones
-ord <- c("clarity", "cut", "color")
-diamonds[, ord] <- lapply(diamonds[, ord], factor, ordered = FALSE)
+### Create "mshapviz" object
 
-# Fit XGBoost model
-x <- c("carat", "clarity", "cut", "color")
-dtrain <- xgb.DMatrix(data.matrix(diamonds[x]), label = diamonds$price)
+```{r}
+x <- shapviz(fit, X_pred = X_pred, X = iris)
+x
+```
+### Force plot
 
-fit <- xgb.train(
-  params = list(learning_rate = 0.1, objective = "reg:squarederror"), 
-  data = dtrain,
-  nrounds = 65L
+```{r}
+sv_force(x, row_id = 101L)
+```
+
+### Summary plot
+
+```{r}
+sv_importance(x, kind = "bee") +
+  plot_layout(ncol = 1L)
+```
+
+### Dependence plot
+
+Here, we will use better class names as well as identical coordinate systems.
+
+```{r}
+names(x) <- levels(iris$Species)
+
+sv_dependence(x, v = "Petal.Length") +
+  plot_layout(ncol = 1L) & 
+  xlim(1, 7) &
+  ylim(-3, 4)
+```
+
+
+## Example: SHAP subgroup analysis
+
+### Fit regression model
+
+```{r}
+X_pred <- data.matrix(iris[, -1L])
+dtrain <- xgb.DMatrix(X_pred, label = iris[, 1L])
+fit <- xgb.train(data = dtrain, nrounds = 50L)
+```
+
+### Create "mshapviz" object
+
+```{r}
+x <- shapviz(fit, X_pred = X_pred, X = iris)
+x_subgroups <- c(
+  setosa = x[iris$Species == "setosa"],
+  versicolor = x[iris$Species == "versicolor"],
+  virginica = x[iris$Species == "virginica"]
 )
 ```
 
-### Create "shapviz" object
-
-One line of code creates a "shapviz" object. It contains SHAP values and feature values for the set of observations we are interested in. Note again that `X` is solely used as explanation dataset, not for calculating SHAP values. 
-
-In this example we construct the "shapviz" object directly from the fitted XGBoost model. Thus we also need to pass a corresponding prediction dataset `X_pred` used for calculating SHAP values by XGBoost.
+### Dependence plot
 
 ```{r}
-# Pick explanation data
-dia_small <- diamonds[sample(nrow(diamonds), 2000L), ]
-
-# We also pass feature data X with originally encoded values
-shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
+sv_dependence(x_subgroups, v = "Petal.Length") +
+  plot_layout(ncol = 1L) & 
+  xlim(1, 7) &
+  ylim(-1.4, 2.2)
 ```
-
-Note: If `X_pred` would contain one-hot-encoded dummy variables, their SHAP values (and also SHAP interaction values) could be collapsed by the `collapse` argument of `shapviz()`.
-
-### Decompose single prediction
-
-The main idea behind SHAP values is to decompose, in a fair way, a prediction into additive contributions of each feature. Typical visualizations include waterfall plots and force plots:
-
-```{r}
-sv_waterfall(shp, row_id = 1L) +
-  theme(axis.text = element_text(size = 11))
-```
-Works pretty sweet, and factor input is respected!
-
-Alternatively, we can study a force plot:
-
-```{r, fig.asp = .5}
-sv_force(shp, row_id = 1L)
-```
-
-Also multiple `row_id` can be passed: The SHAP values of the selected observations are averaged and then plotted as **aggregated SHAP values**: The prediction profile for beautiful color "D" diamonds:
-
-```{r}
-sv_waterfall(shp, shp$X$color == "D") +
-  theme(axis.text = element_text(size = 11))
-```
-
-```{r, fig.asp = .5}
-sv_force(shp, shp$X$color == "D")
-```
-
-### SHAP importance
-
-Studying SHAP decompositions of many observations allows to gain an impression on variable importance. As simple descriptive measure, the mean absolute SHAP value of each feature is considered. These values can be plotted as a simple bar plot, or, to add information on the sign of the feature effects, as a beeswarm plot sorted by the mean absolute SHAP values. Such beeswarm plots are often called "summary plots".
-
-```{r}
-# A bar plot of mean absolute SHAP values
-sv_importance(shp)
-
-# A beeswarm plot
-sv_importance(shp, kind = "beeswarm")
-
-# Or both!
-sv_importance(shp, kind = "both", show_numbers = TRUE, bee_width = 0.2)
-```
-
-### SHAP dependence plots
-
-A SHAP beeswarm importance plot gives first hints on whether high feature values tend to high or low predictions. This impression can be substantiated by studying simple scatterplots of SHAP values of a feature against its feature values. 
-
-On the color axis, the feature with (heuristically) strongest interaction is shown by default. Use `color_var` to use another feature (or `NULL` for no coloring).
-
-```{r}
-sv_dependence(shp, v = "color")
-
-sv_dependence(shp, v = "carat", alpha = 0.2, size = 1) +
-  guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2)))
-```
-
-### Interactions
-
-If SHAP interaction values have been computed (via XGBoost or "treeshap"), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry):
-
-```{r}
-shp_with_inter <- shapviz(
-  fit, X_pred = data.matrix(dia_small[x]), X = dia_small, interactions = TRUE
-)
-
-sv_dependence(shp_with_inter, v = "color", color_var = "cut", interactions = TRUE)
-```
-
-We can also study all interactions and main effects together using the following beeswarm visualization:
-
-```{r}
-sv_interaction(shp_with_inter) +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
-```
-
-## Interface to other packages
-
-The above example uses XGBoost to calculate SHAP values. In the following sections, we show (without running the code), how other packages work together with {shapviz}.
-
-### LightGBM
-
-```r
-library(lightgbm)
-dtrain <- lgb.Dataset(data.matrix(diamonds[x]), label = diamonds$price)
-
-fit <- lgb.train(
-  params = list(learning_rate = 0.1, objective = "regression"), 
-  data = dtrain,
-  nrounds = 65L
-)
-
-shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
-sv_importance(shp)
-```
-### fastshap
-
-```r
-library(fastshap)
-
-# SHAP sampling values using iris data
-fit <- lm(Sepal.Length ~ Sepal.Width + Petal.Length, data = iris)
-
-shap <- explain(
-  fit, 
-  X = iris[c("Sepal.Width", "Petal.Length")], 
-  newdata = iris[c("Sepal.Width", "Petal.Length")], 
-  nsim = 100, 
-  pred_wrapper = predict
-)
-
-sv <- shapviz(shap, X = iris)
-sv_dependence(sv, "Sepal.Width", color_var = NULL)
-```
-
-### shapr
-
-```r
-library(shapr)
-
-fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
-dia_smaller <- diamonds[sample(nrow(diamonds), 20L), ]
-
-explainer <- shapr(dia_smaller, fit)
-
-explanation <- explain(
-  dia_smaller,
-  approach = "ctree",
-  explainer = explainer,
-  prediction_zero = mean(diamonds$price)
-)
-
-shp <- shapviz(explanation)
-sv_dependence(shp, "carat")
-```
-
-### H2O
-
-If you work with a tree-based H2O model:
-
-```r
-library(h2o)
-
-h2o.init()
-
-dia_h2o <- as.h2o(diamonds)
-
-fit <- h2o.gbm(x, "price", training_frame = dia_h2o)
-shp <- shapviz(fit, X_pred = dia_small)
-sv_force(shp, row_id = 1)
-sv_dependence(shp, "carat")
-```
-
-### treeshap
-
-```r
-library(treeshap)
-library(ranger)
-
-fit <- ranger(
-  y = diamonds$price, x = data.matrix(diamonds[x]), max.depth = 6, num.trees = 100
-)
-unified_model <- ranger.unify(fit, data.matrix(diamonds[x]))
-shaps <- treeshap(unified_model, data.matrix(dia_small[x]), interactions = TRUE)
-shp <- shapviz(shaps, X = dia_small)
-sv_importance(shp)
-sv_dependence(shp, "carat", alpha = 0.7, interactions = TRUE)
-```
-
-### DALEX
-
-Decompositions of single predictions obtained by `DALEX::predict_parts()`:
-
-```r
-library(DALEX)
-library(ranger)
-
-fit <- ranger(reformulate(x, "price"), data = diamonds, max.depth = 6, num.trees = 100)
-explainer <- explain(fit, data = diamonds[x], y = diamonds$price, label = "RF")
-breakdown <- predict_parts(explainer, diamonds[10000, ], keep_distributions = FALSE)
-
-sv_force(shapviz(breakdown)) +
-  xlab("Breakdown")
-```
-
-### kernelshap
-
-```r
-library(kernelshap)
-
-dia_smaller <- diamonds[sample(nrow(diamonds), 100L), ]
-fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
-ks <- kernelshap(fit, dia_small[x], bg_X = dia_smaller)
-
-shp <- shapviz(ks)
-sv_importance(shp)
-sv_dependence(shp, "carat", color_var = NULL)
-```
-
-### Any other package
-
-The most general interface is to provide a matrix of SHAP values and corresponding
-feature values (and optionally, a baseline value):
-
-``` r
-S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-X <- data.frame(x = c("a", "b"), y = c(100, 10))
-shp <- shapviz(S, X, baseline = 4)
-```
-
-An example is CatBoost: it is not on CRAN and requires `catboost.*()` functions to calculate SHAP values, so we cannot directly add it to {shapviz} for now. Just use a wrapper like this:
-
-``` r
-library(catboost)
-
-shapviz.catboost.Model <- function(object, X_pred, X = X_pred, collapse = NULL, ...) {
-  if (!requireNamespace("catboost", quietly = TRUE)) {
-    stop("Package 'catboost' not installed")
-  }
-  stopifnot(
-    "X must be a matrix or data.frame. It can't be an object of class catboost.Pool" =
-      is.matrix(X) || is.data.frame(X),
-    "X_pred must be a matrix, a data.frame, or a catboost.Pool" =
-      is.matrix(X_pred) || is.data.frame(X_pred) || inherits(X_pred, "catboost.Pool"),
-    "X_pred must have column names" = !is.null(colnames(X_pred))
-  )
-  
-  if (!inherits(X_pred, "catboost.Pool")) {
-    X_pred <- catboost.load_pool(X_pred)
-  }
-
-  S <- catboost.get_feature_importance(object, X_pred, type = "ShapValues", ...)
-
-  # Call matrix method
-  pp <- ncol(X_pred) + 1L
-  baseline <- S[1L, pp]
-  S <- S[, -pp, drop = FALSE]
-  colnames(S) <- colnames(X_pred)
-  shapviz(S, X = X, baseline = baseline, collapse = collapse)
-}
-
-# Example
-X_pool <- catboost.load_pool(diamonds[x], label = diamonds$price)
-
-fit <- catboost.train(
-  X_pool, 
-  params = list(
-    loss_function = "RMSE", 
-    iterations = 165, 
-    logging_level = "Silent", 
-    allow_writing_files = FALSE
-  )
-)
-
-shp <- shapviz(fit, X_pred = dia_small[x])
-sv_importance(shp)
-sv_dependence(shp, "clarity", alpha = 0.2, size = 1)
-```
-
-## References
-

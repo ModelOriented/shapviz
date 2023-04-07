@@ -30,7 +30,6 @@ sv_dependence(object, ...)
   viridis_args = getOption("shapviz.viridis_args"),
   jitter_width = NULL,
   interactions = FALSE,
-  titles = names(object),
   ...
 )
 }
@@ -64,8 +63,6 @@ use a value of 0.2 in case \code{v} is discrete, and no jitter otherwise.
 Requires SHAP interaction values. If \code{color_var = NULL} (or it is equal to
 \code{v}), the pure main effect of \code{v} is visualized. Otherwise, twice the SHAP
 interaction values between \code{v} and the \code{color_var} are plotted.}
-
-\item{titles}{Titles added to patchwork subplots via \code{ggplot2::ggtitle()}.}
 }
 \value{
 An object of class \code{ggplot} (or "patchwork") representing a dependence plot.

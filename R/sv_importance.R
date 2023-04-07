@@ -156,6 +156,8 @@ sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "
                                    color_bar_title = "Feature value",
                                    show_numbers = FALSE, format_fun = format_max,
                                    number_size = 3.2, ...) {
+  kind <- match.arg(kind)
+
   plot_list <- lapply(
     object,
     FUN = sv_importance,
@@ -176,6 +178,7 @@ sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "
   if (kind == "no") {
     return(plot_list)
   }
+  plot_list <- add_titles(plot_list, nms = names(object))  # see sv_waterfall()
   patchwork::wrap_plots(plot_list)
 }
 

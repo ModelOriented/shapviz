@@ -1,7 +1,6 @@
 #' Prints "shapviz" Object
 #'
 #' @param x An object of class "shapviz".
-#' @param n Maximum number of rows of SHAP values and feature values to show.
 #' @param ... Further arguments passed from other methods.
 #' @return Invisibly, the input is returned.
 #' @export
@@ -10,27 +9,8 @@
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
 #' shapviz(S, X, baseline = 4)
 #' @seealso \code{\link{shapviz}}.
-print.shapviz <- function(x, n = 2L, ...) {
-  S <- get_shap_values(x)
-  S_inter <- get_shap_interactions(x)
-  n <- min(n, nrow(S))
-  cat(
-    "'shapviz' object representing \n  - SHAP matrix of dimension",
-    nrow(S), "x", ncol(S),
-    "\n  - feature data.frame of dimension",  nrow(S), "x", ncol(S),
-    "\n  - baseline value of", get_baseline(x)
-  )
-  if (!is.null(S_inter)) {
-    cat(
-      "\n  - SHAP interaction array of dimension",
-      paste(dim(S_inter), collapse = " x "))
-  }
-  cat("\n\n")
-  cat("SHAP values of first", n, "observations:\n")
-  print(utils::head(S, n))
-  cat("\n Corresponding feature values:\n")
-  print(utils::head(get_feature_values(x), n))
-  cat("\n")
+print.shapviz <- function(x, ...) {
+  cat("'shapviz' object representing", .print_dim(get_shap_values(x)), "SHAP matrix\n")
   invisible(x)
 }
 
@@ -45,7 +25,8 @@ print.shapviz <- function(x, n = 2L, ...) {
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
 #' s1 <- shapviz(S, X, baseline = 4)
 #' s2 <- shapviz(S, X, baseline = 4)
-#' c(s1 = s1, s2 = s2)
+#' x <- c(s1 = s1, s2 = s2)
+#' x
 #' @seealso \code{\link{shapviz}}.
 print.mshapviz <- function(x, ...) {
   nms <- names(x)
@@ -53,19 +34,55 @@ print.mshapviz <- function(x, ...) {
 
   cat("'mshapviz' object representing", length(x), "'shapviz' objects:")
   for (i in seq_along(x)) {
-    d <- dim(S_list[[i]])
     nm <- if (is.null(nms)) i else paste0("'", nms[i], "'")
-    cat("\n  ", paste0(nm, ":"), d[1L], "x", d[2L], "SHAP matrix")
+    cat("\n  ", paste0(nm, ":"), .print_dim(S_list[[i]]), "SHAP matrix")
   }
   cat("\n")
   invisible(x)
 }
 
+#' Summarizes "shapviz" Object
+#'
+#' @param object An object of class "shapviz".
+#' @param n Maximum number of rows of SHAP values and feature values to show.
+#' @param ... Further arguments passed from other methods.
+#' @return Invisibly, the input is returned.
+#' @export
+#' @examples
+#' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' object <- shapviz(S, X, baseline = 4)
+#' summary(object)
+#' @seealso \code{\link{shapviz}}.
+summary.shapviz <- function(object, n = 2L, ...) {
+  S <- get_shap_values(object)
+  X <- get_feature_values(object)
+  S_inter <- get_shap_interactions(object)
+  n <- min(n, nrow(S))
+  cat(
+    "'shapviz' object representing \n  - SHAP matrix of dimension", .print_dim(S),
+    "\n  - feature data.frame of dimension",  .print_dim(X),
+    "\n  - baseline value of", get_baseline(object)
+  )
+  if (!is.null(S_inter)) {
+    cat("\n  - SHAP interaction array of dimension", .print_dim(S_inter))
+  }
+  cat("\n\n")
+  cat("SHAP values of first", n, "observations:\n")
+  print(utils::head(S, n))
+  cat("\n Corresponding feature values:\n")
+  print(utils::head(X, n))
+  cat("\n")
+  invisible(object)
+}
+
+# TODO: summary.mshapviz()
+
 #' Dimensions of "shapviz" Object
 #'
 #' @param x An object of class "shapviz".
 #' @return A numeric vector of length two providing the number of rows and columns
-#' of the SHAP matrix (or the feature dataset) stored in \code{x}.
+#' of the SHAP matrix stored in \code{x}.
 #' @export
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
@@ -140,33 +157,6 @@ is.mshapviz <- function(object){
     baseline = get_baseline(x),
     S_inter = if (!is.null(inter)) inter[i, j, j, drop = FALSE]
   )
-}
-
-#' Subsets "mshapviz" Object
-#'
-#' Use standard square bracket subsetting to select rows and/or columns of
-#' SHAP values, feature values, and SHAP interaction values of a "mshapviz" object.
-#'
-#' @param x An object of class "mshapviz".
-#' @param i Row subsetting.
-#' @param j Column subsetting.
-#' @param ... Currently unused.
-#' @return A new object of class "mshapviz".
-#' @export
-#' @examples
-#' S1 <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-#' S2 <- matrix(c(-1, 1, 1, -1), ncol = 2, dimnames = list(NULL, c("x", "y")))
-#' X1 <- data.frame(x = c("a", "b"), y = c(100, 10))
-#' X2 <- data.frame(x = c("b", "a"), y = c(100, 10))
-#' x1 <- shapviz(S1, X1, baseline = 4)
-#' x2 <- shapviz(S2, X2, baseline = 4)
-#' x <- c(Model_1 = x1, Model_2 = x2)
-#' x
-#' x[1, ]
-#' @seealso \code{\link{shapviz}}.
-#' @export
-`[.mshapviz` <- function(x, i, j, ...) {
-  mshapviz(lapply(x, FUN = `[.shapviz`, i = i, j = j, ...))
 }
 
 #' Dimnames of "shapviz" Object
@@ -294,3 +284,6 @@ rbind_S_inter <- function(x, y) {
   out
 }
 
+.print_dim <- function(X, sep = " x ") {
+  paste(dim(X), collapse = sep)
+}

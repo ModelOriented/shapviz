@@ -118,6 +118,8 @@ sv_interaction.mshapviz <- function(object, kind = c("beeswarm", "no"),
                                     bee_width = 0.3, bee_adjust = 0.5,
                                     viridis_args = getOption("shapviz.viridis_args"),
                                     color_bar_title = "Row feature value", ...) {
+  kind <- match.arg(kind)
+
   plot_list <- lapply(
     object,
     FUN = sv_interaction,
@@ -131,6 +133,7 @@ sv_interaction.mshapviz <- function(object, kind = c("beeswarm", "no"),
     color_bar_title = color_bar_title,
     ...
   )
+  plot_list <- add_titles(plot_list, nms = names(object))  # see sv_waterfall()
   if (kind == "no") {
     return(plot_list)
   }

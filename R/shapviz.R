@@ -97,10 +97,9 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
     S_inter <- S_inter[, nms, nms, drop = FALSE]
   }
 
-  # Organize output
-  out <- list(S = object, X = X, baseline = baseline, S_inter = S_inter)
-  class(out) <- "shapviz"
-  out
+  structure(
+    list(S = object, X = X, baseline = baseline, S_inter = S_inter), class = "shapviz"
+  )
 }
 
 #' @describeIn shapviz Creates a "shapviz" object from an XGBoost model.
@@ -409,8 +408,7 @@ mshapviz <- function(object, ...) {
   if (!all(vapply(object, is.shapviz, FUN.VALUE = logical(1)))) {
     stop("Must pass list of 'shapviz' objects")
   }
-  class(object) <- "mshapviz"
-  object
+  structure(object, class = "mshapviz")
 }
 
 

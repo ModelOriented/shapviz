@@ -174,6 +174,7 @@ sv_force.mshapviz <- function(object, row_id = 1L, max_display = 6L,
     annotation_size = annotation_size,
     ...
   )
+  plot_list <- add_titles(plot_list, nms = names(object))  # see sv_waterfall()
   patchwork::wrap_plots(plot_list) +
     patchwork::plot_layout(ncol = 1L)
 }

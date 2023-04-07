@@ -63,6 +63,10 @@ fit <- xgb.train(params = params, data = dtrain, nrounds = 50L)
 ```{r}
 x <- shapviz(fit, X_pred = X_pred, X = iris)
 x
+
+# Better names
+names(x) <- levels(iris$Species)
+x
 ```
 ### Force plot
 
@@ -90,25 +94,26 @@ sv_dependence(x, v = "Petal.Length") +
   ylim(-3, 4)
 ```
 
-
 ## Example: SHAP subgroup analysis
+
+Here, we want to compare SHAP dependence plots across Species subgroups.
 
 ### Fit regression model
 
 ```{r}
 X_pred <- data.matrix(iris[, -1L])
 dtrain <- xgb.DMatrix(X_pred, label = iris[, 1L])
-fit <- xgb.train(data = dtrain, nrounds = 50L)
+fit_xgb <- xgb.train(data = dtrain, nrounds = 50L)
 ```
 
 ### Create "mshapviz" object
 
 ```{r}
-x <- shapviz(fit, X_pred = X_pred, X = iris)
+shap_xgb <- shapviz(fit_xgb, X_pred = X_pred, X = iris)
 x_subgroups <- c(
-  setosa = x[iris$Species == "setosa"],
-  versicolor = x[iris$Species == "versicolor"],
-  virginica = x[iris$Species == "virginica"]
+  setosa     = shap_xgb[iris$Species == "setosa"],
+  versicolor = shap_xgb[iris$Species == "versicolor"],
+  virginica  = shap_xgb[iris$Species == "virginica"]
 )
 ```
 
@@ -120,3 +125,45 @@ sv_dependence(x_subgroups, v = "Petal.Length") +
   xlim(1, 7) &
   ylim(-1.4, 2.2)
 ```
+
+## Example: Different models
+
+In the last example, we used a regression model fitted via XGBoost. How does it compare with a linear regression?
+
+### Fit linear regression and use {kernelshap} to get SHAP values
+
+```r
+library(kernelshap)
+
+fit_lm <- lm(Sepal.Length ~ ., data = iris)
+shap_lm <- shapviz(kernelshap(fit_lm, iris[-1L], bg_X = iris))
+```
+
+### Combine "shapviz" objects
+
+```r
+mshap <- c(lm = shap_lm, xgb = shap_xgb)
+mshap
+
+#> 'mshapviz' object representing 2 'shapviz' objects:
+#>   'lm': 150 x 4 SHAP matrix
+#>   'xgb': 150 x 4 SHAP matrix
+```
+
+### SHAP importance plot
+
+```r
+sv_importance(mshap)
+```
+
+![](../man/figures/VIGNETTE-imp.png)
+
+### SHAP dependence plot
+
+```r
+sv_dependence(mshap, v = "Species") &
+  ylim(-0.5, 0.6)
+```
+
+![](../man/figures/VIGNETTE-dep.png)
+

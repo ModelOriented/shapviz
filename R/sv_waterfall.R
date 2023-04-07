@@ -190,6 +190,7 @@ sv_waterfall.mshapviz <- function(object, row_id = 1L, max_display = 10L,
     annotation_size = annotation_size,
     ...
   )
+  plot_list <- add_titles(plot_list, nms = names(object))
   patchwork::wrap_plots(plot_list)
 }
 
@@ -238,4 +239,12 @@ sv_waterfall.mshapviz <- function(object, row_id = 1L, max_display = 10L,
       row.names = "other"
     )
   )
+}
+
+# Adds non-null titles "nms" to list of ggplots
+add_titles <- function(a_list, nms = NULL) {
+  if (is.null(nms)) {
+    return(a_list)
+  }
+  mapply(function(p, nm) p + ggplot2::ggtitle(nm), a_list, nms, SIMPLIFY = FALSE)
 }

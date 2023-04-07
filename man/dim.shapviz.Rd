@@ -11,7 +11,7 @@
 }
 \value{
 A numeric vector of length two providing the number of rows and columns
-of the SHAP matrix (or the feature dataset) stored in \code{x}.
+of the SHAP matrix stored in \code{x}.
 }
 \description{
 Dimensions of "shapviz" Object

@@ -8,7 +8,7 @@
 - Aggregated SHAP values: The argument `row_id` of `sv_waterfall()` and `sv_force()` now also allows a vector of integers or a logical vector. If more than one row is selected, SHAP values and predictions are averaged before plotting (*aggregated SHAP values* in {DALEX}).
 - Rowbinding: "shapviz" objects `x1`, `x2` can now be concatenated in rowwise manner using `x1 + x2` or `rbind(x1, x2)`, again thanks to Adrian.
 - `colnames()`: "shapviz" objects `x` have received a `dimnames()` function, so you can now, e.g., use `colnames(x)` to see the feature names.
-- Subsetting: "shapviz" and "mshapviz" objects `x` can now be subsetted using `x[cond, features]`.
+- Subsetting: "shapviz" `x` can now be subsetted using `x[cond, features]`.
 - New vignette on working with multiple "shapviz" objects.
 
 ## Maintenance
@@ -23,6 +23,7 @@
 - As announced, the argument `show_other` of `sv_importance()` has been removed.
 - Slightly less picky checks on `S_inter`.
 - `sv_waterfall()`: Using `order_fun()` would not work as expected with `max_display`.
+- `print.shapviz()` is much more compact, use `summary.shapviz()` for more info.
 
 # shapviz 0.6.0
 

@@ -1,4 +1,4 @@
-# {shapviz} <a href='https://github.com/mayer79/shapviz'><img src='man/figures/logo.png' align="right" height="139" /></a>
+# {shapviz} <a href='https://github.com/ModelOriented/shapviz'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 

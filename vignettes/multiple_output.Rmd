@@ -29,7 +29,7 @@ In certain situations, you will find it necessary to work with several "shapviz"
 3. Compare SHAP plots of different models.
 4. Study SHAP plots for different subgroups.
 
-The [{patchwork}](https://cran.r-project.org/web/packages/patchwork) package allows to glue together the resulting plots.
+The [{patchwork}](https://CRAN.R-project.org/package=patchwork) package allows to glue together the resulting plots.
 
 To simplify the workflow, multiple "shapviz" objects can be combined together to a "mshapviz" object. This object will care about calling {patchwork}. 
 

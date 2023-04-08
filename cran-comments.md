@@ -1,4 +1,8 @@
-# Submission of {shapviz} 0.7.0
+# Re-Submission of {shapviz} 0.7.0
+
+This re-submission fixes non-standard links in the new vignette.
+
+## Original message
 
 Dear CRAN team. 
 

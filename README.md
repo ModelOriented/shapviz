@@ -39,12 +39,12 @@ To further simplify the use of {shapviz}, we added direct connectors to:
 - [`kernelshap`](https://CRAN.R-project.org/package=kernelshap)
 - [`fastshap`](https://CRAN.R-project.org/package=fastshap)
 - [`shapr`](https://CRAN.R-project.org/package=shapr)
-- [`treeshap`](https://github.com/ModelOriented/treeshap)
-- [`DALEX`](https://cran.r-project.org/web/packages/DALEX)
+- [`treeshap`](https://github.com/ModelOriented/treeshap/)
+- [`DALEX`](https://CRAN.R-project.org/package=DALEX)
 
 For XGBoost, LightGBM, and H2O, the SHAP values are directly calculated from the fitted model.
 
-[`CatBoost`](https://github.com/catboost) is not included, but see the vignette how to use its SHAP calculation backend with {shapviz}.
+[`CatBoost`](https://github.com/catboost/) is not included, but see the vignette how to use its SHAP calculation backend with {shapviz}.
 
 Multiple "shapviz" objects can be glued together, see Vignette "Multiple shapviz objects".
 

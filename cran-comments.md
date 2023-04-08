@@ -21,12 +21,7 @@ https://github.com/ModelOriented/shapviz/actions/runs/4640206862
 
 ### check_rhub()
 
-* checking package dependencies ... NOTE
-  'h2o', 'lightgbm'
-Packages which this enhances but not available for checking:
-* checking for detritus in the temp directory ... NOTE
-Found the following files/directories:
-  'lastMiKTeXException'
+Currently down (no packages available)
 
 ### check_win_devel()
 

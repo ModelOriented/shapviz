@@ -1,4 +1,4 @@
-# shapviz <a href='https://github.com/mayer79/shapviz'><img src='man/figures/logo.png' align="right" height="139" /></a>
+# {shapviz} <a href='https://github.com/mayer79/shapviz'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
@@ -11,7 +11,7 @@
 
 <!-- badges: end -->
 
-## Introduction
+## Overview
 
 SHAP (SHapley Additive exPlanations, [1]) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. {shapviz} offers the latter: 
 
@@ -59,9 +59,9 @@ install.packages("shapviz")
 devtools::install_github("mayer79/shapviz")
 ```
 
-## Example
+## Usage
 
-Shiny diamonds... let's model their prices by four "c" variables with XGBoost:
+Shiny diamonds... let's use XGBoost to model their prices by the four "C" variables:
 
 ### Model
 
@@ -72,18 +72,9 @@ library(xgboost)
 
 set.seed(3653)
 
-# Explanation data
-dia_small <- diamonds[sample(nrow(diamonds), 2000L), ]
-
-# XGBoost model
 x <- c("carat", "cut", "color", "clarity")
 dtrain <- xgb.DMatrix(data.matrix(diamonds[x]), label = diamonds$price)
-
-fit <- xgb.train(
-  params = list(learning_rate = 0.1, objective = "reg:squarederror"), 
-  data = dtrain,
-  nrounds = 65L
-)
+fit <- xgb.train(params = list(learning_rate = 0.1), data = dtrain, nrounds = 65L)
 ```
 
 ### Create "shapviz" object
@@ -93,6 +84,9 @@ One line of code creates a "shapviz" object. It contains SHAP values and feature
 In this example, we construct the "shapviz" object directly from the fitted XGBoost model. Thus we also need to pass a corresponding prediction dataset `X_pred` used for calculating SHAP values by XGBoost.
 
 ``` r
+# Explanation data
+dia_small <- diamonds[sample(nrow(diamonds), 2000L), ]
+
 shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
 ```
 

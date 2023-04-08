@@ -1,8 +1,8 @@
 ---
-title: "Multiple shapviz objects"
+title: "Multiple 'shapviz' objects"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Multiple shapviz objects}
+  %\VignetteIndexEntry{Multiple 'shapviz' objects}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Introduction
+## Overview
 
 In certain situations, you will find it necessary to work with several "shapviz" objects at the same time:
 
@@ -88,7 +88,7 @@ sv_importance(x, kind = "bee") +
 
 ### Dependence plot
 
-Here, we will use better class names as well as identical coordinate systems.
+Here, we will use identical coordinate systems.
 
 ```{r}
 names(x) <- levels(iris$Species)
@@ -136,7 +136,7 @@ shp <- setNames(shapviz(x), levels(iris$Species))
 all.equal(shp[[3L]], shapviz(x, which_class = 3L))
 
 sv_dependence(shp, v = "Sepal.Width") +
-  plot_layout(ncol = 1L) &
+  plot_layout(ncol = 2L) &
   ylim(-0.025, 0.03)
 ```
 

@@ -160,10 +160,14 @@ sv_dependence(shp, v = "color")
 
 ![](man/figures/README-dep.svg)
 
-Or multiple features together:
+Or multiple features together, using {patchwork}:
 
 ``` r
-sv_dependence(shp, v = x)
+library(patchwork)  # We need the & operator
+
+sv_dependence(shp, v = x) &
+  theme_light(base_size = 9) &
+  ylim(-5000, 15000)
 ```
 
 ![](man/figures/README-dep-multi.png)

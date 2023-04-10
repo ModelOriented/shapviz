@@ -142,14 +142,6 @@ sv_importance(shp, kind = "beeswarm")
 
 ![](man/figures/README-imp2.png)
 
-#### Or both combined
-
-``` r
-sv_importance(shp, kind = "both", show_numbers = TRUE, bee_width = 0.2)
-```
-
-![](man/figures/README-imp3.png)
-
 ### Dependence plot
 
 A scatterplot of SHAP values of a feature like `color` against its observed values gives a great impression on the feature effect on the response. Vertical scatter gives additional info on interaction effects (using a heuristic to select the feature on the color axis).
@@ -174,22 +166,25 @@ sv_dependence(shp, v = x) &
 
 ### Interactions
 
-If SHAP interaction values have been computed (via {xgboost} or {treeshap}), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry):
+If SHAP interaction values have been computed (via {xgboost} or {treeshap}), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry).
 
 ``` r
-shp_with_inter <- shapviz(
+shp_i <- shapviz(
   fit, X_pred = data.matrix(dia_small[x]), X = dia_small, interactions = TRUE
 )
 
-sv_dependence(shp_with_inter, v = "color", color_var = "cut", interactions = TRUE)
+# Main effect of carat and its interactions
+sv_dependence(
+  shp_i, v = "carat", color_var = x, interactions = TRUE) &
+  ylim(-6000, 13000)
 ```
 
-![](man/figures/README-dep2.svg)
+![](man/figures/README-dep2.png)
 
 We can also study all interactions and main effects together using the following beeswarm visualization:
 
 ```{r}
-sv_interaction(shp_with_inter) +
+sv_interaction(shp_i) +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
 ```
 

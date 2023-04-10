@@ -12,6 +12,15 @@ test_that("plots work for basic example", {
   expect_s3_class(sv_importance(x, kind = "beeswarm"), "ggplot")
   expect_s3_class(sv_dependence(x, "Petal.Length"), "ggplot")
   expect_s3_class(sv_dependence(x, c("Petal.Length", "Species")), "patchwork")
+  expect_s3_class(
+    sv_dependence(
+      x,
+      "Petal.Length",
+      color_var = c("Petal.Length", "Species"),
+      jitter_width = c(0, 0.1),
+    ),
+    "patchwork"
+  )
 })
 
 test_that("using 'max_display' gives no error", {
@@ -33,6 +42,15 @@ test_that("dependence plots work for interactions = TRUE", {
   )
   expect_s3_class(
     sv_dependence(x_inter, v = c("Petal.Length", "Species"), interactions = TRUE),
+    "patchwork"
+  )
+  expect_s3_class(
+    sv_dependence(
+      x_inter,
+      v = "Species",
+      color_var = c("Petal.Length", "Species"),
+      interactions = TRUE
+    ),
     "patchwork"
   )
 

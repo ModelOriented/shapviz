@@ -21,7 +21,7 @@ See the new vignette for more info and specific examples.
 
 ## Other new features
 
-- `sv_dependence()` now allows multiple `v` to be plotted (glued via {patchwork}). The other arguments of `sv_dependence()` are not (yet) vectorized.
+- `sv_dependence()` now allows multiple `v` and/or `color_var` to be plotted (glued via {patchwork}).
 - {DALEX}: Support for "predict_parts" objects from {DALEX}, thanks to Adrian Stando.
 - Aggregated SHAP values: The argument `row_id` of `sv_waterfall()` and `sv_force()` now also allows a vector of integers or a logical vector. If more than one row is selected, SHAP values and predictions are averaged before plotting (*aggregated SHAP values* in {DALEX}).
 - Row bind: "shapviz" objects `x1`, `x2` can now be concatenated in rowwise manner using `x1 + x2` or `rbind(x1, x2)`, again thanks to Adrian.
@@ -35,13 +35,18 @@ See the new vignette for more info and specific examples.
 - Webpage created with "pgkdown"
 - New dependency: {patchwork}
 
-## Other changes and bug fixes
+## Other changes
 
-- Color guides are closer to the plot. This affects `sv_dependence()`, `sv_importance(kind="bee")`, and `sv_interaction()`.
+- Color guides are closer to the plot area. This affects `sv_dependence()`, `sv_importance(kind="bee")`, and `sv_interaction()`.
+- The lengthy y axis title "SHAP interaction value" in `sv_dependence()` has been shortened to "SHAP interaction".
 - As announced, the argument `show_other` of `sv_importance()` has been removed.
 - Slightly less picky checks on `S_inter`.
-- `sv_waterfall()`: Using `order_fun()` would not work as expected with `max_display`.
 - `print.shapviz()` is much more compact, use `summary.shapviz()` for more info.
+
+## Bug fixes
+
+- `sv_waterfall()`: Using `order_fun()` would not work as expected with `max_display`. This has been fixed.
+- `sv_dependence()`: Passing `viridis_args = NULL` would hide the color guide title. This has been fixed. But please pass `viridis_args = list()` instead.
 
 # shapviz 0.6.0
 

@@ -1,5 +1,9 @@
 # Re-Submission of {shapviz} 0.7.0
 
+This second resubmission removes non-standard file (sorry, my bad!)
+
+# Re-Submission of {shapviz} 0.7.0
+
 This re-submission fixes non-standard links in the new vignette (and the README).
 
 ## Original message

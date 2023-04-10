@@ -161,11 +161,11 @@ sv_dependence(shp, v = "carat", alpha = 0.2, size = 1) +
 
 Using {patchwork}, we can also plot multiple features at the same time.
 
-```{r}
+```{r, fig.height=5.5, fig.width=7}
 library(patchwork)  # to use the & operator
 
 sv_dependence(shp, v = x) &
-  theme_light(base_size = 9) &
+  theme_gray(base_size = 9) &
   ylim(-5000, 15000)
 ```
 
@@ -174,17 +174,25 @@ sv_dependence(shp, v = x) &
 If SHAP interaction values have been computed (via {xgboost} or {treeshap}), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry):
 
 ```{r}
-shp_with_inter <- shapviz(
+shp_i <- shapviz(
   fit, X_pred = data.matrix(dia_small[x]), X = dia_small, interactions = TRUE
 )
 
-sv_dependence(shp_with_inter, v = "color", color_var = "cut", interactions = TRUE)
+sv_dependence(shp_i, v = "color", color_var = "cut", interactions = TRUE)
+```
+
+Using {patchwork}, we can show multiple colors at the same time:
+
+```{r}
+sv_dependence(
+  shp_i, v = "carat", color_var = x, interactions = TRUE) &
+  ylim(-6000, 13000)
 ```
 
 We can also study all interactions and main effects together using the following beeswarm visualization:
 
 ```{r}
-sv_interaction(shp_with_inter) +
+sv_interaction(shp_i) +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
 ```
 

@@ -158,7 +158,7 @@ Or multiple features together, using {patchwork}:
 library(patchwork)  # We need the & operator
 
 sv_dependence(shp, v = x) &
-  theme_light(base_size = 9) &
+  theme_gray(base_size = 9) &
   ylim(-5000, 15000)
 ```
 

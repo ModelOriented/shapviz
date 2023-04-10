@@ -11,6 +11,7 @@ test_that("plots work for basic example", {
   expect_s3_class(sv_importance(x, show_numbers = TRUE), "ggplot")
   expect_s3_class(sv_importance(x, kind = "beeswarm"), "ggplot")
   expect_s3_class(sv_dependence(x, "Petal.Length"), "ggplot")
+  expect_s3_class(sv_dependence(x, c("Petal.Length", "Species")), "patchwork")
 })
 
 test_that("using 'max_display' gives no error", {
@@ -27,15 +28,26 @@ x_inter <- shapviz(fit, X_pred = dtrain, X = iris[, -1L], interactions = TRUE)
 
 test_that("dependence plots work for interactions = TRUE", {
   expect_s3_class(
-    sv_dependence(x_inter, v = "Petal.Length", interactions = TRUE), "ggplot"
-  )
-  expect_s3_class(
     sv_dependence(x_inter, v = "Petal.Length", interactions = TRUE),
     "ggplot"
   )
   expect_s3_class(
+    sv_dependence(x_inter, v = c("Petal.Length", "Species"), interactions = TRUE),
+    "patchwork"
+  )
+
+  expect_s3_class(
     sv_dependence(x_inter, "Petal.Length", color_var = "Species", interactions = TRUE),
     "ggplot"
+  )
+  expect_s3_class(
+    sv_dependence(
+      x_inter,
+      v = c("Petal.Length", "Species"),
+      color_var = "Species",
+      interactions = TRUE
+    ),
+    "patchwork"
   )
 })
 
@@ -99,6 +111,4 @@ test_that("sv_importance() and sv_interaction() and kind = 'no' gives numeric ou
   inter <- sv_interaction(x, kind = "no")
   expect_true(is.numeric(inter) && all(dim(inter) == rep(ncol(X_pred), 2L)))
 })
-
-
 

@@ -1,12 +1,13 @@
 #' SHAP Dependence Plot
 #'
-#' Scatter plot of the SHAP values of a feature against its feature values.
+#' Scatterplot of the SHAP values of a feature against its feature values.
 #' If SHAP interaction values are available, setting \code{interactions = TRUE} allows
 #' to focus on pure interaction effects (multiplied by two) or on pure main effects.
+#' Multiple features can be plotted as well.
 #'
 #' @importFrom rlang .data
 #' @param object An object of class "(m)shapviz".
-#' @param v Column name of feature to be plotted.
+#' @param v Column name(s) of feature(s) to be plotted.
 #' @param color_var Feature name to be used on the color scale to investigate interactions.
 #' The default ("auto") uses SHAP interaction values (if available) or a heuristic to
 #' select the strongest interacting feature. Set to \code{NULL} to not use the color axis.
@@ -35,6 +36,7 @@
 #' sv_dependence(x, "Petal.Length")
 #' sv_dependence(x, "Petal.Length", color_var = "Species")
 #' sv_dependence(x, "Petal.Length", color_var = NULL)
+#' sv_dependence(x, c("Species", "Petal.Length", "Petal.Width", "Sepal.Width"))
 #'
 #' # SHAP interaction values
 #' x2 <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
@@ -64,6 +66,23 @@ sv_dependence.default <- function(object, ...) {
 sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528b",
                                   viridis_args = getOption("shapviz.viridis_args"),
                                   jitter_width = NULL, interactions = FALSE, ...) {
+  if (length(v) > 1L) {
+    plot_list <- lapply(
+      v,
+      FUN = sv_dependence,
+      # Argument list (simplify via match.call() or some rlang magic?)
+      object = object,
+      color_var = color_var,
+      color = color,
+      viridis_args = viridis_args,
+      jitter_width = jitter_width,
+      interactions = interactions,
+      ...
+    )
+    plot_list <- add_titles(plot_list, nms = v)  # see sv_waterfall()
+    return(patchwork::wrap_plots(plot_list))
+  }
+
   S <- get_shap_values(object)
   X <- get_feature_values(object)
   S_inter <- get_shap_interactions(object)
@@ -124,7 +143,8 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
   ggplot(dat, aes(x = .data[[v]], y = shap, color = .data[[color_var]])) +
     geom_jitter(width = jitter_width, height = 0, ...) +
     ylab(y_lab) +
-    do.call(vir, viridis_args)
+    do.call(vir, viridis_args) +
+    theme(legend.box.spacing = grid::unit(0, "pt"))
 }
 
 #' @describeIn sv_dependence SHAP dependence plot for "mshapviz" object.
@@ -132,6 +152,9 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
 sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b528b",
                                    viridis_args = getOption("shapviz.viridis_args"),
                                    jitter_width = NULL, interactions = FALSE, ...) {
+  if (length(v) > 1L) {
+    stop("Only one 'v' allowed with 'mshapviz' objects")
+  }
   plot_list <- lapply(
     object,
     FUN = sv_dependence,

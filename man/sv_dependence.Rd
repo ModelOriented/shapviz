@@ -38,7 +38,7 @@ sv_dependence(object, ...)
 
 \item{...}{Arguments passed to \code{geom_jitter()}.}
 
-\item{v}{Column name of feature to be plotted.}
+\item{v}{Column name(s) of feature(s) to be plotted.}
 
 \item{color_var}{Feature name to be used on the color scale to investigate interactions.
 The default ("auto") uses SHAP interaction values (if available) or a heuristic to
@@ -68,9 +68,10 @@ interaction values between \code{v} and the \code{color_var} are plotted.}
 An object of class \code{ggplot} (or "patchwork") representing a dependence plot.
 }
 \description{
-Scatter plot of the SHAP values of a feature against its feature values.
+Scatterplot of the SHAP values of a feature against its feature values.
 If SHAP interaction values are available, setting \code{interactions = TRUE} allows
 to focus on pure interaction effects (multiplied by two) or on pure main effects.
+Multiple features can be plotted as well.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -88,6 +89,7 @@ x <- shapviz(fit, X_pred = dtrain, X = iris)
 sv_dependence(x, "Petal.Length")
 sv_dependence(x, "Petal.Length", color_var = "Species")
 sv_dependence(x, "Petal.Length", color_var = NULL)
+sv_dependence(x, c("Species", "Petal.Length", "Petal.Width", "Sepal.Width"))
 
 # SHAP interaction values
 x2 <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)

@@ -90,5 +90,14 @@ test_that("sv_importance() and sv_interaction() and kind = 'no' gives list", {
   expect_true(is.list(inter) && all(dim(inter[[1L]]) == rep(ncol(X_pred), 2L)))
 })
 
+test_that("sv_dependence() does not work with multiple v", {
+  X_pred <- data.matrix(iris[, -1L])
+  dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1L])
+  fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
+  x <- c(m1 = shapviz(fit, X_pred = X_pred), m2 = shapviz(fit, X_pred = X_pred))
+  expect_error(sv_dependence(x, v = c("Species", "Sepal.Width")))
+})
+
+
 
 

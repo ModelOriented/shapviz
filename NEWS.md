@@ -21,6 +21,7 @@ See the new vignette for more info and specific examples.
 
 ## Other new features
 
+- `sv_dependence()` now allows multiple `v` to be plotted (glued via {patchwork}). The other arguments of `sv_dependence()` are not (yet) vectorized.
 - {DALEX}: Support for "predict_parts" objects from {DALEX}, thanks to Adrian Stando.
 - Aggregated SHAP values: The argument `row_id` of `sv_waterfall()` and `sv_force()` now also allows a vector of integers or a logical vector. If more than one row is selected, SHAP values and predictions are averaged before plotting (*aggregated SHAP values* in {DALEX}).
 - Row bind: "shapviz" objects `x1`, `x2` can now be concatenated in rowwise manner using `x1 + x2` or `rbind(x1, x2)`, again thanks to Adrian.
@@ -36,6 +37,7 @@ See the new vignette for more info and specific examples.
 
 ## Other changes and bug fixes
 
+- Color guides are closer to the plot. This affects `sv_dependence()`, `sv_importance(kind="bee")`, and `sv_interaction()`.
 - As announced, the argument `show_other` of `sv_importance()` has been removed.
 - Slightly less picky checks on `S_inter`.
 - `sv_waterfall()`: Using `order_fun()` would not work as expected with `max_display`.

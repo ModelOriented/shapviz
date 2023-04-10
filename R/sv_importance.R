@@ -127,7 +127,8 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
         bar = !is.null(color_bar_title),
         ncol = length(unique(df$color))   # Special case of constant feature values
       ) +
-      labs(x = "SHAP value", y = element_blank(), color = color_bar_title)
+      labs(x = "SHAP value", y = element_blank(), color = color_bar_title) +
+      theme(legend.box.spacing = grid::unit(0, "pt"))
   }
   if (show_numbers) {
     p <- p +

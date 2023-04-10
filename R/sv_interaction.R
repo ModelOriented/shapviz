@@ -106,7 +106,8 @@ sv_interaction.shapviz <- function(object, kind = c("beeswarm", "no"),
       ncol = length(unique(X_long$Freq))
     ) +
     theme(
-      panel.spacing = unit(0.2, "lines"),
+      panel.spacing = grid::unit(0.2, "lines"),
+      legend.box.spacing = grid::unit(0, "pt"),
       axis.ticks.y = element_blank(),
       axis.text.y = element_blank()
     )

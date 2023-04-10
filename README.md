@@ -160,6 +160,14 @@ sv_dependence(shp, v = "color")
 
 ![](man/figures/README-dep.svg)
 
+Or multiple features together:
+
+``` r
+sv_dependence(shp, v = x)
+```
+
+![](man/figures/README-dep-multi.png)
+
 ### Interactions
 
 If SHAP interaction values have been computed (via {xgboost} or {treeshap}), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry):

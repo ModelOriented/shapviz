@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Introduction
+## Overview
 
 SHAP (SHapley Additive exPlanations, see @lundberg2017) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. {shapviz} offers the latter:
 
@@ -70,9 +70,9 @@ install.packages("shapviz")
 devtools::install_github("mayer79/shapviz")
 ```
 
-## Example: Diamond prices
+## Usage
 
-### Fit model
+### Fit model on diamond prices
 
 We start by fitting an XGBoost model to predict diamond prices based on the four "C" features.
 
@@ -157,6 +157,16 @@ sv_dependence(shp, v = "color")
 
 sv_dependence(shp, v = "carat", alpha = 0.2, size = 1) +
   guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2)))
+```
+
+Using {patchwork}, we can also plot multiple features at the same time.
+
+```{r}
+library(patchwork)  # to use the & operator
+
+sv_dependence(shp, v = x) &
+  theme_light(base_size = 9) &
+  ylim(-5000, 15000)
 ```
 
 ### Interactions

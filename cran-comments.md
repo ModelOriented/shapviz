@@ -38,6 +38,5 @@ Skipping checking HTML validation: no command 'tidy' found
 
 ### check_win_devel()
 
-Status: 1 NOTE
-R version 4.3.0 beta (2023-04-07 r84200 ucrt)
+Status: OK
 

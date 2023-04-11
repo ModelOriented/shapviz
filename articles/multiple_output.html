@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Multiple shapviz objects • shapviz</title>
+<title>Multiple 'shapviz' objects • shapviz</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -19,7 +19,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- dalexverse --><link href="../dalexverse.css" rel="stylesheet">
 <link href="../dalexverse-2.css" rel="stylesheet">
 <!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Multiple shapviz objects">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Multiple 'shapviz' objects">
 <meta property="og:description" content="shapviz">
 <meta property="og:image" content="/logo.png">
 <meta name="robots" content="noindex">
@@ -68,10 +68,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/basic_use.html">Using 'shapviz'</a>
+      <a href="../articles/basic_use.html">Using {shapviz}</a>
     </li>
     <li>
-      <a href="../articles/multiple_output.html">Multiple shapviz objects</a>
+      <a href="../articles/multiple_output.html">Multiple 'shapviz' objects</a>
     </li>
   </ul>
 </li>
@@ -97,7 +97,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Multiple shapviz objects</h1>
+      <h1 data-toc-skip>Multiple ‘shapviz’ objects</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/ModelOriented/shapviz/blob/HEAD/vignettes/multiple_output.Rmd" class="external-link"><code>vignettes/multiple_output.Rmd</code></a></small>
@@ -108,28 +108,17 @@
     
     
 <div class="section level2">
-<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>In certain situations, you will find it necessary to work with
-several “shapviz” objects at the same time:</p>
-<ol style="list-style-type: decimal">
-<li>Multiclass models fitted via XGBoost or LightGBM return SHAP values
-per class.</li>
-<li>{kernelshap} returns SHAP values per class/response for
-corresponding models.</li>
-<li>Compare SHAP plots of different models.</li>
-<li>Study SHAP plots for different subgroups.</li>
-</ol>
-<p>The <a href="https://cran.r-project.org/web/packages/patchwork" class="external-link">{patchwork}</a>
-package allows to glue together the resulting plots.</p>
-<p>To simplify the workflow, multiple “shapviz” objects can be combined
-together to a “mshapviz” object. This object will care about calling
-{patchwork}.</p>
-</div>
-<div class="section level2">
-<h2 id="how-to-construct-a-mshapviz-object">How to construct a “mshapviz” object?<a class="anchor" aria-label="anchor" href="#how-to-construct-a-mshapviz-object"></a>
-</h2>
-<p>There are different options:</p>
+<p>Sometimes, you will find it necessary to work with several “shapviz”
+objects at the same time:</p>
+<ul>
+<li>To visualize SHAP values of a multiclass or multi-output model.</li>
+<li>To compare SHAP plots of different models.</li>
+<li>To compare SHAP plots between subgroups.</li>
+</ul>
+<p>To simplify the workflow, {shapviz} introduces the “mshapviz” object
+(“m” like “multi”). You can create it in different ways:</p>
 <ul>
 <li>Use <code><a href="../reference/shapviz.html">shapviz()</a></code> on multiclass XGBoost or LightGBM
 models.</li>
@@ -140,6 +129,8 @@ multiclass/multioutput models.</li>
 <li>Or <code>mshapviz(list(Mod_1 = s1, Mod_2 = s2, ...))</code>
 </li>
 </ul>
+<p>The <code>sv_*()</code> functions use the {patchwork} package to glue
+the individual plots together.</p>
 </div>
 <div class="section level2">
 <h2 id="example-multiclass-model">Example: Multiclass model<a class="anchor" aria-label="anchor" href="#example-multiclass-model"></a>
@@ -201,13 +192,12 @@ scale.</p>
 <div class="section level3">
 <h3 id="dependence-plot">Dependence plot<a class="anchor" aria-label="anchor" href="#dependence-plot"></a>
 </h3>
-<p>Here, we will use better class names as well as identical coordinate
-systems.</p>
+<p>Here, we will use identical coordinate systems.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">x</span>, v <span class="op">=</span> <span class="st">"Petal.Length"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span> <span class="op">&amp;</span> </span>
+<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">7</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
 <p><img src="multiple_output_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;"></p>
@@ -224,9 +214,7 @@ systems.</p>
 <span><span class="va">dtrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lightgbm/man/lgb.Dataset.html" class="external-link">lgb.Dataset</a></span><span class="op">(</span><span class="va">X_pred</span>, label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="fl">5L</span><span class="op">]</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1L</span><span class="op">)</span></span>
 <span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lightgbm/man/lgb.train.html" class="external-link">lgb.train</a></span><span class="op">(</span>params <span class="op">=</span> <span class="va">params</span>, data <span class="op">=</span> <span class="va">dtrain</span>, nrounds <span class="op">=</span> <span class="fl">50L</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># "mshapviz" object</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">fit</span>, X_pred <span class="op">=</span> <span class="va">X_pred</span>, X <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="fl">3L</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="../reference/shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">fit</span>, X_pred <span class="op">=</span> <span class="va">X_pred</span>, X <span class="op">=</span> <span class="va">iris</span>, which_class <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">x</span>, show_numbers <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span> <span class="op">&amp;</span></span>
@@ -247,10 +235,10 @@ probability scale.</p>
 <span><span class="co"># "mshapviz" object</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">kernelshap</span><span class="op">(</span><span class="va">fit</span>, X <span class="op">=</span> <span class="va">iris</span>, bg_X <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
 <span><span class="va">shp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="fu"><a href="../reference/shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">shp</span><span class="op">[[</span><span class="fl">3L</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="../reference/shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">x</span>, which_class <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># all.equal(shp[[3L]], shapviz(x, which_class = 3L))</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp</span>, v <span class="op">=</span> <span class="st">"Sepal.Width"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.025</span>, <span class="fl">0.03</span><span class="op">)</span></span></code></pre></div>
 <p><img src="../reference/figures/VIGNETTE-dep-ranger.png"></p>
 </div>

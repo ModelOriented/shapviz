@@ -40,10 +40,10 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/basic_use.html">Using 'shapviz'</a>
+      <a href="../articles/basic_use.html">Using {shapviz}</a>
     </li>
     <li>
-      <a href="../articles/multiple_output.html">Multiple shapviz objects</a>
+      <a href="../articles/multiple_output.html">Multiple 'shapviz' objects</a>
     </li>
   </ul></li>
 <li>
@@ -69,18 +69,32 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.7.0" id="shapviz-070">shapviz 0.7.0<a class="anchor" aria-label="anchor" href="#shapviz-070"></a></h2>
+<h2 class="page-header" data-toc-text="0.7.0" id="shapviz-070">shapviz 0.7.0<small>2023-04-10</small><a class="anchor" aria-label="anchor" href="#shapviz-070"></a></h2>
 <div class="section level3">
-<h3 id="new-features-0-7-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-7-0"></a></h3>
-<ul><li>Multiple models: Use <code>c(xgb = s1, rf = s2, ...)</code> or <code>mshapviz(list(xgb = s1, rf = s2, ...))</code> to combine multiple “shapviz” objects to a “mshapviz” object. Their plots are glued together by the {patchwork} package and can modified, e.g., using <code>&amp;</code> and other {patchwork} functionalities.</li>
-<li>Multiclass: Another way to create a “mshapviz” object is to call <code><a href="../reference/shapviz.html">shapviz()</a></code> to multiclass XGBoost/LightGBM/kernelshap objects.</li>
+<h3 id="milestone-working-with-multiple-shapviz-objects-0-7-0">Milestone: Working with multiple ‘shapviz’ objects<a class="anchor" aria-label="anchor" href="#milestone-working-with-multiple-shapviz-objects-0-7-0"></a></h3>
+<p>Sometimes, you will find it necessary to work with several “shapviz” objects at the same time:</p>
+<ul><li>To visualize SHAP values of a multiclass or multi-output model.</li>
+<li>To compare SHAP plots of different models.</li>
+<li>To compare SHAP plots between subgroups.</li>
+</ul><p>To simplify the workflow, {shapviz} introduces the “mshapviz” object (“m” like “multi”). You can create it in different ways:</p>
+<ul><li>Use <code><a href="../reference/shapviz.html">shapviz()</a></code> on multiclass XGBoost or LightGBM models.</li>
+<li>Use <code><a href="../reference/shapviz.html">shapviz()</a></code> on “kernelshap” objects created from multiclass/multioutput models.</li>
+<li>Use <code>c(Mod_1 = s1, Mod_2 = s2, ...)</code> on “shapviz” objects <code>s1</code>, <code>s2</code>, …</li>
+<li>Or <code>mshapviz(list(Mod_1 = s1, Mod_2 = s2, ...))</code>
+</li>
+</ul><p>The <code>sv_*()</code> functions use the {patchwork} package to glue the individual plots together.</p>
+<p>See the new vignette for more info and specific examples.</p>
+</div>
+<div class="section level3">
+<h3 id="other-new-features-0-7-0">Other new features<a class="anchor" aria-label="anchor" href="#other-new-features-0-7-0"></a></h3>
+<ul><li>
+<code><a href="../reference/sv_dependence.html">sv_dependence()</a></code> now allows multiple <code>v</code> and/or <code>color_var</code> to be plotted (glued via {patchwork}).</li>
 <li>{DALEX}: Support for “predict_parts” objects from {DALEX}, thanks to Adrian Stando.</li>
 <li>Aggregated SHAP values: The argument <code>row_id</code> of <code><a href="../reference/sv_waterfall.html">sv_waterfall()</a></code> and <code><a href="../reference/sv_force.html">sv_force()</a></code> now also allows a vector of integers or a logical vector. If more than one row is selected, SHAP values and predictions are averaged before plotting (<em>aggregated SHAP values</em> in {DALEX}).</li>
 <li>Row bind: “shapviz” objects <code>x1</code>, <code>x2</code> can now be concatenated in rowwise manner using <code>x1 + x2</code> or <code>rbind(x1, x2)</code>, again thanks to Adrian.</li>
 <li>
 <code><a href="https://rdrr.io/pkg/h2o/man/colnames.html" class="external-link">colnames()</a></code>: “shapviz” objects <code>x</code> have received a <code><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames()</a></code> function, so you can now, e.g., use <code>colnames(x)</code> to see the feature names.</li>
 <li>Subsetting: “shapviz” <code>x</code> can now be subsetted using <code>x[cond, features]</code>.</li>
-<li>New vignette on working with multiple “shapviz” objects.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="maintenance-0-7-0">Maintenance<a class="anchor" aria-label="anchor" href="#maintenance-0-7-0"></a></h3>
@@ -91,13 +105,20 @@
 <li>New dependency: {patchwork}</li>
 </ul></div>
 <div class="section level3">
-<h3 id="other-changes-and-bug-fixes-0-7-0">Other changes and bug fixes<a class="anchor" aria-label="anchor" href="#other-changes-and-bug-fixes-0-7-0"></a></h3>
-<ul><li>As announced, the argument <code>show_other</code> of <code><a href="../reference/sv_importance.html">sv_importance()</a></code> has been removed.</li>
+<h3 id="other-changes-0-7-0">Other changes<a class="anchor" aria-label="anchor" href="#other-changes-0-7-0"></a></h3>
+<ul><li>Color guides are closer to the plot area. This affects <code><a href="../reference/sv_dependence.html">sv_dependence()</a></code>, <code>sv_importance(kind="bee")</code>, and <code><a href="../reference/sv_interaction.html">sv_interaction()</a></code>.</li>
+<li>The lengthy y axis title “SHAP interaction value” in <code><a href="../reference/sv_dependence.html">sv_dependence()</a></code> has been shortened to “SHAP interaction”.</li>
+<li>As announced, the argument <code>show_other</code> of <code><a href="../reference/sv_importance.html">sv_importance()</a></code> has been removed.</li>
 <li>Slightly less picky checks on <code>S_inter</code>.</li>
 <li>
-<code><a href="../reference/sv_waterfall.html">sv_waterfall()</a></code>: Using <code>order_fun()</code> would not work as expected with <code>max_display</code>.</li>
-<li>
 <code><a href="../reference/print.shapviz.html">print.shapviz()</a></code> is much more compact, use <code><a href="../reference/summary.shapviz.html">summary.shapviz()</a></code> for more info.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-7-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-7-0"></a></h3>
+<ul><li>
+<code><a href="../reference/sv_waterfall.html">sv_waterfall()</a></code>: Using <code>order_fun()</code> would not work as expected with <code>max_display</code>. This has been fixed.</li>
+<li>
+<code><a href="../reference/sv_dependence.html">sv_dependence()</a></code>: Passing <code>viridis_args = NULL</code> would hide the color guide title. This has been fixed. But please pass <code>viridis_args = list()</code> instead.</li>
 </ul></div>
 </div>
     <div class="section level2">

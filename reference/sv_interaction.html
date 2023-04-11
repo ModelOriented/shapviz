@@ -44,10 +44,10 @@ The features are sorted in decreasing order of usual SHAP importance."><meta pro
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/basic_use.html">Using 'shapviz'</a>
+      <a href="../articles/basic_use.html">Using {shapviz}</a>
     </li>
     <li>
-      <a href="../articles/multiple_output.html">Multiple shapviz objects</a>
+      <a href="../articles/multiple_output.html">Multiple 'shapviz' objects</a>
     </li>
   </ul></li>
 <li>
@@ -156,7 +156,7 @@ The default points to the global option <code>shapviz.viridis_args</code>, which
 corresponds to <code>list(begin = 0.25, end = 0.85, option = "inferno")</code>.
 These values are passed to <code><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">ggplot2::scale_color_viridis_c()</a></code>.
 For example, to switch to a standard viridis scale, you can either change the default
-with <code>options(shapviz.viridis_args = NULL)</code> or set <code>viridis_args = NULL</code>.</p></dd>
+with <code>options(shapviz.viridis_args = list())</code> or set <code>viridis_args = list()</code>.</p></dd>
 
 
 <dt>color_bar_title</dt>

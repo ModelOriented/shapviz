@@ -78,10 +78,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/basic_use.html">Using 'shapviz'</a>
+      <a href="articles/basic_use.html">Using {shapviz}</a>
     </li>
     <li>
-      <a href="articles/multiple_output.html">Multiple shapviz objects</a>
+      <a href="articles/multiple_output.html">Multiple 'shapviz' objects</a>
     </li>
   </ul>
 </li>
@@ -107,7 +107,7 @@
       </header><div class="row">
   <div class="contents col-md-9">
 <div class="section level1">
-<div class="page-header"><h1 id="shapviz-">shapviz <a href="https://github.com/mayer79/shapviz" class="external-link"><img src="reference/figures/logo.png" align="right" height="139"></a>
+<div class="page-header"><h1 id="shapviz-">{shapviz} <a href="https://github.com/ModelOriented/shapviz" class="external-link"><img src="reference/figures/logo.png" align="right" height="139"></a>
 <a class="anchor" aria-label="anchor" href="#shapviz-"></a>
 </h1></div>
 <!-- badges: start -->
@@ -115,7 +115,7 @@
 
 <!-- badges: end -->
 <div class="section level2">
-<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
 <p>SHAP (SHapley Additive exPlanations, [1]) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. {shapviz} offers the latter:</p>
 <ul>
@@ -147,11 +147,11 @@
 <li><a href="https://CRAN.R-project.org/package=kernelshap" class="external-link"><code>kernelshap</code></a></li>
 <li><a href="https://CRAN.R-project.org/package=fastshap" class="external-link"><code>fastshap</code></a></li>
 <li><a href="https://CRAN.R-project.org/package=shapr" class="external-link"><code>shapr</code></a></li>
-<li><a href="https://github.com/ModelOriented/treeshap" class="external-link"><code>treeshap</code></a></li>
-<li><a href="https://cran.r-project.org/web/packages/DALEX" class="external-link"><code>DALEX</code></a></li>
+<li><a href="https://github.com/ModelOriented/treeshap/" class="external-link"><code>treeshap</code></a></li>
+<li><a href="https://CRAN.R-project.org/package=DALEX" class="external-link"><code>DALEX</code></a></li>
 </ul>
 <p>For XGBoost, LightGBM, and H2O, the SHAP values are directly calculated from the fitted model.</p>
-<p><a href="https://github.com/catboost" class="external-link"><code>CatBoost</code></a> is not included, but see the vignette how to use its SHAP calculation backend with {shapviz}.</p>
+<p><a href="https://github.com/catboost/" class="external-link"><code>CatBoost</code></a> is not included, but see the vignette how to use its SHAP calculation backend with {shapviz}.</p>
 <p>Multiple “shapviz” objects can be glued together, see Vignette “Multiple shapviz objects”.</p>
 </div>
 <div class="section level2">
@@ -166,9 +166,9 @@
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mayer79/shapviz"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>Shiny diamonds… let’s model their prices by four “c” variables with XGBoost:</p>
+<p>Shiny diamonds… let’s use XGBoost to model their prices by the four “C” variables:</p>
 <div class="section level3">
 <h3 id="model">Model<a class="anchor" aria-label="anchor" href="#model"></a>
 </h3>
@@ -179,18 +179,9 @@
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">3653</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Explanation data</span></span>
-<span><span class="va">dia_small</span> <span class="op">&lt;-</span> <span class="va">diamonds</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">)</span>, <span class="fl">2000L</span><span class="op">)</span>, <span class="op">]</span></span>
-<span></span>
-<span><span class="co"># XGBoost model</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"carat"</span>, <span class="st">"cut"</span>, <span class="st">"color"</span>, <span class="st">"clarity"</span><span class="op">)</span></span>
 <span><span class="va">dtrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html" class="external-link">xgb.DMatrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">[</span><span class="va">x</span><span class="op">]</span><span class="op">)</span>, label <span class="op">=</span> <span class="va">diamonds</span><span class="op">$</span><span class="va">price</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgb.train</a></span><span class="op">(</span></span>
-<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>learning_rate <span class="op">=</span> <span class="fl">0.1</span>, objective <span class="op">=</span> <span class="st">"reg:squarederror"</span><span class="op">)</span>, </span>
-<span>  data <span class="op">=</span> <span class="va">dtrain</span>,</span>
-<span>  nrounds <span class="op">=</span> <span class="fl">65L</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgb.train</a></span><span class="op">(</span>params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>learning_rate <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">dtrain</span>, nrounds <span class="op">=</span> <span class="fl">65L</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="create-shapviz-object">Create “shapviz” object<a class="anchor" aria-label="anchor" href="#create-shapviz-object"></a>
@@ -198,7 +189,10 @@
 <p>One line of code creates a “shapviz” object. It contains SHAP values and feature values for the set of observations we are interested in. Note again that <code>X</code> is solely used as explanation dataset, not for calculating SHAP values.</p>
 <p>In this example, we construct the “shapviz” object directly from the fitted XGBoost model. Thus we also need to pass a corresponding prediction dataset <code>X_pred</code> used for calculating SHAP values by XGBoost.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">shp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">fit</span>, X_pred <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">dia_small</span><span class="op">[</span><span class="va">x</span><span class="op">]</span><span class="op">)</span>, X <span class="op">=</span> <span class="va">dia_small</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Explanation data</span></span>
+<span><span class="va">dia_small</span> <span class="op">&lt;-</span> <span class="va">diamonds</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">)</span>, <span class="fl">2000L</span><span class="op">)</span>, <span class="op">]</span></span>
+<span></span>
+<span><span class="va">shp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">fit</span>, X_pred <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">dia_small</span><span class="op">[</span><span class="va">x</span><span class="op">]</span><span class="op">)</span>, X <span class="op">=</span> <span class="va">dia_small</span><span class="op">)</span></span></code></pre></div>
 <p>Note: If <code>X_pred</code> would contain one-hot-encoded dummy variables, their SHAP values (and also SHAP interaction values) could be collapsed by the <code>collapse</code> argument of <code><a href="reference/shapviz.html">shapviz()</a></code>.</p>
 </div>
 <div class="section level3">
@@ -243,35 +237,39 @@
 <code class="sourceCode R"><span><span class="fu"><a href="reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">shp</span>, kind <span class="op">=</span> <span class="st">"beeswarm"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-imp2.png"></p>
 </div>
-<div class="section level4">
-<h4 id="or-both-combined">Or both combined<a class="anchor" aria-label="anchor" href="#or-both-combined"></a>
-</h4>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">shp</span>, kind <span class="op">=</span> <span class="st">"both"</span>, show_numbers <span class="op">=</span> <span class="cn">TRUE</span>, bee_width <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-imp3.png"></p>
-</div>
 </div>
 <div class="section level3">
 <h3 id="dependence-plot">Dependence plot<a class="anchor" aria-label="anchor" href="#dependence-plot"></a>
 </h3>
 <p>A scatterplot of SHAP values of a feature like <code>color</code> against its observed values gives a great impression on the feature effect on the response. Vertical scatter gives additional info on interaction effects (using a heuristic to select the feature on the color axis).</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp</span>, v <span class="op">=</span> <span class="st">"color"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-dep.svg"></p>
+<p>Or multiple features together, using {patchwork}:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span>  <span class="co"># We need the &amp; operator</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp</span>, v <span class="op">=</span> <span class="va">x</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_gray</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">9</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5000</span>, <span class="fl">15000</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-dep-multi.png"></p>
 </div>
 <div class="section level3">
 <h3 id="interactions">Interactions<a class="anchor" aria-label="anchor" href="#interactions"></a>
 </h3>
-<p>If SHAP interaction values have been computed (via {xgboost} or {treeshap}), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry):</p>
+<p>If SHAP interaction values have been computed (via {xgboost} or {treeshap}), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry).</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">shp_with_inter</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/shapviz.html">shapviz</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">shp_i</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/shapviz.html">shapviz</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit</span>, X_pred <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">dia_small</span><span class="op">[</span><span class="va">x</span><span class="op">]</span><span class="op">)</span>, X <span class="op">=</span> <span class="va">dia_small</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp_with_inter</span>, v <span class="op">=</span> <span class="st">"color"</span>, color_var <span class="op">=</span> <span class="st">"cut"</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-dep2.svg"></p>
+<span><span class="co"># Main effect of carat and its interactions</span></span>
+<span><span class="fu"><a href="reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span></span>
+<span>  <span class="va">shp_i</span>, v <span class="op">=</span> <span class="st">"carat"</span>, color_var <span class="op">=</span> <span class="va">x</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="op">-</span><span class="fl">6000</span>, <span class="fl">13000</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-dep2.png"></p>
 <p>We can also study all interactions and main effects together using the following beeswarm visualization:</p>
-<pre class="{r}"><code><span><span class="fu"><a href="reference/sv_interaction.html">sv_interaction</a></span><span class="op">(</span><span class="va">shp_with_inter</span><span class="op">)</span> <span class="op">+</span></span>
+<pre class="{r}"><code><span><span class="fu"><a href="reference/sv_interaction.html">sv_interaction</a></span><span class="op">(</span><span class="va">shp_i</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, vjust <span class="op">=</span> <span class="fl">1</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre>
 <p><img src="reference/figures/README-interactions.png"></p>
 </div>

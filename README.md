@@ -1,4 +1,4 @@
-# shapviz <a href='https://github.com/mayer79/shapviz'><img src='man/figures/logo.png' align="right" height="139" /></a>
+# {shapviz} <a href='https://github.com/ModelOriented/shapviz'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
@@ -11,7 +11,7 @@
 
 <!-- badges: end -->
 
-## Introduction
+## Overview
 
 SHAP (SHapley Additive exPlanations, [1]) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. {shapviz} offers the latter: 
 
@@ -39,12 +39,12 @@ To further simplify the use of {shapviz}, we added direct connectors to:
 - [`kernelshap`](https://CRAN.R-project.org/package=kernelshap)
 - [`fastshap`](https://CRAN.R-project.org/package=fastshap)
 - [`shapr`](https://CRAN.R-project.org/package=shapr)
-- [`treeshap`](https://github.com/ModelOriented/treeshap)
-- [`DALEX`](https://cran.r-project.org/web/packages/DALEX)
+- [`treeshap`](https://github.com/ModelOriented/treeshap/)
+- [`DALEX`](https://CRAN.R-project.org/package=DALEX)
 
 For XGBoost, LightGBM, and H2O, the SHAP values are directly calculated from the fitted model.
 
-[`CatBoost`](https://github.com/catboost) is not included, but see the vignette how to use its SHAP calculation backend with {shapviz}.
+[`CatBoost`](https://github.com/catboost/) is not included, but see the vignette how to use its SHAP calculation backend with {shapviz}.
 
 Multiple "shapviz" objects can be glued together, see Vignette "Multiple shapviz objects".
 
@@ -59,9 +59,9 @@ install.packages("shapviz")
 devtools::install_github("mayer79/shapviz")
 ```
 
-## Example
+## Usage
 
-Shiny diamonds... let's model their prices by four "c" variables with XGBoost:
+Shiny diamonds... let's use XGBoost to model their prices by the four "C" variables:
 
 ### Model
 
@@ -72,18 +72,9 @@ library(xgboost)
 
 set.seed(3653)
 
-# Explanation data
-dia_small <- diamonds[sample(nrow(diamonds), 2000L), ]
-
-# XGBoost model
 x <- c("carat", "cut", "color", "clarity")
 dtrain <- xgb.DMatrix(data.matrix(diamonds[x]), label = diamonds$price)
-
-fit <- xgb.train(
-  params = list(learning_rate = 0.1, objective = "reg:squarederror"), 
-  data = dtrain,
-  nrounds = 65L
-)
+fit <- xgb.train(params = list(learning_rate = 0.1), data = dtrain, nrounds = 65L)
 ```
 
 ### Create "shapviz" object
@@ -93,6 +84,9 @@ One line of code creates a "shapviz" object. It contains SHAP values and feature
 In this example, we construct the "shapviz" object directly from the fitted XGBoost model. Thus we also need to pass a corresponding prediction dataset `X_pred` used for calculating SHAP values by XGBoost.
 
 ``` r
+# Explanation data
+dia_small <- diamonds[sample(nrow(diamonds), 2000L), ]
+
 shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
 ```
 
@@ -148,14 +142,6 @@ sv_importance(shp, kind = "beeswarm")
 
 ![](man/figures/README-imp2.png)
 
-#### Or both combined
-
-``` r
-sv_importance(shp, kind = "both", show_numbers = TRUE, bee_width = 0.2)
-```
-
-![](man/figures/README-imp3.png)
-
 ### Dependence plot
 
 A scatterplot of SHAP values of a feature like `color` against its observed values gives a great impression on the feature effect on the response. Vertical scatter gives additional info on interaction effects (using a heuristic to select the feature on the color axis).
@@ -166,24 +152,39 @@ sv_dependence(shp, v = "color")
 
 ![](man/figures/README-dep.svg)
 
-### Interactions
-
-If SHAP interaction values have been computed (via {xgboost} or {treeshap}), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry):
+Or multiple features together, using {patchwork}:
 
 ``` r
-shp_with_inter <- shapviz(
+library(patchwork)  # We need the & operator
+
+sv_dependence(shp, v = x) &
+  theme_gray(base_size = 9) &
+  ylim(-5000, 15000)
+```
+
+![](man/figures/README-dep-multi.png)
+
+### Interactions
+
+If SHAP interaction values have been computed (via {xgboost} or {treeshap}), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry).
+
+``` r
+shp_i <- shapviz(
   fit, X_pred = data.matrix(dia_small[x]), X = dia_small, interactions = TRUE
 )
 
-sv_dependence(shp_with_inter, v = "color", color_var = "cut", interactions = TRUE)
+# Main effect of carat and its interactions
+sv_dependence(
+  shp_i, v = "carat", color_var = x, interactions = TRUE) &
+  ylim(-6000, 13000)
 ```
 
-![](man/figures/README-dep2.svg)
+![](man/figures/README-dep2.png)
 
 We can also study all interactions and main effects together using the following beeswarm visualization:
 
 ```{r}
-sv_interaction(shp_with_inter) +
+sv_interaction(shp_i) +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
 ```
 

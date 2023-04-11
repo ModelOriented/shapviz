@@ -1,15 +1,32 @@
 # shapviz 0.7.0
 
-## New features
+## Milestone: Working with multiple 'shapviz' objects
 
-- Multiple models: Use `c(xgb = s1, rf = s2, ...)` or `mshapviz(list(xgb = s1, rf = s2, ...))` to combine multiple "shapviz" objects to a "mshapviz" object. Their plots are glued together by the {patchwork} package and can modified, e.g., using `&` and other {patchwork} functionalities.
-- Multiclass: Another way to create a "mshapviz" object is to call `shapviz()` to multiclass XGBoost/LightGBM/kernelshap objects.
+Sometimes, you will find it necessary to work with several "shapviz" objects at the same time:
+
+- To visualize SHAP values of a multiclass or multi-output model.
+- To compare SHAP plots of different models.
+- To compare SHAP plots between subgroups.
+
+To simplify the workflow, {shapviz} introduces the "mshapviz" object ("m" like "multi"). You can create it in different ways:
+
+- Use `shapviz()` on multiclass XGBoost or LightGBM models.
+- Use `shapviz()` on "kernelshap" objects created from multiclass/multioutput models.
+- Use `c(Mod_1 = s1, Mod_2 = s2, ...)` on "shapviz" objects `s1`, `s2`, ...
+- Or `mshapviz(list(Mod_1 = s1, Mod_2 = s2, ...))`
+
+The `sv_*()` functions use the {patchwork} package to glue the individual plots together.
+
+See the new vignette for more info and specific examples.
+
+## Other new features
+
+- `sv_dependence()` now allows multiple `v` and/or `color_var` to be plotted (glued via {patchwork}).
 - {DALEX}: Support for "predict_parts" objects from {DALEX}, thanks to Adrian Stando.
 - Aggregated SHAP values: The argument `row_id` of `sv_waterfall()` and `sv_force()` now also allows a vector of integers or a logical vector. If more than one row is selected, SHAP values and predictions are averaged before plotting (*aggregated SHAP values* in {DALEX}).
 - Row bind: "shapviz" objects `x1`, `x2` can now be concatenated in rowwise manner using `x1 + x2` or `rbind(x1, x2)`, again thanks to Adrian.
 - `colnames()`: "shapviz" objects `x` have received a `dimnames()` function, so you can now, e.g., use `colnames(x)` to see the feature names.
 - Subsetting: "shapviz" `x` can now be subsetted using `x[cond, features]`.
-- New vignette on working with multiple "shapviz" objects.
 
 ## Maintenance
 
@@ -18,12 +35,18 @@
 - Webpage created with "pgkdown"
 - New dependency: {patchwork}
 
-## Other changes and bug fixes
+## Other changes
 
+- Color guides are closer to the plot area. This affects `sv_dependence()`, `sv_importance(kind="bee")`, and `sv_interaction()`.
+- The lengthy y axis title "SHAP interaction value" in `sv_dependence()` has been shortened to "SHAP interaction".
 - As announced, the argument `show_other` of `sv_importance()` has been removed.
 - Slightly less picky checks on `S_inter`.
-- `sv_waterfall()`: Using `order_fun()` would not work as expected with `max_display`.
 - `print.shapviz()` is much more compact, use `summary.shapviz()` for more info.
+
+## Bug fixes
+
+- `sv_waterfall()`: Using `order_fun()` would not work as expected with `max_display`. This has been fixed.
+- `sv_dependence()`: Passing `viridis_args = NULL` would hide the color guide title. This has been fixed. But please pass `viridis_args = list()` instead.
 
 # shapviz 0.6.0
 

@@ -1,8 +1,8 @@
 ---
-title: "Multiple shapviz objects"
+title: "Multiple 'shapviz' objects"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Multiple shapviz objects}
+  %\VignetteIndexEntry{Multiple 'shapviz' objects}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,27 +20,22 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Introduction
+## Overview
 
-In certain situations, you will find it necessary to work with several "shapviz" objects at the same time:
+Sometimes, you will find it necessary to work with several "shapviz" objects at the same time:
 
-1. Multiclass models fitted via XGBoost or LightGBM return SHAP values per class.
-2. {kernelshap} returns SHAP values per class/response for corresponding models.
-3. Compare SHAP plots of different models.
-4. Study SHAP plots for different subgroups.
+- To visualize SHAP values of a multiclass or multi-output model.
+- To compare SHAP plots of different models.
+- To compare SHAP plots between subgroups.
 
-The [{patchwork}](https://cran.r-project.org/web/packages/patchwork) package allows to glue together the resulting plots.
-
-To simplify the workflow, multiple "shapviz" objects can be combined together to a "mshapviz" object. This object will care about calling {patchwork}. 
-
-## How to construct a "mshapviz" object?
-
-There are different options:
+To simplify the workflow, {shapviz} introduces the "mshapviz" object ("m" like "multi"). You can create it in different ways:
 
 - Use `shapviz()` on multiclass XGBoost or LightGBM models.
 - Use `shapviz()` on "kernelshap" objects created from multiclass/multioutput models.
 - Use `c(Mod_1 = s1, Mod_2 = s2, ...)` on "shapviz" objects `s1`, `s2`, ...
 - Or `mshapviz(list(Mod_1 = s1, Mod_2 = s2, ...))`
+
+The `sv_*()` functions use the {patchwork} package to glue the individual plots together.
 
 ## Example: Multiclass model
 
@@ -88,13 +83,13 @@ sv_importance(x, kind = "bee") +
 
 ### Dependence plot
 
-Here, we will use better class names as well as identical coordinate systems.
+Here, we will use identical coordinate systems.
 
 ```{r}
 names(x) <- levels(iris$Species)
 
 sv_dependence(x, v = "Petal.Length") +
-  plot_layout(ncol = 1L) & 
+  plot_layout(ncol = 1L) &
   xlim(1, 7) &
   ylim(-3, 4)
 ```
@@ -110,9 +105,7 @@ X_pred <- data.matrix(iris[, -5L])
 dtrain <- lgb.Dataset(X_pred, label = as.integer(iris[, 5L]) - 1L)
 fit <- lgb.train(params = params, data = dtrain, nrounds = 50L)
 
-# "mshapviz" object
 x <- shapviz(fit, X_pred = X_pred, X = iris)
-all.equal(x[[3L]], shapviz(fit, X_pred = X_pred, X = iris, which_class = 3L))
 
 sv_importance(x, show_numbers = TRUE) +
   plot_layout(ncol = 1L) &
@@ -133,10 +126,10 @@ fit <- ranger(Species ~ ., data = iris, num.trees = 100L, probability = TRUE)
 # "mshapviz" object
 x <- kernelshap(fit, X = iris, bg_X = iris)
 shp <- setNames(shapviz(x), levels(iris$Species))
-all.equal(shp[[3L]], shapviz(x, which_class = 3L))
+# all.equal(shp[[3L]], shapviz(x, which_class = 3L))
 
 sv_dependence(shp, v = "Sepal.Width") +
-  plot_layout(ncol = 1L) &
+  plot_layout(ncol = 2L) &
   ylim(-0.025, 0.03)
 ```
 

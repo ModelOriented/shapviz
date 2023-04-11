@@ -73,7 +73,7 @@ The default points to the global option \code{shapviz.viridis_args}, which
 corresponds to \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
 These values are passed to \code{ggplot2::scale_color_viridis_c()}.
 For example, to switch to a standard viridis scale, you can either change the default
-with \code{options(shapviz.viridis_args = NULL)} or set \code{viridis_args = NULL}.}
+with \code{options(shapviz.viridis_args = list())} or set \code{viridis_args = list()}.}
 
 \item{color_bar_title}{Title of color bar of the beeswarm plot.
 Set to \code{NULL} to hide the color bar altogether.}

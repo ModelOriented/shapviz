@@ -22,7 +22,7 @@
 #' corresponds to \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
 #' These values are passed to \code{ggplot2::scale_color_viridis_c()}.
 #' For example, to switch to a standard viridis scale, you can either change the default
-#' with \code{options(shapviz.viridis_args = NULL)} or set \code{viridis_args = NULL}.
+#' with \code{options(shapviz.viridis_args = list())} or set \code{viridis_args = list()}.
 #' @param color_bar_title Title of color bar of the beeswarm plot.
 #' Set to \code{NULL} to hide the color bar altogether.
 #' @param ... Arguments passed to \code{geom_point()}.
@@ -106,7 +106,8 @@ sv_interaction.shapviz <- function(object, kind = c("beeswarm", "no"),
       ncol = length(unique(X_long$Freq))
     ) +
     theme(
-      panel.spacing = unit(0.2, "lines"),
+      panel.spacing = grid::unit(0.2, "lines"),
+      legend.box.spacing = grid::unit(0, "pt"),
       axis.ticks.y = element_blank(),
       axis.text.y = element_blank()
     )

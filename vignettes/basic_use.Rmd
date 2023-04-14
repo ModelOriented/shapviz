@@ -184,8 +184,7 @@ sv_dependence(shp_i, v = "color", color_var = "cut", interactions = TRUE)
 Using {patchwork}, we can show multiple colors at the same time:
 
 ```{r}
-sv_dependence(
-  shp_i, v = "carat", color_var = x, interactions = TRUE) &
+sv_dependence(shp_i, v = "carat", color_var = x, interactions = TRUE) &
   ylim(-6000, 13000)
 ```
 

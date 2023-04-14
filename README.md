@@ -174,8 +174,7 @@ shp_i <- shapviz(
 )
 
 # Main effect of carat and its interactions
-sv_dependence(
-  shp_i, v = "carat", color_var = x, interactions = TRUE) &
+sv_dependence(shp_i, v = "carat", color_var = x, interactions = TRUE) &
   ylim(-6000, 13000)
 ```
 

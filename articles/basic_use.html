@@ -314,8 +314,7 @@ interaction effects (multiplied by two due to symmetry):</p>
 <p><img src="basic_use_files/figure-html/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>Using {patchwork}, we can show multiple colors at the same time:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span></span>
-<span>  <span class="va">shp_i</span>, v <span class="op">=</span> <span class="st">"carat"</span>, color_var <span class="op">=</span> <span class="va">x</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp_i</span>, v <span class="op">=</span> <span class="st">"carat"</span>, color_var <span class="op">=</span> <span class="va">x</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="op">-</span><span class="fl">6000</span>, <span class="fl">13000</span><span class="op">)</span></span></code></pre></div>
 <p><img src="basic_use_files/figure-html/unnamed-chunk-11-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>We can also study all interactions and main effects together using

@@ -1,3 +1,9 @@
+# shapviz 0.7.1
+
+## Documentation
+
+- Vignette "Multiple 'shapviz' objects": Fixed mistake in Random Forest + Kernel SHAP example
+
 # shapviz 0.7.0
 
 ## Milestone: Working with multiple 'shapviz' objects

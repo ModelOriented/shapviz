@@ -124,7 +124,7 @@ library(kernelshap)
 fit <- ranger(Species ~ ., data = iris, num.trees = 100L, probability = TRUE)
 
 # "mshapviz" object
-x <- kernelshap(fit, X = iris, bg_X = iris)
+x <- kernelshap(fit, X = iris[-5L], bg_X = iris)
 shp <- setNames(shapviz(x), levels(iris$Species))
 # all.equal(shp[[3L]], shapviz(x, which_class = 3L))
 

@@ -38,14 +38,14 @@ sv_interaction(object, ...)
 \arguments{
 \item{object}{An object of class "(m)shapviz" containing element \code{S_inter}.}
 
-\item{...}{Arguments passed to \code{geom_point()}.
-For instance, passing \code{size = 1} will produce smaller dots.}
+\item{...}{Arguments passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}. For instance,
+passing \code{size = 1} will produce smaller dots.}
 
 \item{kind}{Set to "no" to simply return the matrix of average absolute SHAP
 interactions (or a list of such matrices in case of object of class "mshapviz").
 The default is "beeswarm".}
 
-\item{max_display}{Maximum number of features (with highest SHAP importance) to plot.
+\item{max_display}{Maximum number of features (with highest importance) to plot.
 Set to \code{Inf} to show all features. Has no effect if \code{kind = "no"}.}
 
 \item{alpha}{Transparency of the beeswarm dots. Defaults to 0.3.}
@@ -56,26 +56,27 @@ Set to \code{Inf} to show all features. Has no effect if \code{kind = "no"}.}
 estimating the density of the beeswarms (only used if beeswarm shown).}
 
 \item{viridis_args}{List of viridis color scale arguments used to control the
-coloring of the beeswarm plot, see \code{?ggplot2::scale_color_viridis_c()}.
+coloring of the beeswarm plot, see \code{?ggplot2::scale_color_viridis_c}.
 The default points to the global option \code{shapviz.viridis_args}, which
 corresponds to \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
-These values are passed to \code{ggplot2::scale_color_viridis_c()}.
-For example, to switch to a standard viridis scale, you can either change the default
-with \code{options(shapviz.viridis_args = list())} or set \code{viridis_args = list()}.}
+These values are passed to \code{\link[ggplot2:scale_viridis]{ggplot2::scale_color_viridis_c()}}.
+For example, to switch to a standard viridis scale, you can either change the
+default with \code{options(shapviz.viridis_args = list())} or set
+\code{viridis_args = list()}.}
 
-\item{color_bar_title}{Title of color bar of the beeswarm plot.
-Set to \code{NULL} to hide the color bar altogether.}
+\item{color_bar_title}{Title of color bar of the beeswarm plot. Set to \code{NULL}
+to hide the color bar altogether.}
 }
 \value{
-A "ggplot" (or "patchwork") object, or - if \code{kind = "no"} - a named numeric matrix
-of average absolute SHAP interactions sorted by the average absolute SHAP values
-(or a list of such matrices in case of "mshapviz" object).
+A "ggplot" (or "patchwork") object, or - if \code{kind = "no"} - a named
+numeric matrix of average absolute SHAP interactions sorted by the average
+absolute SHAP values (or a list of such matrices in case of "mshapviz" object).
 }
 \description{
 Plots a beeswarm plot for each feature pair. Diagonals represent the main effects,
 while off-diagonals show interactions (multiplied by two due to symmetry).
 The colors on the beeswarm plots represent min-max scaled feature values.
-Non-numeric features are transformed to numeric by calling \code{data.matrix()} first.
+Non-numeric features are transformed to numeric by calling \code{\link[=data.matrix]{data.matrix()}} first.
 The features are sorted in decreasing order of usual SHAP importance.
 }
 \section{Methods (by class)}{
@@ -96,5 +97,5 @@ sv_interaction(x, max_display = 2L, size = 3, alpha = 0.1)
 sv_interaction(x, kind = "no")
 }
 \seealso{
-\code{\link{sv_importance}}
+\code{\link[=sv_importance]{sv_importance()}}
 }

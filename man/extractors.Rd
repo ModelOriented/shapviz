@@ -58,14 +58,17 @@ get_shap_interactions(object, ...)
 \item{...}{Currently unused.}
 }
 \value{
-\code{get_shap_values()} returns the matrix of SHAP values,
-\code{get_feature_values()} the \code{data.frame} of feature values,
-\code{get_baseline()} the numeric baseline value,
-and \code{get_shap_interactions()} the SHAP interactions of the input.
+\itemize{
+\item \code{get_shap_values()} returns the matrix of SHAP values,
+\item \code{get_feature_values()} the \code{data.frame} of feature values,
+\item \code{get_baseline()} the numeric baseline value, and
+\item \code{get_shap_interactions()} the SHAP interactions of the input.
 For objects of class "mshapviz", these functions return lists of those elements.
 }
+}
 \description{
-Functions to extract SHAP values, feature values, the baseline, or SHAP interactions from a "(m)shapviz" object.
+Functions to extract SHAP values, feature values, the baseline,
+or SHAP interactions from a "(m)shapviz" object.
 }
 \examples{
 S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))

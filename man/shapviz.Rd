@@ -62,26 +62,27 @@ calculate SHAP values from \code{X_pred}.
 In the other cases, it is the object containing the SHAP values.}
 
 \item{...}{Parameters passed to other methods (currently only used by
-the \code{predict} functions of XGBoost, LightGBM, and H2O).}
+the \code{predict()} functions of XGBoost, LightGBM, and H2O).}
 
 \item{X}{Matrix or data.frame of feature values used for visualization.
-It must contain at least the same column names as the SHAP matrix represented by
+Must contain at least the same column names as the SHAP matrix represented by
 \code{object}/\code{X_pred} (after optionally collapsing some of the SHAP columns).}
 
 \item{baseline}{Optional baseline value, representing the average response at the
 scale of the SHAP values. It will be used for plot methods that explain single
 predictions.}
 
-\item{collapse}{A named list of character vectors. Each vector specifies a group of
-column names in the SHAP matrix that should be collapsed to a single column by summation.
-The name of the new column equals the name of the vector in \code{collapse}.}
+\item{collapse}{A named list of character vectors. Each vector specifies the
+feature names whose SHAP values need to be summed up.
+The names determine the resulting collapsed column/dimension names.}
 
 \item{S_inter}{Optional 3D array of SHAP interaction values.
-If \code{object} has shape n x p, then \code{S_inter} needs to be of shape n x p x p.
-Summation over the second (or third) dimension should yield the usual SHAP values.
-Furthermore, dimensions 2 and 3 are symmetric. Default is \code{NULL}.}
+If \code{object} has shape n x p, then \code{S_inter} needs to be of
+shape n x p x p. Summation over the second (or third) dimension should yield the
+usual SHAP values. Furthermore, dimensions 2 and 3 are expected to be symmetric.
+Default is \code{NULL}.}
 
-\item{X_pred}{Data set as expected by the \code{predict} function of
+\item{X_pred}{Data set as expected by the \code{predict()} function of
 XGBoost, LightGBM, or H2O. For XGBoost, a matrix or \code{xgb.DMatrix},
 for LightGBM a matrix, and for H2O a \code{data.frame} or an \code{H2OFrame}.
 Only used for XGBoost, LightGBM, or H2O objects.}
@@ -94,37 +95,46 @@ and kernelshap.}
 Only available for XGBoost.}
 }
 \value{
-An object of class "shapviz" with the following three elements:
+An object of class "shapviz" with the following elements:
 \itemize{
-\item \code{S}: A numeric matrix of SHAP values.
-\item \code{X}: A \code{data.frame} containing the feature values corresponding to \code{S}.
-\item \code{baseline}: Baseline value, representing the average prediction at the scale of the SHAP values.
-\item \code{S_inter}: A numeric array of SHAP interaction values (or \code{NULL}).
+\item \code{S}: Numeric matrix of SHAP values.
+\item \code{X}: \code{data.frame} containing the feature values corresponding to \code{S}.
+\item \code{baseline}: Baseline value, representing the average prediction at the
+scale of the SHAP values.
+\item \code{S_inter}: Numeric array of SHAP interaction values (or \code{NULL}).
 }
 }
 \description{
-This function creates an object of class "shapviz" from one of the following inputs:
+This function creates an object of class "shapviz" from a matrix of SHAP values, or
+from a fitted model of type
 \itemize{
-\item Matrix with SHAP values
-\item XGBoost model
-\item LightGBM model
-\item "explain" object from the package "fastshap"
-\item H2O model (tree-based regression or binary classification model)
-\item "shapr" object from the package "shapr"
-\item The result of calling \code{treeshap()} from the "treeshap" package
-\item The result of calling \code{predict_parts()} from the "DALEX" package
-\item "kernelshap" object from the "kernelshap" package
+\item XGBoost,
+\item LightGBM, or
+\item H2O (tree-based regression or binary classification model).
 }
-The vignettes explain how to use them.
+
+Furthermore, \code{\link[=shapviz]{shapviz()}} can digest the results of
+\itemize{
+\item \code{fastshap::explain()},
+\item \code{shapr::explain()},
+\item \code{treeshap::treeshap()},
+\item \code{DALEX::predict_parts()}, and
+\item \code{kernelshap::kernelshap()},
+}
+
+check the vignettes for examples.
+}
+\details{
 Together with the main input, a data set \code{X} of feature values is required,
-which is used only for visualization. It can therefore contain character or factor
+used only for visualization. It can therefore contain character or factor
 variables, even if the SHAP values were calculated from a purely numerical feature
 matrix. In addition, to improve visualization, it can sometimes be useful to truncate
 gross outliers, logarithmize certain columns, or replace missing values with an
 explicit value.
+
 SHAP values of dummy variables can be combined using the convenient
 \code{collapse} argument.
-Multi-output models created from XGBoost, LightGBM, or kernelshap
+Multi-output models created from XGBoost, LightGBM, or {kernelshap}
 return a "mshapviz" object, containing a "shapviz" object per output.
 }
 \section{Methods (by class)}{
@@ -137,15 +147,15 @@ return a "mshapviz" object, containing a "shapviz" object per output.
 
 \item \code{shapviz(lgb.Booster)}: Creates a "shapviz" object from a LightGBM model.
 
-\item \code{shapviz(explain)}: Creates a "shapviz" object from fastshap's "explain()" method.
+\item \code{shapviz(explain)}: Creates a "shapviz" object from \code{fastshap::explain()}.
 
-\item \code{shapviz(treeshap)}: Creates a "shapviz" object from treeshap's "treeshap()" method.
+\item \code{shapviz(treeshap)}: Creates a "shapviz" object from \code{treeshap::treeshap()}.
 
-\item \code{shapviz(predict_parts)}: Creates a "shapviz" object from DALEX's "predict_parts()" method.
+\item \code{shapviz(predict_parts)}: Creates a "shapviz" object from \code{DALEX::predict_parts()}.
 
-\item \code{shapviz(shapr)}: Creates a "shapviz" object from shapr's "explain()" method.
+\item \code{shapviz(shapr)}: Creates a "shapviz" object from \code{shapr::explain()}.
 
-\item \code{shapviz(kernelshap)}: Creates a "shapviz" object from kernelshap's "kernelshap()" method.
+\item \code{shapviz(kernelshap)}: Creates a "shapviz" object from \code{kernelshap::kernelshap()}.
 
 \item \code{shapviz(H2ORegressionModel)}: Creates a "shapviz" object from a (tree-based) H2O regression model.
 
@@ -159,6 +169,7 @@ S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 X <- data.frame(x = c("a", "b"), y = c(100, 10))
 shapviz(S, X, baseline = 4)
 
+# XGBoost models
 X_pred <- data.matrix(iris[, -1L])
 dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1L])
 fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
@@ -211,6 +222,7 @@ if (requireNamespace("lightgbm", quietly = TRUE)) {
     nrounds = 50L,
     verbose = -2L
   )
+
   x <- shapviz(fit, X_pred = X_pred)
   x
 
@@ -231,6 +243,6 @@ if (requireNamespace("lightgbm", quietly = TRUE)) {
 }
 }
 \seealso{
-\code{\link{sv_importance}}, \code{\link{sv_dependence}}, \code{\link{sv_interaction}},
-\code{\link{sv_waterfall}}, \code{\link{sv_force}}, \code{\link{collapse_shap}}
+\code{\link[=sv_importance]{sv_importance()}}, \code{\link[=sv_dependence]{sv_dependence()}}, \code{\link[=sv_interaction]{sv_interaction()}},
+\code{\link[=sv_waterfall]{sv_waterfall()}}, \code{\link[=sv_force]{sv_force()}}, \code{\link[=collapse_shap]{collapse_shap()}}
 }

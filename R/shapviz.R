@@ -1,82 +1,88 @@
 #' Initialize "shapviz" Object
 #'
-#' This function creates an object of class "shapviz" from one of the following inputs:
-#' \itemize{
-#'   \item Matrix with SHAP values
-#'   \item XGBoost model
-#'   \item LightGBM model
-#'   \item "explain" object from the package "fastshap"
-#'   \item H2O model (tree-based regression or binary classification model)
-#'   \item "shapr" object from the package "shapr"
-#'   \item The result of calling \code{treeshap()} from the "treeshap" package
-#'   \item The result of calling \code{predict_parts()} from the "DALEX" package
-#'   \item "kernelshap" object from the "kernelshap" package
-#' }
-#' The vignettes explain how to use them.
-#' Together with the main input, a data set \code{X} of feature values is required,
-#' which is used only for visualization. It can therefore contain character or factor
+#' @description
+#' This function creates an object of class "shapviz" from a matrix of SHAP values, or
+#' from a fitted model of type
+#' - XGBoost,
+#' - LightGBM, or
+#' - H2O (tree-based regression or binary classification model).
+#'
+#' Furthermore, [shapviz()] can digest the results of
+#' - `fastshap::explain()`,
+#' - `shapr::explain()`,
+#' - `treeshap::treeshap()`,
+#' - `DALEX::predict_parts()`, and
+#' - `kernelshap::kernelshap()`,
+#'
+#' check the vignettes for examples.
+#'
+#' @details
+#' Together with the main input, a data set `X` of feature values is required,
+#' used only for visualization. It can therefore contain character or factor
 #' variables, even if the SHAP values were calculated from a purely numerical feature
 #' matrix. In addition, to improve visualization, it can sometimes be useful to truncate
 #' gross outliers, logarithmize certain columns, or replace missing values with an
 #' explicit value.
+#'
 #' SHAP values of dummy variables can be combined using the convenient
-#' \code{collapse} argument.
-#' Multi-output models created from XGBoost, LightGBM, or kernelshap
+#' `collapse` argument.
+#' Multi-output models created from XGBoost, LightGBM, or {kernelshap}
 #' return a "mshapviz" object, containing a "shapviz" object per output.
-#' @importFrom xgboost xgb.train
+#'
+#' @inheritParams collapse_shap
 #' @param object For XGBoost, LightGBM, and H2O, this is the fitted model used to
-#' calculate SHAP values from \code{X_pred}.
-#' In the other cases, it is the object containing the SHAP values.
+#'   calculate SHAP values from `X_pred`.
+#'   In the other cases, it is the object containing the SHAP values.
 #' @param X Matrix or data.frame of feature values used for visualization.
-#' It must contain at least the same column names as the SHAP matrix represented by
-#' \code{object}/\code{X_pred} (after optionally collapsing some of the SHAP columns).
-#' @param X_pred Data set as expected by the \code{predict} function of
-#' XGBoost, LightGBM, or H2O. For XGBoost, a matrix or \code{xgb.DMatrix},
-#' for LightGBM a matrix, and for H2O a \code{data.frame} or an \code{H2OFrame}.
-#' Only used for XGBoost, LightGBM, or H2O objects.
+#'   Must contain at least the same column names as the SHAP matrix represented by
+#'   `object`/`X_pred` (after optionally collapsing some of the SHAP columns).
+#' @param X_pred Data set as expected by the `predict()` function of
+#'   XGBoost, LightGBM, or H2O. For XGBoost, a matrix or `xgb.DMatrix`,
+#'   for LightGBM a matrix, and for H2O a `data.frame` or an `H2OFrame`.
+#'   Only used for XGBoost, LightGBM, or H2O objects.
 #' @param baseline Optional baseline value, representing the average response at the
-#' scale of the SHAP values. It will be used for plot methods that explain single
-#' predictions.
+#'   scale of the SHAP values. It will be used for plot methods that explain single
+#'   predictions.
 #' @param which_class In case of a multiclass or multioutput setting,
-#' which class/output (>= 1) to explain. Currently relevant for XGBoost, LightGBM,
-#' and kernelshap.
-#' @param collapse A named list of character vectors. Each vector specifies a group of
-#' column names in the SHAP matrix that should be collapsed to a single column by summation.
-#' The name of the new column equals the name of the vector in \code{collapse}.
-#' @param interactions Should SHAP interactions be calculated (default is \code{FALSE})?
-#' Only available for XGBoost.
+#'   which class/output (>= 1) to explain. Currently relevant for XGBoost, LightGBM,
+#'   and kernelshap.
+#' @param interactions Should SHAP interactions be calculated (default is `FALSE`)?
+#'   Only available for XGBoost.
 #' @param S_inter Optional 3D array of SHAP interaction values.
-#' If \code{object} has shape n x p, then \code{S_inter} needs to be of shape n x p x p.
-#' Summation over the second (or third) dimension should yield the usual SHAP values.
-#' Furthermore, dimensions 2 and 3 are symmetric. Default is \code{NULL}.
+#'   If `object` has shape n x p, then `S_inter` needs to be of
+#'   shape n x p x p. Summation over the second (or third) dimension should yield the
+#'   usual SHAP values. Furthermore, dimensions 2 and 3 are expected to be symmetric.
+#'   Default is `NULL`.
 #' @param ... Parameters passed to other methods (currently only used by
-#' the \code{predict} functions of XGBoost, LightGBM, and H2O).
-#' @return An object of class "shapviz" with the following three elements:
-#' \itemize{
-#'   \item \code{S}: A numeric matrix of SHAP values.
-#'   \item \code{X}: A \code{data.frame} containing the feature values corresponding to \code{S}.
-#'   \item \code{baseline}: Baseline value, representing the average prediction at the scale of the SHAP values.
-#'   \item \code{S_inter}: A numeric array of SHAP interaction values (or \code{NULL}).
-#' }
-#' @export
-#' @seealso \code{\link{sv_importance}}, \code{\link{sv_dependence}}, \code{\link{sv_interaction}},
-#' \code{\link{sv_waterfall}}, \code{\link{sv_force}}, \code{\link{collapse_shap}}
+#'   the `predict()` functions of XGBoost, LightGBM, and H2O).
+#' @returns
+#'   An object of class "shapviz" with the following elements:
+#'   - `S`: Numeric matrix of SHAP values.
+#'   - `X`: `data.frame` containing the feature values corresponding to `S`.
+#'   - `baseline`: Baseline value, representing the average prediction at the
+#'     scale of the SHAP values.
+#'   - `S_inter`: Numeric array of SHAP interaction values (or `NULL`).
+#' @seealso
+#'   [sv_importance()], [sv_dependence()], [sv_interaction()],
+#'   [sv_waterfall()], [sv_force()], [collapse_shap()]
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
 #' shapviz(S, X, baseline = 4)
-#'
+#' @export
 shapviz <- function(object, ...){
   UseMethod("shapviz")
 }
 
-#' @describeIn shapviz Default method to initialize a "shapviz" object.
+#' @describeIn shapviz
+#'   Default method to initialize a "shapviz" object.
 #' @export
 shapviz.default = function(object, ...) {
   stop("No default method available.")
 }
 
-#' @describeIn shapviz Creates a "shapviz" object from a matrix of SHAP values.
+#' @describeIn shapviz
+#'   Creates a "shapviz" object from a matrix of SHAP values.
 #' @export
 shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
                           S_inter = NULL, ...) {
@@ -100,9 +106,12 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
   )
 }
 
-#' @describeIn shapviz Creates a "shapviz" object from an XGBoost model.
+#' @describeIn shapviz
+#'   Creates a "shapviz" object from an XGBoost model.
 #' @export
 #' @examples
+#'
+#' # XGBoost models
 #' X_pred <- data.matrix(iris[, -1L])
 #' dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1L])
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
@@ -155,6 +164,7 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
 #'     nrounds = 50L,
 #'     verbose = -2L
 #'   )
+#'
 #'   x <- shapviz(fit, X_pred = X_pred)
 #'   x
 #'
@@ -228,7 +238,8 @@ shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL,
   )
 }
 
-#' @describeIn shapviz Creates a "shapviz" object from a LightGBM model.
+#' @describeIn shapviz
+#'   Creates a "shapviz" object from a LightGBM model.
 #' @export
 shapviz.lgb.Booster = function(object, X_pred, X = X_pred,
                                which_class = NULL, collapse = NULL, ...) {
@@ -279,7 +290,8 @@ shapviz.lgb.Booster = function(object, X_pred, X = X_pred,
   shapviz.matrix(object = S, X = X, baseline = baseline, collapse = collapse)
 }
 
-#' @describeIn shapviz Creates a "shapviz" object from fastshap's "explain()" method.
+#' @describeIn shapviz
+#'   Creates a "shapviz" object from `fastshap::explain()`.
 #' @export
 shapviz.explain <- function(object, X, baseline = 0, collapse = NULL, ...) {
   shapviz.matrix(
@@ -287,7 +299,8 @@ shapviz.explain <- function(object, X, baseline = 0, collapse = NULL, ...) {
   )
 }
 
-#' @describeIn shapviz Creates a "shapviz" object from treeshap's "treeshap()" method.
+#' @describeIn shapviz
+#'   Creates a "shapviz" object from `treeshap::treeshap()`.
 #' @export
 shapviz.treeshap <- function(object, X = object[["observations"]],
                              baseline = 0, collapse = NULL, ...) {
@@ -304,7 +317,8 @@ shapviz.treeshap <- function(object, X = object[["observations"]],
   )
 }
 
-#' @describeIn shapviz Creates a "shapviz" object from DALEX's "predict_parts()" method.
+#' @describeIn shapviz
+#'   Creates a "shapviz" object from `DALEX::predict_parts()`.
 #' @export
 shapviz.predict_parts <- function(object, ...) {
   if (!inherits(object, c("shap", "shap_aggregated", "break_down"))) {
@@ -332,7 +346,8 @@ shapviz.predict_parts <- function(object, ...) {
   shapviz(object = S, X = X, baseline = baseline, ...)
 }
 
-#' @describeIn shapviz Creates a "shapviz" object from shapr's "explain()" method.
+#' @describeIn shapviz
+#'   Creates a "shapviz" object from `shapr::explain()`.
 #' @export
 shapviz.shapr <- function(object, X = object[["x_test"]], collapse = NULL, ...) {
   dt <- as.matrix(object[["dt"]])
@@ -344,7 +359,8 @@ shapviz.shapr <- function(object, X = object[["x_test"]], collapse = NULL, ...) 
   )
 }
 
-#' @describeIn shapviz Creates a "shapviz" object from kernelshap's "kernelshap()" method.
+#' @describeIn shapviz
+#'   Creates a "shapviz" object from `kernelshap::kernelshap()`.
 #' @export
 shapviz.kernelshap <- function(object, X = object[["X"]],
                                which_class = NULL, collapse = NULL, ...) {
@@ -372,21 +388,24 @@ shapviz.kernelshap <- function(object, X = object[["X"]],
   shapviz.matrix(object = S, X = X, baseline = b, collapse = collapse)
 }
 
-#' @describeIn shapviz Creates a "shapviz" object from a (tree-based) H2O regression model.
+#' @describeIn shapviz
+#'   Creates a "shapviz" object from a (tree-based) H2O regression model.
 #' @export
 shapviz.H2ORegressionModel = function(object, X_pred, X = as.data.frame(X_pred),
                                       collapse = NULL, ...) {
   shapviz.H2OModel(object = object, X_pred = X_pred, X = X, collapse = collapse, ...)
 }
 
-#' @describeIn shapviz Creates a "shapviz" object from a (tree-based) H2O binary classification model.
+#' @describeIn shapviz
+#'   Creates a "shapviz" object from a (tree-based) H2O binary classification model.
 #' @export
 shapviz.H2OBinomialModel = function(object, X_pred, X = as.data.frame(X_pred),
                                     collapse = NULL, ...) {
   shapviz.H2OModel(object = object, X_pred = X_pred, X = X, collapse = collapse, ...)
 }
 
-#' @describeIn shapviz Creates a "shapviz" object from a (tree-based) H2O model (base class).
+#' @describeIn shapviz
+#'   Creates a "shapviz" object from a (tree-based) H2O model (base class).
 #' @export
 shapviz.H2OModel = function(object, X_pred, X = as.data.frame(X_pred),
                             collapse = NULL, ...) {
@@ -417,7 +436,7 @@ shapviz.H2OModel = function(object, X_pred, X = as.data.frame(X_pred),
 #'
 #' @param object List of "shapviz" objects to be concatenated.
 #' @param ... Not used.
-#' @return A "mshapviz" object.
+#' @returns A "mshapviz" object.
 #' @export
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))

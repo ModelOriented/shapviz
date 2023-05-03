@@ -26,5 +26,5 @@ x <- c(s1 = s1, s2 = s2)
 x
 }
 \seealso{
-\code{\link{mshapviz}}
+\code{\link[=mshapviz]{mshapviz()}}
 }

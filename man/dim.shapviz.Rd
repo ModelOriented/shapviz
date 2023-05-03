@@ -25,5 +25,5 @@ nrow(x)
 ncol(x)
 }
 \seealso{
-\code{\link{shapviz}}
+\code{\link[=shapviz]{shapviz()}}
 }

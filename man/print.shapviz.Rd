@@ -24,5 +24,5 @@ x <- shapviz(S, X, baseline = 4)
 x
 }
 \seealso{
-\code{\link{shapviz}}
+\code{\link[=shapviz]{shapviz()}}
 }

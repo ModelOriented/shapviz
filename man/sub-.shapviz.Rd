@@ -32,5 +32,5 @@ x[c(FALSE, TRUE), ]
 x[, "x"]
 }
 \seealso{
-\code{\link{shapviz}}
+\code{\link[=shapviz]{shapviz()}}
 }

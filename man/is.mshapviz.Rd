@@ -10,7 +10,7 @@ is.mshapviz(object)
 \item{object}{An R object.}
 }
 \value{
-Returns \code{TRUE} if \code{object} has "\code{mshapviz}" among its classes,
+Returns \code{TRUE} if \code{object} has "mshapviz" among its classes,
 and \code{FALSE} otherwise.
 }
 \description{
@@ -26,5 +26,5 @@ is.mshapviz(x)
 is.mshapviz(s1)
 }
 \seealso{
-\code{\link{mshapviz}}
+\code{\link[=mshapviz]{mshapviz()}}
 }

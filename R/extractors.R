@@ -1,14 +1,16 @@
 #' Extractor Functions
 #'
-#' Functions to extract SHAP values, feature values, the baseline, or SHAP interactions from a "(m)shapviz" object.
+#' Functions to extract SHAP values, feature values, the baseline,
+#' or SHAP interactions from a "(m)shapviz" object.
 #'
 #' @name extractors
 #' @param object Object to extract something.
 #' @param ... Currently unused.
-#' @return `get_shap_values()` returns the matrix of SHAP values,
-#' `get_feature_values()` the \code{data.frame} of feature values,
-#' `get_baseline()` the numeric baseline value,
-#' and `get_shap_interactions()` the SHAP interactions of the input.
+#' @returns
+#'   - `get_shap_values()` returns the matrix of SHAP values,
+#'   - `get_feature_values()` the \code{data.frame} of feature values,
+#'   - `get_baseline()` the numeric baseline value, and
+#'   - `get_shap_interactions()` the SHAP interactions of the input.
 #' For objects of class "mshapviz", these functions return lists of those elements.
 NULL
 

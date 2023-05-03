@@ -12,7 +12,7 @@ interaction values.}
 
 \item{collapse}{A named list of character vectors. Each vector specifies the
 feature names whose SHAP values need to be summed up.
-The list names determine the resulting collapsed column/dimension names.}
+The names determine the resulting collapsed column/dimension names.}
 
 \item{...}{Currently unused.}
 }

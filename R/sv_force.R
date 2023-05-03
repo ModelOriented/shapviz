@@ -1,35 +1,15 @@
 #' SHAP Force Plot
 #'
-#' Creates a force plot of SHAP values of one observation. The value of
-#' f(x) denotes the prediction on the SHAP scale, while E(f(x)) refers to the baseline
-#' SHAP value.
-#' If multiple observations are selected, their SHAP values and predictions are averaged.
+#' Creates a force plot of SHAP values of one observation. If multiple
+#' observations are selected, their SHAP values and predictions are averaged.
 #'
-#' @param object An object of class "(m)shapviz".
-#' @param row_id Subset of observations to plot, typically a single row number.
-#' If more than one row is selected, SHAP values are averaged, and feature values
-#' are shown only when they are unique.
-#' @param max_display Maximum number of features (with largest absolute SHAP values)
-#' should be plotted? If there are more features, they will be collapsed to one feature.
-#' Set to \code{Inf} to show all features.
-#' @param fill_colors A vector of exactly two fill colors: the first for positive
-#' SHAP values, the other for negative ones.
-#' @param format_shap Function used to format SHAP values. The default uses the
-#' global option \code{shapviz.format_shap}, which equals to
-#' \code{function(z) prettyNum(z, digits = 3, scientific = FALSE)} by default.
-#' @param format_feat Function used to format numeric feature values. The default uses
-#' the global option \code{shapviz.format_feat}, which equals to
-#' \code{function(z) prettyNum(z, digits = 3, scientific = FALSE)} by default.
-#' @param contrast Logical flag that detemines whether to use white text in dark arrows.
-#' Default is \code{TRUE}.
-#' @param bar_label_size Size of text used to describe bars.
-#' (via \code{ggrepel::geom_text_repel()}).
-#' @param show_annotation Should "f(x)" and "E(f(x))" be plotted? Default is \code{TRUE}.
-#' @param annotation_size Size of the annotation text (f(x)=... and E(f(x))=...).
-#' @param ... Arguments passed to \code{ggfittext::geom_fit_text()}.
-#' For example, \code{size = 9} will use fixed text size in the bars and \code{size = 0}
-#' will altogether suppress adding text to the bars.
-#' @return An object of class "ggplot" (or "patchwork") representing a force plot.
+#' f(x) denotes the prediction on the SHAP scale, while E(f(x)) refers to the
+#' baseline SHAP value.
+#'
+#' @inheritParams sv_waterfall
+#' @param bar_label_size Size of text used to describe bars
+#'   (via [ggrepel::geom_text_repel()]).
+#' @returns An object of class "ggplot" (or "patchwork") representing a force plot.
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
@@ -43,18 +23,20 @@
 #' # Combine two force plots via {patchwork}
 #' sv_force(c(Obs1 = x[1L], Obs2 = x[2L]))
 #' @export
-#' @seealso \code{\link{sv_waterfall}}
+#' @seealso [sv_waterfall()]
 sv_force <- function(object, ...) {
   UseMethod("sv_force")
 }
 
-#' @describeIn sv_force Default method.
+#' @describeIn sv_force
+#'   Default method.
 #' @export
 sv_force.default <- function(object, ...) {
   stop("No default method available.")
 }
 
-#' @describeIn sv_force SHAP force plot for object of class "shapviz".
+#' @describeIn sv_force
+#'   SHAP force plot for object of class "shapviz".
 #' @export
 sv_force.shapviz <- function(object, row_id = 1L, max_display = 6L,
                              fill_colors = c("#f7d13d", "#a52c60"),
@@ -154,7 +136,8 @@ sv_force.shapviz <- function(object, row_id = 1L, max_display = 6L,
   p
 }
 
-#' @describeIn sv_force SHAP force plot for object of class "mshapviz".
+#' @describeIn sv_force
+#'   SHAP force plot for object of class "mshapviz".
 #' @export
 sv_force.mshapviz <- function(object, row_id = 1L, max_display = 6L,
                               fill_colors = c("#f7d13d", "#a52c60"),
@@ -181,6 +164,3 @@ sv_force.mshapviz <- function(object, row_id = 1L, max_display = 6L,
   patchwork::wrap_plots(plot_list) +
     patchwork::plot_layout(ncol = 1L)
 }
-
-
-

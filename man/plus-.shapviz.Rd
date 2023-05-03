@@ -26,5 +26,5 @@ s <- s1 + s2
 s
 }
 \seealso{
-\code{\link{shapviz}}, \code{\link{rbind.shapviz}}.
+\code{\link[=shapviz]{shapviz()}}, \code{\link[=rbind.shapviz]{rbind.shapviz()}}
 }

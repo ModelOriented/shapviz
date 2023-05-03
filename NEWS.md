@@ -2,6 +2,7 @@
 
 ## Documentation
 
+- Better help files
 - Vignette "Multiple 'shapviz' objects": Fixed mistake in Random Forest + Kernel SHAP example
 
 # shapviz 0.7.0

@@ -115,35 +115,35 @@ to focus on pure interaction effects (multiplied by two) or on pure main effects
 
 
 <dt>...</dt>
-<dd><p>Arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html" class="external-link">geom_jitter()</a></code>.</p></dd>
+<dd><p>Arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html" class="external-link">ggplot2::geom_jitter()</a></code>.</p></dd>
 
 
 <dt>v</dt>
-<dd><p>Column name of feature to be plotted.
-Can be a vector/list if <code>object</code> is of class "shapviz".</p></dd>
+<dd><p>Column name of feature to be plotted. Can be a vector/list if <code>object</code> is
+of class "shapviz".</p></dd>
 
 
 <dt>color_var</dt>
-<dd><p>Feature name to be used on the color scale to investigate interactions.
-The default ("auto") uses SHAP interaction values (if available) or a heuristic to
-select the strongest interacting feature. Set to <code>NULL</code> to not use the color axis.
-Can be a vector/list if <code>object</code> is of class "shapviz".</p></dd>
+<dd><p>Feature name to be used on the color scale to investigate
+interactions. The default ("auto") uses SHAP interaction values (if available),
+or a heuristic to select the strongest interacting feature. Set to <code>NULL</code> to not
+use the color axis. Can be a vector/list if <code>object</code> is of class "shapviz".</p></dd>
 
 
 <dt>color</dt>
-<dd><p>Color to be used if <code>color_var = NULL</code>.
-Can be a vector/list if <code>v</code> is a vector.</p></dd>
+<dd><p>Color to be used if <code>color_var = NULL</code>. Can be a vector/list if <code>v</code>
+is a vector.</p></dd>
 
 
 <dt>viridis_args</dt>
 <dd><p>List of viridis color scale arguments, see
-<code>?ggplot2::scale_color_viridis_c()</code>. The default points to the global
-option <code>shapviz.viridis_args</code>, which corresponds to
+<code><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">?ggplot2::scale_color_viridis_c</a></code>. The default points to the global option
+<code>shapviz.viridis_args</code>, which corresponds to
 <code>list(begin = 0.25, end = 0.85, option = "inferno")</code>.
 These values are passed to <code>ggplot2::scale_color_viridis_*()</code>.
-For example, to switch to a standard viridis scale, you can either change the default
-with <code>options(shapviz.viridis_args = list())</code> or set <code>viridis_args = list()</code>.
-Only relevant if <code>color_var</code> is not <code>NULL</code>.</p></dd>
+For example, to switch to a standard viridis scale, you can either change the
+default via <code>options(shapviz.viridis_args = list())</code>, or set
+<code>viridis_args = list()</code>. Only relevant if <code>color_var</code> is not <code>NULL</code>.</p></dd>
 
 
 <dt>jitter_width</dt>
@@ -155,16 +155,16 @@ Can be a vector/list if <code>v</code> is a vector.</p></dd>
 
 <dt>interactions</dt>
 <dd><p>Should SHAP interaction values be plotted? Default is <code>FALSE</code>.
-Requires SHAP interaction values. If <code>color_var = NULL</code> (or it is equal to
-<code>v</code>), the pure main effect of <code>v</code> is visualized. Otherwise, twice the SHAP
-interaction values between <code>v</code> and the <code>color_var</code> are plotted.</p></dd>
+Requires SHAP interaction values. If <code>color_var = NULL</code> (or it is equal to <code>v</code>),
+the pure main effect of <code>v</code> is visualized. Otherwise, twice the SHAP interaction
+values between <code>v</code> and the <code>color_var</code> are plotted.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p>An object of class <code>ggplot</code> (or "patchwork") representing a dependence plot.</p>
+<p>An object of class "ggplot" (or "patchwork") representing a dependence plot.</p>
     </div>
     <div id="methods-by-class-">
     <h2>Methods (by class)</h2>
@@ -175,7 +175,7 @@ interaction values between <code>v</code> and the <code>color_var</code> are plo
 </ul></div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="potential_interactions.html">potential_interactions</a></code></p></div>
+    <div class="dont-index"><p><code><a href="potential_interactions.html">potential_interactions()</a></code></p></div>
     </div>
 
     <div id="ref-examples">

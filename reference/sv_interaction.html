@@ -121,8 +121,8 @@ The features are sorted in decreasing order of usual SHAP importance.</p>
 
 
 <dt>...</dt>
-<dd><p>Arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code>.
-For instance, passing <code>size = 1</code> will produce smaller dots.</p></dd>
+<dd><p>Arguments passed to <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">ggplot2::geom_point()</a></code>. For instance,
+passing <code>size = 1</code> will produce smaller dots.</p></dd>
 
 
 <dt>kind</dt>
@@ -132,7 +132,7 @@ The default is "beeswarm".</p></dd>
 
 
 <dt>max_display</dt>
-<dd><p>Maximum number of features (with highest SHAP importance) to plot.
+<dd><p>Maximum number of features (with highest importance) to plot.
 Set to <code>Inf</code> to show all features. Has no effect if <code>kind = "no"</code>.</p></dd>
 
 
@@ -151,26 +151,27 @@ estimating the density of the beeswarms (only used if beeswarm shown).</p></dd>
 
 <dt>viridis_args</dt>
 <dd><p>List of viridis color scale arguments used to control the
-coloring of the beeswarm plot, see <code>?ggplot2::scale_color_viridis_c()</code>.
+coloring of the beeswarm plot, see <code><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">?ggplot2::scale_color_viridis_c</a></code>.
 The default points to the global option <code>shapviz.viridis_args</code>, which
 corresponds to <code>list(begin = 0.25, end = 0.85, option = "inferno")</code>.
 These values are passed to <code><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">ggplot2::scale_color_viridis_c()</a></code>.
-For example, to switch to a standard viridis scale, you can either change the default
-with <code>options(shapviz.viridis_args = list())</code> or set <code>viridis_args = list()</code>.</p></dd>
+For example, to switch to a standard viridis scale, you can either change the
+default with <code>options(shapviz.viridis_args = list())</code> or set
+<code>viridis_args = list()</code>.</p></dd>
 
 
 <dt>color_bar_title</dt>
-<dd><p>Title of color bar of the beeswarm plot.
-Set to <code>NULL</code> to hide the color bar altogether.</p></dd>
+<dd><p>Title of color bar of the beeswarm plot. Set to <code>NULL</code>
+to hide the color bar altogether.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p>A "ggplot" (or "patchwork") object, or - if <code>kind = "no"</code> - a named numeric matrix
-of average absolute SHAP interactions sorted by the average absolute SHAP values
-(or a list of such matrices in case of "mshapviz" object).</p>
+<p>A "ggplot" (or "patchwork") object, or - if <code>kind = "no"</code> - a named
+numeric matrix of average absolute SHAP interactions sorted by the average
+absolute SHAP values (or a list of such matrices in case of "mshapviz" object).</p>
     </div>
     <div id="methods-by-class-">
     <h2>Methods (by class)</h2>
@@ -181,7 +182,7 @@ of average absolute SHAP interactions sorted by the average absolute SHAP values
 </ul></div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="sv_importance.html">sv_importance</a></code></p></div>
+    <div class="dont-index"><p><code><a href="sv_importance.html">sv_importance()</a></code></p></div>
     </div>
 
     <div id="ref-examples">

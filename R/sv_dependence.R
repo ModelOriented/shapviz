@@ -1,37 +1,38 @@
 #' SHAP Dependence Plot
 #'
 #' Scatterplot of the SHAP values of a feature against its feature values.
-#' If SHAP interaction values are available, setting \code{interactions = TRUE} allows
+#' If SHAP interaction values are available, setting `interactions = TRUE` allows
 #' to focus on pure interaction effects (multiplied by two) or on pure main effects.
 #'
 #' @importFrom rlang .data
+#'
 #' @param object An object of class "(m)shapviz".
-#' @param v Column name of feature to be plotted.
-#' Can be a vector/list if \code{object} is of class "shapviz".
-#' @param color_var Feature name to be used on the color scale to investigate interactions.
-#' The default ("auto") uses SHAP interaction values (if available) or a heuristic to
-#' select the strongest interacting feature. Set to \code{NULL} to not use the color axis.
-#' Can be a vector/list if \code{object} is of class "shapviz".
-#' @param color Color to be used if \code{color_var = NULL}.
-#' Can be a vector/list if \code{v} is a vector.
+#' @param v Column name of feature to be plotted. Can be a vector/list if `object` is
+#'   of class "shapviz".
+#' @param color_var Feature name to be used on the color scale to investigate
+#'   interactions. The default ("auto") uses SHAP interaction values (if available),
+#'   or a heuristic to select the strongest interacting feature. Set to `NULL` to not
+#'   use the color axis. Can be a vector/list if `object` is of class "shapviz".
+#' @param color Color to be used if `color_var = NULL`. Can be a vector/list if `v`
+#'   is a vector.
 #' @param viridis_args List of viridis color scale arguments, see
-#' \code{?ggplot2::scale_color_viridis_c()}. The default points to the global
-#' option \code{shapviz.viridis_args}, which corresponds to
-#' \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
-#' These values are passed to \code{ggplot2::scale_color_viridis_*()}.
-#' For example, to switch to a standard viridis scale, you can either change the default
-#' with \code{options(shapviz.viridis_args = list())} or set \code{viridis_args = list()}.
-#' Only relevant if \code{color_var} is not \code{NULL}.
-#' @param jitter_width The amount of horizontal jitter. The default (\code{NULL}) will
-#' use a value of 0.2 in case \code{v} is discrete, and no jitter otherwise.
-#' (Numeric variables are considered discrete if they have at most 7 unique values.)
-#' Can be a vector/list if \code{v} is a vector.
-#' @param interactions Should SHAP interaction values be plotted? Default is \code{FALSE}.
-#' Requires SHAP interaction values. If \code{color_var = NULL} (or it is equal to
-#' \code{v}), the pure main effect of \code{v} is visualized. Otherwise, twice the SHAP
-#' interaction values between \code{v} and the \code{color_var} are plotted.
-#' @param ... Arguments passed to \code{geom_jitter()}.
-#' @return An object of class \code{ggplot} (or "patchwork") representing a dependence plot.
+#'   `?ggplot2::scale_color_viridis_c`. The default points to the global option
+#'   `shapviz.viridis_args`, which corresponds to
+#'   `list(begin = 0.25, end = 0.85, option = "inferno")`.
+#'   These values are passed to `ggplot2::scale_color_viridis_*()`.
+#'   For example, to switch to a standard viridis scale, you can either change the
+#'   default via `options(shapviz.viridis_args = list())`, or set
+#'   `viridis_args = list()`. Only relevant if `color_var` is not `NULL`.
+#' @param jitter_width The amount of horizontal jitter. The default (`NULL`) will
+#'   use a value of 0.2 in case `v` is discrete, and no jitter otherwise.
+#'   (Numeric variables are considered discrete if they have at most 7 unique values.)
+#'   Can be a vector/list if `v` is a vector.
+#' @param interactions Should SHAP interaction values be plotted? Default is `FALSE`.
+#'   Requires SHAP interaction values. If `color_var = NULL` (or it is equal to `v`),
+#'   the pure main effect of `v` is visualized. Otherwise, twice the SHAP interaction
+#'   values between `v` and the `color_var` are plotted.
+#' @param ... Arguments passed to [ggplot2::geom_jitter()].
+#' @returns An object of class "ggplot" (or "patchwork") representing a dependence plot.
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
@@ -54,18 +55,20 @@
 #' )
 #' sv_dependence(mx, "Petal.Length", color_var = NULL, interactions = TRUE)
 #' @export
-#' @seealso \code{\link{potential_interactions}}
+#' @seealso [potential_interactions()]
 sv_dependence <- function(object, ...) {
   UseMethod("sv_dependence")
 }
 
-#' @describeIn sv_dependence Default method.
+#' @describeIn sv_dependence
+#'   Default method.
 #' @export
 sv_dependence.default <- function(object, ...) {
   stop("No default method available.")
 }
 
-#' @describeIn sv_dependence SHAP dependence plot for "shapviz" object.
+#' @describeIn sv_dependence
+#'   SHAP dependence plot for "shapviz" object.
 #' @export
 sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528b",
                                   viridis_args = getOption("shapviz.viridis_args"),
@@ -160,7 +163,8 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
     theme(legend.box.spacing = grid::unit(0, "pt"))
 }
 
-#' @describeIn sv_dependence SHAP dependence plot for "mshapviz" object.
+#' @describeIn sv_dependence
+#'   SHAP dependence plot for "mshapviz" object.
 #' @export
 sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b528b",
                                    viridis_args = getOption("shapviz.viridis_args"),
@@ -187,25 +191,25 @@ sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b52
 
 #' Interaction Strength
 #'
-#' Returns the interaction strengths between variable \code{v} and all other variables.
+#' Returns vector of interaction strengths between variable `v` and all other variables.
+#'
 #' If SHAP interaction values are available, interaction strength
-#' between feature \code{v} and another feature \code{v'} is measured by twice their
+#' between feature `v` and another feature `v'` is measured by twice their
 #' mean absolute SHAP interaction values. Otherwise, we use as heuristic the
-#' squared correlation between feature values of \code{v'} and
-#' SHAP values of \code{v}, averaged over (binned) values of \code{v}.
-#' A numeric \code{v} with more than \code{n_bins} unique values is binned into
-#' quantile bins.
-#' Currently \code{n_bins} equals the smaller of n/20 and sqrt(n), where n is the
-#' sample size.
+#' squared correlation between feature values of `v'` and
+#' SHAP values of `v`, averaged over (binned) values of `v`.
+#' A numeric `v` with more than `n_bins` unique values is binned into quantile bins.
+#' Currently `n_bins` equals the smaller of \eqn{n/20} and \eqn{\sqrt n}, where \eqn{n}
+#' is the sample size.
 #' The average squared correlation is weighted by the number of non-missing feature
 #' values in the bin. Note that non-numeric color features are turned to numeric
-#' by calling \code{data.matrix}, which does not necessarily make sense.
+#' by calling [data.matrix()], which does not necessarily make sense.
 #'
-#' @param obj An object of type "shapviz".
+#' @param obj An object of class "shapviz".
 #' @param v Variable name.
-#' @return A named vector of decreasing interaction strengths.
+#' @returns A named vector of decreasing interaction strengths.
 #' @export
-#' @seealso \code{\link{sv_dependence}}
+#' @seealso [sv_dependence()]
 potential_interactions <- function(obj, v) {
   stopifnot(is.shapviz(obj))
   S <- get_shap_values(obj)
@@ -251,4 +255,3 @@ potential_interactions <- function(obj, v) {
   q <- stats::quantile(z, seq(0, 1, length.out = n_bins + 1L), na.rm = TRUE)
   findInterval(z, unique(q), rightmost.closed = TRUE)
 }
-

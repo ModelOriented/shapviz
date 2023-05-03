@@ -3,33 +3,20 @@
 #' Plots a beeswarm plot for each feature pair. Diagonals represent the main effects,
 #' while off-diagonals show interactions (multiplied by two due to symmetry).
 #' The colors on the beeswarm plots represent min-max scaled feature values.
-#' Non-numeric features are transformed to numeric by calling \code{data.matrix()} first.
+#' Non-numeric features are transformed to numeric by calling [data.matrix()] first.
 #' The features are sorted in decreasing order of usual SHAP importance.
 #'
-#' @param object An object of class "(m)shapviz" containing element \code{S_inter}.
+#' @param object An object of class "(m)shapviz" containing element `S_inter`.
 #' @param kind Set to "no" to simply return the matrix of average absolute SHAP
-#' interactions (or a list of such matrices in case of object of class "mshapviz").
-#' The default is "beeswarm".
-#' @param max_display Maximum number of features (with highest SHAP importance) to plot.
-#' Set to \code{Inf} to show all features. Has no effect if \code{kind = "no"}.
+#'   interactions (or a list of such matrices in case of object of class "mshapviz").
+#'   The default is "beeswarm".
 #' @param alpha Transparency of the beeswarm dots. Defaults to 0.3.
-#' @param bee_width Relative width of the beeswarms (only used if beeswarm shown).
-#' @param bee_adjust Relative bandwidth adjustment factor used in
-#' estimating the density of the beeswarms (only used if beeswarm shown).
-#' @param viridis_args List of viridis color scale arguments used to control the
-#' coloring of the beeswarm plot, see \code{?ggplot2::scale_color_viridis_c()}.
-#' The default points to the global option \code{shapviz.viridis_args}, which
-#' corresponds to \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
-#' These values are passed to \code{ggplot2::scale_color_viridis_c()}.
-#' For example, to switch to a standard viridis scale, you can either change the default
-#' with \code{options(shapviz.viridis_args = list())} or set \code{viridis_args = list()}.
-#' @param color_bar_title Title of color bar of the beeswarm plot.
-#' Set to \code{NULL} to hide the color bar altogether.
-#' @param ... Arguments passed to \code{geom_point()}.
-#' For instance, passing \code{size = 1} will produce smaller dots.
-#' @return A "ggplot" (or "patchwork") object, or - if \code{kind = "no"} - a named numeric matrix
-#' of average absolute SHAP interactions sorted by the average absolute SHAP values
-#' (or a list of such matrices in case of "mshapviz" object).
+#' @param ... Arguments passed to [ggplot2::geom_point()]. For instance,
+#'   passing `size = 1` will produce smaller dots.
+#' @inheritParams sv_importance
+#' @returns A "ggplot" (or "patchwork") object, or - if `kind = "no"` - a named
+#'   numeric matrix of average absolute SHAP interactions sorted by the average
+#'   absolute SHAP values (or a list of such matrices in case of "mshapviz" object).
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
@@ -37,19 +24,21 @@
 #' sv_interaction(x)
 #' sv_interaction(x, max_display = 2L, size = 3, alpha = 0.1)
 #' sv_interaction(x, kind = "no")
-#' @seealso \code{\link{sv_importance}}
+#' @seealso [sv_importance()]
 #' @export
 sv_interaction <- function(object, ...) {
   UseMethod("sv_interaction")
 }
 
-#' @describeIn sv_interaction Default method.
+#' @describeIn sv_interaction
+#'   Default method.
 #' @export
 sv_interaction.default <- function(object, ...) {
   stop("No default method available.")
 }
 
-#' @describeIn sv_interaction SHAP interaction plot for an object of class "shapviz".
+#' @describeIn sv_interaction
+#'   SHAP interaction plot for an object of class "shapviz".
 #' @export
 sv_interaction.shapviz <- function(object, kind = c("beeswarm", "no"),
                                    max_display = 7L, alpha = 0.3,
@@ -113,7 +102,8 @@ sv_interaction.shapviz <- function(object, kind = c("beeswarm", "no"),
     )
 }
 
-#' @describeIn sv_interaction SHAP interaction plot for an object of class "mshapviz".
+#' @describeIn sv_interaction
+#'   SHAP interaction plot for an object of class "mshapviz".
 #' @export
 sv_interaction.mshapviz <- function(object, kind = c("beeswarm", "no"),
                                     max_display = 7L, alpha = 0.3,

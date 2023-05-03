@@ -36,27 +36,27 @@ sv_dependence(object, ...)
 \arguments{
 \item{object}{An object of class "(m)shapviz".}
 
-\item{...}{Arguments passed to \code{geom_jitter()}.}
+\item{...}{Arguments passed to \code{\link[ggplot2:geom_jitter]{ggplot2::geom_jitter()}}.}
 
-\item{v}{Column name of feature to be plotted.
-Can be a vector/list if \code{object} is of class "shapviz".}
+\item{v}{Column name of feature to be plotted. Can be a vector/list if \code{object} is
+of class "shapviz".}
 
-\item{color_var}{Feature name to be used on the color scale to investigate interactions.
-The default ("auto") uses SHAP interaction values (if available) or a heuristic to
-select the strongest interacting feature. Set to \code{NULL} to not use the color axis.
-Can be a vector/list if \code{object} is of class "shapviz".}
+\item{color_var}{Feature name to be used on the color scale to investigate
+interactions. The default ("auto") uses SHAP interaction values (if available),
+or a heuristic to select the strongest interacting feature. Set to \code{NULL} to not
+use the color axis. Can be a vector/list if \code{object} is of class "shapviz".}
 
-\item{color}{Color to be used if \code{color_var = NULL}.
-Can be a vector/list if \code{v} is a vector.}
+\item{color}{Color to be used if \code{color_var = NULL}. Can be a vector/list if \code{v}
+is a vector.}
 
 \item{viridis_args}{List of viridis color scale arguments, see
-\code{?ggplot2::scale_color_viridis_c()}. The default points to the global
-option \code{shapviz.viridis_args}, which corresponds to
+\code{?ggplot2::scale_color_viridis_c}. The default points to the global option
+\code{shapviz.viridis_args}, which corresponds to
 \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
-These values are passed to \code{ggplot2::scale_color_viridis_*()}.
-For example, to switch to a standard viridis scale, you can either change the default
-with \code{options(shapviz.viridis_args = list())} or set \code{viridis_args = list()}.
-Only relevant if \code{color_var} is not \code{NULL}.}
+These values are passed to \verb{ggplot2::scale_color_viridis_*()}.
+For example, to switch to a standard viridis scale, you can either change the
+default via \code{options(shapviz.viridis_args = list())}, or set
+\code{viridis_args = list()}. Only relevant if \code{color_var} is not \code{NULL}.}
 
 \item{jitter_width}{The amount of horizontal jitter. The default (\code{NULL}) will
 use a value of 0.2 in case \code{v} is discrete, and no jitter otherwise.
@@ -64,12 +64,12 @@ use a value of 0.2 in case \code{v} is discrete, and no jitter otherwise.
 Can be a vector/list if \code{v} is a vector.}
 
 \item{interactions}{Should SHAP interaction values be plotted? Default is \code{FALSE}.
-Requires SHAP interaction values. If \code{color_var = NULL} (or it is equal to
-\code{v}), the pure main effect of \code{v} is visualized. Otherwise, twice the SHAP
-interaction values between \code{v} and the \code{color_var} are plotted.}
+Requires SHAP interaction values. If \code{color_var = NULL} (or it is equal to \code{v}),
+the pure main effect of \code{v} is visualized. Otherwise, twice the SHAP interaction
+values between \code{v} and the \code{color_var} are plotted.}
 }
 \value{
-An object of class \code{ggplot} (or "patchwork") representing a dependence plot.
+An object of class "ggplot" (or "patchwork") representing a dependence plot.
 }
 \description{
 Scatterplot of the SHAP values of a feature against its feature values.
@@ -108,5 +108,5 @@ mx <- c(
 sv_dependence(mx, "Petal.Length", color_var = NULL, interactions = TRUE)
 }
 \seealso{
-\code{\link{potential_interactions}}
+\code{\link[=potential_interactions]{potential_interactions()}}
 }

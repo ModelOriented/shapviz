@@ -1,40 +1,39 @@
 #' SHAP Waterfall Plot
 #'
-#' Creates a waterfall plot of SHAP values of one observation. The value of
-#' f(x) denotes the prediction on the SHAP scale, while E(f(x)) refers to the baseline
-#' SHAP value. The plot has to be read from bottom to top.
-#' If multiple observations are selected, their SHAP values and predictions are averaged.
+#' Creates a waterfall plot of SHAP values of one observation. If multiple
+#' observations are selected, their SHAP values and predictions are averaged.
+#'
+#' f(x) denotes the prediction on the SHAP scale, while E(f(x)) refers to the
+#' baseline SHAP value.
 #'
 #' @param object An object of class "(m)shapviz".
 #' @param row_id Subset of observations to plot, typically a single row number.
-#' If more than one row is selected, SHAP values are averaged, and feature values
-#' are shown only when they are unique.
+#'   If more than one row is selected, SHAP values are averaged, and feature values
+#'   are shown only when they are unique.
 #' @param max_display Maximum number of features (with largest absolute SHAP values)
-#' should be plotted? If there are more features, they will be collapsed to one feature.
-#' The default is ten in order to not overload the plot. Set to \code{Inf} to show
-#' all features.
+#'   should be plotted? If there are more features, they will be collapsed to one
+#'   feature. Set to `Inf` to show all features.
 #' @param order_fun Function specifying the order of the variables/SHAP values.
-#' It maps the vector \code{s} of SHAP values to sort indices from 1 to \code{length(s)}.
-#' The default is \code{function(s) order(abs(s))}.
-#' To plot without sorting, use \code{function(s) 1:length(s)} or
-#' \code{function(s) length(s):1}.
+#'   It maps the vector `s` of SHAP values to sort indices from 1 to `length(s)`.
+#'   The default is `function(s) order(abs(s))`. To plot without sorting, use
+#'   `function(s) 1:length(s)` or `function(s) length(s):1`.
 #' @param fill_colors A vector of exactly two fill colors: the first for positive
-#' SHAP values, the other for negative ones.
+#'   SHAP values, the other for negative ones.
 #' @param format_shap Function used to format SHAP values. The default uses the
-#' global option \code{shapviz.format_shap}, which equals to
-#' \code{function(z) prettyNum(z, digits = 3, scientific = FALSE)} by default.
+#'   global option `shapviz.format_shap`, which equals to
+#'   `function(z) prettyNum(z, digits = 3, scientific = FALSE)` by default.
 #' @param format_feat Function used to format numeric feature values. The default uses
-#' the global option \code{shapviz.format_feat}, which equals to
-#' \code{function(z) prettyNum(z, digits = 3, scientific = FALSE)} by default.
+#'   the global option `shapviz.format_feat`, which equals to
+#'   `function(z) prettyNum(z, digits = 3, scientific = FALSE)` by default.
 #' @param contrast Logical flag that detemines whether to use white text in dark arrows.
-#' Default is \code{TRUE}.
-#' @param show_connection Should connecting lines be shown? Default is \code{TRUE}.
-#' @param show_annotation Should "f(x)" and "E(f(x))" be plotted? Default is \code{TRUE}.
+#'   Default is `TRUE`.
+#' @param show_connection Should connecting lines be shown? Default is `TRUE`.
+#' @param show_annotation Should "f(x)" and "E(f(x))" be plotted? Default is `TRUE`.
 #' @param annotation_size Size of the annotation text (f(x)=... and E(f(x))=...).
-#' @param ... Arguments passed to \code{ggfittext::geom_fit_text()}.
-#' For example, \code{size = 9} will use fixed text size in the bars and \code{size = 0}
-#' will altogether suppress adding text to the bars.
-#' @return An object of class "ggplot" (or "patchwork") representing a waterfall plot.
+#' @param ... Arguments passed to [ggfittext::geom_fit_text()].
+#'   For example, `size = 9` will use fixed text size in the bars and `size = 0`
+#'   will altogether suppress adding text to the bars.
+#' @returns An object of class "ggplot" (or "patchwork") representing a waterfall plot.
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
@@ -60,18 +59,20 @@
 #' sv_waterfall(c(Obs1 = x[1L], Obs2 = x[2L])) +
 #'   patchwork::plot_layout(ncol = 1L)
 #' @export
-#' @seealso \code{\link{sv_force}}
+#' @seealso [sv_force()]
 sv_waterfall <- function(object, ...) {
   UseMethod("sv_waterfall")
 }
 
-#' @describeIn sv_waterfall Default method.
+#' @describeIn sv_waterfall
+#'   Default method.
 #' @export
 sv_waterfall.default <- function(object, ...) {
   stop("No default method available.")
 }
 
-#' @describeIn sv_waterfall SHAP waterfall plot for an object of class "shapviz".
+#' @describeIn sv_waterfall
+#'   SHAP waterfall plot for an object of class "shapviz".
 #' @export
 sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
                                  order_fun = function(s) order(abs(s)),
@@ -170,7 +171,8 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
   p
 }
 
-#' @describeIn sv_waterfall SHAP waterfall plot for an object of class "mshapviz".
+#' @describeIn sv_waterfall
+#'   SHAP waterfall plot for an object of class "mshapviz".
 #' @export
 sv_waterfall.mshapviz <- function(object, row_id = 1L, max_display = 10L,
                                   order_fun = function(s) order(abs(s)),

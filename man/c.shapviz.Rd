@@ -25,5 +25,5 @@ s <- c(shp1 = s1, shp2 = s2)
 s
 }
 \seealso{
-\code{\link{mshapviz}}
+\code{\link[=mshapviz]{mshapviz()}}
 }

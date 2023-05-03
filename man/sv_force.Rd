@@ -42,7 +42,7 @@ sv_force(object, ...)
 \arguments{
 \item{object}{An object of class "(m)shapviz".}
 
-\item{...}{Arguments passed to \code{ggfittext::geom_fit_text()}.
+\item{...}{Arguments passed to \code{\link[ggfittext:geom_fit_text]{ggfittext::geom_fit_text()}}.
 For example, \code{size = 9} will use fixed text size in the bars and \code{size = 0}
 will altogether suppress adding text to the bars.}
 
@@ -51,8 +51,8 @@ If more than one row is selected, SHAP values are averaged, and feature values
 are shown only when they are unique.}
 
 \item{max_display}{Maximum number of features (with largest absolute SHAP values)
-should be plotted? If there are more features, they will be collapsed to one feature.
-Set to \code{Inf} to show all features.}
+should be plotted? If there are more features, they will be collapsed to one
+feature. Set to \code{Inf} to show all features.}
 
 \item{fill_colors}{A vector of exactly two fill colors: the first for positive
 SHAP values, the other for negative ones.}
@@ -68,8 +68,8 @@ the global option \code{shapviz.format_feat}, which equals to
 \item{contrast}{Logical flag that detemines whether to use white text in dark arrows.
 Default is \code{TRUE}.}
 
-\item{bar_label_size}{Size of text used to describe bars.
-(via \code{ggrepel::geom_text_repel()}).}
+\item{bar_label_size}{Size of text used to describe bars
+(via \code{\link[ggrepel:geom_text_repel]{ggrepel::geom_text_repel()}}).}
 
 \item{show_annotation}{Should "f(x)" and "E(f(x))" be plotted? Default is \code{TRUE}.}
 
@@ -79,10 +79,12 @@ Default is \code{TRUE}.}
 An object of class "ggplot" (or "patchwork") representing a force plot.
 }
 \description{
-Creates a force plot of SHAP values of one observation. The value of
-f(x) denotes the prediction on the SHAP scale, while E(f(x)) refers to the baseline
-SHAP value.
-If multiple observations are selected, their SHAP values and predictions are averaged.
+Creates a force plot of SHAP values of one observation. If multiple
+observations are selected, their SHAP values and predictions are averaged.
+}
+\details{
+f(x) denotes the prediction on the SHAP scale, while E(f(x)) refers to the
+baseline SHAP value.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -107,5 +109,5 @@ sv_force(x, row_id = x$X$Petal.Length == 1.4)
 sv_force(c(Obs1 = x[1L], Obs2 = x[2L]))
 }
 \seealso{
-\code{\link{sv_waterfall}}
+\code{\link[=sv_waterfall]{sv_waterfall()}}
 }

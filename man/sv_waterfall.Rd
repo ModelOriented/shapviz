@@ -44,7 +44,7 @@ sv_waterfall(object, ...)
 \arguments{
 \item{object}{An object of class "(m)shapviz".}
 
-\item{...}{Arguments passed to \code{ggfittext::geom_fit_text()}.
+\item{...}{Arguments passed to \code{\link[ggfittext:geom_fit_text]{ggfittext::geom_fit_text()}}.
 For example, \code{size = 9} will use fixed text size in the bars and \code{size = 0}
 will altogether suppress adding text to the bars.}
 
@@ -53,15 +53,13 @@ If more than one row is selected, SHAP values are averaged, and feature values
 are shown only when they are unique.}
 
 \item{max_display}{Maximum number of features (with largest absolute SHAP values)
-should be plotted? If there are more features, they will be collapsed to one feature.
-The default is ten in order to not overload the plot. Set to \code{Inf} to show
-all features.}
+should be plotted? If there are more features, they will be collapsed to one
+feature. Set to \code{Inf} to show all features.}
 
 \item{order_fun}{Function specifying the order of the variables/SHAP values.
 It maps the vector \code{s} of SHAP values to sort indices from 1 to \code{length(s)}.
-The default is \code{function(s) order(abs(s))}.
-To plot without sorting, use \code{function(s) 1:length(s)} or
-\code{function(s) length(s):1}.}
+The default is \code{function(s) order(abs(s))}. To plot without sorting, use
+\code{function(s) 1:length(s)} or \code{function(s) length(s):1}.}
 
 \item{fill_colors}{A vector of exactly two fill colors: the first for positive
 SHAP values, the other for negative ones.}
@@ -87,10 +85,12 @@ Default is \code{TRUE}.}
 An object of class "ggplot" (or "patchwork") representing a waterfall plot.
 }
 \description{
-Creates a waterfall plot of SHAP values of one observation. The value of
-f(x) denotes the prediction on the SHAP scale, while E(f(x)) refers to the baseline
-SHAP value. The plot has to be read from bottom to top.
-If multiple observations are selected, their SHAP values and predictions are averaged.
+Creates a waterfall plot of SHAP values of one observation. If multiple
+observations are selected, their SHAP values and predictions are averaged.
+}
+\details{
+f(x) denotes the prediction on the SHAP scale, while E(f(x)) refers to the
+baseline SHAP value.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -127,5 +127,5 @@ sv_waterfall(c(Obs1 = x[1L], Obs2 = x[2L])) +
   patchwork::plot_layout(ncol = 1L)
 }
 \seealso{
-\code{\link{sv_force}}
+\code{\link[=sv_force]{sv_force()}}
 }

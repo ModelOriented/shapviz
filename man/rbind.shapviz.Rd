@@ -13,7 +13,7 @@
 A new object of class "shapviz".
 }
 \description{
-It is based on the \code{+} operator for "shapviz" objects.
+Rowbinds multiple "shapviz" objects based on the \code{+} operator.
 }
 \examples{
 S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
@@ -24,5 +24,5 @@ s <- rbind(s1, s2)
 s
 }
 \seealso{
-\code{\link{shapviz}}
+\code{\link[=shapviz]{shapviz()}}
 }

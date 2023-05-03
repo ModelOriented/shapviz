@@ -7,7 +7,7 @@
 potential_interactions(obj, v)
 }
 \arguments{
-\item{obj}{An object of type "shapviz".}
+\item{obj}{An object of class "shapviz".}
 
 \item{v}{Variable name.}
 }
@@ -15,20 +15,21 @@ potential_interactions(obj, v)
 A named vector of decreasing interaction strengths.
 }
 \description{
-Returns the interaction strengths between variable \code{v} and all other variables.
+Returns vector of interaction strengths between variable \code{v} and all other variables.
+}
+\details{
 If SHAP interaction values are available, interaction strength
-between feature \code{v} and another feature \code{v'} is measured by twice their
+between feature \code{v} and another feature \verb{v'} is measured by twice their
 mean absolute SHAP interaction values. Otherwise, we use as heuristic the
-squared correlation between feature values of \code{v'} and
+squared correlation between feature values of \verb{v'} and
 SHAP values of \code{v}, averaged over (binned) values of \code{v}.
-A numeric \code{v} with more than \code{n_bins} unique values is binned into
-quantile bins.
-Currently \code{n_bins} equals the smaller of n/20 and sqrt(n), where n is the
-sample size.
+A numeric \code{v} with more than \code{n_bins} unique values is binned into quantile bins.
+Currently \code{n_bins} equals the smaller of \eqn{n/20} and \eqn{\sqrt n}, where \eqn{n}
+is the sample size.
 The average squared correlation is weighted by the number of non-missing feature
 values in the bin. Note that non-numeric color features are turned to numeric
-by calling \code{data.matrix}, which does not necessarily make sense.
+by calling \code{\link[=data.matrix]{data.matrix()}}, which does not necessarily make sense.
 }
 \seealso{
-\code{\link{sv_dependence}}
+\code{\link[=sv_dependence]{sv_dependence()}}
 }

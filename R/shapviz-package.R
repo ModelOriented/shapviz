@@ -4,6 +4,9 @@
 #' @import ggplot2
 NULL
 
+# Suppress R CMD check note
+#' @importFrom xgboost xgb.train
+
 globalVariables(c("from", "i", "id", "label", "to", "x", "shap",
                   "feature", "value", "color", "Var2", "Var3", "S"))
 

@@ -2,47 +2,47 @@
 #'
 #' This function provides two types of SHAP importance plots: a bar plot
 #' and a beeswarm plot (sometimes called "SHAP summary plot").
+#' The two types of plots can also be combined.
+#'
 #' The bar plot shows SHAP feature importances, calculated as the average absolute SHAP
-#' value per feature.
-#' The beeswarm plot displays SHAP values per feature, using min-max
+#' value per feature. The beeswarm plot displays SHAP values per feature, using min-max
 #' scaled feature values on the color axis. Non-numeric features are transformed
-#' to numeric by calling \code{data.matrix()} first.
-#' For both types of plots, the features are sorted in decreasing
-#' order of importance. The two types of plots can also be combined.
+#' to numeric by calling [data.matrix()] first. For both types of plots, the features
+#' are sorted in decreasing order of importance.
 #'
 #' @param object An object of class "(m)shapviz".
 #' @param kind Should a "bar" plot (the default), a "beeswarm" plot, or "both" be shown?
-#' Set to "no" in order to suppress plotting. In that case, the sorted
-#' SHAP feature importances of all variables are returned.
+#'   Set to "no" in order to suppress plotting. In that case, the sorted
+#'   SHAP feature importances of all variables are returned.
 #' @param max_display Maximum number of features (with highest importance) to plot.
-#' Set to \code{Inf} to show all features. Has no effect if \code{kind = "no"}.
+#'   Set to `Inf` to show all features. Has no effect if `kind = "no"`.
 #' @param fill Color used to fill the bars (only used if bars are shown).
 #' @param bar_width Relative width of the bars (only used if bars are shown).
 #' @param bee_width Relative width of the beeswarms (only used if beeswarm shown).
 #' @param bee_adjust Relative bandwidth adjustment factor used in
-#' estimating the density of the beeswarms (only used if beeswarm shown).
+#'   estimating the density of the beeswarms (only used if beeswarm shown).
 #' @param viridis_args List of viridis color scale arguments used to control the
-#' coloring of the beeswarm plot, see \code{?ggplot2::scale_color_viridis_c()}.
-#' The default points to the global option \code{shapviz.viridis_args}, which
-#' corresponds to \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
-#' These values are passed to \code{ggplot2::scale_color_viridis_c()}.
-#' For example, to switch to a standard viridis scale, you can either change the default
-#' with \code{options(shapviz.viridis_args = list())} or set \code{viridis_args = list()}.
-#' @param color_bar_title Title of color bar of the beeswarm plot.
-#' Set to \code{NULL} to hide the color bar altogether.
-#' @param show_numbers Should SHAP feature importances be printed?
-#' Default is \code{FALSE}.
+#'   coloring of the beeswarm plot, see `?ggplot2::scale_color_viridis_c`.
+#'   The default points to the global option `shapviz.viridis_args`, which
+#'   corresponds to `list(begin = 0.25, end = 0.85, option = "inferno")`.
+#'   These values are passed to [ggplot2::scale_color_viridis_c()].
+#'   For example, to switch to a standard viridis scale, you can either change the
+#'   default with `options(shapviz.viridis_args = list())` or set
+#'   `viridis_args = list()`.
+#' @param color_bar_title Title of color bar of the beeswarm plot. Set to `NULL`
+#'   to hide the color bar altogether.
+#' @param show_numbers Should SHAP feature importances be printed? Default is `FALSE`.
 #' @param format_fun Function used to format SHAP feature importances
-#' (only if \code{show_numbers = TRUE}). To change to scientific notation, use e.g.
-#' \code{function(x) = prettyNum(x, scientific = TRUE)}.
-#' @param number_size Text size of the numbers (if \code{show_numbers = TRUE}).
-#' @param ... Arguments passed to \code{geom_bar()} (if \code{kind = "bar"}) or
-#' to \code{geom_point()} otherwise.
-#' For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms,
-#' and setting \code{size = 3} will produce larger dots.
-#' @return A "ggplot" (or "patchwork") object representing an importance plot, or - if
-#' \code{kind = "no"} - a named numeric vector of sorted SHAP feature importances
-#' (or a list of such vectors in case of an object of class "mshapviz").
+#'   (only if `show_numbers = TRUE`). To change to scientific notation, use
+#'   `function(x) = prettyNum(x, scientific = TRUE)`.
+#' @param number_size Text size of the numbers (if `show_numbers = TRUE`).
+#' @param ... Arguments passed to [ggplot2::geom_bar()] (if `kind = "bar"`) or to
+#'   [ggplot2::geom_point()] otherwise. For instance, passing `alpha = 0.2` will produce
+#'   semi-transparent beeswarms, and setting `size = 3` will produce larger dots.
+#' @returns
+#'   A "ggplot" (or "patchwork") object representing an importance plot, or - if
+#'   `kind = "no"` - a named numeric vector of sorted SHAP feature importances
+#'   (or a list of such vectors in case of an object of class "mshapviz").
 #' @examples
 #' X_train <- data.matrix(iris[, -1L])
 #' dtrain <- xgboost::xgb.DMatrix(X_train, label = iris[, 1L])
@@ -63,13 +63,15 @@ sv_importance <- function(object, ...) {
   UseMethod("sv_importance")
 }
 
-#' @describeIn sv_importance Default method.
+#' @describeIn sv_importance
+#'   Default method.
 #' @export
 sv_importance.default <- function(object, ...) {
   stop("No default method available.")
 }
 
-#' @describeIn sv_importance SHAP importance plot for an object of class "shapviz".
+#' @describeIn sv_importance
+#'   SHAP importance plot for an object of class "shapviz".
 #' @export
 sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "no"),
                                   max_display = 15L, fill = "#fca50a", bar_width = 2/3,
@@ -149,7 +151,8 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
   p
 }
 
-#' @describeIn sv_importance SHAP importance plot for an object of class "mshapviz".
+#' @describeIn sv_importance
+#'   SHAP importance plot for an object of class "mshapviz".
 #' @export
 sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "no"),
                                    max_display = 15L, fill = "#fca50a", bar_width = 2/3,
@@ -233,8 +236,8 @@ sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "
 #'
 #' @param x A numeric vector to be formatted.
 #' @param digits Number of significant digits of the largest absolute value.
-#' @param ... Further arguments passed to \code{format()}, e.g., \code{big.mark = "'"}.
-#' @return A character vector of formatted numbers.
+#' @param ... Further arguments passed to [format()], e.g., `big.mark = "'"`.
+#' @returns A character vector of formatted numbers.
 #' @export
 #' @examples
 #' x <- c(100, 1, 0.1)

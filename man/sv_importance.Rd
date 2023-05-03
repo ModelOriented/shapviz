@@ -46,10 +46,9 @@ sv_importance(object, ...)
 \arguments{
 \item{object}{An object of class "(m)shapviz".}
 
-\item{...}{Arguments passed to \code{geom_bar()} (if \code{kind = "bar"}) or
-to \code{geom_point()} otherwise.
-For instance, passing \code{alpha = 0.2} will produce semi-transparent beeswarms,
-and setting \code{size = 3} will produce larger dots.}
+\item{...}{Arguments passed to \code{\link[ggplot2:geom_bar]{ggplot2::geom_bar()}} (if \code{kind = "bar"}) or to
+\code{\link[ggplot2:geom_point]{ggplot2::geom_point()}} otherwise. For instance, passing \code{alpha = 0.2} will produce
+semi-transparent beeswarms, and setting \code{size = 3} will produce larger dots.}
 
 \item{kind}{Should a "bar" plot (the default), a "beeswarm" plot, or "both" be shown?
 Set to "no" in order to suppress plotting. In that case, the sorted
@@ -68,22 +67,22 @@ Set to \code{Inf} to show all features. Has no effect if \code{kind = "no"}.}
 estimating the density of the beeswarms (only used if beeswarm shown).}
 
 \item{viridis_args}{List of viridis color scale arguments used to control the
-coloring of the beeswarm plot, see \code{?ggplot2::scale_color_viridis_c()}.
+coloring of the beeswarm plot, see \code{?ggplot2::scale_color_viridis_c}.
 The default points to the global option \code{shapviz.viridis_args}, which
 corresponds to \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
-These values are passed to \code{ggplot2::scale_color_viridis_c()}.
-For example, to switch to a standard viridis scale, you can either change the default
-with \code{options(shapviz.viridis_args = list())} or set \code{viridis_args = list()}.}
+These values are passed to \code{\link[ggplot2:scale_viridis]{ggplot2::scale_color_viridis_c()}}.
+For example, to switch to a standard viridis scale, you can either change the
+default with \code{options(shapviz.viridis_args = list())} or set
+\code{viridis_args = list()}.}
 
-\item{color_bar_title}{Title of color bar of the beeswarm plot.
-Set to \code{NULL} to hide the color bar altogether.}
+\item{color_bar_title}{Title of color bar of the beeswarm plot. Set to \code{NULL}
+to hide the color bar altogether.}
 
-\item{show_numbers}{Should SHAP feature importances be printed?
-Default is \code{FALSE}.}
+\item{show_numbers}{Should SHAP feature importances be printed? Default is \code{FALSE}.}
 
 \item{format_fun}{Function used to format SHAP feature importances
-(only if \code{show_numbers = TRUE}). To change to scientific notation, use e.g.
-\code{function(x) = prettyNum(x, scientific = TRUE)}.}
+(only if \code{show_numbers = TRUE}). To change to scientific notation, use
+\verb{function(x) = prettyNum(x, scientific = TRUE)}.}
 
 \item{number_size}{Text size of the numbers (if \code{show_numbers = TRUE}).}
 }
@@ -95,13 +94,14 @@ A "ggplot" (or "patchwork") object representing an importance plot, or - if
 \description{
 This function provides two types of SHAP importance plots: a bar plot
 and a beeswarm plot (sometimes called "SHAP summary plot").
+The two types of plots can also be combined.
+}
+\details{
 The bar plot shows SHAP feature importances, calculated as the average absolute SHAP
-value per feature.
-The beeswarm plot displays SHAP values per feature, using min-max
+value per feature. The beeswarm plot displays SHAP values per feature, using min-max
 scaled feature values on the color axis. Non-numeric features are transformed
-to numeric by calling \code{data.matrix()} first.
-For both types of plots, the features are sorted in decreasing
-order of importance. The two types of plots can also be combined.
+to numeric by calling \code{\link[=data.matrix]{data.matrix()}} first. For both types of plots, the features
+are sorted in decreasing order of importance.
 }
 \section{Methods (by class)}{
 \itemize{

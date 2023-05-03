@@ -6,12 +6,12 @@
 #' original factor.
 #'
 #' @param S Either a (n x p) matrix of SHAP values or a (n x p x p) array of SHAP
-#' interaction values.
+#'   interaction values.
 #' @param collapse A named list of character vectors. Each vector specifies the
-#' feature names whose SHAP values need to be summed up.
-#' The list names determine the resulting collapsed column/dimension names.
+#'   feature names whose SHAP values need to be summed up.
+#'   The names determine the resulting collapsed column/dimension names.
 #' @param ... Currently unused.
-#' @return A matrix of SHAP values, or an array of SHAP interaction values.
+#' @returns A matrix of SHAP values, or an array of SHAP interaction values.
 #' @export
 #' @examples
 #' S <- cbind(

@@ -11,7 +11,7 @@ format_max(x, digits = 4L, ...)
 
 \item{digits}{Number of significant digits of the largest absolute value.}
 
-\item{...}{Further arguments passed to \code{format()}, e.g., \code{big.mark = "'"}.}
+\item{...}{Further arguments passed to \code{\link[=format]{format()}}, e.g., \code{big.mark = "'"}.}
 }
 \value{
 A character vector of formatted numbers.

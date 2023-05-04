@@ -220,10 +220,41 @@ sv_importance(shp)
 ```r
 library(fastshap)
 
+fit <- lm(Sepal.Length ~ Sepal.Width + Petal.Length, data = iris)
+
+# fastshap > 0.0.7 and shap_only = FALSE
+shap <- fastshap::explain(
+  fit, 
+  X = iris[c("Sepal.Width", "Petal.Length")],
+  nsim = 100, 
+  pred_wrapper = predict,
+  shap_only = FALSE
+)
+
+sv <- shapviz(shap)
+sv_dependence(sv, "Sepal.Width", color_var = NULL)
+
+# fastshap <= 0.0.7 or shap_only = TRUE
+shap <- fastshap::explain(
+  fit, 
+  X = iris[c("Sepal.Width", "Petal.Length")], 
+  nsim = 100, 
+  pred_wrapper = predict
+)
+
+sv <- shapviz(shap, X = iris, baseline = mean(iris$Sepal.Length))
+sv_dependence(sv, "Sepal.Width", color_var = NULL)
+```
+
+### fastshap > 0.0.7
+
+```r
+library(fastshap)
+
 # SHAP sampling values using iris data
 fit <- lm(Sepal.Length ~ Sepal.Width + Petal.Length, data = iris)
 
-shap <- explain(
+shap <- fastshap::explain(
   fit, 
   X = iris[c("Sepal.Width", "Petal.Length")], 
   newdata = iris[c("Sepal.Width", "Petal.Length")], 
@@ -231,7 +262,7 @@ shap <- explain(
   pred_wrapper = predict
 )
 
-sv <- shapviz(shap, X = iris)
+sv <- shapviz(shap, X = iris, baseline = mean(iris$Sepal.Length))
 sv_dependence(sv, "Sepal.Width", color_var = NULL)
 ```
 

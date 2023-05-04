@@ -293,10 +293,32 @@ shapviz.lgb.Booster = function(object, X_pred, X = X_pred,
 #' @describeIn shapviz
 #'   Creates a "shapviz" object from `fastshap::explain()`.
 #' @export
-shapviz.explain <- function(object, X, baseline = 0, collapse = NULL, ...) {
-  shapviz.matrix(
-    object = as.matrix(object), X = X, baseline = baseline, collapse = collapse
-  )
+shapviz.explain <- function(object, X = NULL, baseline = NULL, collapse = NULL, ...) {
+  # Thanks @Brandon Greenwell
+  if (inherits(object, "data.frame")) {  # packageVersion("fastshap") <= "0.0.7"
+    object <- as.matrix(object)
+  }
+  if (is.matrix(object)) {    # fastshap::explain() called with shap_only = TRUE
+    if (is.null(baseline)) {  # try to extract baseline attribute
+      baseline <- attr(object, which = "baseline")
+    }
+    if (is.null(baseline)) {  # will still be NULL is missing, so check again
+      warning("No baseline attribute found in 'object', setting baseline to zero.")
+      baseline <- 0
+    }
+    if (is.null(X)) {
+      stop("No feature values found. Pass feature values via 'X' or use ",
+           "'fastshap::explain(..., shap_only = FALSE)'")
+    }
+    shapviz.matrix(object = object, X = X, baseline = baseline, collapse = collapse)
+  } else {  # explain() called with shap_only = FALSE
+    shapviz.matrix(
+      object = object[["shapley_values"]],
+      X = if (!is.null(X)) X else object[["feature_values"]],
+      baseline = if (!is.null(baseline)) baseline else object[["baseline"]],
+      collapse = collapse
+    )
+  }
 }
 
 #' @describeIn shapviz

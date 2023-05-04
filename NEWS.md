@@ -1,5 +1,9 @@
 # shapviz 0.7.1
 
+## Better connector to {fastshap}
+
+- From Version >0.0.7, `fastshap::explain()` offers the option `shap_only`. To conveniently construct the "shapviz" object, use `shapviz(fastshap::explain(..., shap_only = FALSE))`. This not only passes the SHAP matrix but also the feature data and the baseline. Thanks, Brandon Greenwell!
+
 ## Documentation
 
 - Better help files

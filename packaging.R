@@ -47,8 +47,9 @@ use_package("ggrepel", "Imports")
 use_package("patchwork", "Imports")
 use_package("xgboost", "Imports")
 
-use_package("lightgbm", "Enhances")
+use_package("fastshap", "Enhances")
 use_package("h2o", "Enhances")
+use_package("lightgbm", "Enhances")
 
 use_gpl_license(2)
 

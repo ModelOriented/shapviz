@@ -89,7 +89,7 @@ check the vignettes for examples.'><meta property="og:image" content="/logo.png"
 from a fitted model of type</p><ul><li><p>XGBoost,</p></li>
 <li><p>LightGBM, or</p></li>
 <li><p>H2O (tree-based regression or binary classification model).</p></li>
-</ul><p>Furthermore, <code>shapviz()</code> can digest the results of</p><ul><li><p><code>fastshap::explain()</code>,</p></li>
+</ul><p>Furthermore, <code>shapviz()</code> can digest the results of</p><ul><li><p><code><a href="https://rdrr.io/pkg/fastshap/man/explain.html" class="external-link">fastshap::explain()</a></code>,</p></li>
 <li><p><code>shapr::explain()</code>,</p></li>
 <li><p><code>treeshap::treeshap()</code>,</p></li>
 <li><p><code>DALEX::predict_parts()</code>, and</p></li>
@@ -121,7 +121,7 @@ from a fitted model of type</p><ul><li><p>XGBoost,</p></li>
 <span><span class="fu">shapviz</span><span class="op">(</span><span class="va">object</span>, <span class="va">X_pred</span>, X <span class="op">=</span> <span class="va">X_pred</span>, which_class <span class="op">=</span> <span class="cn">NULL</span>, collapse <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for explain</span></span>
-<span><span class="fu">shapviz</span><span class="op">(</span><span class="va">object</span>, <span class="va">X</span>, baseline <span class="op">=</span> <span class="fl">0</span>, collapse <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">shapviz</span><span class="op">(</span><span class="va">object</span>, X <span class="op">=</span> <span class="cn">NULL</span>, baseline <span class="op">=</span> <span class="cn">NULL</span>, collapse <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for treeshap</span></span>
 <span><span class="fu">shapviz</span><span class="op">(</span></span>
@@ -238,7 +238,7 @@ return a "mshapviz" object, containing a "shapviz" object per output.</p>
 <li><p><code>shapviz(matrix)</code>: Creates a "shapviz" object from a matrix of SHAP values.</p></li>
 <li><p><code>shapviz(xgb.Booster)</code>: Creates a "shapviz" object from an XGBoost model.</p></li>
 <li><p><code>shapviz(lgb.Booster)</code>: Creates a "shapviz" object from a LightGBM model.</p></li>
-<li><p><code>shapviz(explain)</code>: Creates a "shapviz" object from <code>fastshap::explain()</code>.</p></li>
+<li><p><code>shapviz(explain)</code>: Creates a "shapviz" object from <code><a href="https://rdrr.io/pkg/fastshap/man/explain.html" class="external-link">fastshap::explain()</a></code>.</p></li>
 <li><p><code>shapviz(treeshap)</code>: Creates a "shapviz" object from <code>treeshap::treeshap()</code>.</p></li>
 <li><p><code>shapviz(predict_parts)</code>: Creates a "shapviz" object from <code>DALEX::predict_parts()</code>.</p></li>
 <li><p><code>shapviz(shapr)</code>: Creates a "shapviz" object from <code>shapr::explain()</code>.</p></li>
@@ -355,7 +355,7 @@ return a "mshapviz" object, containing a "shapviz" object per output.</p>
 <span class="r-in"><span>  <span class="va">mx</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">mx</span><span class="op">[[</span><span class="fl">3L</span><span class="op">]</span><span class="op">]</span>, <span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [LightGBM] [Warning] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000028 seconds.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [LightGBM] [Warning] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000035 seconds.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> You can set `force_col_wise=true` to remove the overhead.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [LightGBM] [Info] Total Bins 98</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [LightGBM] [Info] Number of data points in the train set: 150, number of used features: 4</span>

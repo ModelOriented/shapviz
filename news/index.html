@@ -71,6 +71,10 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.7.1" id="shapviz-071">shapviz 0.7.1<a class="anchor" aria-label="anchor" href="#shapviz-071"></a></h2>
 <div class="section level3">
+<h3 id="better-connector-to-fastshap-0-7-1">Better connector to {fastshap}<a class="anchor" aria-label="anchor" href="#better-connector-to-fastshap-0-7-1"></a></h3>
+<ul><li>From Version &gt;0.0.7, <code><a href="https://rdrr.io/pkg/fastshap/man/explain.html" class="external-link">fastshap::explain()</a></code> offers the option <code>shap_only</code>. To conveniently construct the “shapviz” object, use <code>shapviz(fastshap::explain(..., shap_only = FALSE))</code>. This not only passes the SHAP matrix but also the feature data and the baseline. Thanks, Brandon Greenwell!</li>
+</ul></div>
+<div class="section level3">
 <h3 id="documentation-0-7-1">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-7-1"></a></h3>
 <ul><li>Better help files</li>
 <li>Vignette “Multiple ‘shapviz’ objects”: Fixed mistake in Random Forest + Kernel SHAP example</li>

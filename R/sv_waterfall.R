@@ -104,9 +104,9 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
   # Make a waterfall plot
   height <- grid::unit(1 / (1 + 2 * m), "npc")
 
-  p <- ggplot(
+  p <- ggplot2::ggplot(
     dat,
-    aes(
+    ggplot2::aes(
       xmin = from,
       xmax = to,
       y = stats::reorder(label, i),
@@ -120,26 +120,26 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
       arrow_body_height = height
     ) +
     ggfittext::geom_fit_text(
-      aes(label = paste0(ifelse(S > 0, "+", ""), format_shap(S))),
+      ggplot2::aes(label = paste0(ifelse(S > 0, "+", ""), format_shap(S))),
       show.legend = FALSE,
       contrast = contrast,
       ...
     ) +
-    scale_fill_manual(values = fill_colors, drop = FALSE) +
-    theme_bw() +
-    theme(
-      panel.border = element_blank(),
-      panel.grid.minor = element_blank(),
-      panel.grid.major.x = element_blank(),
-      axis.line.x = element_line(),
-      axis.ticks.y = element_blank()
+    ggplot2::scale_fill_manual(values = fill_colors, drop = FALSE) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      panel.border = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      panel.grid.major.x = ggplot2::element_blank(),
+      axis.line.x = ggplot2::element_line(),
+      axis.ticks.y = ggplot2::element_blank()
     ) +
-    labs(y = element_blank(), x = "SHAP value")
+    ggplot2::labs(y = ggplot2::element_blank(), x = "SHAP value")
 
   if (show_connection) {
     p <- p +
-      geom_segment(
-        aes(x = to, xend = to, y = i, yend = .lag(i, lead = TRUE, default = m)),
+      ggplot2::geom_segment(
+        ggplot2::aes(x = to, xend = to, y = i, yend = .lag(i, lead = TRUE, default = m)),
         linewidth = 0.3,
         linetype = 2
       )
@@ -148,7 +148,7 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
   if (show_annotation) {
     full_range <- c(dat[m, "to"], dat[1L, "from"])
     p <- p +
-      annotate(
+      ggplot2::annotate(
         "segment",
         x = full_range,
         xend = full_range,
@@ -157,16 +157,16 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
         linewidth = 0.3,
         linetype = 2
       ) +
-      annotate(
+      ggplot2::annotate(
         "text",
         x = full_range,
         y = c(m, 1) + m * c(0.1, -0.1) + 0.15 * c(1, -1),
         label = paste0(c("f(x)=", "E[f(x)]="), format_shap(full_range)),
         size = annotation_size
       ) +
-      scale_x_continuous(expand = expansion(mult = c(0.05, 0.12))) +
-      scale_y_discrete(expand = expansion(add = 0.3, mult = 0.2)) +
-      coord_cartesian(clip = "off")
+      ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0.05, 0.12))) +
+      ggplot2::scale_y_discrete(expand = ggplot2::expansion(add = 0.3, mult = 0.2)) +
+      ggplot2::coord_cartesian(clip = "off")
   }
   p
 }

@@ -1,9 +1,6 @@
 #' @aliases shapviz-package
 "_PACKAGE"
 
-#' @import ggplot2
-NULL
-
 # Suppress R CMD check note
 #' @importFrom xgboost xgb.train
 

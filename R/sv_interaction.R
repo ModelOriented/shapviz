@@ -79,26 +79,28 @@ sv_interaction.shapviz <- function(object, kind = c("beeswarm", "no"),
   mask <- df[["Variable1"]] != df[["Variable2"]]
   df[mask, "value"] <- 2 * df[mask, "value"]
 
-  ggplot(df, aes(x = value, y = "1")) +
-    geom_vline(xintercept = 0, color = "darkgray") +
-    geom_point(
-      aes(color = color),
+  ggplot2::ggplot(df, ggplot2::aes(x = value, y = "1")) +
+    ggplot2::geom_vline(xintercept = 0, color = "darkgray") +
+    ggplot2::geom_point(
+      ggplot2::aes(color = color),
       position = position_bee(width = bee_width, adjust = bee_adjust),
       alpha = alpha,
       ...
     ) +
-    facet_grid(Variable1 ~ Variable2, switch = "y") +
-    labs(x = "SHAP value", y = element_blank(), color = color_bar_title) +
+    ggplot2::facet_grid(Variable1 ~ Variable2, switch = "y") +
+    ggplot2::labs(
+      x = "SHAP value", y = ggplot2::element_blank(), color = color_bar_title
+    ) +
     .get_color_scale(
       viridis_args = viridis_args,
       bar = !is.null(color_bar_title),
       ncol = length(unique(X_long$Freq))
     ) +
-    theme(
+    ggplot2::theme(
       panel.spacing = grid::unit(0.2, "lines"),
       legend.box.spacing = grid::unit(0, "pt"),
-      axis.ticks.y = element_blank(),
-      axis.text.y = element_blank()
+      axis.ticks.y = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_blank()
     )
 }
 

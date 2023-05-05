@@ -99,9 +99,9 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
   imp_df <- data.frame(feature = factor(ord, rev(ord)), value = imp)
   is_bar <- kind == "bar"
   if (is_bar) {
-    p <- ggplot(imp_df, aes(x = value, y = feature)) +
-      geom_bar(fill = fill, width = bar_width, stat = "identity", ...) +
-      labs(x = "mean(|SHAP value|)", y = element_blank())
+    p <- ggplot2::ggplot(imp_df, ggplot2::aes(x = value, y = feature)) +
+      ggplot2::geom_bar(fill = fill, width = bar_width, stat = "identity", ...) +
+      ggplot2::labs(x = "mean(|SHAP value|)", y = ggplot2::element_blank())
   } else {
     # Prepare data.frame for beeswarm plot
     S <- get_shap_values(object)
@@ -112,15 +112,17 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
       color = as.data.frame.table(X)$Freq
     )
 
-    p <- ggplot(df, aes(x = value, y = feature))
+    p <- ggplot2::ggplot(df, ggplot2::aes(x = value, y = feature))
     if (kind == "both") {
       p <- p +
-        geom_bar(data = imp_df, fill = fill, width = bar_width, stat = "identity")
+        ggplot2::geom_bar(
+          data = imp_df, fill = fill, width = bar_width, stat = "identity"
+        )
     }
     p <- p +
-      geom_vline(xintercept = 0, color = "darkgray") +
-      geom_point(
-        aes(color = color),
+      ggplot2::geom_vline(xintercept = 0, color = "darkgray") +
+      ggplot2::geom_point(
+        ggplot2::aes(color = color),
         position = position_bee(width = bee_width, adjust = bee_adjust),
         ...
       ) +
@@ -129,14 +131,16 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
         bar = !is.null(color_bar_title),
         ncol = length(unique(df$color))   # Special case of constant feature values
       ) +
-      labs(x = "SHAP value", y = element_blank(), color = color_bar_title) +
-      theme(legend.box.spacing = grid::unit(0, "pt"))
+      ggplot2::labs(
+        x = "SHAP value", y = ggplot2::element_blank(), color = color_bar_title
+      ) +
+      ggplot2::theme(legend.box.spacing = grid::unit(0, "pt"))
   }
   if (show_numbers) {
     p <- p +
-      geom_text(
+      ggplot2::geom_text(
         data = imp_df,
-        aes(
+        ggplot2::aes(
           x = if (is_bar) value + max(value) / 60 else
             min(df$value) - diff(range(df$value)) / 20,
           label = format_fun(value)
@@ -144,8 +148,8 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
         hjust = !is_bar,
         size = number_size
       ) +
-      scale_x_continuous(
-        expand = expansion(mult = 0.05 + c(0.12 *!is_bar, 0.09 * is_bar))
+      ggplot2::scale_x_continuous(
+        expand = ggplot2::expansion(mult = 0.05 + c(0.12 *!is_bar, 0.09 * is_bar))
       )
   }
   p
@@ -214,17 +218,17 @@ sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "
       list(
         breaks = if (ncol >= 2L) 0:1 else 0.5,
         labels = if (ncol >= 2L) c("Low", "High") else "Avg",
-        guide = guide_colorbar(
+        guide = ggplot2::guide_colorbar(
           barwidth = 0.4,
           barheight = 8,
-          title.theme = element_text(angle = 90, hjust = 0.5, vjust = 0),
+          title.theme = ggplot2::element_text(angle = 90, hjust = 0.5, vjust = 0),
           title.position = "left"
         )
       )
   } else {
     viridis_args_plus <- list(guide = "none")
   }
-  return(do.call(scale_color_viridis_c, c(viridis_args, viridis_args_plus)))
+  return(do.call(ggplot2::scale_color_viridis_c, c(viridis_args, viridis_args_plus)))
 }
 
 

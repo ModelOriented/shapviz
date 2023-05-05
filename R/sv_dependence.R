@@ -142,25 +142,27 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
   dat <- data.frame(s, X[[v]])
   colnames(dat) <- c("shap", v)
   if (is.null(color_var) || color_var == v) {
-    p <- ggplot(dat, aes(x = .data[[v]], y = shap)) +
-      geom_jitter(color = color, width = jitter_width, height = 0, ...) +
-      ylab(y_lab)
+    p <- ggplot2::ggplot(dat, ggplot2::aes(x = .data[[v]], y = shap)) +
+      ggplot2::geom_jitter(color = color, width = jitter_width, height = 0, ...) +
+      ggplot2::ylab(y_lab)
     return(p)
   }
   dat[[color_var]] <- X[[color_var]]
   if (.is_discrete(dat[[color_var]], n_unique = 0L)) {  # only if non-numeric
-    vir <- scale_color_viridis_d
+    vir <- ggplot2::scale_color_viridis_d
   } else {
-    vir <- scale_color_viridis_c
+    vir <- ggplot2::scale_color_viridis_c
   }
   if (is.null(viridis_args)) {
     viridis_args <- list()
   }
-  ggplot(dat, aes(x = .data[[v]], y = shap, color = .data[[color_var]])) +
-    geom_jitter(width = jitter_width, height = 0, ...) +
-    ylab(y_lab) +
+  ggplot2::ggplot(
+    dat, ggplot2::aes(x = .data[[v]], y = shap, color = .data[[color_var]])
+  ) +
+    ggplot2::geom_jitter(width = jitter_width, height = 0, ...) +
+    ggplot2::ylab(y_lab) +
     do.call(vir, viridis_args) +
-    theme(legend.box.spacing = grid::unit(0, "pt"))
+    ggplot2::theme(legend.box.spacing = grid::unit(0, "pt"))
 }
 
 #' @describeIn sv_dependence

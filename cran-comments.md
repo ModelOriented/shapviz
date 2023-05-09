@@ -1,33 +1,31 @@
-# Re-Submission of {shapviz} 0.7.0
+# {shapviz} 0.8.0
 
-This second resubmission removes non-standard file (sorry, my bad!)
+Hello CRAN team
 
-# Re-Submission of {shapviz} 0.7.0
+- {shapviz} will work more smoothly for upcoming {fastshap} versions. I did this change together with the {fastshap} maintainer (Brandon Greenwell).
+- Better help files
+- Switched from "import ggplot2" to "ggplot2::function" code style
 
-This re-submission fixes non-standard links in the new vignette (and the README).
-
-## Original message
-
-Dear CRAN team. 
-
-- {shapviz} can now deal with multiclass models or SHAP values of multiple models. Hurray ;).
-- Many additional features
-- New contributor
-- Additional vignette
-- New home: github/ModelOriented/shapviz
-
-## Checks
+## Checks look good
 
 ### check(manual = TRUE, cran = TRUE) 
 
-- WARNING: 'qpdf' is needed for checks on size reduction of PDFs
-- Note: unable to verify current time
+* checking for future file timestamps ... NOTE
+  unable to verify current time
 
-### check_rhub()
+* checking HTML version of manual ... NOTE
+  Skipping checking HTML validation: no command 'tidy' found
+
+### check_rhub(): Some usual notes...
 
 * checking package dependencies ... NOTE
-  'h2o', 'lightgbm'
 Packages which this enhances but not available for checking:
+  'fastshap', 'h2o', 'lightgbm'
+* checking HTML version of manual ... NOTE
+Skipping checking math rendering: package 'V8' unavailable
+* checking for non-standard things in the check directory ... NOTE
+Found the following files/directories:
+  ''NULL''
 * checking for detritus in the temp directory ... NOTE
 Found the following files/directories:
   'lastMiKTeXException'
@@ -35,4 +33,3 @@ Found the following files/directories:
 ### check_win_devel()
 
 Status: OK
-

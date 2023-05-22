@@ -29,7 +29,7 @@ The features are sorted in decreasing order of usual SHAP importance."><meta pro
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">0.8.0</span>
+          <span class="version version-default">0.8.1</span>
         </div>
       </div>
     </div>
@@ -126,9 +126,9 @@ passing <code>size = 1</code> will produce smaller dots.</p></dd>
 
 
 <dt>kind</dt>
-<dd><p>Set to "no" to simply return the matrix of average absolute SHAP
+<dd><p>Set to "no" to return the matrix of average absolute SHAP
 interactions (or a list of such matrices in case of object of class "mshapviz").
-The default is "beeswarm".</p></dd>
+Due to symmetry, off-diagonals are multiplied by two. The default is "beeswarm".</p></dd>
 
 
 <dt>max_display</dt>
@@ -141,12 +141,12 @@ Set to <code>Inf</code> to show all features. Has no effect if <code>kind = "no"
 
 
 <dt>bee_width</dt>
-<dd><p>Relative width of the beeswarms (only used if beeswarm shown).</p></dd>
+<dd><p>Relative width of the beeswarms.</p></dd>
 
 
 <dt>bee_adjust</dt>
 <dd><p>Relative bandwidth adjustment factor used in
-estimating the density of the beeswarms (only used if beeswarm shown).</p></dd>
+estimating the density of the beeswarms.</p></dd>
 
 
 <dt>viridis_args</dt>
@@ -187,12 +187,12 @@ absolute SHAP values (or a list of such matrices in case of "mshapviz" object).<
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dtrain</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html" class="external-link">xgb.DMatrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1L</span><span class="op">]</span><span class="op">)</span>, label <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1L</span><span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dtrain</span>, nrounds <span class="op">=</span> <span class="fl">50L</span>, nthread <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dtrain</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html" class="external-link">xgb.DMatrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, label <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dtrain</span>, nrounds <span class="op">=</span> <span class="fl">50</span>, nthread <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">fit</span>, X_pred <span class="op">=</span> <span class="va">dtrain</span>, X <span class="op">=</span> <span class="va">iris</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">sv_interaction</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="sv_interaction-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">sv_interaction</span><span class="op">(</span><span class="va">x</span>, max_display <span class="op">=</span> <span class="fl">2L</span>, size <span class="op">=</span> <span class="fl">3</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">sv_interaction</span><span class="op">(</span><span class="va">x</span>, max_display <span class="op">=</span> <span class="fl">2</span>, size <span class="op">=</span> <span class="fl">3</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="sv_interaction-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu">sv_interaction</span><span class="op">(</span><span class="va">x</span>, kind <span class="op">=</span> <span class="st">"no"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              Petal.Length Sepal.Width Petal.Width     Species</span>

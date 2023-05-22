@@ -18,8 +18,8 @@ Rowbinds multiple "shapviz" objects based on the \code{+} operator.
 \examples{
 S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 X <- data.frame(x = c("a", "b"), y = c(100, 10))
-s1 <- shapviz(S, X, baseline = 4)[1L]
-s2 <- shapviz(S, X, baseline = 4)[2L]
+s1 <- shapviz(S, X, baseline = 4)[1]
+s2 <- shapviz(S, X, baseline = 4)[2]
 s <- rbind(s1, s2)
 s
 }

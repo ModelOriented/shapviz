@@ -34,8 +34,8 @@
 #' @param ... Arguments passed to [ggplot2::geom_jitter()].
 #' @returns An object of class "ggplot" (or "patchwork") representing a dependence plot.
 #' @examples
-#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
+#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
 #' x <- shapviz(fit, X_pred = dtrain, X = iris)
 #' sv_dependence(x, "Petal.Length")
 #' sv_dependence(x, "Petal.Length", color_var = "Species")

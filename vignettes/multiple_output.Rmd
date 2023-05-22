@@ -47,10 +47,10 @@ library(ggplot2)
 library(shapviz)
 library(patchwork)
 
-params <- list(objective = "multi:softprob", num_class = 3L)
-X_pred <- data.matrix(iris[, -5L])
-dtrain <- xgb.DMatrix(X_pred, label = as.integer(iris[, 5L]) - 1L)
-fit <- xgb.train(params = params, data = dtrain, nrounds = 50L)
+params <- list(objective = "multi:softprob", num_class = 3)
+X_pred <- data.matrix(iris[, -5])
+dtrain <- xgb.DMatrix(X_pred, label = as.integer(iris[, 5]) - 1)
+fit <- xgb.train(params = params, data = dtrain, nrounds = 50)
 ```
 
 ### Create "mshapviz" object (logit scale)
@@ -62,7 +62,7 @@ x <- shapviz(fit, X_pred = X_pred, X = iris)
 x
 
 # Contains "shapviz" objects for all classes
-all.equal(x[[3L]], shapviz(fit, X_pred = X_pred, X = iris, which_class = 3L))
+all.equal(x[[3]], shapviz(fit, X_pred = X_pred, X = iris, which_class = 3))
 
 # Better names
 names(x) <- levels(iris$Species)
@@ -71,14 +71,14 @@ x
 ### Force plot
 
 ```{r}
-sv_force(x, row_id = 101L)
+sv_force(x, row_id = 101)
 ```
 
 ### Summary plot
 
 ```{r}
 sv_importance(x, kind = "bee") +
-  plot_layout(ncol = 1L)
+  plot_layout(ncol = 1)
 ```
 
 ### Dependence plot
@@ -89,7 +89,7 @@ Here, we will use identical coordinate systems.
 names(x) <- levels(iris$Species)
 
 sv_dependence(x, v = "Petal.Length") +
-  plot_layout(ncol = 1L) &
+  plot_layout(ncol = 1) &
   xlim(1, 7) &
   ylim(-3, 4)
 ```
@@ -100,19 +100,19 @@ sv_dependence(x, v = "Petal.Length") +
 library(lightgbm)
 
 # Model
-params <- list(objective = "multiclass", num_class = 3L)
-X_pred <- data.matrix(iris[, -5L])
-dtrain <- lgb.Dataset(X_pred, label = as.integer(iris[, 5L]) - 1L)
-fit <- lgb.train(params = params, data = dtrain, nrounds = 50L)
+params <- list(objective = "multiclass", num_class = 3)
+X_pred <- data.matrix(iris[, -5])
+dtrain <- lgb.Dataset(X_pred, label = as.integer(iris[, 5]) - 1)
+fit <- lgb.train(params = params, data = dtrain, nrounds = 50)
 
 x <- shapviz(fit, X_pred = X_pred, X = iris)
 
 sv_importance(x, show_numbers = TRUE) +
-  plot_layout(ncol = 1L) &
+  plot_layout(ncol = 1) &
   xlim(0, 2.25)
 ```
 
-### And for random forest and kernelshap (only code)
+### And for random forest and kernelshap
 
 Since Kernel SHAP is model agnostic, we can get SHAP values on probability scale.
 
@@ -121,15 +121,15 @@ library(ranger)
 library(kernelshap)
 
 # Model
-fit <- ranger(Species ~ ., data = iris, num.trees = 100L, probability = TRUE)
+fit <- ranger(Species ~ ., data = iris, num.trees = 100, probability = TRUE)
 
 # "mshapviz" object
-x <- kernelshap(fit, X = iris[-5L], bg_X = iris)
+x <- kernelshap(fit, X = iris[-5], bg_X = iris)
 shp <- setNames(shapviz(x), levels(iris$Species))
-# all.equal(shp[[3L]], shapviz(x, which_class = 3L))
+# all.equal(shp[[3]], shapviz(x, which_class = 3))
 
 sv_dependence(shp, v = "Sepal.Width") +
-  plot_layout(ncol = 2L) &
+  plot_layout(ncol = 2) &
   ylim(-0.025, 0.03)
 ```
 
@@ -142,9 +142,9 @@ Here, we want to compare SHAP dependence plots across Species subgroups.
 ### Fit regression model
 
 ```{r}
-X_pred <- data.matrix(iris[, -1L])
-dtrain <- xgb.DMatrix(X_pred, label = iris[, 1L])
-fit_xgb <- xgb.train(data = dtrain, nrounds = 50L)
+X_pred <- data.matrix(iris[, -1])
+dtrain <- xgb.DMatrix(X_pred, label = iris[, 1])
+fit_xgb <- xgb.train(data = dtrain, nrounds = 50)
 ```
 
 ### Create "mshapviz" object
@@ -162,7 +162,7 @@ x_subgroups <- c(
 
 ```{r}
 sv_dependence(x_subgroups, v = "Petal.Length") +
-  plot_layout(ncol = 1L) & 
+  plot_layout(ncol = 1) & 
   xlim(1, 7) &
   ylim(-1.4, 2.2)
 ```
@@ -177,7 +177,7 @@ In the last example, we used a regression model fitted via XGBoost. How does it 
 library(kernelshap)
 
 fit_lm <- lm(Sepal.Length ~ ., data = iris)
-shap_lm <- shapviz(kernelshap(fit_lm, iris[-1L], bg_X = iris))
+shap_lm <- shapviz(kernelshap(fit_lm, iris[-1], bg_X = iris))
 ```
 
 ### Combine "shapviz" objects

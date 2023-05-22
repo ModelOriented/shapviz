@@ -26,8 +26,8 @@ SHAP values, feature values, and SHAP interaction values of a "shapviz" object.
 S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 X <- data.frame(x = c("a", "b"), y = c(100, 10))
 x <- shapviz(S, X, baseline = 4)
-x[1L, "x"]
-x[1L]
+x[1, "x"]
+x[1]
 x[c(FALSE, TRUE), ]
 x[, "x"]
 }

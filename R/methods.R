@@ -23,7 +23,7 @@ print.shapviz <- function(x, ...) {
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
-#' s1 <- shapviz(S, X, baseline = 4)[1L]
+#' s1 <- shapviz(S, X, baseline = 4)[1]
 #' s2 <- shapviz(S, X, baseline = 4)
 #' x <- c(s1 = s1, s2 = s2)
 #' x
@@ -107,12 +107,12 @@ dim.shapviz <- function(x) {
 #'   Returns `TRUE` if `object` has "shapviz" among its classes,
 #'   and `FALSE` otherwise.
 #' @examples
-#' S <- matrix(c(1, -1, -1, 1), ncol = 2L, dimnames = list(NULL, c("x", "y")))
+#' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
 #' shp <- shapviz(S, X)
 #' is.shapviz(shp)
 #' is.shapviz("a")
-#' @seealso [mshapviz()]
+#' @seealso [shapviz()]
 #' @export
 is.shapviz <- function(object){
   inherits(object, "shapviz")
@@ -129,7 +129,7 @@ is.shapviz <- function(object){
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
-#' s1 <- shapviz(S, X, baseline = 4)[1L]
+#' s1 <- shapviz(S, X, baseline = 4)[1]
 #' s2 <- shapviz(S, X, baseline = 4)
 #' x <- c(s1 = s1, s2 = s2)
 #' is.mshapviz(x)
@@ -154,8 +154,8 @@ is.mshapviz <- function(object){
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
 #' x <- shapviz(S, X, baseline = 4)
-#' x[1L, "x"]
-#' x[1L]
+#' x[1, "x"]
+#' x[1]
 #' x[c(FALSE, TRUE), ]
 #' x[, "x"]
 #' @seealso [shapviz()]
@@ -196,8 +196,8 @@ dimnames.shapviz <- function(x) {
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
-#' s1 <- shapviz(S, X, baseline = 4)[1L]
-#' s2 <- shapviz(S, X, baseline = 4)[2L]
+#' s1 <- shapviz(S, X, baseline = 4)[1]
+#' s2 <- shapviz(S, X, baseline = 4)[2]
 #' s <- s1 + s2
 #' s
 #' @seealso [shapviz()], [rbind.shapviz()]
@@ -232,8 +232,8 @@ dimnames.shapviz <- function(x) {
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
-#' s1 <- shapviz(S, X, baseline = 4)[1L]
-#' s2 <- shapviz(S, X, baseline = 4)[2L]
+#' s1 <- shapviz(S, X, baseline = 4)[1]
+#' s2 <- shapviz(S, X, baseline = 4)[2]
 #' s <- rbind(s1, s2)
 #' s
 #' @seealso [shapviz()]
@@ -252,8 +252,8 @@ rbind.shapviz <- function(...) {
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
-#' s1 <- shapviz(S, X, baseline = 4)[1L]
-#' s2 <- shapviz(S, X, baseline = 4)[2L]
+#' s1 <- shapviz(S, X, baseline = 4)[1]
+#' s2 <- shapviz(S, X, baseline = 4)[2]
 #' s <- c(shp1 = s1, shp2 = s2)
 #' s
 #' @export

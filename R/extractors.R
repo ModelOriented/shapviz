@@ -11,6 +11,7 @@
 #'   - `get_feature_values()` the \code{data.frame} of feature values,
 #'   - `get_baseline()` the numeric baseline value, and
 #'   - `get_shap_interactions()` the SHAP interactions of the input.
+#'
 #' For objects of class "mshapviz", these functions return lists of those elements.
 NULL
 

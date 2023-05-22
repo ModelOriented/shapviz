@@ -90,7 +90,7 @@ diamonds[, ord] <- lapply(diamonds[, ord], factor, ordered = FALSE)
 # Fit XGBoost model
 x <- c("carat", "clarity", "cut", "color")
 dtrain <- xgb.DMatrix(data.matrix(diamonds[x]), label = diamonds$price)
-fit <- xgb.train(params = list(learning_rate = 0.1), data = dtrain, nrounds = 65L)
+fit <- xgb.train(params = list(learning_rate = 0.1), data = dtrain, nrounds = 65)
 ```
 
 ### Create "shapviz" object
@@ -101,7 +101,7 @@ In this example we construct the "shapviz" object directly from the fitted XGBoo
 
 ```{r}
 # Explanation data
-dia_small <- diamonds[sample(nrow(diamonds), 2000L), ]
+dia_small <- diamonds[sample(nrow(diamonds), 2000), ]
 
 shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
 ```
@@ -113,7 +113,7 @@ Note: If `X_pred` would contain one-hot-encoded dummy variables, their SHAP valu
 The main idea behind SHAP values is to decompose, in a fair way, a prediction into additive contributions of each feature. Typical visualizations include waterfall plots and force plots:
 
 ```{r}
-sv_waterfall(shp, row_id = 1L) +
+sv_waterfall(shp, row_id = 1) +
   theme(axis.text = element_text(size = 11))
 ```
 Works pretty sweet, and factor input is respected!
@@ -121,7 +121,7 @@ Works pretty sweet, and factor input is respected!
 Alternatively, we can study a force plot:
 
 ```{r, fig.asp = .5}
-sv_force(shp, row_id = 1L)
+sv_force(shp, row_id = 1)
 ```
 
 Also multiple `row_id` can be passed: The SHAP values of the selected observations are averaged and then plotted as **aggregated SHAP values**: The prediction profile for beautiful color "D" diamonds:
@@ -208,7 +208,7 @@ dtrain <- lgb.Dataset(data.matrix(diamonds[x]), label = diamonds$price)
 fit <- lgb.train(
   params = list(learning_rate = 0.1, objective = "regression"), 
   data = dtrain,
-  nrounds = 65L
+  nrounds = 65
 )
 
 shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
@@ -252,7 +252,7 @@ sv_dependence(sv, "Sepal.Width", color_var = NULL)
 library(shapr)
 
 fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
-background <- diamonds[sample(nrow(diamonds), 100L), ]
+background <- diamonds[sample(nrow(diamonds), 100), ]
 
 explainer <- shapr(background, fit)
 
@@ -321,7 +321,7 @@ sv_force(shapviz(breakdown)) +
 ```r
 library(kernelshap)
 
-background <- diamonds[sample(nrow(diamonds), 200L), ]
+background <- diamonds[sample(nrow(diamonds), 200), ]
 fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
 ks <- kernelshap(fit, dia_small[x], bg_X = background)
 
@@ -365,8 +365,8 @@ shapviz.catboost.Model <- function(object, X_pred, X = X_pred, collapse = NULL, 
   S <- catboost.get_feature_importance(object, X_pred, type = "ShapValues", ...)
 
   # Call matrix method
-  pp <- ncol(X_pred) + 1L
-  baseline <- S[1L, pp]
+  pp <- ncol(X_pred) + 1
+  baseline <- S[1, pp]
   S <- S[, -pp, drop = FALSE]
   colnames(S) <- colnames(X_pred)
   shapviz(S, X = X, baseline = baseline, collapse = collapse)

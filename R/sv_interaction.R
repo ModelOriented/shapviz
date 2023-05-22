@@ -7,9 +7,9 @@
 #' The features are sorted in decreasing order of usual SHAP importance.
 #'
 #' @param object An object of class "(m)shapviz" containing element `S_inter`.
-#' @param kind Set to "no" to simply return the matrix of average absolute SHAP
+#' @param kind Set to "no" to return the matrix of average absolute SHAP
 #'   interactions (or a list of such matrices in case of object of class "mshapviz").
-#'   The default is "beeswarm".
+#'   Due to symmetry, off-diagonals are multiplied by two. The default is "beeswarm".
 #' @param alpha Transparency of the beeswarm dots. Defaults to 0.3.
 #' @param ... Arguments passed to [ggplot2::geom_point()]. For instance,
 #'   passing `size = 1` will produce smaller dots.
@@ -18,11 +18,11 @@
 #'   numeric matrix of average absolute SHAP interactions sorted by the average
 #'   absolute SHAP values (or a list of such matrices in case of "mshapviz" object).
 #' @examples
-#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
+#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
 #' x <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 #' sv_interaction(x)
-#' sv_interaction(x, max_display = 2L, size = 3, alpha = 0.1)
+#' sv_interaction(x, max_display = 2, size = 3, alpha = 0.1)
 #' sv_interaction(x, kind = "no")
 #' @seealso [sv_importance()]
 #' @export

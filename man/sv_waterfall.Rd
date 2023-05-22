@@ -102,29 +102,29 @@ baseline SHAP value.
 
 }}
 \examples{
-dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
+dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
 x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
 sv_waterfall(x)
-sv_waterfall(x, row_id = 123, max_display = 2L, size = 9, fill_colors = 4:5)
+sv_waterfall(x, row_id = 123, max_display = 2, size = 9, fill_colors = 4:5)
 
 # Ordered by colnames(x), combined with max_display
 sv_waterfall(
-  x[, sort(colnames(x))], order_fun = function(s) length(s):1, max_display = 3L
+  x[, sort(colnames(x))], order_fun = function(s) length(s):1, max_display = 3
 )
 
 # Aggregate over all observations with Petal.Length == 1.4
 sv_waterfall(x, row_id = x$X$Petal.Length == 1.4)
 
 # More features
-X <- as.data.frame(matrix(1:100, nrow = 10L))
+X <- as.data.frame(matrix(1:100, nrow = 10))
 S <- as.matrix(X)
 shp <- shapviz(S, X)
 sv_waterfall(shp)
 
 # Combine two waterfall plots via {patchwork}
-sv_waterfall(c(Obs1 = x[1L], Obs2 = x[2L])) +
-  patchwork::plot_layout(ncol = 1L)
+sv_waterfall(c(Obs1 = x[1], Obs2 = x[2])) +
+  patchwork::plot_layout(ncol = 1)
 }
 \seealso{
 \code{\link[=sv_force]{sv_force()}}

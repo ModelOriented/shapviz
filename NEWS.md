@@ -1,3 +1,9 @@
+# shapviz 0.8.1
+
+## Documentation
+
+- Slight improvements in help/docu.
+
 # shapviz 0.8.0
 
 ## API improvement

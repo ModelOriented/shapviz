@@ -63,8 +63,9 @@ get_shap_interactions(object, ...)
 \item \code{get_feature_values()} the \code{data.frame} of feature values,
 \item \code{get_baseline()} the numeric baseline value, and
 \item \code{get_shap_interactions()} the SHAP interactions of the input.
-For objects of class "mshapviz", these functions return lists of those elements.
 }
+
+For objects of class "mshapviz", these functions return lists of those elements.
 }
 \description{
 Functions to extract SHAP values, feature values, the baseline,

@@ -18,9 +18,9 @@
 #'   Set to `Inf` to show all features. Has no effect if `kind = "no"`.
 #' @param fill Color used to fill the bars (only used if bars are shown).
 #' @param bar_width Relative width of the bars (only used if bars are shown).
-#' @param bee_width Relative width of the beeswarms (only used if beeswarm shown).
+#' @param bee_width Relative width of the beeswarms.
 #' @param bee_adjust Relative bandwidth adjustment factor used in
-#'   estimating the density of the beeswarms (only used if beeswarm shown).
+#'   estimating the density of the beeswarms.
 #' @param viridis_args List of viridis color scale arguments used to control the
 #'   coloring of the beeswarm plot, see `?ggplot2::scale_color_viridis_c`.
 #'   The default points to the global option `shapviz.viridis_args`, which
@@ -44,19 +44,19 @@
 #'   `kind = "no"` - a named numeric vector of sorted SHAP feature importances
 #'   (or a list of such vectors in case of an object of class "mshapviz").
 #' @examples
-#' X_train <- data.matrix(iris[, -1L])
-#' dtrain <- xgboost::xgb.DMatrix(X_train, label = iris[, 1L])
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
+#' X_train <- data.matrix(iris[, -1])
+#' dtrain <- xgboost::xgb.DMatrix(X_train, label = iris[, 1])
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
 #' x <- shapviz(fit, X_pred = X_train)
 #' sv_importance(x)
 #' sv_importance(x, kind = "beeswarm", show_numbers = TRUE)
 #' sv_importance(x, kind = "no")
 #'
-#' X <- data.frame(matrix(rnorm(1000), ncol = 20L))
+#' X <- data.frame(matrix(rnorm(1000), ncol = 20))
 #' S <- as.matrix(X)
 #' x2 <- shapviz(S, X)
 #' sv_importance(x2)
-#' sv_importance(x2, max_display = 5L)
+#' sv_importance(x2, max_display = 5)
 #' @seealso \code{\link{sv_interaction}}
 #' @export
 sv_importance <- function(object, ...) {

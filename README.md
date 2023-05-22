@@ -74,7 +74,7 @@ set.seed(3653)
 
 x <- c("carat", "cut", "color", "clarity")
 dtrain <- xgb.DMatrix(data.matrix(diamonds[x]), label = diamonds$price)
-fit <- xgb.train(params = list(learning_rate = 0.1), data = dtrain, nrounds = 65L)
+fit <- xgb.train(params = list(learning_rate = 0.1), data = dtrain, nrounds = 65)
 ```
 
 ### Create "shapviz" object
@@ -85,7 +85,7 @@ In this example, we construct the "shapviz" object directly from the fitted XGBo
 
 ``` r
 # Explanation data
-dia_small <- diamonds[sample(nrow(diamonds), 2000L), ]
+dia_small <- diamonds[sample(nrow(diamonds), 2000), ]
 
 shp <- shapviz(fit, X_pred = data.matrix(dia_small[x]), X = dia_small)
 ```

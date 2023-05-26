@@ -55,13 +55,11 @@ Set to \code{Inf} to show all features. Has no effect if \code{kind = "no"}.}
 \item{bee_adjust}{Relative bandwidth adjustment factor used in
 estimating the density of the beeswarms.}
 
-\item{viridis_args}{List of viridis color scale arguments used to control the
-coloring of the beeswarm plot, see \code{?ggplot2::scale_color_viridis_c}.
-The default points to the global option \code{shapviz.viridis_args}, which
-corresponds to \code{list(begin = 0.25, end = 0.85, option = "inferno")}.
-These values are passed to \code{\link[ggplot2:scale_viridis]{ggplot2::scale_color_viridis_c()}}.
-For example, to switch to a standard viridis scale, you can either change the
-default with \code{options(shapviz.viridis_args = list())} or set
+\item{viridis_args}{List of viridis color scale arguments. The default points to the
+global option \code{shapviz.viridis_args}, which corresponds to
+\code{list(begin = 0.25, end = 0.85, option = "inferno")}. These values are passed to
+\code{\link[ggplot2:scale_viridis]{ggplot2::scale_color_viridis_c()}}. For example, to switch to standard viridis,
+either change the default with \code{options(shapviz.viridis_args = list())} or set
 \code{viridis_args = list()}.}
 
 \item{color_bar_title}{Title of color bar of the beeswarm plot. Set to \code{NULL}

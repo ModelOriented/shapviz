@@ -21,6 +21,19 @@ test_that("plots work for basic example", {
     ),
     "patchwork"
   )
+  expect_s3_class(sv_dependence2D(x, x = "Petal.Length", y = "Species"), "ggplot")
+  expect_s3_class(
+    sv_dependence2D(x, x = "Petal.Length", y = c("Species", "Petal.Width")), "patchwork"
+  )
+  expect_s3_class(
+    sv_dependence2D(x, x = c("Petal.Length", "Petal.Width"), y = "Species"), "patchwork"
+  )
+  expect_s3_class(
+    sv_dependence2D(
+      x, x = c("Petal.Length", "Petal.Width"), y = c("Species", "Sepal.Width")
+    ),
+    "patchwork"
+  )
 })
 
 test_that("using 'max_display' gives no error", {
@@ -67,6 +80,32 @@ test_that("dependence plots work for interactions = TRUE", {
     ),
     "patchwork"
   )
+
+  expect_s3_class(
+    sv_dependence2D(x_inter, x = "Petal.Length", y = "Species", interactions = TRUE),
+    "ggplot"
+  )
+  expect_s3_class(
+    sv_dependence2D(
+      x_inter, x = "Petal.Length", y = c("Species", "Petal.Width"), interactions = TRUE
+    ),
+    "patchwork"
+  )
+  expect_s3_class(
+    sv_dependence2D(
+      x_inter, x = c("Petal.Length", "Petal.Width"), y = "Species", interactions = TRUE
+    ),
+    "patchwork"
+  )
+  expect_s3_class(
+    sv_dependence2D(
+      x_inter,
+      x = c("Petal.Length", "Petal.Width"),
+      y = c("Species", "Sepal.Width"),
+      interactions = TRUE
+    ),
+    "patchwork"
+  )
 })
 
 test_that("main effect plots equal case color_var = v", {
@@ -108,11 +147,21 @@ test_that("plots work for non-syntactic column names", {
   expect_s3_class(
     sv_dependence(x, "Petal.Length", color_var = "strange name"), "ggplot"
   )
+  expect_s3_class(
+    sv_dependence2D(x, x = "Petal.Length", y = "strange name"), "ggplot"
+  )
 })
 
 # Miscellaneous tests
 test_that("there are no default sv_*() methods", {
-  for (f in c(sv_dependence, sv_importance, sv_force, sv_waterfall, sv_interaction)) {
+  for (f in c(
+    sv_dependence,
+    sv_dependence2D,
+    sv_importance,
+    sv_force,
+    sv_waterfall,
+    sv_interaction
+  )) {
     expect_error(f(1))
   }
 })

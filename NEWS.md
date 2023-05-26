@@ -1,5 +1,9 @@
 # shapviz 0.8.1
 
+## New features
+
+- New plot function `sv_dependence2D()`: x and y are two features, while their summed SHAP values are shown on the color scale. If `interaction = TRUE`, SHAP interaction values are shown on the color scale instead. The function is vectorized in `x` and/or `y`.
+
 ## Documentation
 
 - Slight improvements in help/docu.

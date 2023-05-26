@@ -21,13 +21,11 @@
 #' @param bee_width Relative width of the beeswarms.
 #' @param bee_adjust Relative bandwidth adjustment factor used in
 #'   estimating the density of the beeswarms.
-#' @param viridis_args List of viridis color scale arguments used to control the
-#'   coloring of the beeswarm plot, see `?ggplot2::scale_color_viridis_c`.
-#'   The default points to the global option `shapviz.viridis_args`, which
-#'   corresponds to `list(begin = 0.25, end = 0.85, option = "inferno")`.
-#'   These values are passed to [ggplot2::scale_color_viridis_c()].
-#'   For example, to switch to a standard viridis scale, you can either change the
-#'   default with `options(shapviz.viridis_args = list())` or set
+#' @param viridis_args List of viridis color scale arguments. The default points to the
+#'   global option `shapviz.viridis_args`, which corresponds to
+#'   `list(begin = 0.25, end = 0.85, option = "inferno")`. These values are passed to
+#'   [ggplot2::scale_color_viridis_c()]. For example, to switch to standard viridis,
+#'   either change the default with `options(shapviz.viridis_args = list())` or set
 #'   `viridis_args = list()`.
 #' @param color_bar_title Title of color bar of the beeswarm plot. Set to `NULL`
 #'   to hide the color bar altogether.

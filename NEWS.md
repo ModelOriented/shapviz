@@ -3,6 +3,7 @@
 ## New features
 
 - New plot function `sv_dependence2D()`: x and y are two features, while their summed SHAP values are shown on the color scale. If `interaction = TRUE`, SHAP interaction values are shown on the color scale instead. The function is vectorized in `x` and/or `y`.
+- `split(x, f)` splits a "shapviz" object `x` into a "mshapviz" object.
 
 ## Documentation
 

@@ -151,11 +151,7 @@ fit_xgb <- xgb.train(data = dtrain, nrounds = 50)
 
 ```{r}
 shap_xgb <- shapviz(fit_xgb, X_pred = X_pred, X = iris)
-x_subgroups <- c(
-  setosa     = shap_xgb[iris$Species == "setosa"],
-  versicolor = shap_xgb[iris$Species == "versicolor"],
-  virginica  = shap_xgb[iris$Species == "virginica"]
-)
+x_subgroups <- split(shap_xgb, f = iris$Species)
 ```
 
 ### Dependence plot

@@ -262,6 +262,27 @@ c.shapviz <- function(...) {
   mshapviz(list(...))
 }
 
+#' Splits "shapviz" Object
+#'
+#' Splits "shapviz" object along a vector `f` into an object of class "mshapviz".
+#'
+#' @param x Object of class "shapviz".
+#' @param f Vector used to split feature values and SHAP (interaction) values.
+#' @param ... Arguments passed to `split()`.
+#' @returns A "mshapviz" object.
+#' @examples
+#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+#' sv <- shapviz(fit, X_pred = dtrain, X = iris)
+#' mx <- split(sv, f = iris$Species)
+#' sv_dependence(mx, "Petal.Length")
+#' @export
+#' @seealso [shapviz()], [rbind.shapviz()]
+split.shapviz <- function(x, f, ...) {
+  ind <- split(seq_len(nrow(x)), f = f, ...)
+  mshapviz(lapply(ind, function(i) x[i, ]))
+}
+
 # Helper functions
 
 # Binds two compatible SHAP interaction arrays along the first dimension.

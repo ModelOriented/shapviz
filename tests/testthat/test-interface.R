@@ -46,6 +46,12 @@ test_that("concatenating with rbind works", {
   expect_equal(dim(rbind(shp, shp, shp)$X), c(6L, 2L))
 })
 
+test_that("split() works", {
+  x_subgroups_a <- split(shp, f = c("1", "2"))
+  x_subgroups_b <- c(`1` = shp[1L, ], `2` = shp[2L, ])
+  expect_equal(x_subgroups_a, x_subgroups_b)
+})
+
 test_that("print() gives no error", {
   capture_output(expect_no_error(print(shp)))
   capture_output(expect_no_error(print(mshp)))
@@ -160,6 +166,12 @@ test_that("get_shap_interactions, +, rbind works for interactions", {
     dim(rbind(shp_inter, shp_inter, shp_inter)$S_inter)[1L],
     3 * dim(shp_inter$S_inter)[1L]
   )
+})
+
+test_that("split() works for interactions", {
+  x_subgroups_a <- split(shp_inter, f = c("1", "2"))
+  x_subgroups_b <- c(`1` = shp_inter[1L, ], `2` = shp_inter[2L, ])
+  expect_equal(x_subgroups_a, x_subgroups_b)
 })
 
 test_that("print() and summary() gives no error (with interactions)", {

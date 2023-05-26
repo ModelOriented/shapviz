@@ -120,9 +120,9 @@
 <p>SHAP (SHapley Additive exPlanations, [1]) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. {shapviz} offers the latter:</p>
 <ul>
 <li>
-<code><a href="reference/sv_dependence.html">sv_dependence()</a></code>: Dependence plots to study feature effects and interactions.</li>
+<code><a href="reference/sv_importance.html">sv_importance()</a></code>: Importance plots (bar plots and/or beeswarm plots) to study variable importance.</li>
 <li>
-<code><a href="reference/sv_importance.html">sv_importance()</a></code>: Importance plots (bar plots and/or beeswarm “summary” plots) to study variable importance.</li>
+<code><a href="reference/sv_dependence.html">sv_dependence()</a></code> and <code><a href="reference/sv_dependence2D.html">sv_dependence2D()</a></code>: Dependence plots to study feature effects and interactions.</li>
 <li>
 <code><a href="reference/sv_interaction.html">sv_interaction()</a></code>: Interaction plots.</li>
 <li>
@@ -253,12 +253,17 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_gray</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">9</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="op">-</span><span class="fl">5000</span>, <span class="fl">15000</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-dep-multi.png"></p>
+<p>To show the combined effects of two features (sum of their SHAP values), 2-dimensional dependence plots are available:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/sv_dependence2D.html">sv_dependence2D</a></span><span class="op">(</span><span class="va">shp</span>, x <span class="op">=</span> <span class="st">"carat"</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"clarity"</span>, <span class="st">"color"</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-dep2D.png"></p>
+<p>This is especially interesting for geographic components in a model.</p>
 </div>
 <div class="section level3">
 <h3 id="interactions">Interactions<a class="anchor" aria-label="anchor" href="#interactions"></a>
 </h3>
 <p>If SHAP interaction values have been computed (via {xgboost} or {treeshap}), the dependence plot can focus on main effects or SHAP interaction effects (multiplied by two due to symmetry).</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">shp_i</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/shapviz.html">shapviz</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit</span>, X_pred <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">dia_small</span><span class="op">[</span><span class="va">x</span><span class="op">]</span><span class="op">)</span>, X <span class="op">=</span> <span class="va">dia_small</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>

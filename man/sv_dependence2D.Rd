@@ -111,11 +111,7 @@ sv_dependence2D(
 )
 
 # mshapviz object
-mx <- c(
-  setosa = sv[sv$X$Species == "setosa"],
-  virginica = sv[sv$X$Species == "virginica"],
-  versicolor = sv[sv$X$Species == "versicolor"]
-)
+mx <- split(sv, f = iris$Species)
 sv_dependence2D(mx, x = "Petal.Length", y = "Sepal.Width")
 }
 \seealso{

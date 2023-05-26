@@ -164,7 +164,7 @@ sv_dependence(shp, v = x) &
 
 ![](man/figures/README-dep-multi.png)
 
-To show the combined effects of two features (sum of their SHAP values), 2-dimensional dependence plots are available:
+To show the combined effects of two features (sum of their SHAP values), 2D dependence plots are available:
 
 ``` r
 sv_dependence2D(shp, x = "carat", y = c("clarity", "color"), alpha = 0.5)

@@ -12,6 +12,7 @@ test_that("plots work for basic example", {
   expect_s3_class(sv_importance(x, show_numbers = TRUE), "patchwork")
   expect_s3_class(sv_importance(x, kind = "beeswarm"), "patchwork")
   expect_s3_class(sv_dependence(x, "Petal.Length"), "patchwork")
+  expect_s3_class(sv_dependence2D(x, x = "Petal.Length", y = "Species"), "patchwork")
 })
 
 test_that("using 'max_display' gives no error", {
@@ -38,6 +39,10 @@ test_that("dependence plots work for interactions = TRUE", {
   )
   expect_s3_class(
     sv_dependence(x_inter, "Petal.Length", color_var = "Species", interactions = TRUE),
+    "patchwork"
+  )
+  expect_s3_class(
+    sv_dependence2D(x_inter, x = "Petal.Length", y = "Species", interactions = TRUE),
     "patchwork"
   )
 })
@@ -74,6 +79,9 @@ test_that("plots work for non-syntactic column names", {
   expect_s3_class(
     sv_dependence(x, "Petal.Length", color_var = "strange name"), "patchwork"
   )
+  expect_s3_class(
+    sv_dependence2D(x, x = "Petal.Length", y = "strange name"), "patchwork"
+  )
 })
 
 test_that("sv_importance() and sv_interaction() and kind = 'no' gives list", {
@@ -96,8 +104,7 @@ test_that("sv_dependence() does not work with multiple v", {
   fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
   x <- c(m1 = shapviz(fit, X_pred = X_pred), m2 = shapviz(fit, X_pred = X_pred))
   expect_error(sv_dependence(x, v = c("Species", "Sepal.Width")))
+
+  expect_error(sv_dependence2D(x, x = c("Species", "Sepal.Width"), y = "Petal.Width"))
+  expect_error(sv_dependence2D(x, x = "Petal.Width", y = c("Species", "Sepal.Width")))
 })
-
-
-
-

@@ -15,8 +15,8 @@
 
 SHAP (SHapley Additive exPlanations, [1]) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. {shapviz} offers the latter: 
 
-- `sv_dependence()`: Dependence plots to study feature effects and interactions.
-- `sv_importance()`: Importance plots (bar plots and/or beeswarm "summary" plots) to study variable importance.
+- `sv_importance()`: Importance plots (bar plots and/or beeswarm plots) to study variable importance.
+- `sv_dependence()` and `sv_dependence2D()`: Dependence plots to study feature effects and interactions.
 - `sv_interaction()`: Interaction plots.
 - `sv_waterfall()`: Waterfall plots.
 - `sv_force()`: Force plots as an alternative to waterfall plots.
@@ -163,6 +163,16 @@ sv_dependence(shp, v = x) &
 ```
 
 ![](man/figures/README-dep-multi.png)
+
+To show the combined effects of two features (sum of their SHAP values), 2-dimensional dependence plots are available:
+
+``` r
+sv_dependence2D(shp, x = "carat", y = c("clarity", "color"), alpha = 0.5)
+```
+
+![](man/figures/README-dep2D.png)
+
+This is especially interesting for geographic components in a model.
 
 ### Interactions
 

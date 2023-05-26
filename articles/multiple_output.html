@@ -261,11 +261,7 @@ subgroups.</p>
 </h3>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">shap_xgb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">fit_xgb</span>, X_pred <span class="op">=</span> <span class="va">X_pred</span>, X <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
-<span><span class="va">x_subgroups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  setosa     <span class="op">=</span> <span class="va">shap_xgb</span><span class="op">[</span><span class="va">iris</span><span class="op">$</span><span class="va">Species</span> <span class="op">==</span> <span class="st">"setosa"</span><span class="op">]</span>,</span>
-<span>  versicolor <span class="op">=</span> <span class="va">shap_xgb</span><span class="op">[</span><span class="va">iris</span><span class="op">$</span><span class="va">Species</span> <span class="op">==</span> <span class="st">"versicolor"</span><span class="op">]</span>,</span>
-<span>  virginica  <span class="op">=</span> <span class="va">shap_xgb</span><span class="op">[</span><span class="va">iris</span><span class="op">$</span><span class="va">Species</span> <span class="op">==</span> <span class="st">"virginica"</span><span class="op">]</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">x_subgroups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">shap_xgb</span>, f <span class="op">=</span> <span class="va">iris</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="dependence-plot-1">Dependence plot<a class="anchor" aria-label="anchor" href="#dependence-plot-1"></a>

@@ -172,7 +172,7 @@ sv_dependence2D(shp, x = "carat", y = c("clarity", "color"), alpha = 0.5)
 
 ![](man/figures/README-dep2D.png)
 
-This is especially interesting for geographic components in a model.
+This is especially interesting for geographic components in a model, see corresponding vignette.
 
 ### Interactions
 

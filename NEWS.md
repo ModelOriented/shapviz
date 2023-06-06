@@ -8,6 +8,8 @@
 ## Documentation
 
 - Slight improvements in help/docu.
+- New vignette on models with geographic components.
+- Added a fantastic house price dataset with about 14,000 houses sold in Miami-Date country, thanks Steven C. Bourassa!
 
 ## API improvements
 

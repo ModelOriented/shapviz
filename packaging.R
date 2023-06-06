@@ -60,7 +60,8 @@ use_build_ignore(c("^packaging.R$", "[.]Rproj$", "^logo.png$"), escape = FALSE)
 # use_pipe()
 
 # If your package contains data. Google how to document
-# use_data()
+# miami <- OpenML::getOMLDataSet(43093)$data
+use_data(miami)
 
 # Add short docu in Markdown (without running R code)
 use_readme_md()

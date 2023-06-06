@@ -399,7 +399,9 @@ shapviz.kernelshap <- function(object, X = object[["X"]],
         MoreArgs = list(X = X, collapse = collapse),
         SIMPLIFY = FALSE
       )
-      names(shapviz_list) <- .make_class_names(length(S))
+      if (is.null(names(shapviz_list))) {
+        names(shapviz_list) <- .make_class_names(length(S))
+      }
       return(mshapviz(shapviz_list))
     }
     # Old way: select just one class

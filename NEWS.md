@@ -9,6 +9,10 @@
 
 - Slight improvements in help/docu.
 
+## API improvements
+
+- "mshapviz" object created from multioutput "kernelshap" object retains names.
+
 # shapviz 0.8.0
 
 ## API improvement

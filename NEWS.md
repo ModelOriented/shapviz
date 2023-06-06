@@ -1,4 +1,4 @@
-# shapviz 0.8.1
+# shapviz 0.9.0
 
 ## New features
 

@@ -15,7 +15,7 @@ library(usethis)
 use_description(
   fields = list(
     Title = "SHAP Visualizations",
-    Version = "0.8.1",
+    Version = "0.9.0",
     Description = "Visualizations for SHAP (SHapley Additive exPlanations),
     such as waterfall plots, force plots, various types of importance plots,
     dependence plots, and interaction plots.
@@ -30,8 +30,7 @@ use_description(
     `Authors@R` =
     "c(person('Michael', family = 'Mayer', role = c('aut', 'cre'), email = 'mayermichael79@gmail.com'),
        person('Adrian', family = 'Stando', role = 'ctb', email = 'adrian.j.stando@gmail.com'))",
-    Depends = "R (>= 3.6.0)",
-    LazyData = NULL
+    Depends = "R (>= 3.6.0)"
   ),
   roxygen = TRUE
 )

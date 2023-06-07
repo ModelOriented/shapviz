@@ -101,7 +101,7 @@ library(devtools)
 
 document()
 test()
-check(manual = TRUE, cran = TRUE, vignettes = FALSE)
+check(manual = TRUE, cran = TRUE, vignettes = TRUE)
 build()
 # build(binary = TRUE)
 install(upgrade = FALSE)

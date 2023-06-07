@@ -25,9 +25,6 @@ A data frame with 13,932 rows and 17 columns:
 \item{LATITUDE, LONGITUDE}{Coordinates}
 }
 }
-\source{
-\url{https://www.openml.org/search?type=data&sort=runs&id=43093&status=active}
-}
 \usage{
 miami
 }

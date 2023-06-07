@@ -87,7 +87,7 @@ to focus on pure interaction effects (multiplied by two) or on pure main effects
 }}
 \examples{
 dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 x <- shapviz(fit, X_pred = dtrain, X = iris)
 sv_dependence(x, "Petal.Length")
 sv_dependence(x, "Petal.Length", color_var = "Species")
@@ -95,17 +95,13 @@ sv_dependence(x, "Petal.Length", color_var = NULL)
 sv_dependence(x, c("Species", "Petal.Length"))
 sv_dependence(x, "Petal.Width", color_var = c("Species", "Petal.Length"))
 
-# SHAP interaction values
+# SHAP interaction values/main effects
 x2 <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 sv_dependence(x2, "Petal.Length", interactions = TRUE)
-sv_dependence(x2, c("Petal.Length", "Species"), color_var = NULL, interactions = TRUE)
-
-# Show main effect of "Petal.Length" for setosa and virginica separately
-mx <- c(
-  setosa = x2[x2$X$Species == "setosa"],
-  virginica = x2[x2$X$Species == "virginica"]
+sv_dependence(
+  x2, c("Petal.Length", "Species"), color_var = NULL, interactions = TRUE
 )
-sv_dependence(mx, "Petal.Length", color_var = NULL, interactions = TRUE)
+
 }
 \seealso{
 \code{\link[=potential_interactions]{potential_interactions()}}

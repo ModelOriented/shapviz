@@ -1,6 +1,9 @@
 # Resubmission
 
-I assume the slow examples on Debian are just a hickup?
+Examples taking too long on Linux. 
+
+- I have now reduced the number of examples.
+- And the number of boosting rounds.
 
 # shapviz 0.9.0
 

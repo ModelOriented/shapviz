@@ -21,7 +21,7 @@ Splits "shapviz" object along a vector \code{f} into an object of class "mshapvi
 }
 \examples{
 dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 sv <- shapviz(fit, X_pred = dtrain, X = iris)
 mx <- split(sv, f = iris$Species)
 sv_dependence(mx, "Petal.Length")

@@ -7,8 +7,6 @@ vignette: >
   %\VignetteIndexEntry{Geographic Components}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
-  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -18,14 +16,14 @@ knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE,
   fig.height = 5, 
-  fig.width = 7,
+  fig.width = 8,
   fig.align = "center"
 )
 ```
 
 ## Setting
 
-In a model with geographic components, we want to express a functional $T$ (usually the expectation or a quantile) of a response $Y$ as a function $f$ of a set of geographic features (latitude/longitude and/or postal code and/or other regional features):
+In a model with geographic components, we want to express a functional $T$ (usually the expectation or a quantile) of a response $Y$ as a function $f$ of a set of geographic features (latitude/longitude and/or postal code and/or other features varying with location):
 
 $$
   T(Y \mid X^\textrm{geo}, X^\textrm{other}) \approx f(X^\textrm{geo}, X^\textrm{other})
@@ -108,7 +106,7 @@ The last plot gives a good impression on price levels.
 Notes:
 
 1. Since we have modeled logarithmic prices, the effects are on relative scale (0.1 means about 10% above average).
-2. Due to interaction effects with non-geographic components, the location effects might depend on features like living area. This is not visible in above plot.
+2. Due to interaction effects with non-geographic components, the location effects might depend on features like living area. This is not visible in above plot. We will modify the model now in this respect.
 
 ## Two modifications
 

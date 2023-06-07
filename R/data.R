@@ -29,5 +29,4 @@
 #'   \item{month_sold}{sale month in 2016 (1 = jan)}
 #'   \item{LATITUDE, LONGITUDE}{Coordinates}
 #' }
-#' @source <https://www.openml.org/search?type=data&sort=runs&id=43093&status=active>
 "miami"

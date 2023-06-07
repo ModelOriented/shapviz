@@ -10,6 +10,9 @@
     <loc>/articles/basic_use.html</loc>
   </url>
   <url>
+    <loc>/articles/geographic.html</loc>
+  </url>
+  <url>
     <loc>/articles/index.html</loc>
   </url>
   <url>
@@ -50,6 +53,9 @@
   </url>
   <url>
     <loc>/reference/is.shapviz.html</loc>
+  </url>
+  <url>
+    <loc>/reference/miami.html</loc>
   </url>
   <url>
     <loc>/reference/mshapviz.html</loc>

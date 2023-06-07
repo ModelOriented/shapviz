@@ -17,20 +17,16 @@ Hello CRAN team
 > checking HTML version of manual ... NOTE
   Skipping checking HTML validation: no command 'tidy' found
 
-### check_rhub(): Some usual notes...
+### RHub
 
 * checking package dependencies ... NOTE
 Packages which this enhances but not available for checking:
   'fastshap', 'h2o', 'lightgbm'
 * checking HTML version of manual ... NOTE
+Skipping checking HTML validation: no command 'tidy' found
 Skipping checking math rendering: package 'V8' unavailable
-* checking for non-standard things in the check directory ... NOTE
-Found the following files/directories:
-  ''NULL''
-* checking for detritus in the temp directory ... NOTE
-Found the following files/directories:
-  'lastMiKTeXException'
 
-### check_win_devel()
+
+### Winbuilder()
 
 Status: OK

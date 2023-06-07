@@ -1,13 +1,15 @@
-# shapviz 0.8.1
+# shapviz 0.9.0
 
 ## New features
 
-- New plot function `sv_dependence2D()`: x and y are two features, while their summed SHAP values are shown on the color scale. If `interaction = TRUE`, SHAP interaction values are shown on the color scale instead. The function is vectorized in `x` and/or `y`.
+- New plot function `sv_dependence2D()`: x and y coordinates are two features, while their summed SHAP values are shown on the color scale. If `interaction = TRUE`, SHAP interaction values are shown on the color scale instead. The function is vectorized in `x` and/or `y`. This visualization is especially useful for models with geographic components.
 - `split(x, f)` splits a "shapviz" object `x` into a "mshapviz" object.
 
 ## Documentation
 
 - Slight improvements in help/docu.
+- New vignette on models with geographic components.
+- Added a fantastic house price dataset with about 14,000 houses sold in Miami-Date County, thanks Steven C. Bourassa.
 
 ## API improvements
 

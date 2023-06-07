@@ -1,19 +1,20 @@
-# {shapviz} 0.8.0
+# shapviz 0.9.0
 
 Hello CRAN team
 
-- {shapviz} will work more smoothly for upcoming {fastshap} versions. I did this change together with the {fastshap} maintainer (Brandon Greenwell).
-- Better help files
-- Switched from "import ggplot2" to "ggplot2::function" code style
+- I have added a beautiful house price dataset with 14000 transactions from Miami in 2016. A friend of mine has created it (Prof. Steven Bourassa).
+- There is a new plot `sv_dependence2D()` that is ideal for visualization of geographic components.
+- Added new vignette on SHAP analyses for models with geographic components.
 
 ## Checks look good
 
 ### check(manual = TRUE, cran = TRUE) 
 
-* checking for future file timestamps ... NOTE
-  unable to verify current time
+> checking data for ASCII and uncompressed saves ... OK
+   WARNING
+  'qpdf' is needed for checks on size reduction of PDFs
 
-* checking HTML version of manual ... NOTE
+> checking HTML version of manual ... NOTE
   Skipping checking HTML validation: no command 'tidy' found
 
 ### check_rhub(): Some usual notes...

@@ -95,13 +95,14 @@ sv_dependence(x, "Petal.Length", color_var = NULL)
 sv_dependence(x, c("Species", "Petal.Length"))
 sv_dependence(x, "Petal.Width", color_var = c("Species", "Petal.Length"))
 
+\dontrun{
 # SHAP interaction values/main effects
 x2 <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 sv_dependence(x2, "Petal.Length", interactions = TRUE)
 sv_dependence(
   x2, c("Petal.Length", "Species"), color_var = NULL, interactions = TRUE
 )
-
+}
 }
 \seealso{
 \code{\link[=potential_interactions]{potential_interactions()}}

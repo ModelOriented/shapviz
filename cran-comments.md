@@ -1,3 +1,7 @@
+# Re-resubmission
+
+Examples still taking too long on Linux. No idea how to fix this except using dontruns...
+
 # Resubmission
 
 Examples taking too long on Linux. 

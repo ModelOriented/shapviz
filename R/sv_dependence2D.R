@@ -34,6 +34,7 @@
 #' sv_dependence2D(sv, x = "Petal.Length", y = "Species")
 #' sv_dependence2D(sv, x = c("Petal.Length", "Species"), y = "Sepal.Width")
 #'
+#' \dontrun{
 #' # SHAP interaction values
 #' sv2 <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 #' sv_dependence2D(sv2, x = "Petal.Length", y = "Species", interactions = TRUE)
@@ -44,6 +45,7 @@
 #' # mshapviz object
 #' mx <- split(sv, f = iris$Species)
 #' sv_dependence2D(mx, x = "Petal.Length", y = "Sepal.Width")
+#' }
 #' @export
 #' @seealso [sv_dependence()]
 sv_dependence2D <- function(object, ...) {

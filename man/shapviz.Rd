@@ -186,6 +186,7 @@ sv_dependence(x, "Species")
 # "X_pred" can also be passed as xgb.DMatrix, but only if X is passed as well!
 x <- shapviz(fit, X_pred = dtrain, X = iris)
 
+\dontrun{
 # Multiclass setting
 params <- list(objective = "multi:softprob", num_class = 3, nthread = 1)
 X_pred <- data.matrix(iris[, -5])
@@ -211,6 +212,7 @@ x <- shapviz(
   collapse = list(Species = c("Speciessetosa", "Speciesversicolor", "Speciesvirginica"))
 )
 summary(x)
+}
 
 # Similarly with LightGBM
 if (requireNamespace("lightgbm", quietly = TRUE)) {

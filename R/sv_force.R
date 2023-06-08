@@ -15,11 +15,13 @@
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 20, nthread = 1)
 #' x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
 #' sv_force(x)
+#'
+#' \dontrun{
 #' sv_force(x, row_id = 65, max_display = 3, size = 9, fill_colors = 4:5)
 #'
 #' # Aggregate over all observations with Petal.Length == 1.4
 #' sv_force(x, row_id = x$X$Petal.Length == 1.4)
-#'
+#' }
 #' @export
 #' @seealso [sv_waterfall()]
 sv_force <- function(object, ...) {

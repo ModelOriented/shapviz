@@ -109,7 +109,7 @@ install(upgrade = FALSE)
 # Run only if package is public(!) and should go to CRAN
 if (FALSE) {
   check_win_devel()
-  check_rhub()
+  check_rhub(platforms = "debian-gcc-devel")
 
   # Wait until above checks are passed without relevant notes/warnings
   # then submit to CRAN

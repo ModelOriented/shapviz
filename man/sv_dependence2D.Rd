@@ -93,15 +93,12 @@ to focus on pure interaction effects (multiplied by two).
 
 }}
 \examples{
+\dontrun{
 dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 sv <- shapviz(fit, X_pred = dtrain, X = iris)
 sv_dependence2D(sv, x = "Petal.Length", y = "Species")
-sv_dependence2D(sv, x = "Petal.Length", y = "Sepal.Width")
 sv_dependence2D(sv, x = c("Petal.Length", "Species"), y = "Sepal.Width")
-sv_dependence2D(
-  sv, x = c("Petal.Length", "Species"), y = c("Petal.Width", "Sepal.Width")
-)
 
 # SHAP interaction values
 sv2 <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
@@ -113,6 +110,7 @@ sv_dependence2D(
 # mshapviz object
 mx <- split(sv, f = iris$Species)
 sv_dependence2D(mx, x = "Petal.Length", y = "Sepal.Width")
+}
 }
 \seealso{
 \code{\link[=sv_dependence]{sv_dependence()}}

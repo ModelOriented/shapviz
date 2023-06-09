@@ -35,8 +35,9 @@
 #'   will altogether suppress adding text to the bars.
 #' @returns An object of class "ggplot" (or "patchwork") representing a waterfall plot.
 #' @examples
+#' \dontrun{
 #' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 20, nthread = 1)
 #' x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
 #' sv_waterfall(x)
 #' sv_waterfall(x, row_id = 123, max_display = 2, size = 9, fill_colors = 4:5)
@@ -48,16 +49,7 @@
 #'
 #' # Aggregate over all observations with Petal.Length == 1.4
 #' sv_waterfall(x, row_id = x$X$Petal.Length == 1.4)
-#'
-#' # More features
-#' X <- as.data.frame(matrix(1:100, nrow = 10))
-#' S <- as.matrix(X)
-#' shp <- shapviz(S, X)
-#' sv_waterfall(shp)
-#'
-#' # Combine two waterfall plots via {patchwork}
-#' sv_waterfall(c(Obs1 = x[1], Obs2 = x[2])) +
-#'   patchwork::plot_layout(ncol = 1)
+#' }
 #' @export
 #' @seealso [sv_force()]
 sv_waterfall <- function(object, ...) {

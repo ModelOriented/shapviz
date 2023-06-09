@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 ## Setting
 
-In a model with geographic components, we want to express a functional $T$ (usually the expectation or a quantile) of a response $Y$ as a function $f$ of a set of geographic features (latitude/longitude and/or postal code and/or other features varying with location):
+In a model with geographic components, we want to express a functional $T$ (usually the expectation or a quantile) of a response $Y$ as a function $f$ of a set of geographic features (latitude/longitude and/or postal code and/or other features varying with location), and other features:
 
 $$
   T(Y \mid X^\textrm{geo}, X^\textrm{other}) \approx f(X^\textrm{geo}, X^\textrm{other})
@@ -34,7 +34,7 @@ That's where the additivity of SHAP values comes into play: The sum of SHAP valu
 
 ## A first example
 
-For illustration, we will use a beautiful house price dataset containing information on about 14'000 houses sold in 2016 in Miami-Date County. Some of the columns are as follows:
+For illustration, we will use a beautiful house price dataset containing information on about 14'000 houses sold in 2016 in Miami-Dade County. Some of the columns are as follows:
 
 - **SALE_PRC**: Sale price in USD: Its logarithm will be our model response.
 - *LATITUDE*, *LONGITUDE*: Coordinates

@@ -271,11 +271,13 @@ c.shapviz <- function(...) {
 #' @param ... Arguments passed to `split()`.
 #' @returns A "mshapviz" object.
 #' @examples
+#' \dontrun{
 #' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 #' sv <- shapviz(fit, X_pred = dtrain, X = iris)
 #' mx <- split(sv, f = iris$Species)
 #' sv_dependence(mx, "Petal.Length")
+#' }
 #' @export
 #' @seealso [shapviz()], [rbind.shapviz()]
 split.shapviz <- function(x, f, ...) {

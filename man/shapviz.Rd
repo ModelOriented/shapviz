@@ -168,11 +168,11 @@ return a "mshapviz" object, containing a "shapviz" object per output.
 S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 X <- data.frame(x = c("a", "b"), y = c(100, 10))
 shapviz(S, X, baseline = 4)
-
+\dontrun{
 # XGBoost models
-X_pred <- data.matrix(iris[, -1L])
-dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1L])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
+X_pred <- data.matrix(iris[, -1])
+dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1])
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 
 # Will use numeric matrix "X_pred" as feature matrix
 x <- shapviz(fit, X_pred = X_pred)
@@ -187,15 +187,13 @@ sv_dependence(x, "Species")
 x <- shapviz(fit, X_pred = dtrain, X = iris)
 
 # Multiclass setting
-params <- list(objective = "multi:softprob", num_class = 3L)
-X_pred <- data.matrix(iris[, -5L])
-dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5L]) - 1L)
-fit <- xgboost::xgb.train(
-  params = params, data = dtrain, nrounds = 50L, nthread = 1L
-)
+params <- list(objective = "multi:softprob", num_class = 3, nthread = 1)
+X_pred <- data.matrix(iris[, -5])
+dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5]) - 1)
+fit <- xgboost::xgb.train(params = params, data = dtrain, nrounds = 10)
 
 # Select specific class
-x <- shapviz(fit, X_pred = X_pred, which_class = 3L)
+x <- shapviz(fit, X_pred = X_pred, which_class = 3)
 x
 
 # Or combine all classes to "mshapviz" object
@@ -203,9 +201,9 @@ x <- shapviz(fit, X_pred = X_pred)
 x
 
 # What if we would have one-hot-encoded values and want to explain the original column?
-X_pred <- stats::model.matrix(~ . -1, iris[, -1L])
-dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 1L]))
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L)
+X_pred <- stats::model.matrix(~ . -1, iris[, -1])
+dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 1]))
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 x <- shapviz(
   fit,
   X_pred = X_pred,
@@ -217,32 +215,33 @@ summary(x)
 # Similarly with LightGBM
 if (requireNamespace("lightgbm", quietly = TRUE)) {
   fit <- lightgbm::lgb.train(
-    params = list(objective = "regression", num_thread = 1L),
-    data = lightgbm::lgb.Dataset(X_pred, label = iris[, 1L]),
-    nrounds = 50L,
-    verbose = -2L
+    params = list(objective = "regression", num_thread = 1),
+    data = lightgbm::lgb.Dataset(X_pred, label = iris[, 1]),
+    nrounds = 10,
+    verbose = -2
   )
 
   x <- shapviz(fit, X_pred = X_pred)
   x
 
   # Multiclass
-  params <- list(objective = "multiclass", num_class = 3L, num_thread = 1L)
-  X_pred <- data.matrix(iris[, -5L])
-  dtrain <- lightgbm::lgb.Dataset(X_pred, label = as.integer(iris[, 5L]) - 1L)
-  fit <- lightgbm::lgb.train(params = params, data = dtrain, nrounds = 50L)
+  params <- list(objective = "multiclass", num_class = 3, num_thread = 1)
+  X_pred <- data.matrix(iris[, -5])
+  dtrain <- lightgbm::lgb.Dataset(X_pred, label = as.integer(iris[, 5]) - 1)
+  fit <- lightgbm::lgb.train(params = params, data = dtrain, nrounds = 10)
 
   # Select specific class
-  x <- shapviz(fit, X_pred = X_pred, which_class = 3L)
+  x <- shapviz(fit, X_pred = X_pred, which_class = 3)
   x
 
   # Or combine all classes to a "mshapviz" object
   mx <- shapviz(fit, X_pred = X_pred)
   mx
-  all.equal(mx[[3L]], x)
+  all.equal(mx[[3]], x)
+}
 }
 }
 \seealso{
-\code{\link[=sv_importance]{sv_importance()}}, \code{\link[=sv_dependence]{sv_dependence()}}, \code{\link[=sv_interaction]{sv_interaction()}},
+\code{\link[=sv_importance]{sv_importance()}}, \code{\link[=sv_dependence]{sv_dependence()}}, \code{\link[=sv_dependence2D]{sv_dependence2D()}}, \code{\link[=sv_interaction]{sv_interaction()}},
 \code{\link[=sv_waterfall]{sv_waterfall()}}, \code{\link[=sv_force]{sv_force()}}, \code{\link[=collapse_shap]{collapse_shap()}}
 }

@@ -11,17 +11,16 @@
 #'   (via [ggrepel::geom_text_repel()]).
 #' @returns An object of class "ggplot" (or "patchwork") representing a force plot.
 #' @examples
+#' \dontrun{
 #' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 20, nthread = 1)
 #' x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
 #' sv_force(x)
 #' sv_force(x, row_id = 65, max_display = 3, size = 9, fill_colors = 4:5)
 #'
 #' # Aggregate over all observations with Petal.Length == 1.4
 #' sv_force(x, row_id = x$X$Petal.Length == 1.4)
-#'
-#' # Combine two force plots via {patchwork}
-#' sv_force(c(Obs1 = x[1], Obs2 = x[2]))
+#' }
 #' @export
 #' @seealso [sv_waterfall()]
 sv_force <- function(object, ...) {

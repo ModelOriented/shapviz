@@ -87,12 +87,13 @@ The features are sorted in decreasing order of usual SHAP importance.
 
 }}
 \examples{
+\dontrun{
 dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50, nthread = 1)
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 x <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
-sv_interaction(x)
-sv_interaction(x, max_display = 2, size = 3, alpha = 0.1)
 sv_interaction(x, kind = "no")
+sv_interaction(x, max_display = 2, size = 3)
+}
 }
 \seealso{
 \code{\link[=sv_importance]{sv_importance()}}

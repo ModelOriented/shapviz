@@ -1,3 +1,18 @@
+# Re-resubmission
+
+Examples that take 0.09 seconds on my Windows laptop take 6 seconds on Linux. I don't know how to fix this, so I am resorting to dontruns around all examples involving XGBoost.
+
+# Re-resubmission
+
+Examples still taking too long on Linux. No idea how to fix this except using dontruns...
+
+# Resubmission
+
+Examples taking too long on Linux. 
+
+- I have now reduced the number of examples.
+- And the number of boosting rounds.
+
 # shapviz 0.9.0
 
 Hello CRAN team
@@ -8,29 +23,21 @@ Hello CRAN team
 
 ## Checks look good
 
-### check(manual = TRUE, cran = TRUE) 
-
-> checking data for ASCII and uncompressed saves ... OK
-   WARNING
-  'qpdf' is needed for checks on size reduction of PDFs
+### check(manual = TRUE, cran = TRUE)
 
 > checking HTML version of manual ... NOTE
   Skipping checking HTML validation: no command 'tidy' found
 
-### check_rhub(): Some usual notes...
+### RHub
 
 * checking package dependencies ... NOTE
 Packages which this enhances but not available for checking:
   'fastshap', 'h2o', 'lightgbm'
 * checking HTML version of manual ... NOTE
+Skipping checking HTML validation: no command 'tidy' found
 Skipping checking math rendering: package 'V8' unavailable
-* checking for non-standard things in the check directory ... NOTE
-Found the following files/directories:
-  ''NULL''
-* checking for detritus in the temp directory ... NOTE
-Found the following files/directories:
-  'lastMiKTeXException'
 
-### check_win_devel()
+
+### Winbuilder()
 
 Status: OK

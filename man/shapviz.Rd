@@ -168,7 +168,7 @@ return a "mshapviz" object, containing a "shapviz" object per output.
 S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 X <- data.frame(x = c("a", "b"), y = c(100, 10))
 shapviz(S, X, baseline = 4)
-
+\dontrun{
 # XGBoost models
 X_pred <- data.matrix(iris[, -1])
 dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1])
@@ -186,7 +186,6 @@ sv_dependence(x, "Species")
 # "X_pred" can also be passed as xgb.DMatrix, but only if X is passed as well!
 x <- shapviz(fit, X_pred = dtrain, X = iris)
 
-\dontrun{
 # Multiclass setting
 params <- list(objective = "multi:softprob", num_class = 3, nthread = 1)
 X_pred <- data.matrix(iris[, -5])
@@ -212,7 +211,6 @@ x <- shapviz(
   collapse = list(Species = c("Speciessetosa", "Speciesversicolor", "Speciesvirginica"))
 )
 summary(x)
-}
 
 # Similarly with LightGBM
 if (requireNamespace("lightgbm", quietly = TRUE)) {
@@ -242,7 +240,8 @@ if (requireNamespace("lightgbm", quietly = TRUE)) {
   all.equal(mx[[3]], x)
 }
 }
+}
 \seealso{
-\code{\link[=sv_importance]{sv_importance()}}, \code{\link[=sv_dependence]{sv_dependence()}}, \code{\link[=sv_interaction]{sv_interaction()}},
+\code{\link[=sv_importance]{sv_importance()}}, \code{\link[=sv_dependence]{sv_dependence()}}, \code{\link[=sv_dependence2D]{sv_dependence2D()}}, \code{\link[=sv_interaction]{sv_interaction()}},
 \code{\link[=sv_waterfall]{sv_waterfall()}}, \code{\link[=sv_force]{sv_force()}}, \code{\link[=collapse_shap]{collapse_shap()}}
 }

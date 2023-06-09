@@ -63,7 +63,7 @@
 #'     scale of the SHAP values.
 #'   - `S_inter`: Numeric array of SHAP interaction values (or `NULL`).
 #' @seealso
-#'   [sv_importance()], [sv_dependence()], [sv_interaction()],
+#'   [sv_importance()], [sv_dependence()], [sv_dependence2D()], [sv_interaction()],
 #'   [sv_waterfall()], [sv_force()], [collapse_shap()]
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
@@ -110,7 +110,7 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
 #'   Creates a "shapviz" object from an XGBoost model.
 #' @export
 #' @examples
-#'
+#' \dontrun{
 #' # XGBoost models
 #' X_pred <- data.matrix(iris[, -1])
 #' dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1])
@@ -128,7 +128,6 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
 #' # "X_pred" can also be passed as xgb.DMatrix, but only if X is passed as well!
 #' x <- shapviz(fit, X_pred = dtrain, X = iris)
 #'
-#' \dontrun{
 #' # Multiclass setting
 #' params <- list(objective = "multi:softprob", num_class = 3, nthread = 1)
 #' X_pred <- data.matrix(iris[, -5])
@@ -154,7 +153,6 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
 #'   collapse = list(Species = c("Speciessetosa", "Speciesversicolor", "Speciesvirginica"))
 #' )
 #' summary(x)
-#' }
 #'
 #' # Similarly with LightGBM
 #' if (requireNamespace("lightgbm", quietly = TRUE)) {
@@ -182,6 +180,7 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
 #'   mx <- shapviz(fit, X_pred = X_pred)
 #'   mx
 #'   all.equal(mx[[3]], x)
+#' }
 #' }
 shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL,
                                collapse = NULL, interactions = FALSE, ...) {

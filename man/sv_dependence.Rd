@@ -86,6 +86,7 @@ to focus on pure interaction effects (multiplied by two) or on pure main effects
 
 }}
 \examples{
+\dontrun{
 dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
 fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 x <- shapviz(fit, X_pred = dtrain, X = iris)
@@ -95,7 +96,6 @@ sv_dependence(x, "Petal.Length", color_var = NULL)
 sv_dependence(x, c("Species", "Petal.Length"))
 sv_dependence(x, "Petal.Width", color_var = c("Species", "Petal.Length"))
 
-\dontrun{
 # SHAP interaction values/main effects
 x2 <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 sv_dependence(x2, "Petal.Length", interactions = TRUE)

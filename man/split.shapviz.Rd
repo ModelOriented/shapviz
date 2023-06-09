@@ -20,11 +20,13 @@ A "mshapviz" object.
 Splits "shapviz" object along a vector \code{f} into an object of class "mshapviz".
 }
 \examples{
+\dontrun{
 dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
 fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 sv <- shapviz(fit, X_pred = dtrain, X = iris)
 mx <- split(sv, f = iris$Species)
 sv_dependence(mx, "Petal.Length")
+}
 }
 \seealso{
 \code{\link[=shapviz]{shapviz()}}, \code{\link[=rbind.shapviz]{rbind.shapviz()}}

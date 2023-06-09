@@ -42,14 +42,13 @@
 #'   `kind = "no"` - a named numeric vector of sorted SHAP feature importances
 #'   (or a list of such vectors in case of an object of class "mshapviz").
 #' @examples
+#' \dontrun{
 #' X_train <- data.matrix(iris[, -1])
 #' dtrain <- xgboost::xgb.DMatrix(X_train, label = iris[, 1])
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 #' x <- shapviz(fit, X_pred = X_train)
 #' sv_importance(x)
 #' sv_importance(x, kind = "no")
-#'
-#' \dontrun{
 #' sv_importance(x, kind = "beeswarm", show_numbers = TRUE)
 #' }
 #'

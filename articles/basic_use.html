@@ -366,7 +366,7 @@ packages work together with {shapviz}.</p>
 <span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Sepal.Width</span> <span class="op">+</span> <span class="va">Petal.Length</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># fastshap &gt; 0.0.7 and shap_only = FALSE</span></span>
-<span><span class="va">shap</span> <span class="op">&lt;-</span> <span class="fu">fastshap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/fastshap/man/explain.html" class="external-link">explain</a></span><span class="op">(</span></span>
+<span><span class="va">shap</span> <span class="op">&lt;-</span> <span class="fu">fastshap</span><span class="fu">::</span><span class="fu"><a href="https://bgreenwell.github.io/fastshap/reference/explain.html" class="external-link">explain</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit</span>, </span>
 <span>  X <span class="op">=</span> <span class="va">iris</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sepal.Width"</span>, <span class="st">"Petal.Length"</span><span class="op">)</span><span class="op">]</span>,</span>
 <span>  nsim <span class="op">=</span> <span class="fl">100</span>, </span>
@@ -378,7 +378,7 @@ packages work together with {shapviz}.</p>
 <span><span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">sv</span>, <span class="st">"Sepal.Width"</span>, color_var <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># fastshap &lt;= 0.0.7 or shap_only = TRUE</span></span>
-<span><span class="va">shap</span> <span class="op">&lt;-</span> <span class="fu">fastshap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/fastshap/man/explain.html" class="external-link">explain</a></span><span class="op">(</span></span>
+<span><span class="va">shap</span> <span class="op">&lt;-</span> <span class="fu">fastshap</span><span class="fu">::</span><span class="fu"><a href="https://bgreenwell.github.io/fastshap/reference/explain.html" class="external-link">explain</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit</span>, </span>
 <span>  X <span class="op">=</span> <span class="va">iris</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sepal.Width"</span>, <span class="st">"Petal.Length"</span><span class="op">)</span><span class="op">]</span>, </span>
 <span>  nsim <span class="op">=</span> <span class="fl">100</span>, </span>

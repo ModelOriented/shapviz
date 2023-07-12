@@ -172,6 +172,9 @@ is.mshapviz <- function(object){
 
 #' Dimnames of "shapviz" Object
 #'
+#' This implies to use `colnames(x)` to get the column names of the SHAP and feature
+#' matrix (and optional SHAP interaction values).
+#'
 #' @param x An object of class "shapviz".
 #' @returns Dimnames of the SHAP matrix.
 #' @examples
@@ -184,6 +187,41 @@ is.mshapviz <- function(object){
 #' @export
 dimnames.shapviz <- function(x) {
   dimnames(get_shap_values(x))
+}
+
+#' Dimnames (Replacement Method) of "shapviz" Object
+#'
+#' This implies `colnames(x) <- ...`.
+#'
+#' @param x An object of class "shapviz".
+#' @param value A list with rownames and column names compliant with SHAP matrix.
+#' @returns Like `x`, but with replaced dimnames.
+#' @examples
+#' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' x <- shapviz(S, X, baseline = 4)
+#' dimnames(x) <- list(1:2, c("a", "b"))
+#' dimnames(x)
+#' colnames(x) <- c("x", "y")
+#' colnames(x)
+#' @seealso [shapviz()]
+#' @export
+`dimnames<-.shapviz` <- function(x, value) {
+  # Matrix
+  dimnames(x[["S"]]) <- value
+
+  # data.frame (can't have NULL rownames)
+  if (!is.null(value[[1L]])) {
+    dimnames(x[["X"]]) <- value
+  } else {
+    dimnames(x[["X"]]) <- list(seq_len(nrow(x[["X"]])), value[[2L]])
+  }
+
+  # 3D array
+  if (!is.null(get_shap_interactions(x))) {
+    dimnames(x[["S_inter"]]) <- list(value[[1L]], value[[2L]], value[[2L]])
+  }
+  x
 }
 
 #' Rowbinds two "shapviz" Objects

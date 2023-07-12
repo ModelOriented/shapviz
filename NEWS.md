@@ -1,3 +1,9 @@
+# shapviz 0.9.1
+
+## New features
+
+- `dimnames.shapviz()` has received a replacement method. You can thus change the column names of SHAP matrix and feature data (as well as SHAP interactions) by `colnames(x) <- ...`, see https://github.com/ModelOriented/shapviz/issues/98
+
 # shapviz 0.9.0
 
 ## New features

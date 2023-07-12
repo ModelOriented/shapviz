@@ -20,6 +20,21 @@ test_that("dim, nrow, ncol, colnames work", {
   expect_equal(colnames(shp), colnames(S))
 })
 
+test_that("<-dimnames work", {
+  shp2 <- shp
+  v <- c("a", "b")
+  colnames(shp2) <- v
+  expect_equal(colnames(shp2), v)
+  expect_equal(colnames(get_shap_values(shp2)), v)
+  expect_equal(colnames(get_feature_values(shp2)), v)
+
+  v <- c("x", "y")
+  dimnames(shp2) <- list(NULL, v)
+  expect_equal(colnames(shp2), v)
+  expect_equal(colnames(get_shap_values(shp2)), v)
+  expect_equal(colnames(get_feature_values(shp2)), v)
+})
+
 test_that("subsetting works", {
   expect_equal(dim(shp[, "x"]$S), c(2L, 1L))
   expect_equal(dim(shp[, "x"]$X), c(2L, 1L))
@@ -166,6 +181,17 @@ test_that("get_shap_interactions, +, rbind works for interactions", {
     dim(rbind(shp_inter, shp_inter, shp_inter)$S_inter)[1L],
     3 * dim(shp_inter$S_inter)[1L]
   )
+})
+
+test_that("dimnames() and replacement work for interactions", {
+  shp2 <- shp_inter
+  colnames(shp2) <- c("a", "b")
+  expect_equal(colnames(shp2), c("a", "b"))
+  expect_equal(colnames(get_shap_interactions(shp2)), c("a", "b"))
+
+  dimnames(shp2) <- list(NULL, c("x", "y"))
+  expect_equal(colnames(shp2), c("x", "y"))
+  expect_equal(colnames(get_shap_interactions(shp2)), c("x", "y"))
 })
 
 test_that("split() works for interactions", {

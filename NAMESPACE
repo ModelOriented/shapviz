@@ -2,6 +2,7 @@
 
 S3method("+",shapviz)
 S3method("[",shapviz)
+S3method("dimnames<-",shapviz)
 S3method(c,shapviz)
 S3method(dim,shapviz)
 S3method(dimnames,shapviz)

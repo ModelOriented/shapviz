@@ -251,7 +251,7 @@ shapviz.lgb.Booster = function(object, X_pred, X = X_pred,
   )
 
   # Switch for different versions of predict.lgb.Booster()
-  is_v4 <- utils::packageVersion("lightgbm") >= 4
+  is_v4 <- utils::packageVersion("lightgbm") >= "4"
   has_type <- "type" %in% names(formals(utils::getS3method("predict", "lgb.Booster")))
   if (is_v4 || has_type) {
     S <- stats::predict(object, newdata = X_pred, type = "contrib", ...)

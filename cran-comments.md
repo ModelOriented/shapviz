@@ -1,43 +1,27 @@
-# Re-resubmission
-
-Examples that take 0.09 seconds on my Windows laptop take 6 seconds on Linux. I don't know how to fix this, so I am resorting to dontruns around all examples involving XGBoost.
-
-# Re-resubmission
-
-Examples still taking too long on Linux. No idea how to fix this except using dontruns...
-
-# Resubmission
-
-Examples taking too long on Linux. 
-
-- I have now reduced the number of examples.
-- And the number of boosting rounds.
-
-# shapviz 0.9.0
+# shapviz 0.9.1
 
 Hello CRAN team
 
-- I have added a beautiful house price dataset with 14000 transactions from Miami in 2016. A friend of mine has created it (Prof. Steven Bourassa).
-- There is a new plot `sv_dependence2D()` that is ideal for visualization of geographic components.
-- Added new vignette on SHAP analyses for models with geographic components.
+This is a small release fixing a future problem pointed out by Kurt Hornik about applying package_version() to numeric input.
 
 ## Checks look good
 
 ### check(manual = TRUE, cran = TRUE)
 
-> checking HTML version of manual ... NOTE
+- checking for future file timestamps ... NOTE
+  unable to verify current time
+  
+- checking HTML version of manual ... NOTE
   Skipping checking HTML validation: no command 'tidy' found
 
 ### RHub
 
-* checking package dependencies ... NOTE
-Packages which this enhances but not available for checking:
-  'fastshap', 'h2o', 'lightgbm'
-* checking HTML version of manual ... NOTE
-Skipping checking HTML validation: no command 'tidy' found
-Skipping checking math rendering: package 'V8' unavailable
+debian ok
 
+Others: hanging
 
 ### Winbuilder()
 
 Status: OK
+R Under development (unstable) (2023-07-17 r84702 ucrt)
+

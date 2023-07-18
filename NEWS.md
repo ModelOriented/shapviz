@@ -4,6 +4,10 @@
 
 - `dimnames.shapviz()` has received a replacement method. You can thus change the column names of SHAP matrix and feature data (as well as SHAP interactions) by `colnames(x) <- ...`, see https://github.com/ModelOriented/shapviz/issues/98
 
+## Maintenance
+
+- Fix for https://github.com/ModelOriented/shapviz/issues/100 (`package_version()` applied to numeric value will be deprecated in the future)
+
 # shapviz 0.9.0
 
 ## New features

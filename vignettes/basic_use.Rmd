@@ -49,8 +49,9 @@ To further simplify the use of {shapviz}, we added direct connectors to:
 - [`kernelshap`](https://CRAN.R-project.org/package=kernelshap)
 - [`fastshap`](https://CRAN.R-project.org/package=fastshap)
 - [`shapr`](https://CRAN.R-project.org/package=shapr)
-- [`treeshap`](https://github.com/ModelOriented/treeshap/)
+- [`treeshap`](https://github.com/ModelOriented/treeshap/) (not on CRAN)
 - [`DALEX`](https://CRAN.R-project.org/package=DALEX)
+- [`permshap`](https://github.com/mayer79/permshap) (not on CRAN)
 
 For XGBoost, LightGBM, and H2O, the SHAP values are directly calculated from the fitted model.
 
@@ -333,6 +334,20 @@ fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
 ks <- kernelshap(fit, dia_small[x], bg_X = background)
 
 shp <- shapviz(ks)
+sv_importance(shp)
+sv_dependence(shp, "carat", color_var = NULL)
+```
+
+### permshap
+
+```r
+library(permshap)
+
+background <- diamonds[sample(nrow(diamonds), 200), ]
+fit <- lm(price ~ carat + clarity + cut + color, data = diamonds)
+ps <- permshap(fit, dia_small[x], bg_X = background)
+
+shp <- shapviz(ps)
 sv_importance(shp)
 sv_dependence(shp, "carat", color_var = NULL)
 ```

@@ -1,6 +1,6 @@
 Package: shapviz
 Title: SHAP Visualizations
-Version: 0.9.1
+Version: 0.9.2
 Authors@R: c(
     person("Michael", "Mayer", , "mayermichael79@gmail.com", role = c("aut", "cre")),
     person("Adrian", "Stando", , "adrian.j.stando@gmail.com", role = "ctb")
@@ -10,12 +10,13 @@ Description: Visualizations for SHAP (SHapley Additive exPlanations), such
     dependence plots, and interaction plots.  These plots act on a
     'shapviz' object created from a matrix of SHAP values and a
     corresponding feature dataset. Wrappers for the R packages 'xgboost',
-    'lightgbm', 'fastshap', 'shapr', 'h2o', 'treeshap', 'DALEX', and
-    'kernelshap' are added for convenience.  By separating visualization
-    and computation, it is possible to display factor variables in graphs,
-    even if the SHAP values are calculated by a model that requires
-    numerical features. The plots are inspired by those provided by the
-    'shap' package in Python, but there is no dependency on it.
+    'lightgbm', 'fastshap', 'shapr', 'h2o', 'treeshap', 'DALEX',
+    'kernelshap', and 'permshap' are added for convenience.  By separating
+    visualization and computation, it is possible to display factor
+    variables in graphs, even if the SHAP values are calculated by a model
+    that requires numerical features. The plots are inspired by those
+    provided by the 'shap' package in Python, but there is no dependency
+    on it.
 License: GPL (>= 2)
 Depends: 
     R (>= 3.6.0)
@@ -37,6 +38,7 @@ Enhances:
     fastshap,
     h2o,
     lightgbm
+LazyData: true
 Suggests: 
     knitr,
     rmarkdown,
@@ -45,4 +47,3 @@ VignetteBuilder: knitr
 Config/testthat/edition: 3
 URL: https://github.com/ModelOriented/shapviz
 BugReports: https://github.com/ModelOriented/shapviz/issues
-LazyData: true

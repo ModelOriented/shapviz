@@ -11,6 +11,7 @@
 \alias{shapviz.predict_parts}
 \alias{shapviz.shapr}
 \alias{shapviz.kernelshap}
+\alias{shapviz.permshap}
 \alias{shapviz.H2ORegressionModel}
 \alias{shapviz.H2OBinomialModel}
 \alias{shapviz.H2OModel}
@@ -49,6 +50,8 @@ shapviz(object, ...)
 \method{shapviz}{shapr}(object, X = object[["x_test"]], collapse = NULL, ...)
 
 \method{shapviz}{kernelshap}(object, X = object[["X"]], which_class = NULL, collapse = NULL, ...)
+
+\method{shapviz}{permshap}(object, X = object[["X"]], which_class = NULL, collapse = NULL, ...)
 
 \method{shapviz}{H2ORegressionModel}(object, X_pred, X = as.data.frame(X_pred), collapse = NULL, ...)
 
@@ -89,7 +92,7 @@ Only used for XGBoost, LightGBM, or H2O objects.}
 
 \item{which_class}{In case of a multiclass or multioutput setting,
 which class/output (>= 1) to explain. Currently relevant for XGBoost, LightGBM,
-and kernelshap.}
+kernelshap, and permshap.}
 
 \item{interactions}{Should SHAP interactions be calculated (default is \code{FALSE})?
 Only available for XGBoost.}
@@ -118,8 +121,9 @@ Furthermore, \code{\link[=shapviz]{shapviz()}} can digest the results of
 \item \code{fastshap::explain()},
 \item \code{shapr::explain()},
 \item \code{treeshap::treeshap()},
-\item \code{DALEX::predict_parts()}, and
-\item \code{kernelshap::kernelshap()},
+\item \code{DALEX::predict_parts()},
+\item \code{kernelshap::kernelshap()}, and
+\item \code{permshap::permshap()},
 }
 
 check the vignettes for examples.
@@ -134,7 +138,7 @@ explicit value.
 
 SHAP values of dummy variables can be combined using the convenient
 \code{collapse} argument.
-Multi-output models created from XGBoost, LightGBM, or {kernelshap}
+Multi-output models created from XGBoost, LightGBM, {kernelshap}, or {permshap}
 return a "mshapviz" object, containing a "shapviz" object per output.
 }
 \section{Methods (by class)}{
@@ -156,6 +160,8 @@ return a "mshapviz" object, containing a "shapviz" object per output.
 \item \code{shapviz(shapr)}: Creates a "shapviz" object from \code{shapr::explain()}.
 
 \item \code{shapviz(kernelshap)}: Creates a "shapviz" object from \code{kernelshap::kernelshap()}.
+
+\item \code{shapviz(permshap)}: Creates a "shapviz" object from \code{permshap::permshap()}.
 
 \item \code{shapviz(H2ORegressionModel)}: Creates a "shapviz" object from a (tree-based) H2O regression model.
 

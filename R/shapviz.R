@@ -11,8 +11,9 @@
 #' - `fastshap::explain()`,
 #' - `shapr::explain()`,
 #' - `treeshap::treeshap()`,
-#' - `DALEX::predict_parts()`, and
-#' - `kernelshap::kernelshap()`,
+#' - `DALEX::predict_parts()`,
+#' - `kernelshap::kernelshap()`, and
+#' - `permshap::permshap()`,
 #'
 #' check the vignettes for examples.
 #'
@@ -26,7 +27,7 @@
 #'
 #' SHAP values of dummy variables can be combined using the convenient
 #' `collapse` argument.
-#' Multi-output models created from XGBoost, LightGBM, or {kernelshap}
+#' Multi-output models created from XGBoost, LightGBM, {kernelshap}, or {permshap}
 #' return a "mshapviz" object, containing a "shapviz" object per output.
 #'
 #' @inheritParams collapse_shap
@@ -45,7 +46,7 @@
 #'   predictions.
 #' @param which_class In case of a multiclass or multioutput setting,
 #'   which class/output (>= 1) to explain. Currently relevant for XGBoost, LightGBM,
-#'   and kernelshap.
+#'   kernelshap, and permshap.
 #' @param interactions Should SHAP interactions be calculated (default is `FALSE`)?
 #'   Only available for XGBoost.
 #' @param S_inter Optional 3D array of SHAP interaction values.
@@ -409,6 +410,15 @@ shapviz.kernelshap <- function(object, X = object[["X"]],
   }
 
   shapviz.matrix(object = S, X = X, baseline = b, collapse = collapse)
+}
+
+#' @describeIn shapviz
+#'   Creates a "shapviz" object from `permshap::permshap()`.
+#' @export
+shapviz.permshap <- function(object, X = object[["X"]],
+                             which_class = NULL, collapse = NULL, ...) {
+  # The output structure of permshap is identical to kernelshap
+  shapviz.kernelshap(object, X = X, which_class = which_class, collapse = collapse, ...)
 }
 
 #' @describeIn shapviz

@@ -1,5 +1,11 @@
 # shapviz 0.9.2
 
+## Resubmission
+
+Fixing problems with curly braces in .rd files.
+
+### Original message
+
 Hello CRAN team
 
 {shapviz} already got 2 reverse dependencies, which look okay.

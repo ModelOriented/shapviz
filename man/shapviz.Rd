@@ -138,7 +138,7 @@ explicit value.
 
 SHAP values of dummy variables can be combined using the convenient
 \code{collapse} argument.
-Multi-output models created from XGBoost, LightGBM, {kernelshap}, or {permshap}
+Multi-output models created from XGBoost, LightGBM, "kernelshap", or "permshap"
 return a "mshapviz" object, containing a "shapviz" object per output.
 }
 \section{Methods (by class)}{

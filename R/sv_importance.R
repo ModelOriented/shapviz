@@ -20,7 +20,7 @@
 #' @param bar_width Relative width of the bars (only used if bars are shown).
 #' @param bar_type For "mshapviz" objects with `kind = "bar"`: How should bars be
 #'   represented? The default is "dodge" for dodged bars. Other options are "stack",
-#'   "wrap", or "separate" (via {patchwork}). Note that "separate" is currently
+#'   "wrap", or "separate" (via "patchwork"). Note that "separate" is currently
 #'   the only option that supports `show_numbers = TRUE`.
 #' @param bee_width Relative width of the beeswarms.
 #' @param bee_adjust Relative bandwidth adjustment factor used in

@@ -131,7 +131,7 @@ correlations with other geographic features.</p>
 of SHAP values of all geographic components represent the total effect
 of <span class="math inline">\(X^\textrm{geo}\)</span>, and this sum can
 be visualized as a heatmap or 3D scatterplot against latitude/longitude
-(or any other geographic representation)</p>
+(or any other geographic representation).</p>
 </div>
 <div class="section level2">
 <h2 id="a-first-example">A first example<a class="anchor" aria-label="anchor" href="#a-first-example"></a>
@@ -142,7 +142,7 @@ County. Some of the columns are as follows:</p>
 <ul>
 <li>
 <strong>SALE_PRC</strong>: Sale price in USD: Its logarithm will be
-our model response.</li>
+our model <strong>response</strong>.</li>
 <li>
 <em>LATITUDE</em>, <em>LONGITUDE</em>: Coordinates</li>
 <li>
@@ -323,8 +323,8 @@ interpretation of SHAP dependence plots of corresponding components.</p>
 <p><img src="geographic_files/figure-html/unnamed-chunk-4-2.png" width="768" style="display: block; margin: auto;"></p>
 <p>Again, the resulting total geographic effect looks reasonable. Note
 that, unlike in the first example, there are no interactions to
-non-geographic components, leading to a Ceteris Paribus
-interpretation.</p>
+non-geographic components, leading to a Ceteris Paribus interpretation.
+Furthermore, it contains the effect of the other regional features.</p>
 </div>
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

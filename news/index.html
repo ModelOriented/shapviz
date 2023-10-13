@@ -74,8 +74,17 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9.2" id="shapviz-092">shapviz 0.9.2<a class="anchor" aria-label="anchor" href="#shapviz-092"></a></h2>
 <div class="section level3">
+<h3 id="user-visible-changes-0-9-2">User-visible changes<a class="anchor" aria-label="anchor" href="#user-visible-changes-0-9-2"></a></h3>
+<ul><li>
+<code><a href="../reference/sv_importance.html">sv_importance()</a></code> of a “mshapviz” object now returns a dodged barplot instead of separate barplots via {patchwork}. Use the new argument <code>bar_type</code> to switch to a stacked barplot (<code>bar_type = "stack"</code>), to “facets” (via {ggplot2}), or “separate” for the old behaviour.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="new-features-0-9-2">New features<a class="anchor" aria-label="anchor" href="#new-features-0-9-2"></a></h3>
 <ul><li>Added connector to <a href="https://github.com/mayer79/permshap" class="external-link">permshap</a>, a package calculating permutation SHAP values for regression and (probabilistic) classification.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-changes-0-9-2">Other changes<a class="anchor" aria-label="anchor" href="#other-changes-0-9-2"></a></h3>
+<ul><li>Revised vignette on “mshapviz”.</li>
 </ul></div>
 </div>
     <div class="section level2">

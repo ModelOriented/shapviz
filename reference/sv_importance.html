@@ -110,6 +110,7 @@ The two types of plots can also be combined.</p>
 <span>  max_display <span class="op">=</span> <span class="fl">15L</span>,</span>
 <span>  fill <span class="op">=</span> <span class="st">"#fca50a"</span>,</span>
 <span>  bar_width <span class="op">=</span> <span class="fl">2</span><span class="op">/</span><span class="fl">3</span>,</span>
+<span>  bar_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dodge"</span>, <span class="st">"stack"</span>, <span class="st">"facets"</span>, <span class="st">"separate"</span><span class="op">)</span>,</span>
 <span>  bee_width <span class="op">=</span> <span class="fl">0.4</span>,</span>
 <span>  bee_adjust <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>  viridis_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"shapviz.viridis_args"</span><span class="op">)</span>,</span>
@@ -188,6 +189,13 @@ to hide the color bar altogether.</p></dd>
 <dt>number_size</dt>
 <dd><p>Text size of the numbers (if <code>show_numbers = TRUE</code>).</p></dd>
 
+
+<dt>bar_type</dt>
+<dd><p>For "mshapviz" objects with <code>kind = "bar"</code>: How should bars be
+represented? The default is "dodge" for dodged bars. Other options are "stack",
+"wrap", or "separate" (via patchwork). Note that "separate" is currently
+the only option that supports <code>show_numbers = TRUE</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -195,7 +203,7 @@ to hide the color bar altogether.</p></dd>
 
 <p>A "ggplot" (or "patchwork") object representing an importance plot, or - if
 <code>kind = "no"</code> - a named numeric vector of sorted SHAP feature importances
-(or a list of such vectors in case of an object of class "mshapviz").</p>
+(or a matrix in case of an object of class "mshapviz").</p>
     </div>
     <div id="details">
     <h2>Details</h2>

@@ -18,7 +18,7 @@
 #'   Set to `Inf` to show all features. Has no effect if `kind = "no"`.
 #' @param fill Color used to fill the bars (only used if bars are shown).
 #' @param bar_width Relative width of the bars (only used if bars are shown).
-#' @param bar_type For "mshap" objects with `kind = "bar"`: How should bars be
+#' @param bar_type For "mshapviz" objects with `kind = "bar"`: How should bars be
 #'   represented? The default is "dodge" for dodged bars. Other options are "stack",
 #'   "wrap", or "separate" (via {patchwork}). Note that "separate" is currently
 #'   the only option that supports `show_numbers = TRUE`.

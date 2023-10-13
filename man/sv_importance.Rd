@@ -85,7 +85,7 @@ to hide the color bar altogether.}
 
 \item{number_size}{Text size of the numbers (if \code{show_numbers = TRUE}).}
 
-\item{bar_type}{For "mshap" objects with \code{kind = "bar"}: How should bars be
+\item{bar_type}{For "mshapviz" objects with \code{kind = "bar"}: How should bars be
 represented? The default is "dodge" for dodged bars. Other options are "stack",
 "wrap", or "separate" (via {patchwork}). Note that "separate" is currently
 the only option that supports \code{show_numbers = TRUE}.}

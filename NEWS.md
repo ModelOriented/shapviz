@@ -2,7 +2,7 @@
 
 ## User-visible changes
 
-- `sv_importance()` of a "mshap" object now returns a dodged barplot instead of separate barplots via {patchwork}. Use the new argument `bar_type` to switch to a stacked barplot (`bar_type = "stack"`), to "facets" (via {ggplot2}), or "separate" for the old behaviour.
+- `sv_importance()` of a "mshapviz" object now returns a dodged barplot instead of separate barplots via {patchwork}. Use the new argument `bar_type` to switch to a stacked barplot (`bar_type = "stack"`), to "facets" (via {ggplot2}), or "separate" for the old behaviour.
 
 ## New features
 

@@ -13,3 +13,4 @@ examples.R
 ^pkgdown/_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^revdep$

@@ -93,6 +93,9 @@ use_github_links(overwrite = TRUE) # use this if this project is on github
 # use_github_action("test-coverage")
 # use_github_action("pkgdown")
 
+# Revdep
+use_revdep()
+
 #=============================================================================
 # Finish package building (can use fresh session)
 #=============================================================================
@@ -109,7 +112,11 @@ install(upgrade = FALSE)
 # Run only if package is public(!) and should go to CRAN
 if (FALSE) {
   check_win_devel()
+  check_rhub()
   check_rhub(platforms = "debian-gcc-devel")
+
+  # Takes long
+  revdepcheck::revdep_check(num_workers = 4)
 
   # Wait until above checks are passed without relevant notes/warnings
   # then submit to CRAN

@@ -8,6 +8,10 @@
 
 - Added connector to [permshap](https://github.com/mayer79/permshap), a package calculating permutation SHAP values for regression and (probabilistic) classification.
 
+## Other changes
+
+- Revised vignette on "mshapviz".
+
 # shapviz 0.9.1
 
 ## New features

@@ -8,8 +8,12 @@ test_that("plots work for basic example", {
   suppressMessages(expect_s3_class(sv_waterfall(x, 2:3), "patchwork"))
   expect_s3_class(sv_force(x, 2), "patchwork")
   suppressMessages(expect_s3_class(sv_force(x, 2:3), "patchwork"))
-  expect_s3_class(sv_importance(x), "patchwork")
-  expect_s3_class(sv_importance(x, show_numbers = TRUE), "patchwork")
+  expect_s3_class(sv_importance(x), "ggplot")
+  expect_s3_class(sv_importance(x, bar_type = "stack"), "ggplot")
+  expect_s3_class(sv_importance(x, bar_type = "facets"), "ggplot")
+  expect_s3_class(
+    sv_importance(x, show_numbers = TRUE, bar_type = "separate"), "patchwork"
+  )
   expect_s3_class(sv_importance(x, kind = "beeswarm"), "patchwork")
   expect_s3_class(sv_dependence(x, "Petal.Length"), "patchwork")
   expect_s3_class(sv_dependence2D(x, x = "Petal.Length", y = "Species"), "patchwork")
@@ -20,8 +24,12 @@ test_that("using 'max_display' gives no error", {
   suppressMessages(expect_s3_class(sv_waterfall(x, 2:10, max_display = 2L), "patchwork"))
   expect_s3_class(sv_force(x, 2, max_display = 2L), "patchwork")
   suppressMessages(expect_s3_class(sv_force(x, 2:10, max_display = 2L), "patchwork"))
-  expect_s3_class(sv_importance(x, max_display = 2L), "patchwork")
-  expect_s3_class(sv_importance(x, max_display = 2L, show_numbers = TRUE), "patchwork")
+  expect_s3_class(sv_importance(x, max_display = 2L), "ggplot")
+  expect_s3_class(sv_importance(x, max_display = 2L, bar_type = "stack"), "ggplot")
+  expect_s3_class(sv_importance(x, max_display = 2L, bar_type = "facets"), "ggplot")
+  expect_s3_class(
+    sv_importance(x, max_display = 2L, show_numbers = TRUE, bar_type = "separate"), "patchwork"
+  )
 })
 
 # SHAP interactions
@@ -71,8 +79,10 @@ x <- c(m1 = x, m2 = x)
 test_that("plots work for non-syntactic column names", {
   expect_s3_class(sv_waterfall(x, 2), "patchwork")
   expect_s3_class(sv_force(x, 2), "patchwork")
-  expect_s3_class(sv_importance(x), "patchwork")
-  expect_s3_class(sv_importance(x, show_numbers = TRUE), "patchwork")
+  expect_s3_class(sv_importance(x), "ggplot")
+  expect_s3_class(
+    sv_importance(x, bar_type = "separate", show_numbers = TRUE), "patchwork"
+  )
   expect_s3_class(sv_importance(x, max_display = 2, kind = "beeswarm"), "patchwork")
   expect_s3_class(sv_importance(x, kind = "beeswarm"), "patchwork")
   expect_s3_class(sv_dependence(x, "strange name"), "patchwork")
@@ -84,7 +94,7 @@ test_that("plots work for non-syntactic column names", {
   )
 })
 
-test_that("sv_importance() and sv_interaction() and kind = 'no' gives list", {
+test_that("sv_importance() and sv_interaction() and kind = 'no' gives matrix", {
   X_pred <- data.matrix(iris[, -1L])
   dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1L])
   fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
@@ -92,7 +102,7 @@ test_that("sv_importance() and sv_interaction() and kind = 'no' gives list", {
   x <- c(m1 = x, m2 = x)
 
   imp <- sv_importance(x, kind = "no")
-  expect_true(is.list(imp) && length(imp) == length(x))
+  expect_true(is.matrix(imp) && all(dim(imp) == c(4L, length(x))))
 
   inter <- sv_interaction(x, kind = "no")
   expect_true(is.list(inter) && all(dim(inter[[1L]]) == rep(ncol(X_pred), 2L)))

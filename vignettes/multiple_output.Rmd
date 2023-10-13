@@ -14,8 +14,8 @@ knitr::opts_chunk$set(
   comment = "#>",
   warning = FALSE,
   message = FALSE,
-  fig.height = 8, 
-  fig.width = 7,
+  fig.height = 5, 
+  fig.width = 6,
   fig.align = "center"
 )
 ```
@@ -35,31 +35,23 @@ To simplify the workflow, {shapviz} introduces the "mshapviz" object ("m" like "
 - Use `c(Mod_1 = s1, Mod_2 = s2, ...)` on "shapviz" objects `s1`, `s2`, ...
 - Or `mshapviz(list(Mod_1 = s1, Mod_2 = s2, ...))`
 
-The `sv_*()` functions use the {patchwork} package to glue the individual plots together.
+The `sv_*()` functions use the {patchwork} package to glue the individual plots together. An exception is `sv_importance(..., kind = "bar")`, which produces a dodged barplot via {ggplot2}, by default.
 
-## Example: Multiclass model
-
-### Fit classification model
+## Example: Multiclass XGBoost model
 
 ```{r}
-library(xgboost)
-library(ggplot2)
 library(shapviz)
+library(ggplot2)
 library(patchwork)
+library(xgboost)
 
 params <- list(objective = "multi:softprob", num_class = 3)
 X_pred <- data.matrix(iris[, -5])
 dtrain <- xgb.DMatrix(X_pred, label = as.integer(iris[, 5]) - 1)
 fit <- xgb.train(params = params, data = dtrain, nrounds = 50)
-```
 
-### Create "mshapviz" object (logit scale)
-
-Note that TreeSHAP produces SHAP values on link scale, i.e., on logit scale.
-
-```{r}
-x <- shapviz(fit, X_pred = X_pred, X = iris)
-x
+# Create "mshapviz" object (logit scale)
+(x <- shapviz(fit, X_pred = X_pred, X = iris))
 
 # Contains "shapviz" objects for all classes
 all.equal(x[[3]], shapviz(fit, X_pred = X_pred, X = iris, which_class = 3))
@@ -67,36 +59,20 @@ all.equal(x[[3]], shapviz(fit, X_pred = X_pred, X = iris, which_class = 3))
 # Better names
 names(x) <- levels(iris$Species)
 x
-```
-### Force plot
 
-```{r}
-sv_force(x, row_id = 101)
-```
-
-### Summary plot
-
-```{r}
-sv_importance(x, kind = "bee") +
-  plot_layout(ncol = 1)
-```
-
-### Dependence plot
-
-Here, we will use identical coordinate systems.
-
-```{r}
-names(x) <- levels(iris$Species)
+# SHAP plots
+sv_importance(x)
+sv_importance(x, bar_type = "stack")  # Same but stacked
 
 sv_dependence(x, v = "Petal.Length") +
   plot_layout(ncol = 1) &
-  xlim(1, 7) &
-  ylim(-3, 4)
+  ylim(-3, 4)  # Same y scale to get impression on strength
 ```
 
 ### Similar for LightGBM (only code)
 
 ```r
+library(shapviz)
 library(lightgbm)
 
 # Model
@@ -107,18 +83,19 @@ fit <- lgb.train(params = params, data = dtrain, nrounds = 50)
 
 x <- shapviz(fit, X_pred = X_pred, X = iris)
 
-sv_importance(x, show_numbers = TRUE) +
-  plot_layout(ncol = 1) &
-  xlim(0, 2.25)
+sv_importance(x)
 ```
 
-### And for random forest and kernelshap
+### Or for random forest with {kernelshap}
 
 Since Kernel SHAP is model agnostic, we can get SHAP values on probability scale.
 
 ```r
-library(ranger)
+library(shapviz)
 library(kernelshap)
+library(ggplot2)
+library(patchwork)
+library(ranger)
 
 # Model
 fit <- ranger(Species ~ ., data = iris, num.trees = 100, probability = TRUE)
@@ -128,35 +105,36 @@ x <- kernelshap(fit, X = iris[-5], bg_X = iris)
 shp <- setNames(shapviz(x), levels(iris$Species))
 # all.equal(shp[[3]], shapviz(x, which_class = 3))
 
+sv_importance(shp)
+
 sv_dependence(shp, v = "Sepal.Width") +
   plot_layout(ncol = 2) &
-  ylim(-0.025, 0.03)
+  ylim(-0.03, 0.035)
 ```
 
 ![](../man/figures/VIGNETTE-dep-ranger.png)
 
 ## Example: SHAP subgroup analysis
 
-Here, we want to compare SHAP dependence plots across Species subgroups.
-
-### Fit regression model
+Let's compare SHAP dependence plots across Species.
 
 ```{r}
+library(shapviz)
+library(ggplot2)
+library(patchwork)
+library(xgboost)
+
 X_pred <- data.matrix(iris[, -1])
 dtrain <- xgb.DMatrix(X_pred, label = iris[, 1])
 fit_xgb <- xgb.train(data = dtrain, nrounds = 50)
-```
 
-### Create "mshapviz" object
-
-```{r}
+# Create "mshapviz" object
 shap_xgb <- shapviz(fit_xgb, X_pred = X_pred, X = iris)
 x_subgroups <- split(shap_xgb, f = iris$Species)
-```
 
-### Dependence plot
+# SHAP analysis
+sv_importance(x_subgroups, bar_type = "stack")
 
-```{r}
 sv_dependence(x_subgroups, v = "Petal.Length") +
   plot_layout(ncol = 1) & 
   xlim(1, 7) &
@@ -174,30 +152,18 @@ library(kernelshap)
 
 fit_lm <- lm(Sepal.Length ~ ., data = iris)
 shap_lm <- shapviz(kernelshap(fit_lm, iris[-1], bg_X = iris))
-```
 
-### Combine "shapviz" objects
-
-```r
+# Combine "shapviz" objects
 mshap <- c(lm = shap_lm, xgb = shap_xgb)
 mshap
 
 #> 'mshapviz' object representing 2 'shapviz' objects:
 #>   'lm': 150 x 4 SHAP matrix
 #>   'xgb': 150 x 4 SHAP matrix
-```
 
-### SHAP importance plot
-
-```r
+# SHAP analysis
 sv_importance(mshap)
-```
 
-![](../man/figures/VIGNETTE-imp.png)
-
-### SHAP dependence plot
-
-```r
 sv_dependence(mshap, v = "Species") &
   ylim(-0.5, 0.6)
 ```

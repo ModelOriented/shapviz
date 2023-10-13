@@ -1,8 +1,16 @@
 # shapviz 0.9.2
 
+## User-visible changes
+
+- `sv_importance()` of a "mshapviz" object now returns a dodged barplot instead of separate barplots via {patchwork}. Use the new argument `bar_type` to switch to a stacked barplot (`bar_type = "stack"`), to "facets" (via {ggplot2}), or "separate" for the old behaviour.
+
 ## New features
 
 - Added connector to [permshap](https://github.com/mayer79/permshap), a package calculating permutation SHAP values for regression and (probabilistic) classification.
+
+## Other changes
+
+- Revised vignette on "mshapviz".
 
 # shapviz 0.9.1
 

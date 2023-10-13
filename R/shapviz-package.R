@@ -5,7 +5,7 @@
 #' @importFrom xgboost xgb.train
 
 globalVariables(c("from", "i", "id", "label", "to", "x", "shap", "SHAP",
-                  "feature", "value", "color", "Var2", "Var3", "S"))
+                  "feature", "value", "color", "Var2", "Var3", "S", "ind", "values"))
 
 .onLoad <- function(libname, pkgname) {
   op <- options()

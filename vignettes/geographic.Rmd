@@ -30,13 +30,13 @@ $$
 $$
 Like any feature, the effect of a single geographic feature $X^{\textrm{geo}, j}$ can be described using SHAP dependence plots. However, studying the effect of latitude (or any other location dependent feature) alone is often not very illuminating - simply due to strong interaction effects and correlations with other geographic features. 
 
-That's where the additivity of SHAP values comes into play: The sum of SHAP values of all geographic components represent the total effect of $X^\textrm{geo}$, and this sum can be visualized as a heatmap or 3D scatterplot against latitude/longitude (or any other geographic representation)
+That's where the additivity of SHAP values comes into play: The sum of SHAP values of all geographic components represent the total effect of $X^\textrm{geo}$, and this sum can be visualized as a heatmap or 3D scatterplot against latitude/longitude (or any other geographic representation).
 
 ## A first example
 
 For illustration, we will use a beautiful house price dataset containing information on about 14'000 houses sold in 2016 in Miami-Dade County. Some of the columns are as follows:
 
-- **SALE_PRC**: Sale price in USD: Its logarithm will be our model response.
+- **SALE_PRC**: Sale price in USD: Its logarithm will be our model **response**.
 - *LATITUDE*, *LONGITUDE*: Coordinates
 - *CNTR_DIST*: Distance to central business district
 - *OCEAN_DIST*: Distance (ft) to the ocean
@@ -158,6 +158,6 @@ sv_dependence2D(sv2, x = "LONGITUDE", y = "LATITUDE", add_vars = more_geo) +
   coord_equal()
 ```
 
-Again, the resulting total geographic effect looks reasonable. Note that, unlike in the first example, there are no interactions to non-geographic components, leading to a Ceteris Paribus interpretation.
+Again, the resulting total geographic effect looks reasonable. Note that, unlike in the first example, there are no interactions to non-geographic components, leading to a Ceteris Paribus interpretation. Furthermore, it contains the effect of the other regional features.
 
 ## References

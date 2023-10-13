@@ -18,6 +18,10 @@
 #'   Set to `Inf` to show all features. Has no effect if `kind = "no"`.
 #' @param fill Color used to fill the bars (only used if bars are shown).
 #' @param bar_width Relative width of the bars (only used if bars are shown).
+#' @param bar_type For "mshap" objects with `kind = "bar"`: How should bars be
+#'   represented? The default is "dodge" for dodged bars. Other options are "stack",
+#'   "wrap", or "separate" (via {patchwork}). Note that "separate" is currently
+#'   the only option that supports `show_numbers = TRUE`.
 #' @param bee_width Relative width of the beeswarms.
 #' @param bee_adjust Relative bandwidth adjustment factor used in
 #'   estimating the density of the beeswarms.
@@ -40,7 +44,7 @@
 #' @returns
 #'   A "ggplot" (or "patchwork") object representing an importance plot, or - if
 #'   `kind = "no"` - a named numeric vector of sorted SHAP feature importances
-#'   (or a list of such vectors in case of an object of class "mshapviz").
+#'   (or a matrix in case of an object of class "mshapviz").
 #' @examples
 #' \dontrun{
 #' X_train <- data.matrix(iris[, -1])
@@ -154,14 +158,59 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
 #'   SHAP importance plot for an object of class "mshapviz".
 #' @export
 sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "no"),
-                                   max_display = 15L, fill = "#fca50a", bar_width = 2/3,
+                                   max_display = 15L, fill = "#fca50a",
+                                   bar_width = 2/3,
+                                   bar_type = c("dodge", "stack", "facets", "separate"),
                                    bee_width = 0.4, bee_adjust = 0.5,
                                    viridis_args = getOption("shapviz.viridis_args"),
                                    color_bar_title = "Feature value",
                                    show_numbers = FALSE, format_fun = format_max,
                                    number_size = 3.2, ...) {
   kind <- match.arg(kind)
+  bar_type <- match.arg(bar_type)
 
+  # All other cases are done via {patchwork}
+  if (kind %in% c("bar", "no") && bar_type != "separate") {
+    imp <- .get_imp(get_shap_values(object))
+    if (kind == "no") {
+      return(imp)
+    }
+    if (nrow(imp) > max_display) {
+      imp <- imp[seq_len(max_display), , drop = FALSE]
+    }
+    ord <- rownames(imp)
+    imp_df <- data.frame(
+      feature = factor(ord, rev(ord)), utils::stack(as.data.frame(imp))
+    )
+
+    if (bar_type %in% c("dodge", "stack")) {
+      imp_df <- transform(imp_df, ind = factor(ind, rev(levels(ind))))
+      if (is.null(viridis_args)) {
+        viridis_args <- list()
+      }
+      p <- ggplot2::ggplot(imp_df, ggplot2::aes(x = values, y = feature)) +
+        ggplot2::geom_bar(
+          ggplot2::aes(fill = ind),
+          width = bar_width,
+          stat = "identity",
+          position = bar_type,
+          ...
+        ) +
+        ggplot2::labs(fill = ggplot2::element_blank()) +
+        do.call(ggplot2::scale_fill_viridis_d, viridis_args) +
+        ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE))
+    } else {  # facets
+      p <- ggplot2::ggplot(imp_df, ggplot2::aes(x = values, y = feature)) +
+        ggplot2::geom_bar(fill = fill, width = bar_width, stat = "identity", ...) +
+        ggplot2::facet_wrap("ind")
+    }
+    p <- p +
+      ggplot2::xlab("mean(|SHAP value|)") +
+      ggplot2::ylab(ggplot2::element_blank())
+    return(p)
+  }
+
+  # Now, patchwork
   plot_list <- lapply(
     object,
     FUN = sv_importance,
@@ -198,7 +247,12 @@ sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "
 }
 
 .get_imp <- function(z) {
-  sort(colMeans(abs(z)), decreasing = TRUE)
+  if (is.matrix(z)) {
+    return(sort(colMeans(abs(z)), decreasing = TRUE))
+  }
+  # list/mshapviz
+  imp <- sapply(z, function(x) colMeans(abs(x)))
+  imp[order(-rowSums(imp)), ]
 }
 
 .scale_X <- function(X) {

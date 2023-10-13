@@ -33,6 +33,7 @@ sv_importance(object, ...)
   max_display = 15L,
   fill = "#fca50a",
   bar_width = 2/3,
+  bar_type = c("dodge", "stack", "facets", "separate"),
   bee_width = 0.4,
   bee_adjust = 0.5,
   viridis_args = getOption("shapviz.viridis_args"),
@@ -83,11 +84,16 @@ to hide the color bar altogether.}
 \verb{function(x) = prettyNum(x, scientific = TRUE)}.}
 
 \item{number_size}{Text size of the numbers (if \code{show_numbers = TRUE}).}
+
+\item{bar_type}{For "mshap" objects with \code{kind = "bar"}: How should bars be
+represented? The default is "dodge" for dodged bars. Other options are "stack",
+"wrap", or "separate" (via {patchwork}). Note that "separate" is currently
+the only option that supports \code{show_numbers = TRUE}.}
 }
 \value{
 A "ggplot" (or "patchwork") object representing an importance plot, or - if
 \code{kind = "no"} - a named numeric vector of sorted SHAP feature importances
-(or a list of such vectors in case of an object of class "mshapviz").
+(or a matrix in case of an object of class "mshapviz").
 }
 \description{
 This function provides two types of SHAP importance plots: a bar plot

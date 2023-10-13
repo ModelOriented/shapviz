@@ -39,7 +39,7 @@ To further simplify the use of {shapviz}, we added direct connectors to:
 - [`kernelshap`](https://CRAN.R-project.org/package=kernelshap)
 - [`fastshap`](https://CRAN.R-project.org/package=fastshap)
 - [`shapr`](https://CRAN.R-project.org/package=shapr)
-- [`treeshap`](https://github.com/ModelOriented/treeshap/)
+- [`treeshap`](https://CRAN.R-project.org/package=treeshap)
 - [`DALEX`](https://CRAN.R-project.org/package=DALEX)
 - [`permshap`](https://github.com/mayer79/permshap)
 

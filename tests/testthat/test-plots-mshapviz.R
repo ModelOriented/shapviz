@@ -1,5 +1,5 @@
 dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
-fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 50L)
+fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 1L)
 x <- shapviz(fit, X_pred = dtrain, X = iris[, -1L])
 x <- c(m1 = x, m2 = x)
 
@@ -72,7 +72,7 @@ test_that("Interaction plots provide patchwork object", {
 ir <- iris
 ir["strange name"] <- ir$Sepal.Width * ir$Petal.Length
 dtrain <- xgboost::xgb.DMatrix(data.matrix(ir[, -1L]), label = ir[, 1L])
-fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 50L)
+fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 1L)
 x <- shapviz(fit, X_pred = dtrain, X = ir[, -1L])
 x <- c(m1 = x, m2 = x)
 
@@ -97,7 +97,7 @@ test_that("plots work for non-syntactic column names", {
 test_that("sv_importance() and sv_interaction() and kind = 'no' gives matrix", {
   X_pred <- data.matrix(iris[, -1L])
   dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1L])
-  fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 50L)
+  fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 1L)
   x <- shapviz(fit, X_pred = X_pred, interactions = TRUE)
   x <- c(m1 = x, m2 = x)
 
@@ -111,7 +111,7 @@ test_that("sv_importance() and sv_interaction() and kind = 'no' gives matrix", {
 test_that("sv_dependence() does not work with multiple v", {
   X_pred <- data.matrix(iris[, -1L])
   dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1L])
-  fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 50L)
+  fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 1L)
   x <- c(m1 = shapviz(fit, X_pred = X_pred), m2 = shapviz(fit, X_pred = X_pred))
   expect_error(sv_dependence(x, v = c("Species", "Sepal.Width")))
 

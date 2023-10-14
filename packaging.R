@@ -105,7 +105,7 @@ library(devtools)
 document()
 test()
 check(manual = TRUE, cran = TRUE, vignettes = FALSE)
-build()
+build(vignettes = FALSE)
 # build(binary = TRUE)
 install(upgrade = FALSE)
 
@@ -120,5 +120,5 @@ if (FALSE) {
 
   # Wait until above checks are passed without relevant notes/warnings
   # then submit to CRAN
-  release()
+  devtools::release()
 }

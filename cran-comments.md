@@ -1,5 +1,9 @@
 # shapviz 0.9.2
 
+## Resubmission 3
+
+Moving one single nthread = 1 into param = list(). Setting nrounds = 1 in all tests. If this does not help, I will need to delete most unit tests.
+
 ## Resubmission 2
 
 Setting nthread = 1 in unit tests and vignettes. Hope this fixes the problems.

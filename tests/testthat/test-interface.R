@@ -215,11 +215,11 @@ test_that("mshapviz object contains original shapviz objects", {
 X_pred <- data.matrix(iris[, -5L])
 dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5L]) - 1L)
 fit <- xgboost::xgb.train(
+  params = list(nthread = 1L),
   data = dtrain,
   nrounds = 50L,
-  nthread = 1L,
   objective="multi:softprob",
-  num_class=3L
+  num_class = 3L
 )
 shp3 <- shapviz(fit, X_pred = X_pred, which_class = 3L, interactions = TRUE)
 mshp <- shapviz(fit, X_pred = X_pred, interactions = TRUE)

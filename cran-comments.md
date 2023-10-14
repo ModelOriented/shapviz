@@ -1,5 +1,9 @@
 # shapviz 0.9.2
 
+## Resubmission 4
+
+The fact that the Debian testing machine does not seem to respect nthread like the other platforms is a pain. I don't have a good solution. Maybe the problem comes from data.table, which is loaded by xgboost.
+
 ## Resubmission 3
 
 Moving one single nthread = 1 into param = list(). Setting nrounds = 1 in all tests. If this does not help, I will need to delete most unit tests.

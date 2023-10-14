@@ -217,7 +217,7 @@ dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5L]) - 1L)
 fit <- xgboost::xgb.train(
   params = list(nthread = 1L),
   data = dtrain,
-  nrounds = 50L,
+  nrounds = 1L,
   objective="multi:softprob",
   num_class = 3L
 )

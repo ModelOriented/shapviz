@@ -45,7 +45,7 @@ library(ggplot2)
 library(patchwork)
 library(xgboost)
 
-params <- list(objective = "multi:softprob", num_class = 3)
+params <- list(objective = "multi:softprob", num_class = 3, nthread = 1)
 X_pred <- data.matrix(iris[, -5])
 dtrain <- xgb.DMatrix(X_pred, label = as.integer(iris[, 5]) - 1)
 fit <- xgb.train(params = params, data = dtrain, nrounds = 50)
@@ -126,7 +126,7 @@ library(xgboost)
 
 X_pred <- data.matrix(iris[, -1])
 dtrain <- xgb.DMatrix(X_pred, label = iris[, 1])
-fit_xgb <- xgb.train(data = dtrain, nrounds = 50)
+fit_xgb <- xgb.train(params = list(nthread = 1), data = dtrain, nrounds = 50)
 
 # Create "mshapviz" object
 shap_xgb <- shapviz(fit_xgb, X_pred = X_pred, X = iris)

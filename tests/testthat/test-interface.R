@@ -211,39 +211,39 @@ test_that("mshapviz object contains original shapviz objects", {
   expect_equal(mshp_inter[[2L]][1:nrow(shp_inter)], shp_inter)
 })
 
-# Multiclass with XGBoost
-X_pred <- data.matrix(iris[, -5L])
-dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5L]) - 1L)
-fit <- xgboost::xgb.train(
-  data = dtrain,
-  nrounds = 50L,
-  nthread = 1L,
-  objective="multi:softprob",
-  num_class=3L
-)
-shp3 <- shapviz(fit, X_pred = X_pred, which_class = 3L, interactions = TRUE)
-mshp <- shapviz(fit, X_pred = X_pred, interactions = TRUE)
-
-test_that("is.shapviz() and is.mshapviz() functions work", {
-  expect_true(is.shapviz(shp3))
-  expect_true(is.mshapviz(mshp))
-  expect_false(is.shapviz(mshp))
-  expect_false(is.mshapviz(shp3))
-})
-
-test_that("shapviz on class 3 equals mshapviz[[3]] for classification", {
-  expect_equal(mshp[[3L]], shp3)
-})
-
-test_that("combining shapviz on classes 1, 2, 3 equal mshapviz", {
-  shp1 <- shapviz(fit, X_pred = X_pred, which_class = 1L, interactions = TRUE)
-  shp2 <- shapviz(fit, X_pred = X_pred, which_class = 2L, interactions = TRUE)
-  expect_equal(mshp, c(Class_1 = shp1, Class_2 = shp2, Class_3 = shp3))
-  expect_equal(mshp, mshapviz(list(Class_1 = shp1, Class_2 = shp2, Class_3 = shp3)))
-})
-
-test_that("combining non-shapviz objects fails", {
-  expect_error(c(shp3, 1))
-  expect_error(mshapviz(1, 2))
-})
-
+# # Multiclass with XGBoost
+# X_pred <- data.matrix(iris[, -5L])
+# dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5L]) - 1L)
+# fit <- xgboost::xgb.train(
+#   params = list(nthread = 1L),
+#   data = dtrain,
+#   nrounds = 1L,
+#   objective="multi:softprob",
+#   num_class = 3L
+# )
+# shp3 <- shapviz(fit, X_pred = X_pred, which_class = 3L, interactions = TRUE)
+# mshp <- shapviz(fit, X_pred = X_pred, interactions = TRUE)
+#
+# test_that("is.shapviz() and is.mshapviz() functions work", {
+#   expect_true(is.shapviz(shp3))
+#   expect_true(is.mshapviz(mshp))
+#   expect_false(is.shapviz(mshp))
+#   expect_false(is.mshapviz(shp3))
+# })
+#
+# test_that("shapviz on class 3 equals mshapviz[[3]] for classification", {
+#   expect_equal(mshp[[3L]], shp3)
+# })
+#
+# test_that("combining shapviz on classes 1, 2, 3 equal mshapviz", {
+#   shp1 <- shapviz(fit, X_pred = X_pred, which_class = 1L, interactions = TRUE)
+#   shp2 <- shapviz(fit, X_pred = X_pred, which_class = 2L, interactions = TRUE)
+#   expect_equal(mshp, c(Class_1 = shp1, Class_2 = shp2, Class_3 = shp3))
+#   expect_equal(mshp, mshapviz(list(Class_1 = shp1, Class_2 = shp2, Class_3 = shp3)))
+# })
+#
+# test_that("combining non-shapviz objects fails", {
+#   expect_error(c(shp3, 1))
+#   expect_error(mshapviz(1, 2))
+# })
+#

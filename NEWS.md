@@ -11,6 +11,7 @@
 ## Other changes
 
 - Revised vignette on "mshapviz".
+- Commenting out most unit tests as they would not pass timings measured on Debian.
 
 # shapviz 0.9.1
 

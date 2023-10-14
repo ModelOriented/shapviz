@@ -1,5 +1,9 @@
 # shapviz 0.9.2
 
+## Resubmission 7
+
+No effect of setDTthreads(2). Removing now all tests with xgboost.
+
 ## Resubmission 6
 
 Test timing not fixed, still. Now testing to import {data.table} and setDTthreads(2) pre checks.

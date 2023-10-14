@@ -6,9 +6,6 @@
 # * https://r-pkgs.org/tests.html
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
-# Sys.setenv("OMP_THREAD_LIMIT" = 2)
-data.table::setDTthreads(2)
-
 library(testthat)
 library(shapviz)
 

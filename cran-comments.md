@@ -2,7 +2,7 @@
 
 ## Resubmission 7
 
-No effect of setDTthreads(2). Removing now all tests with xgboost.
+No effect of setDTthreads(2). Commenting out now all tests with xgboost.
 
 ## Resubmission 6
 

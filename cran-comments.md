@@ -1,6 +1,10 @@
 # shapviz 0.9.2
 
-## Resubmission
+## Resubmission 2
+
+Setting nthread = 1 in unit tests and vignettes. Hope this fixes the problems.
+
+## Resubmission 1
 
 Fixing problems with curly braces in .rd files.
 

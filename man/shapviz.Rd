@@ -193,7 +193,7 @@ sv_dependence(x, "Species")
 x <- shapviz(fit, X_pred = dtrain, X = iris)
 
 # Multiclass setting
-params <- list(objective = "multi:softprob", num_class = 3, nthread = 1)
+params <- list(objective = "multi:softprob", num_class = 3)
 X_pred <- data.matrix(iris[, -5])
 dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5]) - 1)
 fit <- xgboost::xgb.train(params = params, data = dtrain, nrounds = 10)

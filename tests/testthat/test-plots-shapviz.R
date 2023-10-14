@@ -1,5 +1,5 @@
 dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1L]), label = iris[, 1L])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L)
+fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 50L)
 x <- shapviz(fit, X_pred = dtrain, X = iris[, -1L])
 
 test_that("plots work for basic example", {
@@ -133,7 +133,7 @@ test_that("Interaction plots provide ggplot object", {
 ir <- iris
 ir["strange name"] <- ir$Sepal.Width * ir$Petal.Length
 dtrain <- xgboost::xgb.DMatrix(data.matrix(ir[, -1L]), label = ir[, 1L])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L)
+fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 50L)
 x <- shapviz(fit, X_pred = dtrain, X = ir[, -1L])
 
 test_that("plots work for non-syntactic column names", {
@@ -169,7 +169,7 @@ test_that("there are no default sv_*() methods", {
 test_that("sv_importance() and sv_interaction() and kind = 'no' gives numeric output", {
   X_pred <- data.matrix(iris[, -1L])
   dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1L])
-  fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L, nthread = 1L)
+  fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 50L)
   x <- shapviz(fit, X_pred = X_pred, interactions = TRUE)
 
   imp <- sv_importance(x, kind = "no")

@@ -74,7 +74,9 @@ y_valid <- log(miami$SALE_PRC[-ix])
 dtrain <- xgb.DMatrix(X_train, label = y_train)
 dvalid <- xgb.DMatrix(X_valid, label = y_valid)
 
-params <- list(learning_rate = 0.2, objective = "reg:squarederror", max_depth = 5)
+params <- list(
+  learning_rate = 0.2, objective = "reg:squarederror", max_depth = 5, nthread = 1
+)
 
 fit <- xgb.train(
   params = params, 

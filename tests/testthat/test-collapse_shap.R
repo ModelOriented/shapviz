@@ -88,7 +88,7 @@ test_that("collapse_shap works for SHAP interactions and two collapses (result i
 form <- Sepal.Length ~ Sepal.Width + Species - 1
 iris_dummy <- model.matrix(form, data = iris)
 dtrain <- xgboost::xgb.DMatrix(iris_dummy, label = iris[, 1L])
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 50L)
+fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 50L)
 coll <- list(Species = paste0("Species", levels(iris$Species)))
 
 test_that("Collapse works using XGB API", {

@@ -45,6 +45,7 @@ use_package("ggfittext", "Imports", min_version = "0.8.0")
 use_package("ggrepel", "Imports")
 use_package("patchwork", "Imports")
 use_package("xgboost", "Imports")
+use_package("data.table", "Imports")
 
 use_package("fastshap", "Enhances")
 use_package("h2o", "Enhances")

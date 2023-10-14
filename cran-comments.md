@@ -1,5 +1,9 @@
 # shapviz 0.9.2
 
+## Resubmission 6
+
+Test timing not fixed, still. Now testing to import {data.table} and setDTthreads(2) pre checks.
+
 ## Resubmission 5
 
 Now trying 

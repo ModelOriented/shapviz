@@ -6,9 +6,8 @@
 # * https://r-pkgs.org/tests.html
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
-Sys.setenv(DT_NUM_THREADS = 1)
-Sys.setenv("TESTTHAT_CPUS" = 1)
-options(Ncpus = 1)
+# Sys.setenv("OMP_THREAD_LIMIT" = 2)
+data.table::setDTthreads(2)
 
 library(testthat)
 library(shapviz)

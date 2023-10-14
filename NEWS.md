@@ -11,6 +11,7 @@
 ## Other changes
 
 - Revised vignette on "mshapviz".
+- Explicitly list {data.table} in imports to control threads in unit tests. In previous versions, it was loaded implicitly by {xgboost}.
 
 # shapviz 0.9.1
 

@@ -3,6 +3,7 @@
 
 # Suppress R CMD check note
 #' @importFrom xgboost xgb.train
+#' @importFrom data.table setDTthreads
 
 globalVariables(c("from", "i", "id", "label", "to", "x", "shap", "SHAP",
                   "feature", "value", "color", "Var2", "Var3", "S", "ind", "values"))

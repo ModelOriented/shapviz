@@ -1,5 +1,14 @@
 # shapviz 0.9.2
 
+## Resubmission 5
+
+Now trying 
+
+Sys.setenv(DT_NUM_THREADS = 1)
+Sys.setenv("TESTTHAT_CPUS" = 1)
+options(Ncpus = 1)
+
+
 ## Resubmission 4
 
 Trying to set Sys.setenv(DT_NUM_THREADS = 2) in the unit tests to fix the crazy Debian behaviour.

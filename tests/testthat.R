@@ -6,6 +6,8 @@
 # * https://r-pkgs.org/tests.html
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
+Sys.setenv(DT_NUM_THREADS = 2)
+
 library(testthat)
 library(shapviz)
 

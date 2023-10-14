@@ -2,7 +2,7 @@
 
 ## Resubmission 4
 
-The fact that the Debian testing machine does not seem to respect nthread like the other platforms is a pain. I don't have a good solution. Maybe the problem comes from data.table, which is loaded by xgboost.
+Trying to set Sys.setenv(DT_NUM_THREADS = 2) in the unit tests to fix the crazy Debian behaviour.
 
 ## Resubmission 3
 

@@ -249,8 +249,8 @@ dimnames.shapviz <- function(x) {
   )
 
   baseline <- get_baseline(e1)
-  if (baseline != get_baseline(e2)) {
-    warning("Baselines not identical! Will use the one from the first shapviz object.")
+  if (baseline != (baseline2 <- get_baseline(e2))) {
+    baseline <- stats::weighted.mean(c(baseline, baseline2), w = c(nrow(e1), nrow(e2)))
   }
 
   shapviz(

@@ -51,6 +51,17 @@ test_that("concatenating with + works", {
   expect_equal((shp + shp)$baseline, shp$baseline)
   expect_equal(dim((shp + shp + shp)$S), c(6L, 2L))
   expect_equal(dim((shp + shp + shp)$X), c(6L, 2L))
+
+  # mshapviz
+  mapply(function(x, dims) {
+    expect_equal(dim(x$S), dims)
+    expect_equal(dim(x$X), dims)
+  }, x = mshp + mshp, dims = list(c(4L, 2L), c(8L, 2L)))
+  mapply(function(x, x_sum) expect_equal(x$baseline, x_sum$baseline), x = mshp, x_sum = mshp + mshp)
+  mapply(function(x, dims) {
+    expect_equal(dim(x$S), dims)
+    expect_equal(dim(x$X), dims)
+  }, x = mshp + mshp + mshp, dims = list(c(6L, 2L), c(12L, 2L)))
 })
 
 test_that("concatenating with rbind works", {
@@ -59,6 +70,18 @@ test_that("concatenating with rbind works", {
   expect_equal(rbind(shp, shp)$baseline, shp$baseline)
   expect_equal(dim(rbind(shp, shp, shp)$S), c(6L, 2L))
   expect_equal(dim(rbind(shp, shp, shp)$X), c(6L, 2L))
+
+  # mshapviz
+  mshp_rbind <- rbind(mshp, mshp)
+  expect_equal(dim(mshp_rbind$shp$S), c(4L, 2L))
+  expect_equal(dim(mshp_rbind$shp2$S), c(8L, 2L))
+  expect_equal(dim(mshp_rbind$shp$X), c(4L, 2L))
+  expect_equal(dim(mshp_rbind$shp2$X), c(8L, 2L))
+  mapply(function(x, xbind) expect_equal(x$baseline, xbind$baseline), x = mshp, xbind = mshp_rbind)
+  mapply(function(x, dims) {
+    expect_equal(dim(x$S), dims)
+    expect_equal(dim(x$X), dims)
+  }, x = rbind(mshp, mshp, mshp), dims = list(c(6L, 2L), c(12L, 2L)))
 })
 
 test_that("split() works", {

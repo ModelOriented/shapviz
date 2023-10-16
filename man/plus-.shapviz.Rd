@@ -2,9 +2,12 @@
 % Please edit documentation in R/methods.R
 \name{+.shapviz}
 \alias{+.shapviz}
+\alias{+.mshapviz}
 \title{Rowbinds two "shapviz" Objects}
 \usage{
 \method{+}{shapviz}(e1, e2)
+
+\method{+}{mshapviz}(e1, e2)
 }
 \arguments{
 \item{e1}{The first object of class "shapviz".}
@@ -24,6 +27,14 @@ s1 <- shapviz(S, X, baseline = 4)[1]
 s2 <- shapviz(S, X, baseline = 4)[2]
 s <- s1 + s2
 s
+# mshapviz
+S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+X <- data.frame(x = c("a", "b"), y = c(100, 10))
+s1 <- shapviz(S, X, baseline = 4)[1L]
+s2 <- shapviz(S, X, baseline = 4)[2L]
+s <- mshapviz(c(shp1 = s1, shp2 = s2))
+s + s
+
 }
 \seealso{
 \code{\link[=shapviz]{shapviz()}}, \code{\link[=rbind.shapviz]{rbind.shapviz()}}

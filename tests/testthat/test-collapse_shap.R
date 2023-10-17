@@ -85,15 +85,15 @@ test_that("collapse_shap works for SHAP interactions and two collapses (result i
 })
 
 # # Real data example
-# form <- Sepal.Length ~ Sepal.Width + Species - 1
-# iris_dummy <- model.matrix(form, data = iris)
-# dtrain <- xgboost::xgb.DMatrix(iris_dummy, label = iris[, 1L])
-# fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 1L)
-# coll <- list(Species = paste0("Species", levels(iris$Species)))
-#
-# test_that("Collapse works using XGB API", {
-#   expect_no_error(
-#     x <- shapviz(fit, X_pred = dtrain, X = iris, collapse = coll, interactions = TRUE)
-#   )
-#   expect_identical(colnames(x), c("Sepal.Width", "Species"))
-# })
+form <- Sepal.Length ~ Sepal.Width + Species - 1
+iris_dummy <- model.matrix(form, data = iris)
+dtrain <- xgboost::xgb.DMatrix(iris_dummy, label = iris[, 1L])
+fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 1L)
+coll <- list(Species = paste0("Species", levels(iris$Species)))
+
+test_that("Collapse works using XGB API", {
+  expect_no_error(
+    x <- shapviz(fit, X_pred = dtrain, X = iris, collapse = coll, interactions = TRUE)
+  )
+  expect_identical(colnames(x), c("Sepal.Width", "Species"))
+})

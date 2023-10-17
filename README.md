@@ -60,6 +60,13 @@ install.packages("shapviz")
 devtools::install_github("ModelOriented/shapviz")
 ```
 
+## How to contribute
+
+Contributions are very welcome!
+
+1. The first step: open a Github issue to describe the problem or the missing feature.
+2. Then, we check who will implement it. 
+
 ## Usage
 
 Shiny diamonds... let's use XGBoost to model their prices by the four "C" variables:

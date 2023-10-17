@@ -1,3 +1,10 @@
+# shapviz 0.9.3
+
+## Other changes
+
+- Re-activate all unit tests.
+- Added "How to contribute" to README.
+
 # shapviz 0.9.2
 
 ## User-visible changes

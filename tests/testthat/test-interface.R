@@ -11,6 +11,10 @@ test_that("get_* functions work", {
   expect_equal(4, get_baseline(mshp)[[1L]])
   expect_equal(S, get_shap_values(mshp)[[1L]])
   expect_equal(X, get_feature_values(mshp)[[1L]])
+
+  expect_error(get_baseline(3))
+  expect_error(get_shap_values("a"))
+  expect_error(get_feature_values(c(3, 9)))
 })
 
 test_that("dim, nrow, ncol, colnames work", {
@@ -176,6 +180,8 @@ mshp_inter <- c(shp1 = shp_inter, shp2 = shp_inter + shp_inter)
 
 test_that("get_shap_interactions, +, rbind works for interactions", {
   expect_equal(S_inter, get_shap_interactions(shp_inter))
+  expect_equal(length(get_shap_interactions(mshp_inter)), 2L)
+  expect_error(get_shap_interactions(4))
   expect_equal(dim((shp_inter + shp_inter)$S_inter)[1L], 2 * dim(shp_inter$S_inter)[1L])
   expect_equal(
     dim(rbind(shp_inter, shp_inter, shp_inter)$S_inter)[1L],
@@ -211,7 +217,24 @@ test_that("mshapviz object contains original shapviz objects", {
   expect_equal(mshp_inter[[2L]][1:nrow(shp_inter)], shp_inter)
 })
 
-# # Multiclass with XGBoost
+test_that("shapviz objects with interactions can be rowbinded", {
+  expect_equal(dim(rbind(shp_inter, shp_inter)), dim(shp_inter) * (2:1))
+  expect_error(rbind(shp_inter, shp))
+})
+
+# Check on mshapviz
+test_that("combining non-shapviz objects fails", {
+  expect_error(c(shp, 1))
+  expect_error(mshapviz(list(1, 2)))
+})
+
+test_that("combining incompatible shapviz objects fails", {
+  shp2 <- shp[, "x"]
+  expect_error(mshapviz(list(shp, shp2)))
+  expect_error(c(shp, shp2))
+})
+
+# Multiclass with XGBoost
 X_pred <- data.matrix(iris[, -5L])
 dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5L]) - 1L)
 fit <- xgboost::xgb.train(
@@ -240,10 +263,5 @@ test_that("combining shapviz on classes 1, 2, 3 equal mshapviz", {
   shp2 <- shapviz(fit, X_pred = X_pred, which_class = 2L, interactions = TRUE)
   expect_equal(mshp, c(Class_1 = shp1, Class_2 = shp2, Class_3 = shp3))
   expect_equal(mshp, mshapviz(list(Class_1 = shp1, Class_2 = shp2, Class_3 = shp3)))
-})
-
-test_that("combining non-shapviz objects fails", {
-  expect_error(c(shp3, 1))
-  expect_error(mshapviz(1, 2))
 })
 

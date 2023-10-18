@@ -462,9 +462,9 @@ shapviz.H2OModel = function(object, X_pred, X = as.data.frame(X_pred),
   )
 }
 
-#' Concatenates "shapviz" Objects
+#' Combines compatible "shapviz" Objects
 #'
-#' This function combines a list of "shapviz" objects to an object of class
+#' This function combines a list of compatible "shapviz" objects to an object of class
 #' "mshapviz". The elements can be named.
 #'
 #' @param object List of "shapviz" objects to be concatenated.
@@ -479,10 +479,21 @@ shapviz.H2OModel = function(object, X_pred, X = as.data.frame(X_pred),
 #' s <- mshapviz(c(shp1 = s1, shp2 = s2))
 #' s
 mshapviz <- function(object, ...) {
-  stopifnot("'object' must be a list of 'shapviz' objects" = is.list(object))
+  stopifnot("'object' must be a list" = is.list(object))
   if (!all(vapply(object, is.shapviz, FUN.VALUE = logical(1)))) {
     stop("Must pass list of 'shapviz' objects")
   }
+  nms <- lapply(object, colnames)
+  if (!all(vapply(nms, identical, y = nms[[1L]], FUN.VALUE = logical(1)))) {
+    stop("'shapviz' objects need to have identical column names")
+  }
+  # Plot methods using interactions and do.call(rbind, ...) will fail, other plots are ok
+  # inter <- vapply(
+  #   object, function(x) is.null(get_shap_interactions(x)), FUN.VALUE = logical(1)
+  # )
+  # if (!(all(inter) || !any(inter))) {
+  #   stop("Some 'shapviz' objects have SHAP interactions, some not.")
+  # }
   structure(object, class = "mshapviz")
 }
 

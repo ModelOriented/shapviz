@@ -22,10 +22,10 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-Sometimes, you will find it necessary to work with several "shapviz" objects at the same time:
+Sometimes, you will find it necessary to work with several compatible "shapviz" objects at the same time:
 
 - To visualize SHAP values of a multiclass or multi-output model.
-- To compare SHAP plots of different models.
+- To compare SHAP plots of different models (with identical features).
 - To compare SHAP plots between subgroups.
 
 To simplify the workflow, {shapviz} introduces the "mshapviz" object ("m" like "multi"). You can create it in different ways:

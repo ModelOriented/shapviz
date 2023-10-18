@@ -55,6 +55,18 @@ test_that("dependence plots work for interactions = TRUE", {
   )
 })
 
+test_that("shapviz objects w/o interactions can be combined and used for most things", {
+  x_temp1 <- shapviz(fit, X_pred = dtrain, X = iris[, -1L], interactions = TRUE)
+  x_temp2 <- shapviz(fit, X_pred = dtrain, X = iris[, -1L])
+  expect_no_error(x_inter_m <- c(x_temp1, x_temp2))
+  expect_error(do.call(rbind, x_inter_m))
+  expect_error(sv_interaction(x_inter_m))
+  expect_s3_class(sv_importance(x_inter_m), "ggplot")
+  expect_s3_class(sv_dependence(x_inter_m, "Sepal.Width"), "patchwork")
+  expect_error(sv_dependence(x_inter_m, "Sepal.Width", interactions = TRUE))
+  expect_equal(sapply(get_shap_interactions(x_inter_m), is.null), c(FALSE, TRUE))
+})
+
 test_that("main effect plots equal case color_var = v", {
   expect_equal(
     sv_dependence(x_inter, "Petal.Length", color_var = NULL, interactions = TRUE),
@@ -118,3 +130,4 @@ test_that("sv_dependence() does not work with multiple v", {
   expect_error(sv_dependence2D(x, x = c("Species", "Sepal.Width"), y = "Petal.Width"))
   expect_error(sv_dependence2D(x, x = "Petal.Width", y = c("Species", "Sepal.Width")))
 })
+

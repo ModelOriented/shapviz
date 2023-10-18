@@ -2,7 +2,8 @@
 
 ## User-visible changes
 
-- `mshapviz()` is more strict when combining multiple "shapviz" objects. These now need to have identical column names.
+- `mshapviz()` objects can now be rowbinded via `rbind()` or `+`. Implemented by @jmaspons in [#110](https://github.com/ModelOriented/shapviz/pull/110).
+- `mshapviz()` is more strict when combining multiple "shapviz" objects. These now need to have identical column names, see [#114](https://github.com/ModelOriented/shapviz/pull/114).
 
 ## Small changes
 

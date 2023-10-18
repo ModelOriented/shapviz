@@ -2,15 +2,18 @@
 % Please edit documentation in R/methods.R
 \name{rbind.shapviz}
 \alias{rbind.shapviz}
-\title{Rowbinds Multiple "shapviz" Objects}
+\alias{rbind.mshapviz}
+\title{Rowbinds Multiple "shapviz" or "mshapviz" Objects}
 \usage{
 \method{rbind}{shapviz}(...)
+
+\method{rbind}{mshapviz}(...)
 }
 \arguments{
-\item{...}{Any number of "shapviz" objects.}
+\item{...}{Any number of "shapviz" or "mshapviz" objects.}
 }
 \value{
-A new object of class "shapviz".
+A new object of class "shapviz" or "mshapviz".
 }
 \description{
 Rowbinds multiple "shapviz" objects based on the \code{+} operator.
@@ -22,7 +25,15 @@ s1 <- shapviz(S, X, baseline = 4)[1]
 s2 <- shapviz(S, X, baseline = 4)[2]
 s <- rbind(s1, s2)
 s
+# mshapviz
+S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+X <- data.frame(x = c("a", "b"), y = c(100, 10))
+s1 <- shapviz(S, X, baseline = 4)[1L]
+s2 <- shapviz(S, X, baseline = 4)[2L]
+s <- mshapviz(c(shp1 = s1, shp2 = s2))
+rbind(s, s)
+
 }
 \seealso{
-\code{\link[=shapviz]{shapviz()}}
+\code{\link[=shapviz]{shapviz()}}, \code{\link[=mshapviz]{mshapviz()}}
 }

@@ -266,12 +266,40 @@ dimnames.shapviz <- function(x) {
   )
 }
 
-#' Rowbinds Multiple "shapviz" Objects
+#' @rdname plus-.shapviz
+#' @examples
+#' # mshapviz
+#' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' s1 <- shapviz(S, X, baseline = 4)[1L]
+#' s2 <- shapviz(S, X, baseline = 4)[2L]
+#' s <- mshapviz(c(shp1 = s1, shp2 = s2))
+#' s + s
+#'
+#' @export
+`+.mshapviz` <- function(e1, e2) {
+  stopifnot(
+    is.mshapviz(e1),
+    is.mshapviz(e2),
+    length(e1) == length(e2),
+    names(e1) == names(e2),
+    mapply(function(x, y) ncol(x) == ncol(y), x = e1, y = e2),
+    mapply(function(x, y) colnames(x) == colnames(y), x = e1, y = e2)
+  )
+
+  shp_list <- mapply(function(x, y) {
+    x + y
+  }, x = e1, y = e2, SIMPLIFY = FALSE)
+
+  mshapviz(shp_list)
+}
+
+#' Rowbinds Multiple "shapviz" or "mshapviz" Objects
 #'
 #' Rowbinds multiple "shapviz" objects based on the `+` operator.
 #'
-#' @param ... Any number of "shapviz" objects.
-#' @returns A new object of class "shapviz".
+#' @param ... Any number of "shapviz" or "mshapviz" objects.
+#' @returns A new object of class "shapviz" or "mshapviz".
 #' @examples
 #' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 #' X <- data.frame(x = c("a", "b"), y = c(100, 10))
@@ -279,9 +307,24 @@ dimnames.shapviz <- function(x) {
 #' s2 <- shapviz(S, X, baseline = 4)[2]
 #' s <- rbind(s1, s2)
 #' s
-#' @seealso [shapviz()]
+#' @seealso [shapviz()], [mshapviz()]
 #' @export
 rbind.shapviz <- function(...) {
+  Reduce(`+`, list(...))
+}
+
+#' @rdname rbind.shapviz
+#' @examples
+#' # mshapviz
+#' S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
+#' X <- data.frame(x = c("a", "b"), y = c(100, 10))
+#' s1 <- shapviz(S, X, baseline = 4)[1L]
+#' s2 <- shapviz(S, X, baseline = 4)[2L]
+#' s <- mshapviz(c(shp1 = s1, shp2 = s2))
+#' rbind(s, s)
+#'
+#' @export
+rbind.mshapviz <- function(...) {
   Reduce(`+`, list(...))
 }
 

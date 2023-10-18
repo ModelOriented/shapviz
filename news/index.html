@@ -76,7 +76,9 @@
 <div class="section level3">
 <h3 id="user-visible-changes-0-9-3">User-visible changes<a class="anchor" aria-label="anchor" href="#user-visible-changes-0-9-3"></a></h3>
 <ul><li>
-<code><a href="../reference/mshapviz.html">mshapviz()</a></code> is more strict when combining multiple “shapviz” objects. These now need to have identical column names.</li>
+<code><a href="../reference/mshapviz.html">mshapviz()</a></code> objects can now be rowbinded via <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind()</a></code> or <code>+</code>. Implemented by <a href="https://github.com/jmaspons" class="external-link">@jmaspons</a> in <a href="https://github.com/ModelOriented/shapviz/pull/110" class="external-link">#110</a>.</li>
+<li>
+<code><a href="../reference/mshapviz.html">mshapviz()</a></code> is more strict when combining multiple “shapviz” objects. These now need to have identical column names, see <a href="https://github.com/ModelOriented/shapviz/pull/114" class="external-link">#114</a>.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="small-changes-0-9-3">Small changes<a class="anchor" aria-label="anchor" href="#small-changes-0-9-3"></a></h3>

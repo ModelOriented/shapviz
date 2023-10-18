@@ -1,5 +1,9 @@
 # shapviz 0.9.3
 
+## User-visible changes
+
+- `mshapviz()` is more strict when combining multiple "shapviz" objects. These now need to have identical column names.
+
 ## Other changes
 
 - Re-activate all unit tests.

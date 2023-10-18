@@ -2,7 +2,7 @@
 % Please edit documentation in R/shapviz.R
 \name{mshapviz}
 \alias{mshapviz}
-\title{Concatenates "shapviz" Objects}
+\title{Combines compatible "shapviz" Objects}
 \usage{
 mshapviz(object, ...)
 }
@@ -15,7 +15,7 @@ mshapviz(object, ...)
 A "mshapviz" object.
 }
 \description{
-This function combines a list of "shapviz" objects to an object of class
+This function combines a list of compatible "shapviz" objects to an object of class
 "mshapviz". The elements can be named.
 }
 \examples{

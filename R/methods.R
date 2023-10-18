@@ -11,7 +11,12 @@
 #' @seealso [shapviz()]
 #' @export
 print.shapviz <- function(x, ...) {
-  cat("'shapviz' object representing", .print_dim(get_shap_values(x)), "SHAP matrix\n")
+  cat(
+    "'shapviz' object representing",
+    .print_dim(get_shap_values(x)),
+    "SHAP matrix. Top lines:\n\n"
+  )
+  print(utils::head(get_shap_values(x), 2L))
   invisible(x)
 }
 

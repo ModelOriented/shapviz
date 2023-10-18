@@ -4,8 +4,9 @@
 
 - `mshapviz()` is more strict when combining multiple "shapviz" objects. These now need to have identical column names.
 
-## Other changes
+## Small changes
 
+- `print.shapviz()` now shows top two rows of SHAP matrix.
 - Re-activate all unit tests.
 - Added "How to contribute" to README.
 

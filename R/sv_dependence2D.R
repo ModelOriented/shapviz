@@ -7,7 +7,8 @@
 #' maybe other regional features that can be passed via `add_vars`).
 #'
 #' If SHAP interaction values are available, setting `interactions = TRUE` allows
-#' to focus on pure interaction effects (multiplied by two).
+#' to focus on pure interaction effects (multiplied by two). In this case, `add_vars`
+#' has no effect.
 #'
 #' @importFrom rlang .data
 #'
@@ -114,7 +115,7 @@ sv_dependence2D.shapviz <- function(object, x, y,
 
   # Color variable
   if (!interactions) {
-    s <- rowSums(S[, c(x, y, add_vars)])
+    s <- rowSums(S[, unique(c(x, y, add_vars))])  # unique() if add_vars contains x or y
   } else {
     s <- S_inter[, x, y]
     if (x != y) {

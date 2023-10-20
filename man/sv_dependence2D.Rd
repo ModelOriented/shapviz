@@ -81,7 +81,8 @@ A typical application are models with latitude and longitude as features (plus
 maybe other regional features that can be passed via \code{add_vars}).
 
 If SHAP interaction values are available, setting \code{interactions = TRUE} allows
-to focus on pure interaction effects (multiplied by two).
+to focus on pure interaction effects (multiplied by two). In this case, \code{add_vars}
+has no effect.
 }
 \section{Methods (by class)}{
 \itemize{

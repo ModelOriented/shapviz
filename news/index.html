@@ -86,8 +86,14 @@
 <code><a href="../reference/print.shapviz.html">print.shapviz()</a></code> now shows top two rows of SHAP matrix.</li>
 <li>Re-activate all unit tests.</li>
 <li>Added “How to contribute” to README.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-9-3">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-9-3"></a></h3>
+<ul><li>
+<code><a href="../reference/sv_dependence2D.html">sv_dependence2D()</a></code>: In case <code>add_vars</code> are passed, <code>x</code> and/or <code>y</code> are removed from it in order to not use any variable twice. <a href="https://github.com/ModelOriented/shapviz/pull/116" class="external-link">#116</a>.</li>
 <li>
-<code><a href="../reference/sv_dependence2D.html">sv_dependence2D()</a></code>: In case <code>add_vars</code> are passed, <code>x</code> and/or <code>y</code> are removed from it in order to not use any variable twice.</li>
+<code><a href="../reference/split.shapviz.html">split.shapviz()</a></code> now drops empty levels. They launched an error because empty “shapviz” objects are currently not supported. <a href="https://github.com/ModelOriented/shapviz/pull/117" class="external-link">#117</a>
+</li>
 </ul></div>
 </div>
     <div class="section level2">

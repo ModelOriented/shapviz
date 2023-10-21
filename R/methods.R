@@ -354,7 +354,8 @@ c.shapviz <- function(...) {
 #'
 #' @param x Object of class "shapviz".
 #' @param f Vector used to split feature values and SHAP (interaction) values.
-#' @param ... Arguments passed to `split()`.
+#' @param ... Arguments passed to `split()`. Don't pass `drop = TRUE` as empty
+#'   "shapviz" objects are rejected.
 #' @returns A "mshapviz" object.
 #' @examples
 #' \dontrun{
@@ -367,7 +368,7 @@ c.shapviz <- function(...) {
 #' @export
 #' @seealso [shapviz()], [rbind.shapviz()]
 split.shapviz <- function(x, f, ...) {
-  ind <- split(seq_len(nrow(x)), f = f, ...)
+  ind <- split(seq_len(nrow(x)), f = f, drop = FALSE, ...)
   mshapviz(lapply(ind, function(i) x[i, ]))
 }
 

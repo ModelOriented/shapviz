@@ -10,7 +10,11 @@
 - `print.shapviz()` now shows top two rows of SHAP matrix.
 - Re-activate all unit tests.
 - Added "How to contribute" to README.
-- `sv_dependence2D()`: In case `add_vars` are passed, `x` and/or `y` are removed from it in order to not use any variable twice.
+
+## Bug fixes
+
+- `sv_dependence2D()`: In case `add_vars` are passed, `x` and/or `y` are removed from it in order to not use any variable twice [#116](https://github.com/ModelOriented/shapviz/pull/116).
+- `split.shapviz()` now drops empty levels. They launched an error because empty "shapviz" objects are currently not supported.
 
 # shapviz 0.9.2
 

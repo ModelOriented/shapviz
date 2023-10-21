@@ -11,7 +11,8 @@
 
 \item{f}{Vector used to split feature values and SHAP (interaction) values.}
 
-\item{...}{Arguments passed to \code{split()}.}
+\item{...}{Arguments passed to \code{split()}. Don't pass \code{drop = TRUE} as empty
+"shapviz" objects are rejected.}
 }
 \value{
 A "mshapviz" object.

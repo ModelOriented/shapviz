@@ -14,7 +14,7 @@
 ## Bug fixes
 
 - `sv_dependence2D()`: In case `add_vars` are passed, `x` and/or `y` are removed from it in order to not use any variable twice. [#116](https://github.com/ModelOriented/shapviz/pull/116).
-- `split.shapviz()` now drops empty levels. They launched an error because empty "shapviz" objects are currently not supported. [#117](https://github.com/ModelOriented/shapviz/pull/117)
+- `split.shapviz()` now drops empty levels. They launched an error because empty "shapviz" objects are currently not supported. [#117](https://github.com/ModelOriented/shapviz/pull/117), [#118](https://github.com/ModelOriented/shapviz/pull/118)
 
 # shapviz 0.9.2
 

@@ -194,15 +194,16 @@ sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b52
 #'
 #' If SHAP interaction values are available, interaction strength
 #' between feature `v` and another feature `v'` is measured by twice their
-#' mean absolute SHAP interaction values. Otherwise, we use as heuristic the
-#' squared correlation between feature values of `v'` and
-#' SHAP values of `v`, averaged over (binned) values of `v`.
+#' mean absolute SHAP interaction values.
+#' Otherwise, we use a heuristic based on the adjusted R squared by computing
+#' the difference between the mean squared error (MSE) of the SHAP values of `v`
+#' regressed on the feature values of `v'` and the MSE of the null model,
+#' averaged over (binned) values of `v`.
 #' A numeric `v` with more than `n_bins` unique values is binned into quantile bins.
 #' Currently `n_bins` equals the smaller of \eqn{n/20} and \eqn{\sqrt n}, where \eqn{n}
 #' is the sample size.
-#' The average squared correlation is weighted by the number of non-missing feature
-#' values in the bin. Note that non-numeric color features are turned to numeric
-#' by calling [data.matrix()], which does not necessarily make sense.
+#' The average MSE reduction is weighted by the number of non-missing feature
+#' values in the bin before taking the square root.
 #'
 #' @param obj An object of class "shapviz".
 #' @param v Variable name.
@@ -227,17 +228,32 @@ potential_interactions <- function(obj, v) {
     return(sort(2 * colMeans(abs(S_inter[, v, ]))[v_other], decreasing = TRUE))
   }
 
-  # Complicated case: we need to rely on correlation based heuristic
-  r_sq <- function(s, x) {
-    suppressWarnings(stats::cor(s, data.matrix(x), use = "p")^2)
+  # Complicated case: we need to rely on a heuristic based on the reduction in MSE over null model
+  reduction_mse_vec <- function(s, x) {
+    tryCatch(
+      {
+        fit <- stats::lm(s ~ x)
+        y <- fit$model$s
+        n <- length(y)
+        p <- length(coef(fit))
+        # Adjusted R squared multiplied with MSE null model
+        max(0, 1 / (n - 1) * sum((y - mean(y))^2) - 1 / (n - p) * sum((y - fit$fitted.values)^2))
+      },
+      error = function(e) return(NA)
+    )
+  }
+  reduction_mse <- function(s, x) {
+    suppressWarnings(
+      vapply(x, FUN = reduction_mse_vec, FUN.VALUE = numeric(1L), s = s, USE.NAMES = FALSE)
+    )
   }
   n_bins <- ceiling(min(sqrt(nrow(X)), nrow(X) / 20))
   v_bin <- .fast_bin(X[[v]], n_bins = n_bins)
   s_bin <- split(S[, v], v_bin)
   X_bin <- split(X[v_other], v_bin)
   w <- do.call(rbind, lapply(X_bin, function(z) colSums(!is.na(z))))
-  cor_squared <- do.call(rbind, mapply(r_sq, s_bin, X_bin, SIMPLIFY = FALSE))
-  sort(colSums(w * cor_squared, na.rm = TRUE) / colSums(w), decreasing = TRUE)
+  var_explained <- do.call(rbind, mapply(reduction_mse, s_bin, X_bin, SIMPLIFY = FALSE))
+  sort(sqrt(colSums(w * var_explained, na.rm = TRUE) / colSums(w)), decreasing = TRUE)
 }
 
 # Helper functions

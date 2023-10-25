@@ -4,6 +4,7 @@
 
 - `mshapviz()` objects can now be rowbinded via `rbind()` or `+`. Implemented by @jmaspons in [#110](https://github.com/ModelOriented/shapviz/pull/110).
 - `mshapviz()` is more strict when combining multiple "shapviz" objects. These now need to have identical column names, see [#114](https://github.com/ModelOriented/shapviz/pull/114).
+- `potential_interactions()`: when SHAP interaction values are not available, a heuristic based on adjusted R squared is used instead of Pearson correlation. This is more appropriate for measuring the association with non-numeric features, see []().
 
 ## Small changes
 

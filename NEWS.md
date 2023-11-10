@@ -10,7 +10,7 @@
 - `print.shapviz()` now shows top two rows of SHAP matrix.
 - Re-activate all unit tests.
 - Added "How to contribute" to README.
-- `permshap()` connector is now part of {kerneshap}.
+- `permshap()` connector is now part of {kerneshap} [#122](https://github.com/ModelOriented/shapviz/pull/122).
 
 ## Bug fixes
 

@@ -259,7 +259,7 @@ test_that("combining incompatible shapviz objects fails", {
 
 # Multiclass with XGBoost
 X_pred <- data.matrix(iris[, -5L])
-dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5L]) - 1L)
+dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5L]) - 1L, nthread = 1)
 fit <- xgboost::xgb.train(
   params = list(nthread = 1L),
   data = dtrain,

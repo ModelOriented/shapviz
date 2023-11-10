@@ -13,7 +13,7 @@
 #' - `treeshap::treeshap()`,
 #' - `DALEX::predict_parts()`,
 #' - `kernelshap::kernelshap()`, and
-#' - `permshap::permshap()`,
+#' - `kernelshap::permshap()`,
 #'
 #' check the vignettes for examples.
 #'
@@ -413,7 +413,7 @@ shapviz.kernelshap <- function(object, X = object[["X"]],
 }
 
 #' @describeIn shapviz
-#'   Creates a "shapviz" object from `permshap::permshap()`.
+#'   Creates a "shapviz" object from `kernelshap::permshap()`.
 #' @export
 shapviz.permshap <- function(object, X = object[["X"]],
                              which_class = NULL, collapse = NULL, ...) {

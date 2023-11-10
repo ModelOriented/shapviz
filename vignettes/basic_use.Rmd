@@ -88,7 +88,7 @@ diamonds[, ord] <- lapply(diamonds[, ord], factor, ordered = FALSE)
 
 # Fit XGBoost model
 x <- c("carat", "clarity", "cut", "color")
-dtrain <- xgb.DMatrix(data.matrix(diamonds[x]), label = diamonds$price)
+dtrain <- xgb.DMatrix(data.matrix(diamonds[x]), label = diamonds$price, nthread = 1)
 fit <- xgb.train(
   params = list(learning_rate = 0.1, nthread = 1), data = dtrain, nrounds = 65
 )

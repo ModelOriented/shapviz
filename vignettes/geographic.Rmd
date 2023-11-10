@@ -71,8 +71,8 @@ y_train <- log(miami$SALE_PRC[ix])
 y_valid <- log(miami$SALE_PRC[-ix])
 
 # Fit XGBoost model with early stopping
-dtrain <- xgb.DMatrix(X_train, label = y_train)
-dvalid <- xgb.DMatrix(X_valid, label = y_valid)
+dtrain <- xgb.DMatrix(X_train, label = y_train, nthread = 1)
+dvalid <- xgb.DMatrix(X_valid, label = y_valid, nthread = 1)
 
 params <- list(
   learning_rate = 0.2, objective = "reg:squarederror", max_depth = 5, nthread = 1
@@ -127,8 +127,8 @@ x2 <- c(x, more_geo)
 X_train2 <- data.matrix(miami[ix, x2])
 X_valid2 <- data.matrix(miami[-ix, x2])
 
-dtrain2 <- xgb.DMatrix(X_train2, label = y_train)
-dvalid2 <- xgb.DMatrix(X_valid2, label = y_valid)
+dtrain2 <- xgb.DMatrix(X_train2, label = y_train, nthread = 1)
+dvalid2 <- xgb.DMatrix(X_valid2, label = y_valid, nthread = 1)
 
 # Build interaction constraint vector
 ic <- c(

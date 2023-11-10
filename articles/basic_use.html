@@ -163,9 +163,6 @@ to:</p>
 <li><a href="https://CRAN.R-project.org/package=shapr" class="external-link"><code>shapr</code></a></li>
 <li><a href="https://CRAN.R-project.org/package=treeshap" class="external-link"><code>treeshap</code></a></li>
 <li><a href="https://CRAN.R-project.org/package=DALEX" class="external-link"><code>DALEX</code></a></li>
-<li>
-<a href="https://github.com/mayer79/permshap" class="external-link"><code>permshap</code></a>
-(not on CRAN)</li>
 </ul>
 <p>For XGBoost, LightGBM, and H2O, the SHAP values are directly
 calculated from the fitted model.</p>
@@ -465,28 +462,17 @@ packages work together with {shapviz}.</p>
 <div class="section level3">
 <h3 id="kernelshap">kernelshap<a class="anchor" aria-label="anchor" href="#kernelshap"></a>
 </h3>
+<p>Either using <code>kernelshap()</code> or
+<code>permshap()</code>:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ModelOriented/kernelshap" class="external-link">kernelshap</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">background</span> <span class="op">&lt;-</span> <span class="va">diamonds</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">)</span>, <span class="fl">200</span><span class="op">)</span>, <span class="op">]</span></span>
 <span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">price</span> <span class="op">~</span> <span class="va">carat</span> <span class="op">+</span> <span class="va">clarity</span> <span class="op">+</span> <span class="va">cut</span> <span class="op">+</span> <span class="va">color</span>, data <span class="op">=</span> <span class="va">diamonds</span><span class="op">)</span></span>
 <span><span class="va">ks</span> <span class="op">&lt;-</span> <span class="fu">kernelshap</span><span class="op">(</span><span class="va">fit</span>, <span class="va">dia_small</span><span class="op">[</span><span class="va">x</span><span class="op">]</span>, bg_X <span class="op">=</span> <span class="va">background</span><span class="op">)</span></span>
+<span><span class="co"># ks &lt;- permshap(fit, dia_small[x], bg_X = background)</span></span>
 <span></span>
 <span><span class="va">shp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">ks</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">shp</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp</span>, <span class="st">"carat"</span>, color_var <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="permshap">permshap<a class="anchor" aria-label="anchor" href="#permshap"></a>
-</h3>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">permshap</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">background</span> <span class="op">&lt;-</span> <span class="va">diamonds</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">)</span>, <span class="fl">200</span><span class="op">)</span>, <span class="op">]</span></span>
-<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">price</span> <span class="op">~</span> <span class="va">carat</span> <span class="op">+</span> <span class="va">clarity</span> <span class="op">+</span> <span class="va">cut</span> <span class="op">+</span> <span class="va">color</span>, data <span class="op">=</span> <span class="va">diamonds</span><span class="op">)</span></span>
-<span><span class="va">ps</span> <span class="op">&lt;-</span> <span class="fu">permshap</span><span class="op">(</span><span class="va">fit</span>, <span class="va">dia_small</span><span class="op">[</span><span class="va">x</span><span class="op">]</span>, bg_X <span class="op">=</span> <span class="va">background</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">shp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">ps</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">shp</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp</span>, <span class="st">"carat"</span>, color_var <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -495,7 +481,7 @@ packages work together with {shapviz}.</p>
 </h3>
 <p>The most general interface is to provide a matrix of SHAP values and
 corresponding feature values (and optionally, a baseline value):</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">S</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span>, dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">shp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">S</span>, <span class="va">X</span>, baseline <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
@@ -503,7 +489,7 @@ corresponding feature values (and optionally, a baseline value):</p>
 <code>catboost.*()</code> functions to calculate SHAP values, so we
 cannot directly add it to {shapviz} for now. Just use a wrapper like
 this:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">catboost</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">shapviz.catboost.Model</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">object</span>, <span class="va">X_pred</span>, <span class="va">X</span> <span class="op">=</span> <span class="va">X_pred</span>, <span class="va">collapse</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>

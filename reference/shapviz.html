@@ -12,7 +12,7 @@ shapr::explain(),
 treeshap::treeshap(),
 DALEX::predict_parts(),
 kernelshap::kernelshap(), and
-permshap::permshap(),
+kernelshap::permshap(),
 
 
 check the vignettes for examples.'><meta property="og:image" content="/logo.png"><meta name="robots" content="noindex"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -98,7 +98,7 @@ from a fitted model of type</p><ul><li><p>XGBoost,</p></li>
 <li><p><code>treeshap::treeshap()</code>,</p></li>
 <li><p><code>DALEX::predict_parts()</code>,</p></li>
 <li><p><code>kernelshap::kernelshap()</code>, and</p></li>
-<li><p><code>permshap::permshap()</code>,</p></li>
+<li><p><code>kernelshap::permshap()</code>,</p></li>
 </ul><p>check the vignettes for examples.</p>
     </div>
 
@@ -251,7 +251,7 @@ return a "mshapviz" object, containing a "shapviz" object per output.</p>
 <li><p><code>shapviz(predict_parts)</code>: Creates a "shapviz" object from <code>DALEX::predict_parts()</code>.</p></li>
 <li><p><code>shapviz(shapr)</code>: Creates a "shapviz" object from <code>shapr::explain()</code>.</p></li>
 <li><p><code>shapviz(kernelshap)</code>: Creates a "shapviz" object from <code>kernelshap::kernelshap()</code>.</p></li>
-<li><p><code>shapviz(permshap)</code>: Creates a "shapviz" object from <code>permshap::permshap()</code>.</p></li>
+<li><p><code>shapviz(permshap)</code>: Creates a "shapviz" object from <code>kernelshap::permshap()</code>.</p></li>
 <li><p><code>shapviz(H2ORegressionModel)</code>: Creates a "shapviz" object from a (tree-based) H2O regression model.</p></li>
 <li><p><code>shapviz(H2OBinomialModel)</code>: Creates a "shapviz" object from a (tree-based) H2O binary classification model.</p></li>
 <li><p><code>shapviz(H2OModel)</code>: Creates a "shapviz" object from a (tree-based) H2O model (base class).</p></li>

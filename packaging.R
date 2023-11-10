@@ -22,7 +22,7 @@ use_description(
     These plots act on a 'shapviz' object created from a matrix of SHAP
     values and a corresponding feature dataset. Wrappers for the R packages
     'xgboost', 'lightgbm', 'fastshap', 'shapr', 'h2o', 'treeshap', 'DALEX',
-    'kernelshap', and 'permshap' are added for convenience.
+    and 'kernelshap' are added for convenience.
     By separating visualization and computation, it is possible to display
     factor variables in graphs, even if the SHAP values are calculated by a model
     that requires numerical features. The plots are inspired by those provided by
@@ -45,7 +45,6 @@ use_package("ggfittext", "Imports", min_version = "0.8.0")
 use_package("ggrepel", "Imports")
 use_package("patchwork", "Imports")
 use_package("xgboost", "Imports")
-use_package("data.table", "Imports")
 
 use_package("fastshap", "Enhances")
 use_package("h2o", "Enhances")
@@ -61,14 +60,13 @@ use_build_ignore(c("^packaging.R$", "[.]Rproj$", "^logo.png$"), escape = FALSE)
 
 # If your package contains data. Google how to document
 # miami <- OpenML::getOMLDataSet(43093)$data
-use_data(miami)
+use_data(miami, overwrite = TRUE)
 
 # Add short docu in Markdown (without running R code)
 use_readme_md()
 
 # Longer docu in RMarkdown (with running R code). Often quite similar to readme.
 use_vignette("basic_use")
-use_vignette("multiple_output")
 
 # If you want to add unit tests
 use_testthat()
@@ -85,9 +83,6 @@ use_logo("logo.png")
 use_cran_comments()
 
 use_github_links(overwrite = TRUE) # use this if this project is on github
-
-# Build website
-# use_pkgdown(config_file = "pkgdown/_pkgdown.yml")
 
 # Github actions
 # use_github_action("check-standard")

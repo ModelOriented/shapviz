@@ -123,7 +123,7 @@ Furthermore, \code{\link[=shapviz]{shapviz()}} can digest the results of
 \item \code{treeshap::treeshap()},
 \item \code{DALEX::predict_parts()},
 \item \code{kernelshap::kernelshap()}, and
-\item \code{permshap::permshap()},
+\item \code{kernelshap::permshap()},
 }
 
 check the vignettes for examples.
@@ -161,7 +161,7 @@ return a "mshapviz" object, containing a "shapviz" object per output.
 
 \item \code{shapviz(kernelshap)}: Creates a "shapviz" object from \code{kernelshap::kernelshap()}.
 
-\item \code{shapviz(permshap)}: Creates a "shapviz" object from \code{permshap::permshap()}.
+\item \code{shapviz(permshap)}: Creates a "shapviz" object from \code{kernelshap::permshap()}.
 
 \item \code{shapviz(H2ORegressionModel)}: Creates a "shapviz" object from a (tree-based) H2O regression model.
 

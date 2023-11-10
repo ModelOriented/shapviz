@@ -177,7 +177,7 @@ shapviz(S, X, baseline = 4)
 \dontrun{
 # XGBoost models
 X_pred <- data.matrix(iris[, -1])
-dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1])
+dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1], nthread = 1)
 fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 
 # Will use numeric matrix "X_pred" as feature matrix
@@ -195,8 +195,10 @@ x <- shapviz(fit, X_pred = dtrain, X = iris)
 # Multiclass setting
 params <- list(objective = "multi:softprob", num_class = 3)
 X_pred <- data.matrix(iris[, -5])
-dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 5]) - 1)
-fit <- xgboost::xgb.train(params = params, data = dtrain, nrounds = 10)
+dtrain <- xgboost::xgb.DMatrix(
+  X_pred, label = as.integer(iris[, 5]) - 1, nthread = 1
+)
+fit <- xgboost::xgb.train(params = params, data = dtrain, nrounds = 10, nthread = 1)
 
 # Select specific class
 x <- shapviz(fit, X_pred = X_pred, which_class = 3)
@@ -208,7 +210,7 @@ x
 
 # What if we would have one-hot-encoded values and want to explain the original column?
 X_pred <- stats::model.matrix(~ . -1, iris[, -1])
-dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 1]))
+dtrain <- xgboost::xgb.DMatrix(X_pred, label = as.integer(iris[, 1]), nthread = 1)
 fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 x <- shapviz(
   fit,

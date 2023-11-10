@@ -87,7 +87,9 @@ to focus on pure interaction effects (multiplied by two) or on pure main effects
 }}
 \examples{
 \dontrun{
-dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
+dtrain <- xgboost::xgb.DMatrix(
+  data.matrix(iris[, -1]), label = iris[, 1], nthread = 1
+)
 fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 x <- shapviz(fit, X_pred = dtrain, X = iris)
 sv_dependence(x, "Petal.Length")

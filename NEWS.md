@@ -2,15 +2,16 @@
 
 ## User-visible changes
 
-- `mshapviz()` objects can now be rowbinded via `rbind()` or `+`. Implemented by @jmaspons in [#110](https://github.com/ModelOriented/shapviz/pull/110).
+- `mshapviz()` objects can now be rowbinded via `rbind()` or `+`. Implemented by [@jmaspons](https://github.com/jmaspons) in [#110](https://github.com/ModelOriented/shapviz/pull/110).
 - `mshapviz()` is more strict when combining multiple "shapviz" objects. These now need to have identical column names, see [#114](https://github.com/ModelOriented/shapviz/pull/114).
 
 ## Small changes
 
 - `print.shapviz()` now shows top two rows of SHAP matrix.
 - Re-activate all unit tests.
+- Setting `nthread = 1` in all calls to `xgb.DMatrix()` as suggested by [@jmaspons](https://github.com/jmaspons) in [issue #109](https://github.com/ModelOriented/shapviz/issues/109).
 - Added "How to contribute" to README.
-- `permshap()` connector is now part of {kerneshap}.
+- `permshap()` connector is now part of {kerneshap} [#122](https://github.com/ModelOriented/shapviz/pull/122).
 
 ## Bug fixes
 

@@ -19,7 +19,9 @@
 #'   absolute SHAP values (or a list of such matrices in case of "mshapviz" object).
 #' @examples
 #' \dontrun{
-#' dtrain <- xgboost::xgb.DMatrix(data.matrix(iris[, -1]), label = iris[, 1])
+#' dtrain <- xgboost::xgb.DMatrix(
+#'   data.matrix(iris[, -1]), label = iris[, 1], nthread = 1
+#' )
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 #' x <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 #' sv_interaction(x, kind = "no")

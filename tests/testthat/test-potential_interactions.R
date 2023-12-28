@@ -61,9 +61,19 @@ test_that("r2_adj() can fail with NA", {
   expect_equal(r2_adj(0, df = data.frame(x = c(1, 1), y = 1:2)), c(NA_real_, NA_real_))
 })
 
+test_that("r2_adj() gives quite similar results to r_sq()", {
+  # This was the original approach to calculate R-squared NON-adjusted
+  r_sq <- function(s, x) {
+    suppressWarnings(stats::cor(s, data.matrix(x), use = "p")^2)
+  }
+  p1 <- r2_adj(iris$Sepal.Length, iris[2:4])
+  names(p1) <- colnames(iris[2:4])
+  p2 <- r_sq(iris$Sepal.Length, iris[2:4])
+
+  expect_equal(p1, 1 - (1 - drop(p2)) * 149 / 148)
+})
 
 
-# r_sq <- function(s, x) {
-#   suppressWarnings(stats::cor(s, data.matrix(x), use = "p")^2)
-# }
+
+
 

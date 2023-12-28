@@ -4,12 +4,19 @@
 \alias{potential_interactions}
 \title{Interaction Strength}
 \usage{
-potential_interactions(obj, v)
+potential_interactions(obj, v, n_bins = NULL, color_numeric = TRUE)
 }
 \arguments{
 \item{obj}{An object of class "shapviz".}
 
 \item{v}{Variable name.}
+
+\item{n_bins}{Into how many quantile bins should a numeric \code{v} be binned?
+The default \code{NULL} equals the smaller of \eqn{n/20} and \eqn{\sqrt n} (rounded up),
+where \eqn{n} is the sample size. Ignored if \code{obj} contains SHAP interactions.}
+
+\item{color_numeric}{Should color features be converted to numeric, even if they are
+factors/characters? Default is \code{TRUE}. Ignored if \code{obj} contains SHAP interactions.}
 }
 \value{
 A named vector of decreasing interaction strengths.
@@ -18,17 +25,15 @@ A named vector of decreasing interaction strengths.
 Returns vector of interaction strengths between variable \code{v} and all other variables.
 }
 \details{
-If SHAP interaction values are available, interaction strength
-between feature \code{v} and another feature \verb{v'} is measured by twice their
-mean absolute SHAP interaction values. Otherwise, we use as heuristic the
-squared correlation between feature values of \verb{v'} and
-SHAP values of \code{v}, averaged over (binned) values of \code{v}.
-A numeric \code{v} with more than \code{n_bins} unique values is binned into quantile bins.
-Currently \code{n_bins} equals the smaller of \eqn{n/20} and \eqn{\sqrt n}, where \eqn{n}
-is the sample size.
-The average squared correlation is weighted by the number of non-missing feature
-values in the bin. Note that non-numeric color features are turned to numeric
-by calling \code{\link[=data.matrix]{data.matrix()}}, which does not necessarily make sense.
+If SHAP interaction values are available, the interaction strength
+between feature \code{v} and another feature \code{z} is measured by twice their
+mean absolute SHAP interaction values.
+
+Otherwise, we use as heuristic the adjusted R-squared between the SHAP values of \code{v}
+and the feature values of \code{z} , averaged over (binned) values of \code{v}.
+The average adjusted R-squared is weighted by the number of non-missing values of \code{z}
+in the bin. If \code{color_numeric = TRUE}, a non-numeric \code{z} is turned into numeric,
+which does not necessarily make sense (but works in almost all cases).
 }
 \seealso{
 \code{\link[=sv_dependence]{sv_dependence()}}

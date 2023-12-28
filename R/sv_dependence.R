@@ -195,22 +195,22 @@ sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b52
 #' Returns vector of interaction strengths between variable `v` and all other variables.
 #'
 #' If SHAP interaction values are available, the interaction strength
-#' between feature `v` and another feature `v'` is measured by twice their
-#' mean absolute SHAP interaction values. Otherwise, we use as heuristic the
-#' squared correlation between feature values of `v'` and
-#' SHAP values of `v`, averaged over (binned) values of `v`.
-#' The average squared correlation is weighted by the number of non-missing feature
-#' values in the bin. Note that non-numeric color features are turned to numeric
-#' by calling [data.matrix()], which does not necessarily make sense.
+#' between feature `v` and another feature `z` is measured by twice their
+#' mean absolute SHAP interaction values.
+#'
+#' Otherwise, we use as heuristic the adjusted R-squared between the SHAP values of `v`
+#' and the feature values of `z` , averaged over (binned) values of `v`.
+#' The average adjusted R-squared is weighted by the number of non-missing values of `z`
+#' in the bin. If `color_numeric = TRUE`, a non-numeric `z` is turned into numeric,
+#' which does not necessarily make sense (but works in almost all cases).
 #'
 #' @param obj An object of class "shapviz".
 #' @param v Variable name.
-#' @param n_bins A numeric `v` with more than `n_bins` unique values is binned
-#'   into that many quantile bins. If `NULL` (default), `n_bins` equals the smaller
-#'   of \eqn{n/20} and \eqn{\sqrt n} (rounded up), where \eqn{n} is the sample size.
-#'   Ignored if `obj` contains SHAP interactions.
-#' @param color_numeric Should color feature values be converted to numeric? Default is
-#'   `TRUE`. Ignored if `obj` contains SHAP interactions.
+#' @param n_bins Into how many quantile bins should a numeric `v` be binned?
+#'   The default `NULL` equals the smaller of \eqn{n/20} and \eqn{\sqrt n} (rounded up),
+#'   where \eqn{n} is the sample size. Ignored if `obj` contains SHAP interactions.
+#' @param color_numeric Should color features be converted to numeric, even if they are
+#'   factors/characters? Default is `TRUE`. Ignored if `obj` contains SHAP interactions.
 #' @returns A named vector of decreasing interaction strengths.
 #' @export
 #' @seealso [sv_dependence()]

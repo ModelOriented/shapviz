@@ -194,25 +194,28 @@ sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b52
 #'
 #' Returns vector of interaction strengths between variable `v` and all other variables.
 #'
-#' If SHAP interaction values are available, interaction strength
+#' If SHAP interaction values are available, the interaction strength
 #' between feature `v` and another feature `v'` is measured by twice their
 #' mean absolute SHAP interaction values. Otherwise, we use as heuristic the
 #' squared correlation between feature values of `v'` and
 #' SHAP values of `v`, averaged over (binned) values of `v`.
-#' A numeric `v` with more than `n_bins` unique values is binned into quantile bins.
-#' Currently `n_bins` equals the smaller of \eqn{n/20} and \eqn{\sqrt n}, where \eqn{n}
-#' is the sample size.
 #' The average squared correlation is weighted by the number of non-missing feature
 #' values in the bin. Note that non-numeric color features are turned to numeric
 #' by calling [data.matrix()], which does not necessarily make sense.
 #'
 #' @param obj An object of class "shapviz".
 #' @param v Variable name.
+#' @param n_bins A numeric `v` with more than `n_bins` unique values is binned
+#'   into that many quantile bins. If `NULL` (default), `n_bins` equals the smaller
+#'   of \eqn{n/20} and \eqn{\sqrt n} (rounded up), where \eqn{n} is the sample size.
 #' @returns A named vector of decreasing interaction strengths.
 #' @export
 #' @seealso [sv_dependence()]
-potential_interactions <- function(obj, v) {
-  stopifnot(is.shapviz(obj))
+potential_interactions <- function(obj, v, n_bins = NULL) {
+  stopifnot(
+    is.shapviz(obj),
+    is.null(n_bins) || (length(n_bins) == 1L && n_bins >= 1L)
+  )
   S <- get_shap_values(obj)
   S_inter <- get_shap_interactions(obj)
   X <- get_feature_values(obj)
@@ -233,7 +236,9 @@ potential_interactions <- function(obj, v) {
   r_sq <- function(s, x) {
     suppressWarnings(stats::cor(s, data.matrix(x), use = "p")^2)
   }
-  n_bins <- ceiling(min(sqrt(nrow(X)), nrow(X) / 20))
+  if (is.null(n_bins)) {
+    n_bins <- ceiling(min(sqrt(nrow(X)), nrow(X) / 20))
+  }
   v_bin <- .fast_bin(X[[v]], n_bins = n_bins)
   s_bin <- split(S[, v], v_bin)
   X_bin <- split(X[v_other], v_bin)

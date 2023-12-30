@@ -31,6 +31,9 @@
 #'   Requires SHAP interaction values. If `color_var = NULL` (or it is equal to `v`),
 #'   the pure main effect of `v` is visualized. Otherwise, twice the SHAP interaction
 #'   values between `v` and the `color_var` are plotted.
+#' @param ih_nbins,ih_color_num,ih_scale Interaction heuristic (ih) parameters used to
+#'   select the color variable, see [potential_interactions()].
+#'   Only used if `color_var = "auto"` and if there are no SHAP interaction values.
 #' @param ... Arguments passed to [ggplot2::geom_jitter()].
 #' @returns An object of class "ggplot" (or "patchwork") representing a dependence plot.
 #' @examples
@@ -71,7 +74,9 @@ sv_dependence.default <- function(object, ...) {
 #' @export
 sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528b",
                                   viridis_args = getOption("shapviz.viridis_args"),
-                                  jitter_width = NULL, interactions = FALSE, ...) {
+                                  jitter_width = NULL, interactions = FALSE,
+                                  ih_nbins = NULL, ih_color_num = TRUE,
+                                  ih_scale = FALSE, ...) {
   p <- length(v)
   if (p > 1L || length(color_var) > 1L) {
     if (is.null(color_var)) {
@@ -90,6 +95,9 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
         object = object,
         viridis_args = viridis_args,
         interactions = interactions,
+        ih_nbins = ih_nbins,
+        ih_color_num = ih_color_num,
+        ih_scale = ih_scale,
         ...
       ),
       SIMPLIFY = FALSE
@@ -118,7 +126,9 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
 
   # Set color value
   if (!is.null(color_var) && color_var == "auto" && !("auto" %in% nms)) {
-    scores <- potential_interactions(object, v)
+    scores <- potential_interactions(
+      object, v, nbins = ih_nbins, color_num = ih_color_num, scale = ih_scale
+    )
     color_var <- names(scores)[1L]  # NULL if p = 1L
   }
   if (isTRUE(interactions)) {
@@ -169,7 +179,9 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
 #' @export
 sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b528b",
                                    viridis_args = getOption("shapviz.viridis_args"),
-                                   jitter_width = NULL, interactions = FALSE, ...) {
+                                   jitter_width = NULL, interactions = FALSE,
+                                   ih_nbins = NULL, ih_color_num = TRUE,
+                                   ih_scale = FALSE, ...) {
   stopifnot(
     length(v) == 1L,
     length(color_var) <= 1L
@@ -184,6 +196,9 @@ sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b52
     viridis_args = viridis_args,
     jitter_width = jitter_width,
     interactions = interactions,
+    ih_nbins = ih_nbins,
+    ih_color_num = ih_color_num,
+    ih_scale = ih_scale,
     ...
   )
   plot_list <- add_titles(plot_list, nms = names(object))  # see sv_waterfall()
@@ -192,40 +207,48 @@ sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b52
 
 #' Interaction Strength
 #'
-#' Returns vector of interaction strengths between variable `v` and all other variables.
+#' Returns vector of interaction strengths between variable `v` and all other variables,
+#' see Details.
 #'
 #' If SHAP interaction values are available, the interaction strength
-#' between feature `v` and another feature `z` is measured by twice their
+#' between feature `v` and another feature `v'` is measured by twice their
 #' mean absolute SHAP interaction values.
 #'
-#' Otherwise, we use as heuristic the adjusted R-squared between the SHAP values of `v`
-#' and the feature values of `z` , averaged over (binned) values of `v`.
-#' The average adjusted R-squared is weighted by the number of non-missing values of `z`
-#' in the bin. If `color_numeric = TRUE`, a non-numeric `z` is turned into numeric,
-#' which does not necessarily make sense (but works in almost all cases).
+#' Otherwise, we use a heuristic calculated as follows to calculate interaction strength
+#' between `v` and each other "color" feature `v':
+#' 1. If `v` is numeric, it is binned into `nbins` bins.
+#' 2. Per bin, the SHAP values of `v` are regressed onto `v`.
+#' 3. Per bin, the adjusted R-squared is calculated.
+#' 4. The adjusted R-squared are averaged over bins, weighted by the bin size.
+#'
+#' Set `scale = TRUE` to multiply the adjusted R-squared by the within-bin variance
+#' of the SHAP values. This will put higher weight to bins with larger scatter.
+#'
+#' Set `color_num = FALSE` to *not* turn the values of `v` into numerics.
 #'
 #' @param obj An object of class "shapviz".
-#' @param v Variable name.
-#' @param n_bins Into how many quantile bins should a numeric `v` be binned?
+#' @param v Variable name for which potential SHAP interactions are to be computed.
+#' @param nbins Into how many quantile bins should a numeric `v` be binned?
 #'   The default `NULL` equals the smaller of \eqn{n/20} and \eqn{\sqrt n} (rounded up),
 #'   where \eqn{n} is the sample size. Ignored if `obj` contains SHAP interactions.
-#' @param color_numeric Should color features be converted to numeric, even if they are
-#'   factors/characters? Default is `TRUE`. Ignored if `obj` contains SHAP interactions.
+#' @param color_num Should other ("color") features `v'` be converted to numeric,
+#'   even if they are factors/characters? Default is `TRUE`.
+#'   Ignored if `obj` contains SHAP interactions.
+#' @param scale Should adjusted R-squared be multiplied with the sample variance of
+#'   within-bin SHAP values? The default is `FALSE`.
+#'   Ignored if `obj` contains SHAP interactions.
 #' @returns A named vector of decreasing interaction strengths.
 #' @export
 #' @seealso [sv_dependence()]
-potential_interactions <- function(obj, v, n_bins = NULL, color_numeric = TRUE) {
-  stopifnot(
-    is.shapviz(obj),
-    is.null(n_bins) || (length(n_bins) == 1L && n_bins >= 1L)
-  )
+potential_interactions <- function(obj, v, nbins = NULL,
+                                   color_num = TRUE, scale = FALSE) {
+  stopifnot(is.shapviz(obj))
   S <- get_shap_values(obj)
   S_inter <- get_shap_interactions(obj)
   X <- get_feature_values(obj)
   nms <- colnames(obj)
   v_other <- setdiff(nms, v)
   stopifnot(v %in% nms)
-
   if (ncol(obj) <= 1L) {
     return(NULL)
   }
@@ -235,70 +258,98 @@ potential_interactions <- function(obj, v, n_bins = NULL, color_numeric = TRUE) 
     return(sort(2 * colMeans(abs(S_inter[, v, ]))[v_other], decreasing = TRUE))
   }
 
-  # Complicated case: we need to rely on R-squared adjusted based heuristic
-  COL <- X[v_other]
-  if (isTRUE(color_numeric)) {
-    COL <- as.data.frame(data.matrix(COL))
+  # Complicated case: calculate heuristic per color variable
+  if (is.null(nbins)) {
+    nbins <- ceiling(min(sqrt(nrow(X)), nrow(X) / 20))
   }
-  if (is.null(n_bins)) {
-    n_bins <- ceiling(min(sqrt(nrow(X)), nrow(X) / 20))
-  }
-  v_bin <- .fast_bin(X[[v]], n_bins = n_bins)
-  s_bin <- split(S[, v], v_bin)
-  COL_bin <- split(COL, v_bin)
-  w <- do.call(rbind, lapply(COL_bin, function(z) colSums(!is.na(z))))
-  r2 <- do.call(rbind, mapply(r2_adj, s_bin, COL_bin, SIMPLIFY = FALSE))
-  sort(colSums(w * r2, na.rm = TRUE) / colSums(w), decreasing = TRUE)
+  out <- vapply(
+    X[v_other],  # data.frame is a list
+    FUN = heuristic,
+    FUN.VALUE = 1.0,
+    s = S[, v],
+    bins = .fast_bin(X[[v]], nbins = nbins),
+    color_num = color_num,
+    scale = scale
+  )
+  sort(out, decreasing = TRUE, na.last = TRUE)
 }
 
 # Helper functions
 
+# Checks if z is discrete
 .is_discrete <- function(z, n_unique) {
   is.factor(z) || is.character(z) || is.logical(z) || (length(unique(z)) <= n_unique)
 }
 
-# Bins z into integer valued bins, but only if discrete
-.fast_bin <- function(z, n_bins) {
-  if (.is_discrete(z, n_unique = n_bins)) {
+# Like as.numeric(), but can deal with factor variables
+.as_numeric <- function(z) {
+  if (is.numeric(z)) {
     return(z)
   }
-  q <- stats::quantile(z, seq(0, 1, length.out = n_bins + 1L), na.rm = TRUE)
+  if (is.character(z)) {
+    z <- factor(z)
+  }
+  as.numeric(z)
+}
+
+# Bins discrete z into integer valued bins
+.fast_bin <- function(z, nbins) {
+  if (.is_discrete(z, n_unique = nbins)) {
+    return(z)
+  }
+  q <- stats::quantile(z, seq(0, 1, length.out = nbins + 1L), na.rm = TRUE)
   findInterval(z, unique(q), rightmost.closed = TRUE)
 }
 
-#' R-squared adjusted
+#' Interaction Heuristic
 #'
-#' Internal function used to calculate the R-squared adjusted for a simple linear
-#' regression with the SHAP values of the feature on the x-axis as response and
-#' the (potential) color feature as single feature.
+#' Internal function used to calculate the interaction heuristics described in
+#' [potential_interactions()].
 #'
 #' @noRd
 #' @keywords internal
 #'
-#' @param s Vector of within-bin SHAP values of the feature on the x-axis.
-#' @param color Feature values of the color feature.
-#' @returns The R-squared adjusted from regressing `s` onto `color`. If the calculation
-#'   fails (e.g., too many factor levels in `color`), the function returns `NA`.
-r2_adj_uni <- function(s, color) {
-  tryCatch(
-    summary(stats::lm(s ~ color))[["adj.r.squared"]],
-    error = function(e) return(NA)
-  )
+#' @inheritParams potential_interactions
+#' @param color Feature values of the "color" feature.
+#' @param s SHAP values of `v`.
+#' @returns A single number.
+heuristic <- function(color, s, bins, color_num, scale) {
+  if (isTRUE(color_num)) {
+    color <- .as_numeric(color)
+  }
+  color <- split(color, bins)
+  s <- split(s, bins)
+  M <- mapply(heuristic_in_bin, color = color, s = s, MoreArgs = list(scale = scale))
+  stats::weighted.mean(M[1L, ], M[2L, ], na.rm = TRUE)
 }
 
-#' R-squared adjusted for multiple v
+#' Interaction Heuristic in Bin
 #'
-#' Internal function that calls `r2_adj_uni()` for multiple color features.
+#' Internal function used to calculate the within-bin heuristic used in `heuristic()`.
+#' See `heuristic()` for details.
 #'
 #' @noRd
 #' @keywords internal
 #'
-#' @param s Vector of SHAP values of the feature on the x-axis.
-#' @param df Data frame of (multiple) color features.
-#' @returns Vector of R-squared adjusted (one per column in `df`). For columns in `df`
-#'   where the calculations fail, the value is `NA`.
-r2_adj <- function(s, df) {
+#' @inheritParams heuristic
+#' @returns
+#'   A (1x2) matrix. The first value equals the (possibly) scaled adjusted R-squared,
+#'   the second the number of used observations.
+heuristic_in_bin <- function(color, s, scale = FALSE) {
   suppressWarnings(
-    vapply(df, FUN = r2_adj_uni, FUN.VALUE = 1.0, s = s, USE.NAMES = FALSE)
+    tryCatch(
+      {
+        z <- stats::lm(s ~ color)
+        r <- z$residuals
+        var_y <- stats::var(z$fitted.values + r)
+        var_r <- sum(r^2) / z$df.residual  # var(r) would give non-adjusted R2
+        stat <- 1 - var_r / var_y
+        if (scale) {
+          stat <- stat * var_y  # = var_y - var_r
+        }
+        cbind(stat = stat, n = length(r))
+      },
+      error = function(e) return(cbind(stat = NA, n = 0))
+    )
   )
 }

@@ -19,6 +19,9 @@ sv_dependence(object, ...)
   viridis_args = getOption("shapviz.viridis_args"),
   jitter_width = NULL,
   interactions = FALSE,
+  ih_nbins = NULL,
+  ih_color_num = TRUE,
+  ih_scale = FALSE,
   ...
 )
 
@@ -30,6 +33,9 @@ sv_dependence(object, ...)
   viridis_args = getOption("shapviz.viridis_args"),
   jitter_width = NULL,
   interactions = FALSE,
+  ih_nbins = NULL,
+  ih_color_num = TRUE,
+  ih_scale = FALSE,
   ...
 )
 }
@@ -67,6 +73,10 @@ Can be a vector/list if \code{v} is a vector.}
 Requires SHAP interaction values. If \code{color_var = NULL} (or it is equal to \code{v}),
 the pure main effect of \code{v} is visualized. Otherwise, twice the SHAP interaction
 values between \code{v} and the \code{color_var} are plotted.}
+
+\item{ih_nbins, ih_color_num, ih_scale}{Interaction heuristic (ih) parameters used to
+select the color variable, see \code{\link[=potential_interactions]{potential_interactions()}}.
+Only used if \code{color_var = "auto"} and if there are no SHAP interaction values.}
 }
 \value{
 An object of class "ggplot" (or "patchwork") representing a dependence plot.

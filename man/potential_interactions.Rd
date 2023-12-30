@@ -4,36 +4,50 @@
 \alias{potential_interactions}
 \title{Interaction Strength}
 \usage{
-potential_interactions(obj, v, n_bins = NULL, color_numeric = TRUE)
+potential_interactions(obj, v, nbins = NULL, color_num = TRUE, scale = FALSE)
 }
 \arguments{
 \item{obj}{An object of class "shapviz".}
 
-\item{v}{Variable name.}
+\item{v}{Variable name for which potential SHAP interactions are to be computed.}
 
-\item{n_bins}{Into how many quantile bins should a numeric \code{v} be binned?
+\item{nbins}{Into how many quantile bins should a numeric \code{v} be binned?
 The default \code{NULL} equals the smaller of \eqn{n/20} and \eqn{\sqrt n} (rounded up),
 where \eqn{n} is the sample size. Ignored if \code{obj} contains SHAP interactions.}
 
-\item{color_numeric}{Should color features be converted to numeric, even if they are
-factors/characters? Default is \code{TRUE}. Ignored if \code{obj} contains SHAP interactions.}
+\item{color_num}{Should other ("color") features \verb{v'} be converted to numeric,
+even if they are factors/characters? Default is \code{TRUE}.
+Ignored if \code{obj} contains SHAP interactions.}
+
+\item{scale}{Should adjusted R-squared be multiplied with the sample variance of
+within-bin SHAP values? The default is \code{FALSE}.
+Ignored if \code{obj} contains SHAP interactions.}
 }
 \value{
 A named vector of decreasing interaction strengths.
 }
 \description{
-Returns vector of interaction strengths between variable \code{v} and all other variables.
+Returns vector of interaction strengths between variable \code{v} and all other variables,
+see Details.
 }
 \details{
 If SHAP interaction values are available, the interaction strength
-between feature \code{v} and another feature \code{z} is measured by twice their
+between feature \code{v} and another feature \verb{v'} is measured by twice their
 mean absolute SHAP interaction values.
 
-Otherwise, we use as heuristic the adjusted R-squared between the SHAP values of \code{v}
-and the feature values of \code{z} , averaged over (binned) values of \code{v}.
-The average adjusted R-squared is weighted by the number of non-missing values of \code{z}
-in the bin. If \code{color_numeric = TRUE}, a non-numeric \code{z} is turned into numeric,
-which does not necessarily make sense (but works in almost all cases).
+Otherwise, we use a heuristic calculated as follows to calculate interaction strength
+between \code{v} and each other "color" feature `v':
+\enumerate{
+\item If \code{v} is numeric, it is binned into \code{nbins} bins.
+\item Per bin, the SHAP values of \code{v} are regressed onto \code{v}.
+\item Per bin, the adjusted R-squared is calculated.
+\item The adjusted R-squared are averaged over bins, weighted by the bin size.
+}
+
+Set \code{scale = TRUE} to multiply the adjusted R-squared by the within-bin variance
+of the SHAP values. This will put higher weight to bins with larger scatter.
+
+Set \code{color_num = FALSE} to \emph{not} turn the values of \code{v} into numerics.
 }
 \seealso{
 \code{\link[=sv_dependence]{sv_dependence()}}

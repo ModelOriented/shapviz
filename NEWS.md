@@ -1,6 +1,27 @@
 # shapviz 0.9.3
 
-## User-visible changes
+## Selection of color scale in `sv_dependence()`
+
+If no SHAP interaction values are available, by default, the color feature `v'` is selected by the heuristic `potential_interaction()`, which essentially works as follows:
+
+1. If the feature `v` (the on the x-axis) is numeric, it is binned into `nbins` bins.
+2. Per bin, the SHAP values of `v` are regressed onto `v` and the R-squared is calculated.
+3. The R-squared are averaged over bins, weighted by the bin size.
+
+In this release, we have replaced R-squared by *adjusted* R-squared. In rare cases, this may have an impact on the color feature selected by `sv_dependence()`. 
+
+Furthermore, we have introduced three parameters to control the heuristic:
+
+- `nbin = NULL`: Into how many quantile bins should a numeric `v` be binned? The default `NULL` equals the smaller of $n/20$ and $\sqrt n$ (rounded up), where $n$ is the sample size.
+- `color_num` Should color features be converted to numeric, even if they are factors/characters? Default is `TRUE`.
+- `scale = FALSE`: Should R-squared be multiplied with the sample variance of
+within-bin SHAP values? If `TRUE`, bins with stronger vertical scatter will get higher weight. The default is `FALSE`.
+
+If SHAP interaction values are available, these parameters have no effect. In `sv_dependence()` they are called `ih_nbin`, `ih_color_num`, and `ih_scale`.
+
+This implementation partly implements the ideas in [#119](https://github.com/ModelOriented/shapviz/issues/119) of Roel Verbelen, thanks!
+
+## Other user-visible changes
 
 - `mshapviz()` objects can now be rowbinded via `rbind()` or `+`. Implemented by [@jmaspons](https://github.com/jmaspons) in [#110](https://github.com/ModelOriented/shapviz/pull/110).
 - `mshapviz()` is more strict when combining multiple "shapviz" objects. These now need to have identical column names, see [#114](https://github.com/ModelOriented/shapviz/pull/114).

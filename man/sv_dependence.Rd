@@ -85,6 +85,8 @@ An object of class "ggplot" (or "patchwork") representing a dependence plot.
 Scatterplot of the SHAP values of a feature against its feature values.
 If SHAP interaction values are available, setting \code{interactions = TRUE} allows
 to focus on pure interaction effects (multiplied by two) or on pure main effects.
+By default, the feature on the color scale is selected via SHAP interactions
+(if available) or an interaction heuristic, see \code{\link[=potential_interactions]{potential_interactions()}}.
 }
 \section{Methods (by class)}{
 \itemize{

@@ -89,12 +89,10 @@ heuristic <- function(color, s, bins, color_num, scale, adjusted) {
   if (isTRUE(color_num)) {
     color <- .as_numeric(color)
   }
-  color <- split(color, bins)
-  s <- split(s, bins)
   M <- mapply(
     heuristic_in_bin,
-    color = color,
-    s = s,
+    color = split(color, bins),
+    s = split(s, bins),
     MoreArgs = list(scale = scale, adjusted = adjusted)
   )
   stats::weighted.mean(M[1L, ], M[2L, ], na.rm = TRUE)
@@ -112,24 +110,24 @@ heuristic <- function(color, s, bins, color_num, scale, adjusted) {
 #' @returns
 #'   A (1x2) matrix with heuristic and number of observations.
 heuristic_in_bin <- function(color, s, scale = FALSE, adjusted = FALSE) {
-  suppressWarnings(
-    tryCatch(
-      {
-        z <- stats::lm(s ~ color)
-        r <- z$residuals
-        n <- length(r)
-        var_y <- stats::var(z$fitted.values + r)
-        denom <- if (adjusted) z$df.residual else n - 1
-        var_r <- sum(r^2) / denom
-        stat <- 1 - var_r / var_y
-        if (scale) {
-          stat <- stat * var_y
-        }
-        cbind(stat = stat, n = n)
-      },
-      error = function(e) return(cbind(stat = NA, n = 0))
-    )
-  )
+  ok <- !is.na(color)
+  color <- color[ok]
+  s <- s[ok]
+  n <- length(s)
+  var_s <- stats::var(s)
+  if (n < 2L || var_s < .Machine$double.eps || length(unique(color)) < 2L) {
+    return(cbind(stat = NA, n = n))
+  }
+  z <- stats::lm(s ~ color)
+  var_r <- sum(z$residuals^2) / (if (adjusted) z$df.residual else n - 1)
+  stat <- 1 - var_r / var_s
+  if (scale) {
+    stat <- stat * var_s
+  }
+  if (!is.finite(stat)) {
+    stat <- NA
+  }
+  cbind(stat = stat, n = n)
 }
 
 # Like as.numeric(), but can deal with factor variables

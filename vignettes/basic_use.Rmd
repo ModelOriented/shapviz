@@ -212,6 +212,7 @@ The above example uses XGBoost to calculate SHAP values. In the following sectio
 
 ```r
 library(lightgbm)
+
 dtrain <- lgb.Dataset(data.matrix(diamonds[x]), label = diamonds$price)
 
 fit <- lgb.train(

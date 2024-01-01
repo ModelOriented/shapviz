@@ -137,8 +137,8 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
       scale = ih_scale,
       adjusted = ih_adjusted
     )
-    # 'scores' can be NULL, or a numeric vector like c(0.1, 0, -0.01, NaN, NA)
-    # Thus, let's take the first positive one (or none)
+    # 'scores' can be NULL, or a sorted vector like c(0.1, 0, -0.01, NA)
+    # Thus, let's take the first positive one (or NULL)
     scores <- scores[!is.na(scores) & scores > 0]  # NULL stays NULL
     color_var <- if (length(scores) >= 1L) names(scores)[1L]
   }

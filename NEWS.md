@@ -2,7 +2,7 @@
 
 ## `sv_dependence()`: Control over automatic color feature selection
 
-### How is the color feature selected anyway?
+### How is the color feature selected, anyway?
 
 If no SHAP interaction values are available, by default, the color feature `v'` is selected by the heuristic `potential_interaction()`, which works as follows:
 

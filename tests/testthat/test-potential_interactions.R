@@ -67,7 +67,104 @@ test_that("heuristic_in_bin() returns R-squared", {
 })
 
 test_that("Failing heuristic_in_bin() returns NA", {
-  expect_equal(heuristic_in_bin(0, 1:2), cbind(stat = NA, n = 0))
+  expect_equal(heuristic_in_bin(c(NA, NA), 1:2), cbind(stat = NA, n = 0))
+})
+
+test_that("heuristic_in_bin() returns NA for constant response", {
+  expect_equal(
+    heuristic_in_bin(color = 1:3, s = c(1, 1, 1)),
+    cbind(stat = NA, n = 3L)
+  )
+  expect_equal(
+    heuristic_in_bin(color = 1:3, s = c(1, 1, 1), scale = TRUE),
+    cbind(stat = NA, n = 3L)
+  )
+  expect_equal(
+    heuristic_in_bin(color = 1:3, s = c(1, 1, 1), adjust = TRUE),
+    cbind(stat = NA, n = 3L)
+  )
+  expect_equal(
+    heuristic_in_bin(color = 1:3, s = c(1, 1, 1), adjust = TRUE, scale = TRUE),
+    cbind(stat = NA, n = 3L)
+  )
+})
+
+test_that("heuristic_in_bin() returns NA for constant color", {
+  expect_equal(
+    heuristic_in_bin(s = 1:3, color = c(1, 1, 1)),
+    cbind(stat = NA, n = 3L)
+  )
+  expect_equal(
+    heuristic_in_bin(s = 1:3, color = c(1, 1, 1), scale = TRUE),
+    cbind(stat = NA, n = 3L)
+  )
+  expect_equal(
+    heuristic_in_bin(s = 1:3, color = c(1, 1, 1), adjust = TRUE),
+    cbind(stat = NA, n = 3L)
+  )
+  expect_equal(
+    heuristic_in_bin(s = 1:3, color = c(1, 1, 1), adjust = TRUE, scale = TRUE),
+    cbind(stat = NA, n = 3L)
+  )
+})
+
+test_that("heuristic_in_bin() returns 0 if response and color are constant", {
+  z <- c(1, 1)
+  expect_equal(
+    heuristic_in_bin(color = z, s = z),
+    cbind(stat = NA, n = 2L)
+  )
+  expect_equal(
+    heuristic_in_bin(color = z, s = z, scale = TRUE),
+    cbind(stat = NA, n = 2L)
+  )
+  expect_equal(
+    heuristic_in_bin(color = z, s = z, adjust = TRUE),
+    cbind(stat = NA, n = 2L)
+  )
+  expect_equal(
+    heuristic_in_bin(color = z, s = z, adjust = TRUE, scale = TRUE),
+    cbind(stat = NA, n = 2L)
+  )
+})
+
+test_that("heuristic_in_bin() returns NA for single obs", {
+  expect_equal(
+    heuristic_in_bin(color = 2, s = 2),
+    cbind(stat = NA, n = 1L)
+  )
+  expect_equal(
+    heuristic_in_bin(color = 2, s = 2, scale = TRUE),
+    cbind(stat = NA, n = 1L)
+  )
+  expect_equal(
+    heuristic_in_bin(color = 2, s = 2, adjust = TRUE),
+    cbind(stat = NA, n = 1L)
+  )
+  expect_equal(
+    heuristic_in_bin(color = 2, s = 2, adjust = TRUE, scale = TRUE),
+    cbind(stat = NA, n = 1L)
+  )
+})
+
+test_that("heuristic_in_bin() returns NA for single obs", {
+  cc <- factor(LETTERS[1:3])
+  expect_equal(
+    heuristic_in_bin(color = cc, s = 1:3),
+    cbind(stat = 1, n = 3L)
+  )
+  expect_equal(
+    heuristic_in_bin(color = cc, s = 2*(1:3), scale = TRUE),
+    cbind(stat = 4, n = 3L)
+  )
+  expect_equal(
+    heuristic_in_bin(color = cc, s = 1:3, adjust = TRUE),
+    cbind(stat = NA, n = 3L)
+  )
+  expect_equal(
+    heuristic_in_bin(color = cc, s = 2*(1:3), adjust = TRUE, scale = TRUE),
+    cbind(stat = NA, n = 3L)
+  )
 })
 
 test_that("heuristic() returns average R-squared", {

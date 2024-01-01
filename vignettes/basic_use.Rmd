@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-SHAP (SHapley Additive exPlanations, see @lundberg2017) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms by clever people. Analyzing them, however, is super easy with the right visualizations. {shapviz} offers the latter:
+SHAP (SHapley Additive exPlanations, see @lundberg2017) is an ingenious way to study black box models. SHAP values decompose - as fair as possible - predictions into additive feature contributions. Crunching SHAP values requires clever algorithms. Analyzing them, however, is super easy with the right visualizations. {shapviz} offers the latter:
 
 - `sv_importance()`: Importance plots (bar plots and/or beeswarm plots) to study variable importance.
 - `sv_dependence()` and `sv_dependence2D()`: Dependence plots to study feature effects and interactions.

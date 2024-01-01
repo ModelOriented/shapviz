@@ -98,7 +98,7 @@ library(patchwork)
 library(ranger)
 
 # Model
-fit <- ranger(Species ~ ., data = iris, num.trees = 100, probability = TRUE)
+fit <- ranger(Species ~ ., data = iris, num.trees = 100, probability = TRUE, seed = 1)
 
 # "mshapviz" object
 x <- kernelshap(fit, X = iris[-5], bg_X = iris)

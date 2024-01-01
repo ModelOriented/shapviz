@@ -19,6 +19,10 @@ sv_dependence(object, ...)
   viridis_args = getOption("shapviz.viridis_args"),
   jitter_width = NULL,
   interactions = FALSE,
+  ih_nbins = NULL,
+  ih_color_num = TRUE,
+  ih_scale = FALSE,
+  ih_adjusted = FALSE,
   ...
 )
 
@@ -30,6 +34,10 @@ sv_dependence(object, ...)
   viridis_args = getOption("shapviz.viridis_args"),
   jitter_width = NULL,
   interactions = FALSE,
+  ih_nbins = NULL,
+  ih_color_num = TRUE,
+  ih_scale = FALSE,
+  ih_adjusted = FALSE,
   ...
 )
 }
@@ -67,6 +75,10 @@ Can be a vector/list if \code{v} is a vector.}
 Requires SHAP interaction values. If \code{color_var = NULL} (or it is equal to \code{v}),
 the pure main effect of \code{v} is visualized. Otherwise, twice the SHAP interaction
 values between \code{v} and the \code{color_var} are plotted.}
+
+\item{ih_nbins, ih_color_num, ih_scale, ih_adjusted}{Interaction heuristic (ih)
+parameters used to select the color variable, see \code{\link[=potential_interactions]{potential_interactions()}}.
+Only used if \code{color_var = "auto"} and if there are no SHAP interaction values.}
 }
 \value{
 An object of class "ggplot" (or "patchwork") representing a dependence plot.
@@ -75,6 +87,8 @@ An object of class "ggplot" (or "patchwork") representing a dependence plot.
 Scatterplot of the SHAP values of a feature against its feature values.
 If SHAP interaction values are available, setting \code{interactions = TRUE} allows
 to focus on pure interaction effects (multiplied by two) or on pure main effects.
+By default, the feature on the color scale is selected via SHAP interactions
+(if available) or an interaction heuristic, see \code{\link[=potential_interactions]{potential_interactions()}}.
 }
 \section{Methods (by class)}{
 \itemize{

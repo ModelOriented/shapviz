@@ -3,6 +3,8 @@
 #' Scatterplot of the SHAP values of a feature against its feature values.
 #' If SHAP interaction values are available, setting `interactions = TRUE` allows
 #' to focus on pure interaction effects (multiplied by two) or on pure main effects.
+#' By default, the feature on the color scale is selected via SHAP interactions
+#' (if available) or an interaction heuristic, see [potential_interactions()].
 #'
 #' @importFrom rlang .data
 #'
@@ -31,6 +33,9 @@
 #'   Requires SHAP interaction values. If `color_var = NULL` (or it is equal to `v`),
 #'   the pure main effect of `v` is visualized. Otherwise, twice the SHAP interaction
 #'   values between `v` and the `color_var` are plotted.
+#' @param ih_nbins,ih_color_num,ih_scale,ih_adjusted Interaction heuristic (ih)
+#'   parameters used to select the color variable, see [potential_interactions()].
+#'   Only used if `color_var = "auto"` and if there are no SHAP interaction values.
 #' @param ... Arguments passed to [ggplot2::geom_jitter()].
 #' @returns An object of class "ggplot" (or "patchwork") representing a dependence plot.
 #' @examples
@@ -71,7 +76,9 @@ sv_dependence.default <- function(object, ...) {
 #' @export
 sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528b",
                                   viridis_args = getOption("shapviz.viridis_args"),
-                                  jitter_width = NULL, interactions = FALSE, ...) {
+                                  jitter_width = NULL, interactions = FALSE,
+                                  ih_nbins = NULL, ih_color_num = TRUE,
+                                  ih_scale = FALSE, ih_adjusted = FALSE, ...) {
   p <- length(v)
   if (p > 1L || length(color_var) > 1L) {
     if (is.null(color_var)) {
@@ -90,6 +97,10 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
         object = object,
         viridis_args = viridis_args,
         interactions = interactions,
+        ih_nbins = ih_nbins,
+        ih_color_num = ih_color_num,
+        ih_scale = ih_scale,
+        ih_adjusted = ih_adjusted,
         ...
       ),
       SIMPLIFY = FALSE
@@ -116,10 +127,20 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
     jitter_width <- 0.2 * .is_discrete(X[[v]], n_unique = 7L)
   }
 
-  # Set color value
+  # Set color value if "auto"
   if (!is.null(color_var) && color_var == "auto" && !("auto" %in% nms)) {
-    scores <- potential_interactions(object, v)
-    color_var <- names(scores)[1L]  # NULL if p = 1L
+    scores <- potential_interactions(
+      object,
+      v,
+      nbins = ih_nbins,
+      color_num = ih_color_num,
+      scale = ih_scale,
+      adjusted = ih_adjusted
+    )
+    # 'scores' can be NULL, or a numeric vector like c(0.1, 0, -0.01, NaN, NA)
+    # Thus, let's take the first positive one (or none)
+    scores <- scores[!is.na(scores) & scores > 0]  # NULL stays NULL
+    color_var <- if (length(scores) >= 1L) names(scores)[1L]
   }
   if (isTRUE(interactions)) {
     if (is.null(color_var)) {
@@ -169,7 +190,9 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
 #' @export
 sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b528b",
                                    viridis_args = getOption("shapviz.viridis_args"),
-                                   jitter_width = NULL, interactions = FALSE, ...) {
+                                   jitter_width = NULL, interactions = FALSE,
+                                   ih_nbins = NULL, ih_color_num = TRUE,
+                                   ih_scale = FALSE, ih_adjusted = FALSE, ...) {
   stopifnot(
     length(v) == 1L,
     length(color_var) <= 1L
@@ -184,75 +207,19 @@ sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b52
     viridis_args = viridis_args,
     jitter_width = jitter_width,
     interactions = interactions,
+    ih_nbins = ih_nbins,
+    ih_color_num = ih_color_num,
+    ih_scale = ih_scale,
+    ih_adjusted = ih_adjusted,
     ...
   )
   plot_list <- add_titles(plot_list, nms = names(object))  # see sv_waterfall()
   patchwork::wrap_plots(plot_list)
 }
 
-#' Interaction Strength
-#'
-#' Returns vector of interaction strengths between variable `v` and all other variables.
-#'
-#' If SHAP interaction values are available, interaction strength
-#' between feature `v` and another feature `v'` is measured by twice their
-#' mean absolute SHAP interaction values. Otherwise, we use as heuristic the
-#' squared correlation between feature values of `v'` and
-#' SHAP values of `v`, averaged over (binned) values of `v`.
-#' A numeric `v` with more than `n_bins` unique values is binned into quantile bins.
-#' Currently `n_bins` equals the smaller of \eqn{n/20} and \eqn{\sqrt n}, where \eqn{n}
-#' is the sample size.
-#' The average squared correlation is weighted by the number of non-missing feature
-#' values in the bin. Note that non-numeric color features are turned to numeric
-#' by calling [data.matrix()], which does not necessarily make sense.
-#'
-#' @param obj An object of class "shapviz".
-#' @param v Variable name.
-#' @returns A named vector of decreasing interaction strengths.
-#' @export
-#' @seealso [sv_dependence()]
-potential_interactions <- function(obj, v) {
-  stopifnot(is.shapviz(obj))
-  S <- get_shap_values(obj)
-  S_inter <- get_shap_interactions(obj)
-  X <- get_feature_values(obj)
-  nms <- colnames(obj)
-  v_other <- setdiff(nms, v)
-  stopifnot(v %in% nms)
-
-  if (ncol(obj) <= 1L) {
-    return(NULL)
-  }
-
-  # Simple case: we have SHAP interaction values
-  if (!is.null(S_inter)) {
-    return(sort(2 * colMeans(abs(S_inter[, v, ]))[v_other], decreasing = TRUE))
-  }
-
-  # Complicated case: we need to rely on correlation based heuristic
-  r_sq <- function(s, x) {
-    suppressWarnings(stats::cor(s, data.matrix(x), use = "p")^2)
-  }
-  n_bins <- ceiling(min(sqrt(nrow(X)), nrow(X) / 20))
-  v_bin <- .fast_bin(X[[v]], n_bins = n_bins)
-  s_bin <- split(S[, v], v_bin)
-  X_bin <- split(X[v_other], v_bin)
-  w <- do.call(rbind, lapply(X_bin, function(z) colSums(!is.na(z))))
-  cor_squared <- do.call(rbind, mapply(r_sq, s_bin, X_bin, SIMPLIFY = FALSE))
-  sort(colSums(w * cor_squared, na.rm = TRUE) / colSums(w), decreasing = TRUE)
-}
-
 # Helper functions
 
+# Checks if z is discrete
 .is_discrete <- function(z, n_unique) {
   is.factor(z) || is.character(z) || is.logical(z) || (length(unique(z)) <= n_unique)
-}
-
-# Bins z into integer valued bins, but only if discrete
-.fast_bin <- function(z, n_bins) {
-  if (.is_discrete(z, n_unique = n_bins)) {
-    return(z)
-  }
-  q <- stats::quantile(z, seq(0, 1, length.out = n_bins + 1L), na.rm = TRUE)
-  findInterval(z, unique(q), rightmost.closed = TRUE)
 }

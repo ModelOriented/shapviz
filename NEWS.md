@@ -1,7 +1,41 @@
 # shapviz 0.9.3
 
-## User-visible changes
+## `sv_dependence()`: Control over automatic color feature selection
 
+### How is the color feature selected anyway?
+
+If no SHAP interaction values are available, by default, the color feature `v'` is selected by the heuristic `potential_interaction()`, which works as follows:
+
+1. If the feature `v` (the on the x-axis) is numeric, it is binned into `nbins` bins.
+2. Per bin, the SHAP values of `v` are regressed onto `v` and the R-squared is calculated.
+3. The R-squared are averaged over bins, weighted by the bin size.
+
+This measures how much variability in the SHAP values is explained by `v'`, after accounting for `v`.
+
+We have introduced four parameters to control the heuristic. Their defaults are in line with the old behaviour.
+
+- `nbin = NULL`: Into how many quantile bins should a numeric `v` be binned? The default `NULL` equals the smaller of $n/20$ and $\sqrt n$ (rounded up), where $n$ is the sample size.
+- `color_num` Should color features be converted to numeric, even if they are factors/characters? Default is `TRUE`.
+- `scale = FALSE`: Should R-squared be multiplied with the sample variance of
+within-bin SHAP values? If `TRUE`, bins with stronger vertical scatter will get higher weight. The default is `FALSE`.
+- `adjusted = FALSE`: Should *adjusted* R-squared be calculated?
+
+If SHAP interaction values are available, these parameters have no effect. In `sv_dependence()` they are called `ih_nbin` etc.
+
+This partly implements the ideas in [#119](https://github.com/ModelOriented/shapviz/issues/119) of Roel Verbelen, thanks a lot for your patient explanations!
+
+### Further plans?
+
+We will continue to experiment with the defaults, which might change in the future. A good alternative to the current (naive) defaults could be:
+
+- `nbins = 7`: Smaller than now to not overfit too strongly with factor/character color features.
+- `color_num = FALSE`: To not naively integer encode factors/characters. 
+- `scale = TRUE`: To account for non-equal spread in bins.
+- `adjusted = TRUE`: To not put too much weight on factors with many categories.
+
+## Other user-visible changes
+
+- `sv_dependence()`: If `color_var = "auto"` (default) and no color feature seems to be relevant (SHAP interaction is `NULL`, or heuristic returns no positive value), there won't be any color scale.
 - `mshapviz()` objects can now be rowbinded via `rbind()` or `+`. Implemented by [@jmaspons](https://github.com/jmaspons) in [#110](https://github.com/ModelOriented/shapviz/pull/110).
 - `mshapviz()` is more strict when combining multiple "shapviz" objects. These now need to have identical column names, see [#114](https://github.com/ModelOriented/shapviz/pull/114).
 
@@ -9,7 +43,7 @@
 
 - `print.shapviz()` now shows top two rows of SHAP matrix.
 - Re-activate all unit tests.
-- Setting `nthread = 1` in all calls to `xgb.DMatrix()` as suggested by [@jmaspons](https://github.com/jmaspons) in [issue #109](https://github.com/ModelOriented/shapviz/issues/109).
+- Setting `nthread = 1` in all calls to `xgb.DMatrix()` as suggested by [@jmaspons](https://github.com/jmaspons) in [#109](https://github.com/ModelOriented/shapviz/issues/109).
 - Added "How to contribute" to README.
 - `permshap()` connector is now part of {kerneshap} [#122](https://github.com/ModelOriented/shapviz/pull/122).
 

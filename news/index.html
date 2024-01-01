@@ -74,8 +74,45 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9.3" id="shapviz-093">shapviz 0.9.3<a class="anchor" aria-label="anchor" href="#shapviz-093"></a></h2>
 <div class="section level3">
-<h3 id="user-visible-changes-0-9-3">User-visible changes<a class="anchor" aria-label="anchor" href="#user-visible-changes-0-9-3"></a></h3>
+<h3 id="sv_dependence-control-over-automatic-color-feature-selection-0-9-3">
+<code>sv_dependence()</code>: Control over automatic color feature selection<a class="anchor" aria-label="anchor" href="#sv_dependence-control-over-automatic-color-feature-selection-0-9-3"></a></h3>
+<div class="section level4">
+<h4 id="how-is-the-color-feature-selected-anyway-0-9-3">How is the color feature selected anyway?<a class="anchor" aria-label="anchor" href="#how-is-the-color-feature-selected-anyway-0-9-3"></a></h4>
+<p>If no SHAP interaction values are available, by default, the color feature <code>v'</code> is selected by the heuristic <code>potential_interaction()</code>, which works as follows:</p>
+<ol style="list-style-type: decimal"><li>If the feature <code>v</code> (the on the x-axis) is numeric, it is binned into <code>nbins</code> bins.</li>
+<li>Per bin, the SHAP values of <code>v</code> are regressed onto <code>v</code> and the R-squared is calculated.</li>
+<li>The R-squared are averaged over bins, weighted by the bin size.</li>
+</ol><p>This measures how much variability in the SHAP values is explained by <code>v'</code>, after accounting for <code>v</code>.</p>
+<p>We have introduced four parameters to control the heuristic. Their defaults are in line with the old behaviour.</p>
 <ul><li>
+<code>nbin = NULL</code>: Into how many quantile bins should a numeric <code>v</code> be binned? The default <code>NULL</code> equals the smaller of <span class="math inline"><em>n</em>/20</span> and <span class="math inline">$\sqrt n$</span> (rounded up), where <span class="math inline"><em>n</em></span> is the sample size.</li>
+<li>
+<code>color_num</code> Should color features be converted to numeric, even if they are factors/characters? Default is <code>TRUE</code>.</li>
+<li>
+<code>scale = FALSE</code>: Should R-squared be multiplied with the sample variance of within-bin SHAP values? If <code>TRUE</code>, bins with stronger vertical scatter will get higher weight. The default is <code>FALSE</code>.</li>
+<li>
+<code>adjusted = FALSE</code>: Should <em>adjusted</em> R-squared be calculated?</li>
+</ul><p>If SHAP interaction values are available, these parameters have no effect. In <code><a href="../reference/sv_dependence.html">sv_dependence()</a></code> they are called <code>ih_nbin</code> etc.</p>
+<p>This partly implements the ideas in <a href="https://github.com/ModelOriented/shapviz/issues/119" class="external-link">#119</a> of Roel Verbelen, thanks a lot for your patient explanations!</p>
+</div>
+<div class="section level4">
+<h4 id="further-plans-0-9-3">Further plans?<a class="anchor" aria-label="anchor" href="#further-plans-0-9-3"></a></h4>
+<p>We will continue to experiment with the defaults, which might change in the future. A good alternative to the current (naive) defaults could be:</p>
+<ul><li>
+<code>nbins = 7</code>: Smaller than now to not overfit too strongly with factor/character color features.</li>
+<li>
+<code>color_num = FALSE</code>: To not naively integer encode factors/characters.</li>
+<li>
+<code>scale = TRUE</code>: To account for non-equal spread in bins.</li>
+<li>
+<code>adjusted = TRUE</code>: To not put too much weight on factors with many categories.</li>
+</ul></div>
+</div>
+<div class="section level3">
+<h3 id="other-user-visible-changes-0-9-3">Other user-visible changes<a class="anchor" aria-label="anchor" href="#other-user-visible-changes-0-9-3"></a></h3>
+<ul><li>
+<code><a href="../reference/sv_dependence.html">sv_dependence()</a></code>: If <code>color_var = "auto"</code> (default) and no color feature seems to be relevant (SHAP interaction is <code>NULL</code>, or heuristic returns no positive value), there won’t be any color scale.</li>
+<li>
 <code><a href="../reference/mshapviz.html">mshapviz()</a></code> objects can now be rowbinded via <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind()</a></code> or <code>+</code>. Implemented by <a href="https://github.com/jmaspons" class="external-link">@jmaspons</a> in <a href="https://github.com/ModelOriented/shapviz/pull/110" class="external-link">#110</a>.</li>
 <li>
 <code><a href="../reference/mshapviz.html">mshapviz()</a></code> is more strict when combining multiple “shapviz” objects. These now need to have identical column names, see <a href="https://github.com/ModelOriented/shapviz/pull/114" class="external-link">#114</a>.</li>
@@ -85,7 +122,7 @@
 <ul><li>
 <code><a href="../reference/print.shapviz.html">print.shapviz()</a></code> now shows top two rows of SHAP matrix.</li>
 <li>Re-activate all unit tests.</li>
-<li>Setting <code>nthread = 1</code> in all calls to <code><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html" class="external-link">xgb.DMatrix()</a></code> as suggested by <a href="https://github.com/jmaspons" class="external-link">@jmaspons</a> in <a href="https://github.com/ModelOriented/shapviz/issues/109" class="external-link">issue </a><a href="https://github.com/ModelOriented/shapviz/issues/109" class="external-link">#109</a>.</li>
+<li>Setting <code>nthread = 1</code> in all calls to <code><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html" class="external-link">xgb.DMatrix()</a></code> as suggested by <a href="https://github.com/jmaspons" class="external-link">@jmaspons</a> in <a href="https://github.com/ModelOriented/shapviz/issues/109" class="external-link">#109</a>.</li>
 <li>Added “How to contribute” to README.</li>
 <li>
 <code>permshap()</code> connector is now part of {kerneshap} <a href="https://github.com/ModelOriented/shapviz/pull/122" class="external-link">#122</a>.</li>

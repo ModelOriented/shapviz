@@ -77,7 +77,7 @@
 <h3 id="sv_dependence-control-over-automatic-color-feature-selection-0-9-3">
 <code>sv_dependence()</code>: Control over automatic color feature selection<a class="anchor" aria-label="anchor" href="#sv_dependence-control-over-automatic-color-feature-selection-0-9-3"></a></h3>
 <div class="section level4">
-<h4 id="how-is-the-color-feature-selected-anyway-0-9-3">How is the color feature selected anyway?<a class="anchor" aria-label="anchor" href="#how-is-the-color-feature-selected-anyway-0-9-3"></a></h4>
+<h4 id="how-is-the-color-feature-selected-anyway-0-9-3">How is the color feature selected, anyway?<a class="anchor" aria-label="anchor" href="#how-is-the-color-feature-selected-anyway-0-9-3"></a></h4>
 <p>If no SHAP interaction values are available, by default, the color feature <code>v'</code> is selected by the heuristic <code>potential_interaction()</code>, which works as follows:</p>
 <ol style="list-style-type: decimal"><li>If the feature <code>v</code> (the on the x-axis) is numeric, it is binned into <code>nbins</code> bins.</li>
 <li>Per bin, the SHAP values of <code>v</code> are regressed onto <code>v</code> and the R-squared is calculated.</li>

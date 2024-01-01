@@ -41,6 +41,7 @@ We will continue to experiment with the defaults, which might change in the futu
 
 ## Small changes
 
+- The README is shorter and easier.
 - `print.shapviz()` now shows top two rows of SHAP matrix.
 - Re-activate all unit tests.
 - Setting `nthread = 1` in all calls to `xgb.DMatrix()` as suggested by [@jmaspons](https://github.com/jmaspons) in [#109](https://github.com/ModelOriented/shapviz/issues/109).

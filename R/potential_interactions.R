@@ -10,15 +10,17 @@
 #' Otherwise, we use a heuristic calculated as follows to calculate interaction strength
 #' between `v` and each other "color" feature `v':
 #' 1. If `v` is numeric, it is binned into `nbins` bins.
-#' 2. Per bin, the SHAP values of `v` are regressed onto `v` and the adjusted R-squared
+#' 2. Per bin, the SHAP values of `v` are regressed onto `v`, and the R-squared
 #'   is calculated.
-#' 3. The adjusted R-squared are averaged over bins, weighted by the bin size.
+#' 3. The R-squared are averaged over bins, weighted by the bin size.
 #'
-#' Set `scale = TRUE` to multiply the adjusted R-squared by the within-bin variance
+#' Set `scale = TRUE` to multiply the R-squared by the within-bin variance
 #' of the SHAP values. This will put higher weight to bins with larger scatter.
 #'
 #' Set `color_num = FALSE` to *not* turn the values of the "color" feature `v'`
 #' to numeric.
+#'
+#' Finally, set `adjusted = TRUE` to use *adjusted* R-squared.
 #'
 #' @param obj An object of class "shapviz".
 #' @param v Variable name to calculate potential SHAP interactions for.
@@ -31,11 +33,12 @@
 #' @param scale Should adjusted R-squared be multiplied with the sample variance of
 #'   within-bin SHAP values? If `TRUE`, bins with stronger vertical scatter will get
 #'   higher weight. The default is `FALSE`. Ignored if `obj` contains SHAP interactions.
+#' @param adjusted Should *adjusted* R-squared be used? Default is `FALSE`.
 #' @returns A named vector of decreasing interaction strengths.
 #' @export
 #' @seealso [sv_dependence()]
-potential_interactions <- function(obj, v, nbins = NULL,
-                                   color_num = TRUE, scale = FALSE) {
+potential_interactions <- function(obj, v, nbins = NULL, color_num = TRUE,
+                                   scale = FALSE, adjusted = FALSE) {
   stopifnot(is.shapviz(obj))
   S <- get_shap_values(obj)
   S_inter <- get_shap_interactions(obj)
@@ -63,7 +66,8 @@ potential_interactions <- function(obj, v, nbins = NULL,
     s = S[, v],
     bins = .fast_bin(X[[v]], nbins = nbins),
     color_num = color_num,
-    scale = scale
+    scale = scale,
+    adjusted = adjusted
   )
   sort(out, decreasing = TRUE, na.last = TRUE)
 }
@@ -71,7 +75,8 @@ potential_interactions <- function(obj, v, nbins = NULL,
 #' Interaction Heuristic
 #'
 #' Internal function used to calculate the interaction heuristics described in
-#' [potential_interactions()].
+#' [potential_interactions()]. It calls `heuristic_in_bin()` per bin and aggregates
+#' the result.
 #'
 #' @noRd
 #' @keywords internal
@@ -80,13 +85,18 @@ potential_interactions <- function(obj, v, nbins = NULL,
 #' @param color Feature values of the "color" feature.
 #' @param s SHAP values of `v`.
 #' @returns A single number.
-heuristic <- function(color, s, bins, color_num, scale) {
+heuristic <- function(color, s, bins, color_num, scale, adjusted) {
   if (isTRUE(color_num)) {
     color <- .as_numeric(color)
   }
   color <- split(color, bins)
   s <- split(s, bins)
-  M <- mapply(heuristic_in_bin, color = color, s = s, MoreArgs = list(scale = scale))
+  M <- mapply(
+    heuristic_in_bin,
+    color = color,
+    s = s,
+    MoreArgs = list(scale = scale, adjusted = adjusted)
+  )
   stats::weighted.mean(M[1L, ], M[2L, ], na.rm = TRUE)
 }
 
@@ -100,21 +110,22 @@ heuristic <- function(color, s, bins, color_num, scale) {
 #'
 #' @inheritParams heuristic
 #' @returns
-#'   A (1x2) matrix. The first value equals the (possibly) scaled adjusted R-squared,
-#'   the second the number of used observations.
-heuristic_in_bin <- function(color, s, scale = FALSE) {
+#'   A (1x2) matrix with heuristic and number of observations.
+heuristic_in_bin <- function(color, s, scale = FALSE, adjusted = FALSE) {
   suppressWarnings(
     tryCatch(
       {
         z <- stats::lm(s ~ color)
         r <- z$residuals
+        n <- length(r)
         var_y <- stats::var(z$fitted.values + r)
-        var_r <- sum(r^2) / z$df.residual  # var(r) would give non-adjusted R2
+        denom <- if (adjusted) z$df.residual else n - 1
+        var_r <- sum(r^2) / denom
         stat <- 1 - var_r / var_y
         if (scale) {
-          stat <- stat * var_y  # = var_y - var_r
+          stat <- stat * var_y
         }
-        cbind(stat = stat, n = length(r))
+        cbind(stat = stat, n = n)
       },
       error = function(e) return(cbind(stat = NA, n = 0))
     )

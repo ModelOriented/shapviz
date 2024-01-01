@@ -33,8 +33,8 @@
 #'   Requires SHAP interaction values. If `color_var = NULL` (or it is equal to `v`),
 #'   the pure main effect of `v` is visualized. Otherwise, twice the SHAP interaction
 #'   values between `v` and the `color_var` are plotted.
-#' @param ih_nbins,ih_color_num,ih_scale Interaction heuristic (ih) parameters used to
-#'   select the color variable, see [potential_interactions()].
+#' @param ih_nbins,ih_color_num,ih_scale,ih_adjusted Interaction heuristic (ih)
+#'   parameters used to select the color variable, see [potential_interactions()].
 #'   Only used if `color_var = "auto"` and if there are no SHAP interaction values.
 #' @param ... Arguments passed to [ggplot2::geom_jitter()].
 #' @returns An object of class "ggplot" (or "patchwork") representing a dependence plot.
@@ -78,7 +78,7 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
                                   viridis_args = getOption("shapviz.viridis_args"),
                                   jitter_width = NULL, interactions = FALSE,
                                   ih_nbins = NULL, ih_color_num = TRUE,
-                                  ih_scale = FALSE, ...) {
+                                  ih_scale = FALSE, ih_adjusted = FALSE, ...) {
   p <- length(v)
   if (p > 1L || length(color_var) > 1L) {
     if (is.null(color_var)) {
@@ -100,6 +100,7 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
         ih_nbins = ih_nbins,
         ih_color_num = ih_color_num,
         ih_scale = ih_scale,
+        ih_adjusted = ih_adjusted,
         ...
       ),
       SIMPLIFY = FALSE
@@ -126,12 +127,20 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
     jitter_width <- 0.2 * .is_discrete(X[[v]], n_unique = 7L)
   }
 
-  # Set color value
+  # Set color value if "auto"
   if (!is.null(color_var) && color_var == "auto" && !("auto" %in% nms)) {
     scores <- potential_interactions(
-      object, v, nbins = ih_nbins, color_num = ih_color_num, scale = ih_scale
+      object,
+      v,
+      nbins = ih_nbins,
+      color_num = ih_color_num,
+      scale = ih_scale,
+      adjusted = ih_adjusted
     )
-    color_var <- names(scores)[1L]  # NULL if p = 1L
+    # 'scores' can be NULL, or a numeric vector like c(0.1, 0, -0.01, NaN, NA)
+    # Thus, let's take the first positive one (or none)
+    scores <- scores[!is.na(scores) & scores > 0]  # NULL stays NULL
+    color_var <- if (length(scores) >= 1L) names(scores)[1L]
   }
   if (isTRUE(interactions)) {
     if (is.null(color_var)) {
@@ -183,7 +192,7 @@ sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b52
                                    viridis_args = getOption("shapviz.viridis_args"),
                                    jitter_width = NULL, interactions = FALSE,
                                    ih_nbins = NULL, ih_color_num = TRUE,
-                                   ih_scale = FALSE, ...) {
+                                   ih_scale = FALSE, ih_adjusted = FALSE, ...) {
   stopifnot(
     length(v) == 1L,
     length(color_var) <= 1L
@@ -201,6 +210,7 @@ sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b52
     ih_nbins = ih_nbins,
     ih_color_num = ih_color_num,
     ih_scale = ih_scale,
+    ih_adjusted = ih_adjusted,
     ...
   )
   plot_list <- add_titles(plot_list, nms = names(object))  # see sv_waterfall()

@@ -1,5 +1,5 @@
 dtrain <- xgboost::xgb.DMatrix(
-  data.matrix(iris[, -1L]), label = iris[, 1L], nthread = 1
+  data.matrix(iris[, -1L]), label = iris[, 1L], nthread = 1L
 )
 fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 10L)
 x <- shapviz(fit, X_pred = dtrain, X = iris[, -1L])
@@ -20,6 +20,12 @@ test_that("nbins has an effect for numeric v", {
   )
 })
 
+test_that("'adjusted' leads to smaller values", {
+  p1 <- potential_interactions(x, "Sepal.Width", adjusted = FALSE)
+  p2 <- potential_interactions(x, "Sepal.Width", adjusted = TRUE)
+  expect_true(all(p1 > p2))
+})
+
 test_that("color_num has an effect only for non-numeric features", {
   p1 <- potential_interactions(x, "Sepal.Width", color_num = TRUE)
   p2 <- potential_interactions(x, "Sepal.Width", color_num = FALSE)
@@ -35,15 +41,27 @@ test_that("potential_interactions respects true SHAP interactions", {
   expect_equal(i1, i2, tolerance = 1e-5)
 })
 
-test_that("heuristic_in_bin() returns R-squared adjusted", {
+test_that("heuristic_in_bin() returns R-squared", {
   fit_lm <- lm(Sepal.Length ~ Species, data = iris)
   expect_equal(
     unname(heuristic_in_bin(iris$Species, iris$Sepal.Length)[1, 1]),
+    summary(fit_lm)[["r.squared"]]
+  )
+  expect_equal(
+    unname(heuristic_in_bin(iris$Species, iris$Sepal.Length, adjusted = TRUE)[1, 1]),
     summary(fit_lm)[["adj.r.squared"]]
   )
 
+  # Scaled
   expect_equal(
     unname(heuristic_in_bin(iris$Species, iris$Sepal.Length, scale = TRUE)[1, 1]),
+    summary(fit_lm)[["r.squared"]] * var(iris$Sepal.Length)
+  )
+  expect_equal(
+    unname(
+      heuristic_in_bin(
+        iris$Species, iris$Sepal.Length, scale = TRUE, adjusted = TRUE)[1, 1]
+    ),
     summary(fit_lm)[["adj.r.squared"]] * var(iris$Sepal.Length)
   )
 })
@@ -52,25 +70,35 @@ test_that("Failing heuristic_in_bin() returns NA", {
   expect_equal(heuristic_in_bin(0, 1:2), cbind(stat = NA, n = 0))
 })
 
-test_that("heuristic() returns average R-squared adjusted", {
+test_that("heuristic() returns average R-squared", {
   ix <- c(rep(1, 60), rep(2, 90))
   y <- split(iris$Sepal.Length, ix)
   x1 <- split(iris$Sepal.Width, ix)
   x2 <- split(iris$Species, ix)
   f <- function(y, x) {
-    summary(lm(y ~ x))[["adj.r.squared"]]
+    summary(lm(y ~ x))[["r.squared"]]
   }
 
   expect_equal(
     heuristic(
-      iris$Sepal.Width, iris$Sepal.Length, bins = ix, color_num = TRUE, scale = FALSE
+      iris$Sepal.Width,
+      iris$Sepal.Length,
+      bins = ix,
+      color_num = TRUE,
+      scale = FALSE,
+      adjusted = FALSE
     ),
     weighted.mean(mapply(f, y, x1), c(60, 90))
   )
 
   expect_equal(
     heuristic(
-      iris$Species, iris$Sepal.Length, bins = ix, color_num = FALSE, scale = FALSE
+      iris$Species,
+      iris$Sepal.Length,
+      bins = ix,
+      color_num = FALSE,
+      scale = FALSE,
+      adjusted = FALSE
     ),
     weighted.mean(mapply(f, y, x2), c(60, 90))
   )

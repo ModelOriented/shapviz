@@ -4,7 +4,14 @@
 \alias{potential_interactions}
 \title{Interaction Strength}
 \usage{
-potential_interactions(obj, v, nbins = NULL, color_num = TRUE, scale = FALSE)
+potential_interactions(
+  obj,
+  v,
+  nbins = NULL,
+  color_num = TRUE,
+  scale = FALSE,
+  adjusted = FALSE
+)
 }
 \arguments{
 \item{obj}{An object of class "shapviz".}
@@ -22,6 +29,8 @@ Ignored if \code{obj} contains SHAP interactions.}
 \item{scale}{Should adjusted R-squared be multiplied with the sample variance of
 within-bin SHAP values? If \code{TRUE}, bins with stronger vertical scatter will get
 higher weight. The default is \code{FALSE}. Ignored if \code{obj} contains SHAP interactions.}
+
+\item{adjusted}{Should \emph{adjusted} R-squared be used? Default is \code{FALSE}.}
 }
 \value{
 A named vector of decreasing interaction strengths.
@@ -39,16 +48,18 @@ Otherwise, we use a heuristic calculated as follows to calculate interaction str
 between \code{v} and each other "color" feature `v':
 \enumerate{
 \item If \code{v} is numeric, it is binned into \code{nbins} bins.
-\item Per bin, the SHAP values of \code{v} are regressed onto \code{v} and the adjusted R-squared
+\item Per bin, the SHAP values of \code{v} are regressed onto \code{v}, and the R-squared
 is calculated.
-\item The adjusted R-squared are averaged over bins, weighted by the bin size.
+\item The R-squared are averaged over bins, weighted by the bin size.
 }
 
-Set \code{scale = TRUE} to multiply the adjusted R-squared by the within-bin variance
+Set \code{scale = TRUE} to multiply the R-squared by the within-bin variance
 of the SHAP values. This will put higher weight to bins with larger scatter.
 
 Set \code{color_num = FALSE} to \emph{not} turn the values of the "color" feature \verb{v'}
 to numeric.
+
+Finally, set \code{adjusted = TRUE} to use \emph{adjusted} R-squared.
 }
 \seealso{
 \code{\link[=sv_dependence]{sv_dependence()}}

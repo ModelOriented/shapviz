@@ -1,18 +1,21 @@
 #' Interaction Strength
 #'
-#' Returns vector of interaction strengths between variable `v` and all other variables,
-#' see Details.
+#' Returns a vector of interaction strengths between variable `v` and all other
+#' variables, see Details.
 #'
 #' If SHAP interaction values are available, the interaction strength
 #' between feature `v` and another feature `v'` is measured by twice their
 #' mean absolute SHAP interaction values.
 #'
-#' Otherwise, we use a heuristic calculated as follows to calculate interaction strength
-#' between `v` and each other "color" feature `v':
+#' Otherwise, we use a heuristic calculated as follows:
 #' 1. If `v` is numeric, it is binned into `nbins` bins.
 #' 2. Per bin, the SHAP values of `v` are regressed onto `v`, and the R-squared
-#'   is calculated.
-#' 3. The R-squared are averaged over bins, weighted by the bin size.
+#'   is calculated. Rows with missing `v'` are discarded.
+#' 3. The R-squared are averaged over bins, weighted by the number of
+#'   non-missing `v'` values.
+#'
+#' This measures how much variability in the SHAP values of `v` is explained by `v'`,
+#' after accounting for `v`.
 #'
 #' Set `scale = TRUE` to multiply the R-squared by the within-bin variance
 #' of the SHAP values. This will put higher weight to bins with larger scatter.
@@ -21,6 +24,8 @@
 #' to numeric.
 #'
 #' Finally, set `adjusted = TRUE` to use *adjusted* R-squared.
+#'
+#' The algorithm does not consider observations with missing `v'` values.
 #'
 #' @param obj An object of class "shapviz".
 #' @param v Variable name to calculate potential SHAP interactions for.
@@ -60,7 +65,7 @@ potential_interactions <- function(obj, v, nbins = NULL, color_num = TRUE,
     nbins <- ceiling(min(sqrt(nrow(X)), nrow(X) / 20))
   }
   out <- vapply(
-    X[v_other],  # data.frame is a list
+    X[v_other],
     FUN = heuristic,
     FUN.VALUE = 1.0,
     s = S[, v],
@@ -108,7 +113,8 @@ heuristic <- function(color, s, bins, color_num, scale, adjusted) {
 #'
 #' @inheritParams heuristic
 #' @returns
-#'   A (1x2) matrix with heuristic and number of observations.
+#'   A (1x2) matrix with the heuristic and the number of observations with non-missing
+#'   `v'`.
 heuristic_in_bin <- function(color, s, scale = FALSE, adjusted = FALSE) {
   ok <- !is.na(color)
   color <- color[ok]
@@ -116,7 +122,7 @@ heuristic_in_bin <- function(color, s, scale = FALSE, adjusted = FALSE) {
   n <- length(s)
   var_s <- stats::var(s)
   if (n < 2L || var_s < .Machine$double.eps || length(unique(color)) < 2L) {
-    return(cbind(stat = NA, n = n))
+    return(cbind(stat = 0, n = n))
   }
   z <- stats::lm(s ~ color)
   var_r <- sum(z$residuals^2) / (if (adjusted) z$df.residual else n - 1)
@@ -125,7 +131,7 @@ heuristic_in_bin <- function(color, s, scale = FALSE, adjusted = FALSE) {
     stat <- stat * var_s
   }
   if (!is.finite(stat)) {
-    stat <- NA
+    stat <- 0
   }
   cbind(stat = stat, n = n)
 }

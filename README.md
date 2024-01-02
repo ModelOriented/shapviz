@@ -90,9 +90,8 @@ sv_force(shp, row_id = 1)
 Check-out the vignettes. They cover topics like:
 
 - How to work with other SHAP packages like {fastshap}, {kernelshap} or {treeshap}?
-- How to make waterfall and force plots of single decompositions?
 - SHAP interactions.
-- Working with multiple models, multi-output models, subgroup analyses.
+- Multiple models, multi-output models, and subgroup analyses.
 - Plotting geographic effects.
 
 ## References

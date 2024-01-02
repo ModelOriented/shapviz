@@ -38,13 +38,6 @@ install.packages("shapviz")
 devtools::install_github("ModelOriented/shapviz")
 ```
 
-## How to contribute
-
-Contributions are very welcome!
-
-1. The first step: open a Github issue to describe the problem or the missing feature.
-2. Then, we check who will implement it. 
-
 ## Usage
 
 Shiny diamonds... let's use XGBoost to model their prices by the four "C" variables:
@@ -84,10 +77,9 @@ sv_force(shp, row_id = 1)
 
 ![](man/figures/README-force.svg)
 
-
 ## More to Discover
 
-Check-out the vignettes. They cover topics like:
+Check-out the vignettes for topics like:
 
 - How to work with other SHAP packages like {fastshap}, {kernelshap} or {treeshap}?
 - SHAP interactions.

@@ -66,7 +66,7 @@ dia_2000 <- diamonds[sample(nrow(diamonds), 2000), x]
 shp <- shapviz(fit, X_pred = data.matrix(dia_2000), X = dia_2000)
 
 sv_importance(shp, show_numbers = TRUE)
-sv_dependence(shp, v = x)}
+sv_dependence(shp, v = x)
 ```
 
 ![](man/figures/README-imp.svg)

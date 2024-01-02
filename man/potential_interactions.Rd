@@ -36,22 +36,25 @@ higher weight. The default is \code{FALSE}. Ignored if \code{obj} contains SHAP 
 A named vector of decreasing interaction strengths.
 }
 \description{
-Returns vector of interaction strengths between variable \code{v} and all other variables,
-see Details.
+Returns a vector of interaction strengths between variable \code{v} and all other
+variables, see Details.
 }
 \details{
 If SHAP interaction values are available, the interaction strength
 between feature \code{v} and another feature \verb{v'} is measured by twice their
 mean absolute SHAP interaction values.
 
-Otherwise, we use a heuristic calculated as follows to calculate interaction strength
-between \code{v} and each other "color" feature `v':
+Otherwise, we use a heuristic calculated as follows:
 \enumerate{
 \item If \code{v} is numeric, it is binned into \code{nbins} bins.
 \item Per bin, the SHAP values of \code{v} are regressed onto \code{v}, and the R-squared
-is calculated.
-\item The R-squared are averaged over bins, weighted by the bin size.
+is calculated. Rows with missing \verb{v'} are discarded.
+\item The R-squared are averaged over bins, weighted by the number of
+non-missing \verb{v'} values.
 }
+
+This measures how much variability in the SHAP values of \code{v} is explained by \verb{v'},
+after accounting for \code{v}.
 
 Set \code{scale = TRUE} to multiply the R-squared by the within-bin variance
 of the SHAP values. This will put higher weight to bins with larger scatter.
@@ -60,6 +63,8 @@ Set \code{color_num = FALSE} to \emph{not} turn the values of the "color" featur
 to numeric.
 
 Finally, set \code{adjusted = TRUE} to use \emph{adjusted} R-squared.
+
+The algorithm does not consider observations with missing \verb{v'} values.
 }
 \seealso{
 \code{\link[=sv_dependence]{sv_dependence()}}

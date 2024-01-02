@@ -7,10 +7,10 @@
 If no SHAP interaction values are available, by default, the color feature `v'` is selected by the heuristic `potential_interaction()`, which works as follows:
 
 1. If the feature `v` (the on the x-axis) is numeric, it is binned into `nbins` bins.
-2. Per bin, the SHAP values of `v` are regressed onto `v` and the R-squared is calculated.
-3. The R-squared are averaged over bins, weighted by the bin size.
+2. Per bin, the SHAP values of `v` are regressed onto `v'` and the R-squared is calculated. Rows with missing `v'` are discarded.
+3. The R-squared are averaged over bins, weighted by the number of non-missing `v'` values.
 
-This measures how much variability in the SHAP values is explained by `v'`, after accounting for `v`.
+This measures how much variability in the SHAP values of `v` is explained by `v'`, after accounting for `v`.
 
 We have introduced four parameters to control the heuristic. Their defaults are in line with the old behaviour.
 
@@ -35,7 +35,8 @@ We will continue to experiment with the defaults, which might change in the futu
 
 ## Other user-visible changes
 
-- `sv_dependence()`: If `color_var = "auto"` (default) and no color feature seems to be relevant (SHAP interaction is `NULL`, or heuristic returns no positive value), there won't be any color scale.
+- `sv_dependence()`: If `color_var = "auto"` (default) and no color feature seems to be relevant (SHAP interaction is `NULL`, or heuristic returns no positive value), there won't be any color scale. Furthermore, in some edge cases, a different
+color feature might be selected.
 - `mshapviz()` objects can now be rowbinded via `rbind()` or `+`. Implemented by [@jmaspons](https://github.com/jmaspons) in [#110](https://github.com/ModelOriented/shapviz/pull/110).
 - `mshapviz()` is more strict when combining multiple "shapviz" objects. These now need to have identical column names, see [#114](https://github.com/ModelOriented/shapviz/pull/114).
 

@@ -73,7 +73,7 @@ sv_dependence(shp, v = x)}
 
 ![](man/figures/README-dep.png)
 
-Decompositions of individual predictions can be visualized as well:
+Decompositions of individual predictions can be visualized as waterfall or force plot:
 
 ```r
 sv_waterfall(shp, row_id = 1)

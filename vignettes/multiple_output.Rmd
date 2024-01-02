@@ -22,20 +22,20 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-Sometimes, you will find it necessary to work with several compatible "shapviz" objects at the same time:
+Sometimes, you will find it necessary to work with several "shapviz" objects at the same time:
 
 - To visualize SHAP values of a multiclass or multi-output model.
-- To compare SHAP plots of different models (with identical features).
-- To compare SHAP plots between subgroups.
+- To compare SHAP plots of different models with common features.
+- To study SHAP plots between subgroups.
 
-To simplify the workflow, {shapviz} introduces the "mshapviz" object ("m" like "multi"). You can create it in different ways:
+To simplify the workflow, {shapviz} offers a "mshapviz" object ("m" like "multi"). You can create it in different ways:
 
 - Use `shapviz()` on multiclass XGBoost or LightGBM models.
-- Use `shapviz()` on "kernelshap" objects created from multiclass/multioutput models.
+- Use `shapviz()` on "kernelshap" or "permshap" objects created from  multiclass/multioutput models via the {kernelshap} package.
 - Use `c(Mod_1 = s1, Mod_2 = s2, ...)` on "shapviz" objects `s1`, `s2`, ...
 - Or `mshapviz(list(Mod_1 = s1, Mod_2 = s2, ...))`
 
-The `sv_*()` functions use the {patchwork} package to glue the individual plots together. An exception is `sv_importance(..., kind = "bar")`, which produces a dodged barplot via {ggplot2}, by default.
+The `sv_*()` functions mainly use the {patchwork} package to glue the individual plots together. An exception is `sv_importance(..., kind = "bar")`, which produces a dodged barplot via {ggplot2}, by default.
 
 ## Example: Multiclass XGBoost model
 
@@ -86,9 +86,9 @@ x <- shapviz(fit, X_pred = X_pred, X = iris)
 sv_importance(x)
 ```
 
-### Or for random forest with {kernelshap}
+### Or for a random forest with {kernelshap}
 
-Since Kernel SHAP is model agnostic, we can get SHAP values on probability scale.
+Since Kernel SHAP is model agnostic, we get SHAP values on probability scale. To explain log-odds, we would need to pass our own predict function to `kernelshap()`.
 
 ```r
 library(shapviz)
@@ -128,7 +128,7 @@ X_pred <- data.matrix(iris[, -1])
 dtrain <- xgb.DMatrix(X_pred, label = iris[, 1], nthread = 1)
 fit_xgb <- xgb.train(params = list(nthread = 1), data = dtrain, nrounds = 50)
 
-# Create "mshapviz" object
+# Create "mshapviz" object and split it into subgroups
 shap_xgb <- shapviz(fit_xgb, X_pred = X_pred, X = iris)
 x_subgroups <- split(shap_xgb, f = iris$Species)
 

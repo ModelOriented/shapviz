@@ -64,13 +64,26 @@ fit <- xgb.train(params = list(learning_rate = 0.1), data = dtrain, nrounds = 65
 # SHAP analysis: X can even contain factors
 dia_2000 <- diamonds[sample(nrow(diamonds), 2000), x]
 shp <- shapviz(fit, X_pred = data.matrix(dia_2000), X = dia_2000)
+
 sv_importance(shp, show_numbers = TRUE)
-sv_dependence(shp, v = x)
+sv_dependence(shp, v = x)}
 ```
 
 ![](man/figures/README-imp.svg)
 
 ![](man/figures/README-dep.png)
+
+Decompositions of individual predictions can be visualized as well:
+
+```r
+sv_waterfall(shp, row_id = 1)
+sv_force(shp, row_id = 1)
+```
+
+![](man/figures/README-waterfall.svg)
+
+![](man/figures/README-force.svg)
+
 
 ## More to Discover
 

@@ -80,9 +80,9 @@
 <h4 id="how-is-the-color-feature-selected-anyway-0-9-3">How is the color feature selected, anyway?<a class="anchor" aria-label="anchor" href="#how-is-the-color-feature-selected-anyway-0-9-3"></a></h4>
 <p>If no SHAP interaction values are available, by default, the color feature <code>v'</code> is selected by the heuristic <code>potential_interaction()</code>, which works as follows:</p>
 <ol style="list-style-type: decimal"><li>If the feature <code>v</code> (the on the x-axis) is numeric, it is binned into <code>nbins</code> bins.</li>
-<li>Per bin, the SHAP values of <code>v</code> are regressed onto <code>v</code> and the R-squared is calculated.</li>
-<li>The R-squared are averaged over bins, weighted by the bin size.</li>
-</ol><p>This measures how much variability in the SHAP values is explained by <code>v'</code>, after accounting for <code>v</code>.</p>
+<li>Per bin, the SHAP values of <code>v</code> are regressed onto <code>v'</code> and the R-squared is calculated. Rows with missing <code>v'</code> are discarded.</li>
+<li>The R-squared are averaged over bins, weighted by the number of non-missing <code>v'</code> values.</li>
+</ol><p>This measures how much variability in the SHAP values of <code>v</code> is explained by <code>v'</code>, after accounting for <code>v</code>.</p>
 <p>We have introduced four parameters to control the heuristic. Their defaults are in line with the old behaviour.</p>
 <ul><li>
 <code>nbin = NULL</code>: Into how many quantile bins should a numeric <code>v</code> be binned? The default <code>NULL</code> equals the smaller of <span class="math inline"><em>n</em>/20</span> and <span class="math inline">$\sqrt n$</span> (rounded up), where <span class="math inline"><em>n</em></span> is the sample size.</li>
@@ -111,7 +111,7 @@
 <div class="section level3">
 <h3 id="other-user-visible-changes-0-9-3">Other user-visible changes<a class="anchor" aria-label="anchor" href="#other-user-visible-changes-0-9-3"></a></h3>
 <ul><li>
-<code><a href="../reference/sv_dependence.html">sv_dependence()</a></code>: If <code>color_var = "auto"</code> (default) and no color feature seems to be relevant (SHAP interaction is <code>NULL</code>, or heuristic returns no positive value), there won’t be any color scale.</li>
+<code><a href="../reference/sv_dependence.html">sv_dependence()</a></code>: If <code>color_var = "auto"</code> (default) and no color feature seems to be relevant (SHAP interaction is <code>NULL</code>, or heuristic returns no positive value), there won’t be any color scale. Furthermore, in some edge cases, a different color feature might be selected.</li>
 <li>
 <code><a href="../reference/mshapviz.html">mshapviz()</a></code> objects can now be rowbinded via <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind()</a></code> or <code>+</code>. Implemented by <a href="https://github.com/jmaspons" class="external-link">@jmaspons</a> in <a href="https://github.com/ModelOriented/shapviz/pull/110" class="external-link">#110</a>.</li>
 <li>

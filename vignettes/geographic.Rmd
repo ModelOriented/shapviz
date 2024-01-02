@@ -49,7 +49,7 @@ For illustration, we will use a beautiful house price dataset containing informa
 
 (Italic features are geographic components.) For more background on this dataset, see @Mayer2022MachineLA.
 
-We will fit an XGBoost model to explain log(price) as a function of lat/long, size, and quality/age. 
+We will fit an XGBoost model to explain the expected log(price) as a function of lat/long, size, and quality/age. 
 
 ```{r}
 library(xgboost)
@@ -117,7 +117,7 @@ We will now change above model in two ways, not unlike the model in @Mayer2022Ma
 1. We will use additional geographic features like distance to railway track or to the ocean.
 2. We will use interaction constraints to allow only interactions between geographic features.
 
-The second step leads to a model that is additive in each non-geographic component and also additive in the combined location effect. According to the technical report @mayer2022shap, SHAP dependence plots of additive components in a boosted trees model are shifted versions of corresponding partial dependence plots (evaluated at observed values). This allows a "Ceteris Paribus" interpretation of SHAP dependence plots of corresponding components.
+The second step leads to a model that is additive in each non-geographic component and also additive in the *combined* location effect. According to the technical report @mayer2022shap, SHAP dependence plots of additive components in a boosted trees model are shifted versions of corresponding partial dependence plots (evaluated at observed values). This allows a "Ceteris Paribus" interpretation of SHAP dependence plots of corresponding components.
 
 ```{r}
 # Extend the feature set

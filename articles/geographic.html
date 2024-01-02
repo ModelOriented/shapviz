@@ -161,8 +161,8 @@ best)</li>
 </ul>
 <p>(Italic features are geographic components.) For more background on
 this dataset, see <span class="citation">Mayer et al. (<a href="#ref-Mayer2022MachineLA" role="doc-biblioref">2022</a>)</span>.</p>
-<p>We will fit an XGBoost model to explain log(price) as a function of
-lat/long, size, and quality/age.</p>
+<p>We will fit an XGBoost model to explain the expected log(price) as a
+function of lat/long, size, and quality/age.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dmlc/xgboost" class="external-link">xgboost</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -267,13 +267,12 @@ track or to the ocean.</li>
 between geographic features.</li>
 </ol>
 <p>The second step leads to a model that is additive in each
-non-geographic component and also additive in the combined location
-effect. According to the technical report <span class="citation">Mayer
-(<a href="#ref-mayer2022shap" role="doc-biblioref">2022</a>)</span>,
-SHAP dependence plots of additive components in a boosted trees model
-are shifted versions of corresponding partial dependence plots
-(evaluated at observed values). This allows a “Ceteris Paribus”
-interpretation of SHAP dependence plots of corresponding components.</p>
+non-geographic component and also additive in the <em>combined</em>
+location effect. According to the technical report <span class="citation">Mayer (<a href="#ref-mayer2022shap" role="doc-biblioref">2022</a>)</span>, SHAP dependence plots of additive
+components in a boosted trees model are shifted versions of
+corresponding partial dependence plots (evaluated at observed values).
+This allows a “Ceteris Paribus” interpretation of SHAP dependence plots
+of corresponding components.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Extend the feature set</span></span>
 <span><span class="va">more_geo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CNTR_DIST"</span>, <span class="st">"OCEAN_DIST"</span>, <span class="st">"RAIL_DIST"</span>, <span class="st">"HWY_DIST"</span><span class="op">)</span></span>

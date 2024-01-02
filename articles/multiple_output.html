@@ -113,28 +113,28 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>Sometimes, you will find it necessary to work with several compatible
-“shapviz” objects at the same time:</p>
+<p>Sometimes, you will find it necessary to work with several “shapviz”
+objects at the same time:</p>
 <ul>
 <li>To visualize SHAP values of a multiclass or multi-output model.</li>
-<li>To compare SHAP plots of different models (with identical
-features).</li>
-<li>To compare SHAP plots between subgroups.</li>
+<li>To compare SHAP plots of different models with common features.</li>
+<li>To study SHAP plots between subgroups.</li>
 </ul>
-<p>To simplify the workflow, {shapviz} introduces the “mshapviz” object
-(“m” like “multi”). You can create it in different ways:</p>
+<p>To simplify the workflow, {shapviz} offers a “mshapviz” object (“m”
+like “multi”). You can create it in different ways:</p>
 <ul>
 <li>Use <code><a href="../reference/shapviz.html">shapviz()</a></code> on multiclass XGBoost or LightGBM
 models.</li>
-<li>Use <code><a href="../reference/shapviz.html">shapviz()</a></code> on “kernelshap” objects created from
-multiclass/multioutput models.</li>
+<li>Use <code><a href="../reference/shapviz.html">shapviz()</a></code> on “kernelshap” or “permshap” objects
+created from multiclass/multioutput models via the {kernelshap}
+package.</li>
 <li>Use <code>c(Mod_1 = s1, Mod_2 = s2, ...)</code> on “shapviz” objects
 <code>s1</code>, <code>s2</code>, …</li>
 <li>Or <code>mshapviz(list(Mod_1 = s1, Mod_2 = s2, ...))</code>
 </li>
 </ul>
-<p>The <code>sv_*()</code> functions use the {patchwork} package to glue
-the individual plots together. An exception is
+<p>The <code>sv_*()</code> functions mainly use the {patchwork} package
+to glue the individual plots together. An exception is
 <code>sv_importance(..., kind = "bar")</code>, which produces a dodged
 barplot via {ggplot2}, by default.</p>
 </div>
@@ -201,10 +201,11 @@ barplot via {ggplot2}, by default.</p>
 <span><span class="fu"><a href="../reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="or-for-random-forest-with-kernelshap">Or for random forest with {kernelshap}<a class="anchor" aria-label="anchor" href="#or-for-random-forest-with-kernelshap"></a>
+<h3 id="or-for-a-random-forest-with-kernelshap">Or for a random forest with {kernelshap}<a class="anchor" aria-label="anchor" href="#or-for-a-random-forest-with-kernelshap"></a>
 </h3>
-<p>Since Kernel SHAP is model agnostic, we can get SHAP values on
-probability scale.</p>
+<p>Since Kernel SHAP is model agnostic, we get SHAP values on
+probability scale. To explain log-odds, we would need to pass our own
+predict function to <code>kernelshap()</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ModelOriented/shapviz" class="external-link">shapviz</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ModelOriented/kernelshap" class="external-link">kernelshap</a></span><span class="op">)</span></span>
@@ -242,7 +243,7 @@ probability scale.</p>
 <span><span class="va">dtrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html" class="external-link">xgb.DMatrix</a></span><span class="op">(</span><span class="va">X_pred</span>, label <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, nthread <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">fit_xgb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgb.train</a></span><span class="op">(</span>params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nthread <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">dtrain</span>, nrounds <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Create "mshapviz" object</span></span>
+<span><span class="co"># Create "mshapviz" object and split it into subgroups</span></span>
 <span><span class="va">shap_xgb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">fit_xgb</span>, X_pred <span class="op">=</span> <span class="va">X_pred</span>, X <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
 <span><span class="va">x_subgroups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">shap_xgb</span>, f <span class="op">=</span> <span class="va">iris</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span></span>
 <span></span>

@@ -68,8 +68,10 @@ set.seed(1)
 
 # Build model
 x <- c("carat", "cut", "color", "clarity")
-dtrain <- xgb.DMatrix(data.matrix(diamonds[x]), label = diamonds$price)
-fit <- xgb.train(params = list(learning_rate = 0.1), data = dtrain, nrounds = 65)
+dtrain <- xgb.DMatrix(data.matrix(diamonds[x]), label = diamonds$price, nthread = 1)
+fit <- xgb.train(
+  params = list(learning_rate = 0.1, nthread = 1), data = dtrain, nrounds = 65
+)
 
 # SHAP analysis: X can even contain factors
 dia_2000 <- diamonds[sample(nrow(diamonds), 2000), x]

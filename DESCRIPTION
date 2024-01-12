@@ -44,5 +44,5 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-URL: https://github.com/ModelOriented/shapviz
+URL: https://github.com/ModelOriented/shapviz, https://modeloriented.github.io/shapviz/
 BugReports: https://github.com/ModelOriented/shapviz/issues

@@ -188,15 +188,19 @@ absolute SHAP values (or a list of such matrices in case of "mshapviz" object).<
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="va">dtrain</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html" class="external-link">xgb.DMatrix</a></span><span class="op">(</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dtrain</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html" class="external-link">xgb.DMatrix</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, label <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, nthread <span class="op">=</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dtrain</span>, nrounds <span class="op">=</span> <span class="fl">10</span>, nthread <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">fit</span>, X_pred <span class="op">=</span> <span class="va">dtrain</span>, X <span class="op">=</span> <span class="va">iris</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">sv_interaction</span><span class="op">(</span><span class="va">x</span>, kind <span class="op">=</span> <span class="st">"no"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              Petal.Length Sepal.Width  Petal.Width      Species</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Length   0.61216324  0.07647426 0.0439800713 0.0241938784</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Width    0.07647427  0.07895533 0.0381466559 0.0103276318</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Width    0.04398007  0.03814666 0.0428673263 0.0006772984</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Species        0.02419387  0.01032763 0.0006773004 0.0190167296</span>
 <span class="r-in"><span><span class="fu">sv_interaction</span><span class="op">(</span><span class="va">x</span>, max_display <span class="op">=</span> <span class="fl">2</span>, size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-plt img"><img src="sv_interaction-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </div>

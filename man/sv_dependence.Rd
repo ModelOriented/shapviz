@@ -100,7 +100,6 @@ By default, the feature on the color scale is selected via SHAP interactions
 
 }}
 \examples{
-\dontrun{
 dtrain <- xgboost::xgb.DMatrix(
   data.matrix(iris[, -1]), label = iris[, 1], nthread = 1
 )
@@ -118,7 +117,6 @@ sv_dependence(x2, "Petal.Length", interactions = TRUE)
 sv_dependence(
   x2, c("Petal.Length", "Species"), color_var = NULL, interactions = TRUE
 )
-}
 }
 \seealso{
 \code{\link[=potential_interactions]{potential_interactions()}}

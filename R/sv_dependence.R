@@ -39,7 +39,6 @@
 #' @param ... Arguments passed to [ggplot2::geom_jitter()].
 #' @returns An object of class "ggplot" (or "patchwork") representing a dependence plot.
 #' @examples
-#' \dontrun{
 #' dtrain <- xgboost::xgb.DMatrix(
 #'   data.matrix(iris[, -1]), label = iris[, 1], nthread = 1
 #' )
@@ -57,7 +56,6 @@
 #' sv_dependence(
 #'   x2, c("Petal.Length", "Species"), color_var = NULL, interactions = TRUE
 #' )
-#' }
 #' @export
 #' @seealso [potential_interactions()]
 sv_dependence <- function(object, ...) {

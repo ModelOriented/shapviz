@@ -102,7 +102,6 @@ baseline SHAP value.
 
 }}
 \examples{
-\dontrun{
 dtrain <- xgboost::xgb.DMatrix(
   data.matrix(iris[, -1]), label = iris[, 1], nthread = 1
 )
@@ -118,7 +117,6 @@ sv_waterfall(
 
 # Aggregate over all observations with Petal.Length == 1.4
 sv_waterfall(x, row_id = x$X$Petal.Length == 1.4)
-}
 }
 \seealso{
 \code{\link[=sv_force]{sv_force()}}

@@ -111,7 +111,6 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
 #'   Creates a "shapviz" object from an XGBoost model.
 #' @export
 #' @examples
-#' \dontrun{
 #' # XGBoost models
 #' X_pred <- data.matrix(iris[, -1])
 #' dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1], nthread = 1)
@@ -183,7 +182,6 @@ shapviz.matrix = function(object, X, baseline = 0, collapse = NULL,
 #'   mx <- shapviz(fit, X_pred = X_pred)
 #'   mx
 #'   all.equal(mx[[3]], x)
-#' }
 #' }
 shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL,
                                collapse = NULL, interactions = FALSE, ...) {

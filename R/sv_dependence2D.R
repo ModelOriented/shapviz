@@ -29,7 +29,6 @@
 #' @param ... Arguments passed to [ggplot2::geom_jitter()].
 #' @returns An object of class "ggplot" (or "patchwork") representing a dependence plot.
 #' @examples
-#' \dontrun{
 #' dtrain <- xgboost::xgb.DMatrix(
 #'   data.matrix(iris[, -1]), label = iris[, 1], nthread = 1
 #' )
@@ -48,7 +47,6 @@
 #' # mshapviz object
 #' mx <- split(sv, f = iris$Species)
 #' sv_dependence2D(mx, x = "Petal.Length", y = "Sepal.Width")
-#' }
 #' @export
 #' @seealso [sv_dependence()]
 sv_dependence2D <- function(object, ...) {

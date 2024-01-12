@@ -174,7 +174,6 @@ return a "mshapviz" object, containing a "shapviz" object per output.
 S <- matrix(c(1, -1, -1, 1), ncol = 2, dimnames = list(NULL, c("x", "y")))
 X <- data.frame(x = c("a", "b"), y = c(100, 10))
 shapviz(S, X, baseline = 4)
-\dontrun{
 # XGBoost models
 X_pred <- data.matrix(iris[, -1])
 dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1], nthread = 1)
@@ -246,7 +245,6 @@ if (requireNamespace("lightgbm", quietly = TRUE)) {
   mx <- shapviz(fit, X_pred = X_pred)
   mx
   all.equal(mx[[3]], x)
-}
 }
 }
 \seealso{

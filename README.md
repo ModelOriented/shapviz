@@ -4,7 +4,7 @@
 
 [![CRAN status](http://www.r-pkg.org/badges/version/shapviz)](https://cran.r-project.org/package=shapviz)
 [![R-CMD-check](https://github.com/ModelOriented/shapviz/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ModelOriented/shapviz/actions)
-[![Codecov test coverage](https://codecov.io/gh/ModelOriented/shapviz/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ModelOriented/shapviz?branch=main)
+[![Codecov test coverage](https://codecov.io/gh/ModelOriented/shapviz/graph/badge.svg)](https://app.codecov.io/gh/ModelOriented/shapviz?branch=main)
 
 [![](https://cranlogs.r-pkg.org/badges/shapviz)](https://cran.r-project.org/package=shapviz) 
 [![](https://cranlogs.r-pkg.org/badges/grand-total/shapviz?color=orange)](https://cran.r-project.org/package=shapviz)

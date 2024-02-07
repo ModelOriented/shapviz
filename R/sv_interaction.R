@@ -45,12 +45,13 @@ sv_interaction.shapviz <- function(object, kind = c("beeswarm", "no"),
                                    max_display = 7L, alpha = 0.3,
                                    bee_width = 0.3, bee_adjust = 0.5,
                                    viridis_args = getOption("shapviz.viridis_args"),
-                                   color_bar_title = "Row feature value", ...) {
+                                   color_bar_title = "Row feature value",
+                                   sort_features = TRUE, ...) {
   kind <- match.arg(kind)
   if (is.null(get_shap_interactions(object))) {
     stop("No SHAP interaction values available.")
   }
-  ord <- names(.get_imp(get_shap_values(object)))
+  ord <- names(.get_imp(get_shap_values(object), sort_features = sort_features))
   object <- object[, ord]
 
   if (kind == "no") {
@@ -112,7 +113,8 @@ sv_interaction.mshapviz <- function(object, kind = c("beeswarm", "no"),
                                     max_display = 7L, alpha = 0.3,
                                     bee_width = 0.3, bee_adjust = 0.5,
                                     viridis_args = getOption("shapviz.viridis_args"),
-                                    color_bar_title = "Row feature value", ...) {
+                                    color_bar_title = "Row feature value",
+                                    sort_features = TRUE, ...) {
   kind <- match.arg(kind)
 
   plot_list <- lapply(
@@ -126,6 +128,7 @@ sv_interaction.mshapviz <- function(object, kind = c("beeswarm", "no"),
     bee_adjust = bee_adjust,
     viridis_args = viridis_args,
     color_bar_title = color_bar_title,
+    sort_features = sort_features,
     ...
   )
   if (kind == "no") {

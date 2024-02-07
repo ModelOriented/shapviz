@@ -24,6 +24,7 @@ sv_importance(object, ...)
   show_numbers = FALSE,
   format_fun = format_max,
   number_size = 3.2,
+  sort_features = TRUE,
   ...
 )
 
@@ -41,6 +42,7 @@ sv_importance(object, ...)
   show_numbers = FALSE,
   format_fun = format_max,
   number_size = 3.2,
+  sort_features = TRUE,
   ...
 )
 }
@@ -55,7 +57,7 @@ semi-transparent beeswarms, and setting \code{size = 3} will produce larger dots
 Set to "no" in order to suppress plotting. In that case, the sorted
 SHAP feature importances of all variables are returned.}
 
-\item{max_display}{Maximum number of features (with highest importance) to plot.
+\item{max_display}{How many features should be plotted?
 Set to \code{Inf} to show all features. Has no effect if \code{kind = "no"}.}
 
 \item{fill}{Color used to fill the bars (only used if bars are shown).}
@@ -84,6 +86,8 @@ to hide the color bar altogether.}
 \verb{function(x) = prettyNum(x, scientific = TRUE)}.}
 
 \item{number_size}{Text size of the numbers (if \code{show_numbers = TRUE}).}
+
+\item{sort_features}{Should features be sorted or not? The default is \code{TRUE}.}
 
 \item{bar_type}{For "mshapviz" objects with \code{kind = "bar"}: How should bars be
 represented? The default is "dodge" for dodged bars. Other options are "stack",

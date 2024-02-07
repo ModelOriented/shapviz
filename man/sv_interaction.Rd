@@ -20,6 +20,7 @@ sv_interaction(object, ...)
   bee_adjust = 0.5,
   viridis_args = getOption("shapviz.viridis_args"),
   color_bar_title = "Row feature value",
+  sort_features = TRUE,
   ...
 )
 
@@ -32,6 +33,7 @@ sv_interaction(object, ...)
   bee_adjust = 0.5,
   viridis_args = getOption("shapviz.viridis_args"),
   color_bar_title = "Row feature value",
+  sort_features = TRUE,
   ...
 )
 }
@@ -45,7 +47,7 @@ passing \code{size = 1} will produce smaller dots.}
 interactions (or a list of such matrices in case of object of class "mshapviz").
 Due to symmetry, off-diagonals are multiplied by two. The default is "beeswarm".}
 
-\item{max_display}{Maximum number of features (with highest importance) to plot.
+\item{max_display}{How many features should be plotted?
 Set to \code{Inf} to show all features. Has no effect if \code{kind = "no"}.}
 
 \item{alpha}{Transparency of the beeswarm dots. Defaults to 0.3.}
@@ -64,6 +66,8 @@ either change the default with \code{options(shapviz.viridis_args = list())} or 
 
 \item{color_bar_title}{Title of color bar of the beeswarm plot. Set to \code{NULL}
 to hide the color bar altogether.}
+
+\item{sort_features}{Should features be sorted or not? The default is \code{TRUE}.}
 }
 \value{
 A "ggplot" (or "patchwork") object, or - if \code{kind = "no"} - a named

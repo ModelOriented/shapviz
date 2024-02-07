@@ -14,7 +14,7 @@
 #' @param kind Should a "bar" plot (the default), a "beeswarm" plot, or "both" be shown?
 #'   Set to "no" in order to suppress plotting. In that case, the sorted
 #'   SHAP feature importances of all variables are returned.
-#' @param max_display Maximum number of features (with highest importance) to plot.
+#' @param max_display How many features should be plotted?
 #'   Set to `Inf` to show all features. Has no effect if `kind = "no"`.
 #' @param fill Color used to fill the bars (only used if bars are shown).
 #' @param bar_width Relative width of the bars (only used if bars are shown).
@@ -38,6 +38,7 @@
 #'   (only if `show_numbers = TRUE`). To change to scientific notation, use
 #'   `function(x) = prettyNum(x, scientific = TRUE)`.
 #' @param number_size Text size of the numbers (if `show_numbers = TRUE`).
+#' @param sort_features Should features be sorted or not? The default is `TRUE`.
 #' @param ... Arguments passed to [ggplot2::geom_bar()] (if `kind = "bar"`) or to
 #'   [ggplot2::geom_point()] otherwise. For instance, passing `alpha = 0.2` will produce
 #'   semi-transparent beeswarms, and setting `size = 3` will produce larger dots.
@@ -75,10 +76,10 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
                                   viridis_args = getOption("shapviz.viridis_args"),
                                   color_bar_title = "Feature value",
                                   show_numbers = FALSE, format_fun = format_max,
-                                  number_size = 3.2, ...) {
+                                  number_size = 3.2, sort_features = TRUE, ...) {
   stopifnot("format_fun must be a function" = is.function(format_fun))
   kind <- match.arg(kind)
-  imp <- .get_imp(get_shap_values(object))
+  imp <- .get_imp(get_shap_values(object), sort_features = sort_features)
 
   if (kind == "no") {
     return(imp)
@@ -162,13 +163,13 @@ sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "
                                    viridis_args = getOption("shapviz.viridis_args"),
                                    color_bar_title = "Feature value",
                                    show_numbers = FALSE, format_fun = format_max,
-                                   number_size = 3.2, ...) {
+                                   number_size = 3.2, sort_features = TRUE, ...) {
   kind <- match.arg(kind)
   bar_type <- match.arg(bar_type)
 
   # All other cases are done via {patchwork}
   if (kind %in% c("bar", "no") && bar_type != "separate") {
-    imp <- .get_imp(get_shap_values(object))
+    imp <- .get_imp(get_shap_values(object), sort_features = sort_features)
     if (kind == "no") {
       return(imp)
     }
@@ -223,6 +224,7 @@ sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "
     show_numbers = show_numbers,
     format_fun = format_fun,
     number_size = number_size,
+    sort_features = sort_features,
     ...
   )
   if (kind == "no") {
@@ -243,13 +245,20 @@ sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "
   (z - r[1L]) /(r[2L] - r[1L])
 }
 
-.get_imp <- function(z) {
+.get_imp <- function(z, sort_features = TRUE) {
   if (is.matrix(z)) {
-    return(sort(colMeans(abs(z)), decreasing = TRUE))
+    imp <- colMeans(abs(z))
+    if (sort_features) {
+      imp <- sort(imp, decreasing = TRUE)
+    }
+    return(imp)
   }
   # list/mshapviz
   imp <- sapply(z, function(x) colMeans(abs(x)))
-  imp[order(-rowSums(imp)), ]
+  if (sort_features) {
+    imp <- imp[order(-rowSums(imp)), ]
+  }
+  return(imp)
 }
 
 .scale_X <- function(X) {

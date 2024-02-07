@@ -108,19 +108,30 @@ test_that("plots work for non-syntactic column names", {
   )
 })
 
-test_that("sv_importance() and sv_interaction() and kind = 'no' gives matrix", {
-  X_pred <- data.matrix(iris[, -1L])
-  dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1L], nthread = 1)
-  fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 1L)
-  x <- shapviz(fit, X_pred = X_pred, interactions = TRUE)
-  x <- c(m1 = x, m2 = x)
+X_pred <- data.matrix(iris[, -1L])
+dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1L], nthread = 1)
+fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 1L)
+x <- shapviz(fit, X_pred = X_pred, interactions = TRUE)
+x <- c(m1 = x, m2 = x)
 
+test_that("sv_importance() and sv_interaction() and kind = 'no' gives matrix", {
   imp <- sv_importance(x, kind = "no")
   expect_true(is.matrix(imp) && all(dim(imp) == c(4L, length(x))))
 
   inter <- sv_interaction(x, kind = "no")
   expect_true(is.list(inter) && all(dim(inter[[1L]]) == rep(ncol(X_pred), 2L)))
 })
+
+
+test_that("sv_importance() and sv_interaction() respect sort_features = FALSE", {
+  imp <- sv_importance(x, kind = "no", sort_features = FALSE)
+  expect_true(all(rownames(imp) == colnames(x$m1)))
+
+  inter <- sv_interaction(x, kind = "no", sort_features = FALSE)
+  expect_true(all(rownames(inter$m1) == colnames(x$m1)))
+})
+
+
 
 test_that("sv_dependence() does not work with multiple v", {
   X_pred <- data.matrix(iris[, -1L])

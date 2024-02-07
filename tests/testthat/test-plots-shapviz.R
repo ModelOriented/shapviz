@@ -173,3 +173,16 @@ test_that("sv_importance() and sv_interaction() and kind = 'no' gives numeric ou
   expect_true(is.numeric(inter) && all(dim(inter) == rep(ncol(X_pred), 2L)))
 })
 
+test_that("sv_importance() and sv_interaction() respect sort_features = FALSE", {
+  X_pred <- data.matrix(iris[, -1L])
+  dtrain <- xgboost::xgb.DMatrix(X_pred, label = iris[, 1L], nthread = 1)
+  fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 1L)
+  x <- shapviz(fit, X_pred = X_pred, interactions = TRUE)
+
+  imp <- sv_importance(x, kind = "no", sort_features = FALSE)
+  expect_true(all(names(imp) == colnames(x)))
+
+  inter <- sv_interaction(x, kind = "no", sort_features = FALSE)
+  expect_true(all(names(inter) == colnames(x)))
+})
+

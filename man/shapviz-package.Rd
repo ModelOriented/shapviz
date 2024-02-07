@@ -3,7 +3,6 @@
 \docType{package}
 \name{shapviz-package}
 \alias{shapviz-package}
-\alias{_PACKAGE}
 \title{shapviz: SHAP Visualizations}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
@@ -14,6 +13,7 @@ Visualizations for SHAP (SHapley Additive exPlanations), such as waterfall plots
 Useful links:
 \itemize{
   \item \url{https://github.com/ModelOriented/shapviz}
+  \item \url{https://modeloriented.github.io/shapviz/}
   \item Report bugs at \url{https://github.com/ModelOriented/shapviz/issues}
 }
 

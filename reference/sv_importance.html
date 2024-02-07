@@ -27,7 +27,7 @@ The two types of plots can also be combined.'><meta property="og:image" content=
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">0.9.3</span>
+          <span class="version version-default">0.9.4</span>
         </div>
       </div>
     </div>
@@ -100,6 +100,7 @@ The two types of plots can also be combined.</p>
 <span>  show_numbers <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  format_fun <span class="op">=</span> <span class="va">format_max</span>,</span>
 <span>  number_size <span class="op">=</span> <span class="fl">3.2</span>,</span>
+<span>  sort_features <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -118,6 +119,7 @@ The two types of plots can also be combined.</p>
 <span>  show_numbers <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  format_fun <span class="op">=</span> <span class="va">format_max</span>,</span>
 <span>  number_size <span class="op">=</span> <span class="fl">3.2</span>,</span>
+<span>  sort_features <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -141,7 +143,7 @@ SHAP feature importances of all variables are returned.</p></dd>
 
 
 <dt>max_display</dt>
-<dd><p>Maximum number of features (with highest importance) to plot.
+<dd><p>How many features should be plotted?
 Set to <code>Inf</code> to show all features. Has no effect if <code>kind = "no"</code>.</p></dd>
 
 
@@ -188,6 +190,10 @@ to hide the color bar altogether.</p></dd>
 
 <dt>number_size</dt>
 <dd><p>Text size of the numbers (if <code>show_numbers = TRUE</code>).</p></dd>
+
+
+<dt>sort_features</dt>
+<dd><p>Should features be sorted or not? The default is <code>TRUE</code>.</p></dd>
 
 
 <dt>bar_type</dt>

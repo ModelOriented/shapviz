@@ -6,12 +6,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SHAP Visualizations • shapviz</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -20,17 +14,7 @@
 <link href="dalexverse-2.css" rel="stylesheet">
 <!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="SHAP Visualizations">
-<meta property="og:description" content="Visualizations for SHAP (SHapley Additive exPlanations), such
-    as waterfall plots, force plots, various types of importance plots,
-    dependence plots, and interaction plots.  These plots act on a
-    shapviz object created from a matrix of SHAP values and a
-    corresponding feature dataset. Wrappers for the R packages xgboost,
-    lightgbm, fastshap, shapr, h2o, treeshap, DALEX, and
-    kernelshap are added for convenience.  By separating visualization
-    and computation, it is possible to display factor variables in graphs,
-    even if the SHAP values are calculated by a model that requires
-    numerical features. The plots are inspired by those provided by the
-    shap package in Python, but there is no dependency on it.">
+<meta property="og:description" content="Visualizations for SHAP (SHapley Additive exPlanations), such as waterfall plots, force plots, various types of importance plots, dependence plots, and interaction plots. These plots act on a shapviz object created from a matrix of SHAP values and a corresponding feature dataset. Wrappers for the R packages xgboost, lightgbm, fastshap, shapr, h2o, treeshap, DALEX, and kernelshap are added for convenience. By separating visualization and computation, it is possible to display factor variables in graphs, even if the SHAP values are calculated by a model that requires numerical features. The plots are inspired by those provided by the shap package in Python, but there is no dependency on it.">
 <meta property="og:image" content="/logo.png">
 <meta name="robots" content="noindex">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -73,7 +57,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -94,7 +78,7 @@
         <li>
   <a href="https://github.com/ModelOriented/shapviz/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -105,7 +89,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="contents col-md-9">
@@ -238,9 +222,9 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://cran.r-project.org/package=shapviz" class="external-link"><img src="http://www.r-pkg.org/badges/version/shapviz" alt="CRAN status"></a></li>
-<li><a href="https://github.com/ModelOriented/shapviz/actions" class="external-link"><img src="https://github.com/ModelOriented/shapviz/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/ModelOriented/shapviz/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/ModelOriented/shapviz/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://app.codecov.io/gh/ModelOriented/shapviz?branch=main" class="external-link"><img src="https://codecov.io/gh/ModelOriented/shapviz/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://cran.r-project.org/package=shapviz" class="external-link"><img src="https://www.r-pkg.org/badges/version/shapviz" alt="CRAN_Status_Badge"></a></li>
 <li><a href="https://cran.r-project.org/package=shapviz" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/shapviz"></a></li>
 <li><a href="https://cran.r-project.org/package=shapviz" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/shapviz?color=orange"></a></li>
 </ul>
@@ -257,13 +241,13 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
       </footer>
 </div>
 
-  
+
 
 
   </body>

@@ -1,114 +1,40 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/articles/basic_use.html</loc>
-  </url>
-  <url>
-    <loc>/articles/geographic.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/multiple_output.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/c.shapviz.html</loc>
-  </url>
-  <url>
-    <loc>/reference/collapse_shap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dim.shapviz.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dimnames-set-.shapviz.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dimnames.shapviz.html</loc>
-  </url>
-  <url>
-    <loc>/reference/extractors.html</loc>
-  </url>
-  <url>
-    <loc>/reference/format_max.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is.mshapviz.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is.shapviz.html</loc>
-  </url>
-  <url>
-    <loc>/reference/miami.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mshapviz.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plus-.shapviz.html</loc>
-  </url>
-  <url>
-    <loc>/reference/potential_interactions.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.mshapviz.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.shapviz.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rbind.shapviz.html</loc>
-  </url>
-  <url>
-    <loc>/reference/shapviz-package.html</loc>
-  </url>
-  <url>
-    <loc>/reference/shapviz.html</loc>
-  </url>
-  <url>
-    <loc>/reference/split.shapviz.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sub-.shapviz.html</loc>
-  </url>
-  <url>
-    <loc>/reference/summary.shapviz.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sv_dependence.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sv_dependence2D.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sv_force.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sv_importance.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sv_interaction.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sv_waterfall.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
+<url><loc>/articles/basic_use.html</loc></url>
+<url><loc>/articles/geographic.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/articles/multiple_output.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/c.shapviz.html</loc></url>
+<url><loc>/reference/collapse_shap.html</loc></url>
+<url><loc>/reference/dim.shapviz.html</loc></url>
+<url><loc>/reference/dimnames-set-.shapviz.html</loc></url>
+<url><loc>/reference/dimnames.shapviz.html</loc></url>
+<url><loc>/reference/extractors.html</loc></url>
+<url><loc>/reference/format_max.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/is.mshapviz.html</loc></url>
+<url><loc>/reference/is.shapviz.html</loc></url>
+<url><loc>/reference/miami.html</loc></url>
+<url><loc>/reference/mshapviz.html</loc></url>
+<url><loc>/reference/plus-.shapviz.html</loc></url>
+<url><loc>/reference/potential_interactions.html</loc></url>
+<url><loc>/reference/print.mshapviz.html</loc></url>
+<url><loc>/reference/print.shapviz.html</loc></url>
+<url><loc>/reference/rbind.shapviz.html</loc></url>
+<url><loc>/reference/shapviz-package.html</loc></url>
+<url><loc>/reference/shapviz.html</loc></url>
+<url><loc>/reference/split.shapviz.html</loc></url>
+<url><loc>/reference/sub-.shapviz.html</loc></url>
+<url><loc>/reference/summary.shapviz.html</loc></url>
+<url><loc>/reference/sv_dependence.html</loc></url>
+<url><loc>/reference/sv_dependence2D.html</loc></url>
+<url><loc>/reference/sv_force.html</loc></url>
+<url><loc>/reference/sv_importance.html</loc></url>
+<url><loc>/reference/sv_interaction.html</loc></url>
+<url><loc>/reference/sv_waterfall.html</loc></url>
 </urlset>
+

@@ -4,6 +4,10 @@
 
 - New argument `sort_features = TRUE` in `sv_importance()` and `sv_interaction()`. Set to `FALSE` to show the features as they appear in your SHAP matrix. In that case, the plots will show the *first* `max_display` features, not the *most important* features. Implements #136.
 
+### Bug fixes
+
+- `shapviz.xgboost()` would fail if a single row is passed. This has been fixed in #142. Thanks @sebsilas for reporting.
+
 # shapviz 0.9.3
 
 ## `sv_dependence()`: Control over automatic color feature selection

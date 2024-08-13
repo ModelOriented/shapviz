@@ -6,7 +6,7 @@
 
 ### Bug fixes
 
-- `shapviz.xgboost()` would fail if a single row is passed. This has been fixed. Thanks, @sebsilas, for reporting.
+- `shapviz.xgboost()` would fail if a single row is passed. This has been fixed in #142. Thanks @sebsilas for reporting.
 
 # shapviz 0.9.3
 

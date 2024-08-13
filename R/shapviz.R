@@ -196,7 +196,25 @@ shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL,
   S <- stats::predict(object, newdata = X_pred, predcontrib = TRUE, ...)
 
   if (interactions) {
-    S_inter <- stats::predict(object, newdata = X_pred, predinteraction = TRUE, ...)
+    S_inter <- stats::predict(
+      object, newdata = X_pred, predinteraction = TRUE, ...
+    )
+  }
+
+  # Handle problem that S and S_inter lack a dimension if X_pred has only one row
+  # This might be fixed later directly in XGBoost.
+  if (nrow(X_pred) == 1L) {
+    if (is.list(S)) {  #  multiclass
+      S <- lapply(S, rbind)
+      if (interactions) {
+        S_inter <- lapply(S_inter, .add_dim)
+      }
+    } else {
+      S <- rbind(S)
+      if (interactions) {
+        S_inter <-.add_dim(S_inter)
+      }
+    }
   }
 
   # Multiclass
@@ -538,3 +556,13 @@ mshapviz <- function(object, ...) {
     )
   }
 }
+
+# Turns matrix into 3D-array with one "row". solving a problem with XGBoost and one row.
+.add_dim <- function(x) {
+  if (is.matrix(x)) {  # Problematic case: interactions is not 3D array
+    out <- array(dim = c(1L, dim(x)), dimnames = c(list(NULL), dimnames(x)))
+    out[1L, , ] <- x
+  }
+  return(out)
+}
+

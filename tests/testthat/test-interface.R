@@ -288,3 +288,14 @@ test_that("combining shapviz on classes 1, 2, 3 equal mshapviz", {
   expect_equal(mshp, mshapviz(list(Class_1 = shp1, Class_2 = shp2, Class_3 = shp3)))
 })
 
+test_that("single row predictions work with shapviz", {
+  expect_no_error(
+    shp1 <- shapviz(fit, X_pred = X_pred[1L, , drop = FALSE], interactions = TRUE)
+  )
+  shp2 <- shapviz(fit, X_pred = X_pred, interactions = TRUE)
+  for (j in names(shp1)) {
+    expect_equal(shp1[[j]], shp2[[j]][1L, ])
+  }
+})
+
+

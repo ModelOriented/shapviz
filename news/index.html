@@ -76,7 +76,12 @@
 <div class="section level3">
 <h3 id="improvements-0-9-4">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-9-4"></a></h3>
 <ul><li>New argument <code>sort_features = TRUE</code> in <code><a href="../reference/sv_importance.html">sv_importance()</a></code> and <code><a href="../reference/sv_interaction.html">sv_interaction()</a></code>. Set to <code>FALSE</code> to show the features as they appear in your SHAP matrix. In that case, the plots will show the <em>first</em> <code>max_display</code> features, not the <em>most important</em> features. Implements <a href="https://github.com/ModelOriented/shapviz/issues/136" class="external-link">#136</a>.</li>
+</ul><div class="section level4">
+<h4 id="bug-fixes-0-9-4">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-9-4"></a></h4>
+<ul><li>
+<code>shapviz.xgboost()</code> would fail if a single row is passed. This has been fixed in <a href="https://github.com/ModelOriented/shapviz/issues/142" class="external-link">#142</a>. Thanks <a href="https://github.com/sebsilas" class="external-link">@sebsilas</a> for reporting.</li>
 </ul></div>
+</div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9.3" id="shapviz-093">shapviz 0.9.3<small>2024-01-12</small><a class="anchor" aria-label="anchor" href="#shapviz-093"></a></h2>

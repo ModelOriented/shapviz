@@ -202,7 +202,7 @@ shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL,
   }
 
   # Handle problem that S and S_inter lack a dimension if X_pred has only one row
-  # This might be fixed later directly in XGBoost.
+  # This is necessary only for XGBoost < 2.
   if (nrow(X_pred) == 1L) {
     if (is.list(S)) {  #  multiclass
       S <- lapply(S, rbind)
@@ -218,19 +218,25 @@ shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL,
   }
 
   # Multiclass
+  if (length(dim(S)) == 3L) {  # XGBoost >= 2
+    S <- asplit(S, MARGIN = 2L)
+    if (interactions) {
+      S_inter <- asplit(S_inter, MARGIN = 2L)
+    }
+  }
   if (is.list(S)) {
     if (is.null(which_class)) {
-      nms <- setdiff(colnames(S[[1L]]), "BIAS")
+      pp <- ncol(S[[1L]])
       if (interactions) {
-        S_inter <- lapply(S_inter, function(s) s[, nms, nms, drop = FALSE])
+        S_inter <- lapply(S_inter, function(s) s[, -pp, -pp, drop = FALSE])
       } else {
         # mapply() does not want to see a length 0 object like NULL
         S_inter <- replicate(length(S), NULL)
       }
       shapviz_list <- mapply(
         FUN = shapviz.matrix,
-        object = lapply(S, function(s) s[, nms, drop = FALSE]),
-        baseline = lapply(S, function(s) unname(s[1L, "BIAS"])),
+        object = lapply(S, function(s) s[, -pp, drop = FALSE]),
+        baseline = lapply(S, function(s) unname(s[1L, pp])),
         S_inter = S_inter,
         MoreArgs = list(X = X, collapse = collapse),
         SIMPLIFY = FALSE
@@ -246,12 +252,12 @@ shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL,
   }
 
   # Call matrix method
-  nms <- setdiff(colnames(S), "BIAS")
+  pp <- ncol(S)
   shapviz.matrix(
-    object = S[, nms, drop = FALSE],
+    object = S[, -pp, drop = FALSE],
     X = X,
-    baseline = unname(S[1L, "BIAS"]),
-    S_inter = if (interactions) S_inter[, nms, nms, drop = FALSE],
+    baseline = unname(S[1L, pp]),
+    S_inter = if (interactions) S_inter[, -pp, -pp, drop = FALSE],
     collapse = collapse
   )
 }

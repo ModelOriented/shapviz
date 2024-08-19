@@ -201,36 +201,46 @@ shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL,
     )
   }
 
-  # Handle problem that S and S_inter lack a dimension if X_pred has only one row
-  # This might be fixed later directly in XGBoost.
-  if (nrow(X_pred) == 1L) {
-    if (is.list(S)) {  #  multiclass
-      S <- lapply(S, rbind)
+  if (utils::packageVersion("xgboost") >= "2") {
+    # Turn result of multi-output model into list of lower dim arrays
+    if (length(dim(S)) == 3L) {
+      S <- asplit(S, MARGIN = 2L)
       if (interactions) {
-        S_inter <- lapply(S_inter, .add_dim)
+        S_inter <- asplit(S_inter, MARGIN = 2L)
       }
-    } else {
-      S <- rbind(S)
-      if (interactions) {
-        S_inter <-.add_dim(S_inter)
+    }
+  } else {
+    # Handle problem that S and S_inter lack a dimension if X_pred has only one row
+    # This only applies to XGBoost < 2
+    if (nrow(X_pred) == 1L) {
+      if (is.list(S)) {  #  multiclass
+        S <- lapply(S, rbind)
+        if (interactions) {
+          S_inter <- lapply(S_inter, .add_dim)
+        }
+      } else {
+        S <- rbind(S)
+        if (interactions) {
+          S_inter <-.add_dim(S_inter)
+        }
       }
     }
   }
 
-  # Multiclass
+  # Multi-class (or some other multi-output situation)
   if (is.list(S)) {
     if (is.null(which_class)) {
-      nms <- setdiff(colnames(S[[1L]]), "BIAS")
+      pp <- ncol(S[[1L]])  # = ncol(X_pred) + 1. The last column is the baseline
       if (interactions) {
-        S_inter <- lapply(S_inter, function(s) s[, nms, nms, drop = FALSE])
+        S_inter <- lapply(S_inter, function(s) s[, -pp, -pp, drop = FALSE])
       } else {
         # mapply() does not want to see a length 0 object like NULL
         S_inter <- replicate(length(S), NULL)
       }
       shapviz_list <- mapply(
         FUN = shapviz.matrix,
-        object = lapply(S, function(s) s[, nms, drop = FALSE]),
-        baseline = lapply(S, function(s) unname(s[1L, "BIAS"])),
+        object = lapply(S, function(s) s[, -pp, drop = FALSE]),
+        baseline = lapply(S, function(s) unname(s[1L, pp])),
         S_inter = S_inter,
         MoreArgs = list(X = X, collapse = collapse),
         SIMPLIFY = FALSE
@@ -246,12 +256,12 @@ shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL,
   }
 
   # Call matrix method
-  nms <- setdiff(colnames(S), "BIAS")
+  pp <- ncol(S)
   shapviz.matrix(
-    object = S[, nms, drop = FALSE],
+    object = S[, -pp, drop = FALSE],
     X = X,
-    baseline = unname(S[1L, "BIAS"]),
-    S_inter = if (interactions) S_inter[, nms, nms, drop = FALSE],
+    baseline = unname(S[1L, pp]),
+    S_inter = if (interactions) S_inter[, -pp, -pp, drop = FALSE],
     collapse = collapse
   )
 }

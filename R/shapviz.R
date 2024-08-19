@@ -201,32 +201,36 @@ shapviz.xgb.Booster = function(object, X_pred, X = X_pred, which_class = NULL,
     )
   }
 
-  # Handle problem that S and S_inter lack a dimension if X_pred has only one row
-  # This is necessary only for XGBoost < 2.
-  if (nrow(X_pred) == 1L) {
-    if (is.list(S)) {  #  multiclass
-      S <- lapply(S, rbind)
+  if (utils::packageVersion("xgboost") >= "2") {
+    # Turn result of multi-output model into list of lower dim arrays
+    if (length(dim(S)) == 3L) {
+      S <- asplit(S, MARGIN = 2L)
       if (interactions) {
-        S_inter <- lapply(S_inter, .add_dim)
+        S_inter <- asplit(S_inter, MARGIN = 2L)
       }
-    } else {
-      S <- rbind(S)
-      if (interactions) {
-        S_inter <-.add_dim(S_inter)
+    }
+  } else {
+    # Handle problem that S and S_inter lack a dimension if X_pred has only one row
+    # This only applies to XGBoost < 2
+    if (nrow(X_pred) == 1L) {
+      if (is.list(S)) {  #  multiclass
+        S <- lapply(S, rbind)
+        if (interactions) {
+          S_inter <- lapply(S_inter, .add_dim)
+        }
+      } else {
+        S <- rbind(S)
+        if (interactions) {
+          S_inter <-.add_dim(S_inter)
+        }
       }
     }
   }
 
-  # Multiclass
-  if (length(dim(S)) == 3L) {  # XGBoost >= 2
-    S <- asplit(S, MARGIN = 2L)
-    if (interactions) {
-      S_inter <- asplit(S_inter, MARGIN = 2L)
-    }
-  }
+  # Multi-class (or some other multi-output situation)
   if (is.list(S)) {
     if (is.null(which_class)) {
-      pp <- ncol(S[[1L]])
+      pp <- ncol(S[[1L]])  # = ncol(X_pred) + 1. The last column is the baseline
       if (interactions) {
         S_inter <- lapply(S_inter, function(s) s[, -pp, -pp, drop = FALSE])
       } else {

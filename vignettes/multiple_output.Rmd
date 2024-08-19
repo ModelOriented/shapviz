@@ -109,7 +109,7 @@ sv_importance(shp)
 
 sv_dependence(shp, v = "Sepal.Width") +
   plot_layout(ncol = 2) &
-  ylim(-0.03, 0.035)
+  ylim(-0.06, 0.06)
 ```
 
 ![](../man/figures/VIGNETTE-dep-ranger.png)

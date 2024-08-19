@@ -47,7 +47,7 @@ library(shapviz)
 library(ggplot2)
 library(xgboost)
 
-set.seed(1)
+set.seed(10)
 
 # Build model
 x <- c("carat", "cut", "color", "clarity")

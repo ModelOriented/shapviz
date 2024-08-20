@@ -1,16 +1,16 @@
 # shapviz 0.9.4
 
-## API improvements
+### API improvements
 
-- Support both XGBoost 1.x.x as well as XGBoost 2.x.x, implemented in #144.
+- Support both XGBoost 1.x.x as well as XGBoost 2.x.x, implemented in [#144](https://github.com/ModelOriented/shapviz/pull/144).
 
-## Improvements
+### Other improvements
 
-- New argument `sort_features = TRUE` in `sv_importance()` and `sv_interaction()`. Set to `FALSE` to show the features as they appear in your SHAP matrix. In that case, the plots will show the *first* `max_display` features, not the *most important* features. Implements #136.
+- New argument `sort_features = TRUE` in `sv_importance()` and `sv_interaction()`. Set to `FALSE` to show the features as they appear in your SHAP matrix. In that case, the plots will show the *first* `max_display` features, not the *most important* features. Implements [#137](https://github.com/ModelOriented/shapviz/pull/137).
 
 ### Bug fixes
 
-- `shapviz.xgboost()` would fail if a single row is passed. This has been fixed in #142. Thanks @sebsilas for reporting.
+- `shapviz.xgboost()` would fail if a single row is passed. This has been fixed in [#142](https://github.com/ModelOriented/shapviz/pull/142). Thanks @sebsilas for reporting.
 
 # shapviz 0.9.3
 

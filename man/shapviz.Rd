@@ -11,7 +11,6 @@
 \alias{shapviz.predict_parts}
 \alias{shapviz.shapr}
 \alias{shapviz.kernelshap}
-\alias{shapviz.permshap}
 \alias{shapviz.H2ORegressionModel}
 \alias{shapviz.H2OBinomialModel}
 \alias{shapviz.H2OModel}
@@ -50,8 +49,6 @@ shapviz(object, ...)
 \method{shapviz}{shapr}(object, X = object[["x_test"]], collapse = NULL, ...)
 
 \method{shapviz}{kernelshap}(object, X = object[["X"]], which_class = NULL, collapse = NULL, ...)
-
-\method{shapviz}{permshap}(object, X = object[["X"]], which_class = NULL, collapse = NULL, ...)
 
 \method{shapviz}{H2ORegressionModel}(object, X_pred, X = as.data.frame(X_pred), collapse = NULL, ...)
 
@@ -122,8 +119,9 @@ Furthermore, \code{\link[=shapviz]{shapviz()}} can digest the results of
 \item \code{shapr::explain()},
 \item \code{treeshap::treeshap()},
 \item \code{DALEX::predict_parts()},
-\item \code{kernelshap::kernelshap()}, and
-\item \code{kernelshap::permshap()},
+\item \code{kernelshap::kernelshap()},
+\item \code{kernelshap::permshap()}, and
+\item \code{kernelshap::additive_shap()},
 }
 
 check the vignettes for examples.
@@ -159,9 +157,8 @@ return a "mshapviz" object, containing a "shapviz" object per output.
 
 \item \code{shapviz(shapr)}: Creates a "shapviz" object from \code{shapr::explain()}.
 
-\item \code{shapviz(kernelshap)}: Creates a "shapviz" object from \code{kernelshap::kernelshap()}.
-
-\item \code{shapviz(permshap)}: Creates a "shapviz" object from \code{kernelshap::permshap()}.
+\item \code{shapviz(kernelshap)}: Creates a "shapviz" object from an object of class 'kernelshap'. This includes
+results of \code{kernelshap()}, \code{permshap()}, and \code{additive_shap()}.
 
 \item \code{shapviz(H2ORegressionModel)}: Creates a "shapviz" object from a (tree-based) H2O regression model.
 

@@ -1,29 +1,15 @@
-# shapviz 0.9.3
+# shapviz 0.9.4
 
-Hi CRAN team
+Dear CRAN team
 
-This is a relatively small update, but offers much more flexibility in the interaction heuristic.
+This update mainly ensures that upcoming XGBoost version 2.x.x will work.
 
-## Checks look good
 
-### check(manual = TRUE, cran = TRUE)
+### Local checks
 
-Ok
+Ok, with note
 
-### RHub (usual notes)
-
-* checking package dependencies ... NOTE
-Packages which this enhances but not available for checking:
-  'fastshap', 'h2o', 'lightgbm'
-* checking HTML version of manual ... NOTE
-Skipping checking math rendering: package 'V8' unavailable
-* checking for non-standard things in the check directory ... NOTE
-Found the following files/directories:
-  ''NULL''
-* checking for detritus in the temp directory ... NOTE
-Found the following files/directories:
-  'lastMiKTeXException'
-  
+Packages which this enhances but not available for checking: 'fastshap', 'h2o'
 
 ### Winbuilder()
 
@@ -31,5 +17,8 @@ Status: OK
 
 ## Reverse dependencies (2)
 
-- OK: 2
-- BROKEN: 0
+- fastshap 0.1.1                        ── E: 0     | W: 1     | N: 1
+- lowml 0.1.3                           ── E: 0     | W: 0     | N: 0
+
+OK: 2
+BROKEN: 0

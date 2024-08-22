@@ -78,17 +78,10 @@ params <- list(
   learning_rate = 0.2, objective = "reg:squarederror", max_depth = 5, nthread = 1
 )
 
-fit <- xgb.train(
-  params = params, 
-  data = dtrain, 
-  watchlist = list(valid = dvalid), 
-  early_stopping_rounds = 20,
-  nrounds = 1000,
-  callbacks = list(cb.print.evaluation(period = 100))
-)
+fit <- xgb.train(params = params, data = dtrain, nrounds = 200)
 ```
 
-Let's first study selected SHAP dependence plots, evaluated on the validation dataset with around 2800 observations. Note that we could as well use the training data for this purpose, but it is a bit too large.
+Let's first study selected SHAP dependence plots, evaluated on the validation dataset with around 2800 observations. Note that we could as well use (a subset of) the training data for this purpose.
 
 ```{r}
 sv <- shapviz(fit, X_pred = X_valid)
@@ -139,14 +132,7 @@ ic <- c(
 # Modify parameters
 params$interaction_constraints <- ic
 
-fit2 <- xgb.train(
-  params = params, 
-  data = dtrain2, 
-  watchlist = list(valid = dvalid2), 
-  early_stopping_rounds = 20,
-  nrounds = 1000,
-  callbacks = list(cb.print.evaluation(period = 100))
-)
+fit2 <- xgb.train(params = params, data = dtrain2, nrounds = 200)
 
 # SHAP analysis
 sv2 <- shapviz(fit2, X_pred = X_valid2)

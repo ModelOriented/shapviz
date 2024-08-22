@@ -42,8 +42,9 @@
 #' @returns A named vector of decreasing interaction strengths.
 #' @export
 #' @seealso [sv_dependence()]
-potential_interactions <- function(obj, v, nbins = NULL, color_num = TRUE,
-                                   scale = FALSE, adjusted = FALSE) {
+potential_interactions <- function(
+    obj, v, nbins = NULL, color_num = TRUE, scale = FALSE, adjusted = FALSE
+  ) {
   stopifnot(is.shapviz(obj))
   S <- get_shap_values(obj)
   S_inter <- get_shap_interactions(obj)

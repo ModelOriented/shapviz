@@ -1,3 +1,9 @@
+# shapviz 0.9.5
+
+### Documentation
+
+Add vignette for Tidymodels.
+
 # shapviz 0.9.4
 
 ### API improvements

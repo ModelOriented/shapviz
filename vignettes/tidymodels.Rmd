@@ -9,26 +9,13 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  warning = FALSE,
-  message = FALSE,
-  fig.height = 8, 
-  fig.width = 10,
-  fig.align = "center"
-)
-```
-
-
 This vignette explains how to use {shapviz} with {Tidymodels}. 
 
 XGBoost and LightGBM bring their super-fast native TreeSHAP implementation, so the workflow is quite different from the "normal" case.
 
 ## Normal Workflow
 
-A model fitted with Tidymodels has a `predict()` method that produces a data.frame with predictions. Therefore, working with model-agnostic SHAP (permutation SHAP or Kernel SHAP) is as easy as it can get.
+A model fitted with Tidymodels has a `predict()` method that produces a data.frame with predictions. Therefore, working with model-agnostic SHAP (permutation SHAP or Kernel SHAP) is as easy as it can get. But is takes a little bit of time.
 
 ```r
 library(tidymodels)
@@ -119,7 +106,7 @@ fit <- xgb_wf |>
 # SHAP Analysis
 df_explain <- df_train[1:1000, ]
 
-X_pred <- bake(
+X_pred <- bake(  # Goes to xgboost:::predict.xgb.Booster()
   prep(dia_recipe), 
   has_role("predictor"),
   new_data = df_explain,
@@ -199,7 +186,7 @@ fit <- lgb_wf |>
 # SHAP analysis
 df_explain <- df_train[1:1000, ]
 
-X_pred <- bake(
+X_pred <- bake(   # Goes to lightgbm:::predict.lgb.Booster()
   prep(dia_recipe), 
   has_role("predictor"),
   new_data = df_explain
@@ -227,4 +214,172 @@ shap_values |>
 
 ## Probabilistic classification
 
-The code looks very similar for probabilistic classification.
+The code looks very similar for probabilistic classification. 
+
+`shapviz()` returns a list of "shapviz" objects (one per class). Sometimes, you might want to analyze them together, or select an individual class via `$name_of_interesting_class` or `[[`.
+
+### "Normal" case
+
+Simply pass `type = "prob"` to `kernelshap::kernelshap()` or `kernelshap::permshap()`:
+
+```r
+library(tidymodels)
+library(kernelshap)
+library(shapviz)
+library(patchwork)
+
+set.seed(1)
+
+iris_recipe <- iris |> 
+  recipe(Species ~ .)
+
+fit <- rand_forest(trees = 100) |>
+  set_engine("ranger") |> 
+  set_mode("classification")
+  
+iris_wf <- workflow() |>
+  add_recipe(iris_recipe) |>
+  add_model(fit)
+
+fit <- iris_wf |>
+  fit(iris)
+
+# SHAP analysis
+X_explain <- iris[-5]  # Feature columns of <=2000 rows from the training data
+
+system.time(  # 2s
+  shap_values <- permshap(fit, X_explain, type = "prob") |> 
+    shapviz()
+)
+sv_importance(shap_values)
+
+shap_values |> 
+  sv_dependence("Sepal.Length") +
+  plot_layout(ncol = 1) +
+  plot_annotation("SHAP dependence of one variable for all classes")
+
+# Use $ to extract SHAP values for one class
+shap_setosa <- shap_values$.pred_setosa
+
+shap_setosa |> 
+  sv_dependence(colnames(X_explain)) +
+  plot_annotation("SHAP dependence of all variables for one class")
+```
+
+![](../man/figures/VIGNETTE-tidy-class-normal-imp.png)
+
+![](../man/figures/VIGNETTE-tidy-class-normal-dep1.png)
+
+![](../man/figures/VIGNETTE-tidy-class-normal-dep2.png)
+
+### XGBoost
+
+For XGBoost and LightGBM, we want to use its native TreeSHAP implementation.
+
+We can slightly adapt the code from the regression example:
+
+```r
+library(tidymodels)
+library(shapviz)
+library(patchwork)
+
+set.seed(1)
+
+iris_recipe <- iris |>
+  recipe(Species ~ .)
+
+xgb_model <- boost_tree(learn_rate = 0.1, trees = 100) |>
+  set_mode("classification") |> 
+  set_engine("xgboost", verbose = -1)
+
+xgb_wf <- workflow() |>
+  add_recipe(iris_recipe) |>
+  add_model(xgb_model)
+
+fit <- xgb_wf |>
+  fit(iris)
+  
+# SHAP analysis
+df_explain <- iris  # Typically 1000 - 2000 rows from the training data
+
+X_pred <- bake(  # goes to xgboost:::predict.xgb.Booster()
+  prep(iris_recipe), 
+  has_role("predictor"),
+  new_data = df_explain,
+  composition = "matrix"
+)
+
+stopifnot(colnames(X_pred) %in% colnames(df_explain))
+
+shap_values <- extract_fit_engine(fit) |> 
+  shapviz(X_pred = X_pred, X = df_explain) |> 
+  setNames(levels(iris$Species))
+
+shap_values |> 
+  sv_importance()
+
+shap_values |> 
+  sv_dependence(v = "Sepal.Length", color_var = "Sepal.Width") +
+  plot_layout(ncol = 1, guides = "collect")
+```
+
+![](../man/figures/VIGNETTE-tidy-class-xgb-imp.png)
+
+![](../man/figures/VIGNETTE-tidy-class-xgb-dep.png)
+
+### LightGBM (binary probabilistic)
+
+Let's complete this vignette by running a binary LightGBM model.
+
+```r
+library(tidymodels)
+library(bonsai)
+library(shapviz)
+library(patchwork)
+
+set.seed(1)
+
+iris$sl_large <- factor(
+  iris$Sepal.Length > median(iris$Sepal.Length), labels = c("no", "yes")
+)
+
+iris_recipe <- iris |>
+  recipe(sl_large ~ Sepal.Width + Petal.Length + Petal.Width + Species) # |> 
+  # step_integer(some ordinal factor)
+  
+lgb_model <- boost_tree(learn_rate = 0.1, trees = 100) |>
+  set_mode("classification") |> 
+  set_engine("lightgbm", verbose = -1)
+
+lgb_wf <- workflow() |>
+  add_recipe(iris_recipe) |>
+  add_model(lgb_model)
+
+fit <- lgb_wf |>
+  fit(iris)
+  
+# SHAP analysis
+df_explain <- iris  # Typically 1000 - 2000 rows from the training data
+
+X_pred <- bake(
+  prep(iris_recipe), 
+  has_role("predictor"),
+  new_data = df_explain
+) |> 
+  bonsai:::prepare_df_lgbm()
+
+stopifnot(colnames(X_pred) %in% colnames(df_explain))
+
+shap_values <- extract_fit_engine(fit) |> 
+  shapviz(X_pred = X_pred, X = df_explain)
+
+shap_values |> 
+  sv_importance()
+
+shap_values |> 
+  sv_dependence("Species")
+```
+
+![](../man/figures/VIGNETTE-tidy-class-lgb-imp.png)
+
+![](../man/figures/VIGNETTE-tidy-class-lgb-dep.png)

@@ -55,12 +55,13 @@ fit <- rf_wf |>
   
 # SHAP analysis
 xvars <- c("carat", "color", "clarity", "cut")
-X_explain <- df_train[1:1000, xvars]
+X_explain <- df_train[1:1000, xvars]  # Use only feature columns
 
-# 90 seconds on my laptop
+# 90 seconds on laptop
+# Note: If you have more than p=8 features, use kernelshap() instead of permshap()
 system.time(
   shap_values <- fit |> 
-    kernelshap(X = X_explain) |> 
+    permshap(X = X_explain) |> 
     shapviz()
 )
 # saveRDS(shap_values, file = "shap_values.rds")
@@ -148,15 +149,13 @@ shap_values |>
 xvars <- c("carat", "color", "clarity", "cut")
 
 shap_values |> 
-  sv_dependence(xvars) +
-  ggtitle(
-    "SHAP dependence", subtitle = "Color variables selected via SHAP interactions"
-  )
+  sv_dependence(xvars) &
+  plot_annotation("SHAP dependence plots")  # patchwork magic
 
 # SHAP interactions for carat
 shap_values |> 
   sv_dependence("carat", color_var = xvars, interactions = TRUE) &
-  plot_annotation("SHAP interactions for carat")  # patchwork magic
+  plot_annotation("SHAP interactions for carat")
 ```
 ![](../man/figures/VIGNETTE-tidy-xgb-imp.png)
 ![](../man/figures/VIGNETTE-tidy-xgb-dep.png)
@@ -218,10 +217,14 @@ shap_values <- extract_fit_engine(fit) |>
   shapviz(X_pred = X_pred, X = df_explain)
 
 shap_values |> 
-  sv_importance(show_numbers = TRUE) +
-  ggtitle("SHAP importance")
+  sv_importance(show_numbers = TRUE)
 
 shap_values |> 
   sv_dependence(c("carat", "color", "clarity", "cut"))
 ```
 ![](../man/figures/VIGNETTE-tidy-lgb-imp.png)
+![](../man/figures/VIGNETTE-tidy-lgb-dep.png)
+
+## Probabilistic classification
+
+The code looks very similar for probabilistic classification.

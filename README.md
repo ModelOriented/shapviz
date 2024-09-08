@@ -15,17 +15,19 @@
 
 {shapviz} provides typical SHAP plots:
 
-- `sv_importance()`: Importance plots (bar plots and/or beeswarm plots).
+- `sv_importance()`: Importance plot (bar/beeswarm).
 - `sv_dependence()` and `sv_dependence2D()`: Dependence plots to study feature effects and interactions.
-- `sv_interaction()`: Interaction plots.
-- `sv_waterfall()`: Waterfall plots to study single predictions.
-- `sv_force()`: Force plots as alternative to waterfall plots.
+- `sv_interaction()`: Interaction plot (beeswarm).
+- `sv_waterfall()`: Waterfall plot to study single or average predictions.
+- `sv_force()`: Force plot as alternative to waterfall plot.
 
 SHAP and feature values are stored in a "shapviz" object that is built from:
 
-1. Models that know how to calculate SHAP values: XGBoost, LightGBM, h2o, or
-2. SHAP crunchers like {fastshap}, {kernelshap}, {treeshap}, {fastr}, {DALEX}, or simply from a
-3. SHAP matrix and its corresponding feature values. 
+1. Models that know how to calculate SHAP values: XGBoost, LightGBM, H2O (boosted trees).
+2. SHAP crunchers like {fastshap}, {kernelshap}, {treeshap}, {fastr}, and {DALEX}.
+3. SHAP matrix and corresponding feature values.
+
+We use {patchwork} to glue together multiple plots with (potentially) inconsistent x and/or color scale.
 
 ## Installation
 
@@ -59,12 +61,16 @@ dia_2000 <- diamonds[sample(nrow(diamonds), 2000), x]
 shp <- shapviz(fit, X_pred = data.matrix(dia_2000), X = dia_2000)
 
 sv_importance(shp, show_numbers = TRUE)
-sv_dependence(shp, v = x)
+sv_importance(shp, kind = "bee")
+sv_dependence(shp, v = x)  # patchwork
 ```
 
 ![](man/figures/README-imp.svg)
 
-![](man/figures/README-dep.png)
+<img src="man/figures/README-bee.png" alt="beeswarm" width="50%"/>
+
+<img src="man/figures/README-dep.png" alt="scatter" width="70%"/>
+
 
 Decompositions of individual predictions can be visualized as waterfall or force plot:
 
@@ -81,10 +87,10 @@ sv_force(shp, row_id = 1)
 
 Check-out the vignettes for topics like:
 
-- How to work with other SHAP packages like {fastshap}, {kernelshap} or {treeshap}?
-- SHAP interactions.
+- Basic use (includes working with other packages and SHAP interactions).
 - Multiple models, multi-output models, and subgroup analyses.
 - Plotting geographic effects.
+- Working with Tidymodels.
 
 ## References
 

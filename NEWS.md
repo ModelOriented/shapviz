@@ -2,7 +2,9 @@
 
 ### Documentation
 
-Add vignette for Tidymodels.
+- Add vignette for Tidymodels.
+- Update "basic_use" vignette.
+- Update README.
 
 # shapviz 0.9.4
 

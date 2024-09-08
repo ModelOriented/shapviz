@@ -27,19 +27,19 @@ SHAP (SHapley Additive exPlanations, see @lundberg2017) is an ingenious way to s
 
 In particular, the following plots are available:
 
-- `sv_importance()`: Importance plots (bar plots and/or beeswarm plots).
+- `sv_importance()`: Importance plot (bar/beeswarm).
 - `sv_dependence()` and `sv_dependence2D()`: Dependence plots to study feature effects and interactions.
-- `sv_interaction()`: Interaction plots.
-- `sv_waterfall()`: Waterfall plots to study single predictions.
-- `sv_force()`: Force plots as alternative to waterfall plots.
+- `sv_interaction()`: Interaction plot (beeswarm).
+- `sv_waterfall()`: Waterfall plot to study single or average predictions.
+- `sv_force()`: Force plot as alternative to waterfall plot.
 
 SHAP and feature values are stored in a "shapviz" object that is built from:
 
-1. Models that know how to calculate SHAP values: XGBoost, LightGBM, h2o, or
-2. SHAP crunchers like {fastshap}, {kernelshap}, {treeshap}, {fastr}, {DALEX}, or simply from a
-3. SHAP matrix and its corresponding feature values.
+1. Models that know how to calculate SHAP values: XGBoost, LightGBM, h2o (boosted trees).
+2. SHAP crunchers like {fastshap}, {kernelshap}, {treeshap}, {fastr}, and {DALEX}.
+3. SHAP matrix and corresponding feature values.
 
-See vignette "Multiple shapviz objects" for how to deal with multiple models or multiclass models.
+We use {patchwork} to glue together multiple plots with (potentially) inconsistent x and/or color scale.
 
 ## Installation
 
@@ -81,7 +81,7 @@ sv_importance(shp, show_numbers = TRUE)
 sv_importance(shp, kind = "beeswarm")  # kind = "both" combines bar and bee
 ```
 ```{r, fig.width=8.5, fig.height=5.5}
-sv_dependence(shp, v = x)
+sv_dependence(shp, v = x)  # patchwork object
 ```
 
 ### Decompose single predictions
@@ -110,7 +110,7 @@ If SHAP interaction values have been computed (via {xgboost} or {treeshap}), we 
 
 Note that SHAP interaction values are multiplied by two (except main effects).
 
-```{r}
+```{r, fig.width=8.5, fig.height=5.5}
 shp_i <- shapviz(
   fit, X_pred = data.matrix(dia_2000[x]), X = dia_2000, interactions = TRUE
 )
@@ -232,8 +232,9 @@ library(kernelshap)
 
 set.seed(1)
 fit <- lm(Sepal.Length ~ . + Species:Petal.Width, data = iris)
-ks <- permshap(fit, iris[-1], bg_X = iris)
+ks <- permshap(fit, iris[-1])
 shp <- shapviz(ks)
+
 sv_importance(shp)
 sv_dependence(shp, colnames(iris[-1]))
 ```

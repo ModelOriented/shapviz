@@ -113,7 +113,7 @@ sv_force.shapviz <- function(object, row_id = 1L, max_display = 6L,
       axis.ticks.y = ggplot2::element_blank(),
       axis.text.y = ggplot2::element_blank()
     ) +
-    ggplot2::labs(y = ggplot2::element_blank(), x = "SHAP value")
+    ggplot2::labs(y = ggplot2::element_blank(), x = "Prediction")
 
   if (show_annotation) {
     p <- p +

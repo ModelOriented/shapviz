@@ -1,5 +1,9 @@
 # shapviz 0.9.5
 
+### User-visible changes
+
+- `sv_waterfall()` and `sv_force()`: The x label has been changed from "SHAP value" to "Prediction".
+
 ### Documentation
 
 - Add vignette for Tidymodels.

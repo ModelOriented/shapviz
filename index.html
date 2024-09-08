@@ -110,22 +110,23 @@
 <p>{shapviz} provides typical SHAP plots:</p>
 <ul>
 <li>
-<code><a href="reference/sv_importance.html">sv_importance()</a></code>: Importance plots (bar plots and/or beeswarm plots).</li>
+<code><a href="reference/sv_importance.html">sv_importance()</a></code>: Importance plot (bar/beeswarm).</li>
 <li>
 <code><a href="reference/sv_dependence.html">sv_dependence()</a></code> and <code><a href="reference/sv_dependence2D.html">sv_dependence2D()</a></code>: Dependence plots to study feature effects and interactions.</li>
 <li>
-<code><a href="reference/sv_interaction.html">sv_interaction()</a></code>: Interaction plots.</li>
+<code><a href="reference/sv_interaction.html">sv_interaction()</a></code>: Interaction plot (beeswarm).</li>
 <li>
-<code><a href="reference/sv_waterfall.html">sv_waterfall()</a></code>: Waterfall plots to study single predictions.</li>
+<code><a href="reference/sv_waterfall.html">sv_waterfall()</a></code>: Waterfall plot to study single or average predictions.</li>
 <li>
-<code><a href="reference/sv_force.html">sv_force()</a></code>: Force plots as alternative to waterfall plots.</li>
+<code><a href="reference/sv_force.html">sv_force()</a></code>: Force plot as alternative to waterfall plot.</li>
 </ul>
 <p>SHAP and feature values are stored in a “shapviz” object that is built from:</p>
 <ol style="list-style-type: decimal">
-<li>Models that know how to calculate SHAP values: XGBoost, LightGBM, h2o, or</li>
-<li>SHAP crunchers like {fastshap}, {kernelshap}, {treeshap}, {fastr}, {DALEX}, or simply from a</li>
-<li>SHAP matrix and its corresponding feature values.</li>
+<li>Models that know how to calculate SHAP values: XGBoost, LightGBM, H2O (boosted trees).</li>
+<li>SHAP crunchers like {fastshap}, {kernelshap}, {treeshap}, {fastr}, and {DALEX}.</li>
+<li>SHAP matrix and corresponding feature values.</li>
 </ol>
+<p>We use {patchwork} to glue together multiple plots with (potentially) inconsistent x and/or color scale.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -159,9 +160,11 @@
 <span><span class="va">shp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">fit</span>, X_pred <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">dia_2000</span><span class="op">)</span>, X <span class="op">=</span> <span class="va">dia_2000</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">shp</span>, show_numbers <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp</span>, v <span class="op">=</span> <span class="va">x</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">shp</span>, kind <span class="op">=</span> <span class="st">"bee"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp</span>, v <span class="op">=</span> <span class="va">x</span><span class="op">)</span>  <span class="co"># patchwork</span></span></code></pre></div>
 <p><img src="reference/figures/README-imp.svg"></p>
-<p><img src="reference/figures/README-dep.png"></p>
+<p><img src="reference/figures/README-bee.png" alt="beeswarm" width="50%"></p>
+<p><img src="reference/figures/README-dep.png" alt="scatter" width="70%"></p>
 <p>Decompositions of individual predictions can be visualized as waterfall or force plot:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/sv_waterfall.html">sv_waterfall</a></span><span class="op">(</span><span class="va">shp</span>, row_id <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
@@ -174,10 +177,10 @@
 </h2>
 <p>Check-out the vignettes for topics like:</p>
 <ul>
-<li>How to work with other SHAP packages like {fastshap}, {kernelshap} or {treeshap}?</li>
-<li>SHAP interactions.</li>
+<li>Basic use (includes working with other packages and SHAP interactions).</li>
 <li>Multiple models, multi-output models, and subgroup analyses.</li>
 <li>Plotting geographic effects.</li>
+<li>Working with Tidymodels.</li>
 </ul>
 </div>
 <div class="section level2">

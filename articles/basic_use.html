@@ -116,31 +116,30 @@ the right visualizations. {shapviz} offers the latter.</p>
 <p>In particular, the following plots are available:</p>
 <ul>
 <li>
-<code><a href="../reference/sv_importance.html">sv_importance()</a></code>: Importance plots (bar plots and/or
-beeswarm plots).</li>
+<code><a href="../reference/sv_importance.html">sv_importance()</a></code>: Importance plot (bar/beeswarm).</li>
 <li>
 <code><a href="../reference/sv_dependence.html">sv_dependence()</a></code> and <code><a href="../reference/sv_dependence2D.html">sv_dependence2D()</a></code>:
 Dependence plots to study feature effects and interactions.</li>
 <li>
-<code><a href="../reference/sv_interaction.html">sv_interaction()</a></code>: Interaction plots.</li>
+<code><a href="../reference/sv_interaction.html">sv_interaction()</a></code>: Interaction plot (beeswarm).</li>
 <li>
-<code><a href="../reference/sv_waterfall.html">sv_waterfall()</a></code>: Waterfall plots to study single
-predictions.</li>
+<code><a href="../reference/sv_waterfall.html">sv_waterfall()</a></code>: Waterfall plot to study single or
+average predictions.</li>
 <li>
-<code><a href="../reference/sv_force.html">sv_force()</a></code>: Force plots as alternative to waterfall
-plots.</li>
+<code><a href="../reference/sv_force.html">sv_force()</a></code>: Force plot as alternative to waterfall
+plot.</li>
 </ul>
 <p>SHAP and feature values are stored in a “shapviz” object that is
 built from:</p>
 <ol style="list-style-type: decimal">
 <li>Models that know how to calculate SHAP values: XGBoost, LightGBM,
-h2o, or</li>
+h2o (boosted trees).</li>
 <li>SHAP crunchers like {fastshap}, {kernelshap}, {treeshap}, {fastr},
-{DALEX}, or simply from a</li>
-<li>SHAP matrix and its corresponding feature values.</li>
+and {DALEX}.</li>
+<li>SHAP matrix and corresponding feature values.</li>
 </ol>
-<p>See vignette “Multiple shapviz objects” for how to deal with multiple
-models or multiclass models.</p>
+<p>We use {patchwork} to glue together multiple plots with (potentially)
+inconsistent x and/or color scale.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -186,7 +185,7 @@ models or multiclass models.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">shp</span>, kind <span class="op">=</span> <span class="st">"beeswarm"</span><span class="op">)</span>  <span class="co"># kind = "both" combines bar and bee</span></span></code></pre></div>
 <p><img src="basic_use_files/figure-html/unnamed-chunk-2-2.png" width="528" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp</span>, v <span class="op">=</span> <span class="va">x</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp</span>, v <span class="op">=</span> <span class="va">x</span><span class="op">)</span>  <span class="co"># patchwork object</span></span></code></pre></div>
 <p><img src="basic_use_files/figure-html/unnamed-chunk-3-1.png" width="816" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -223,11 +222,11 @@ effects).</p>
 <span>  <span class="va">fit</span>, X_pred <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">dia_2000</span><span class="op">[</span><span class="va">x</span><span class="op">]</span><span class="op">)</span>, X <span class="op">=</span> <span class="va">dia_2000</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp_i</span>, v <span class="op">=</span> <span class="st">"carat"</span>, color_var <span class="op">=</span> <span class="va">x</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="basic_use_files/figure-html/unnamed-chunk-7-1.png" width="528" style="display: block; margin: auto;"></p>
+<p><img src="basic_use_files/figure-html/unnamed-chunk-7-1.png" width="816" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/sv_interaction.html">sv_interaction</a></span><span class="op">(</span><span class="va">shp_i</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, vjust <span class="op">=</span> <span class="fl">1</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="basic_use_files/figure-html/unnamed-chunk-7-2.png" width="528" style="display: block; margin: auto;"></p>
+<p><img src="basic_use_files/figure-html/unnamed-chunk-7-2.png" width="816" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div class="section level2">
@@ -344,8 +343,9 @@ algorithm in DALEX:</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span> <span class="op">+</span> <span class="va">Species</span><span class="op">:</span><span class="va">Petal.Width</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
-<span><span class="va">ks</span> <span class="op">&lt;-</span> <span class="fu">permshap</span><span class="op">(</span><span class="va">fit</span>, <span class="va">iris</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>, bg_X <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
+<span><span class="va">ks</span> <span class="op">&lt;-</span> <span class="fu">permshap</span><span class="op">(</span><span class="va">fit</span>, <span class="va">iris</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">shp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">ks</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu"><a href="../reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">shp</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp</span>, <span class="fu"><a href="https://rdrr.io/pkg/h2o/man/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>

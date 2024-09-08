@@ -130,7 +130,11 @@ sv_dependence2D.shapviz <- function(object, x, y,
   ggplot2::ggplot(dat, ggplot2::aes(x = .data[[x]], y = .data[[y]], color = SHAP)) +
     ggplot2::geom_jitter(width = jitter_width, height = jitter_height, ...) +
     do.call(vir, viridis_args) +
-    ggplot2::theme(legend.box.spacing = grid::unit(0, "pt"))
+    ggplot2::theme(
+      legend.box.spacing = grid::unit(0, "pt"),
+      legend.key.width = grid::unit(0.5, "lines"),
+      legend.key.height = grid::unit(1, "lines")
+    )
 }
 
 #' @describeIn sv_dependence2D

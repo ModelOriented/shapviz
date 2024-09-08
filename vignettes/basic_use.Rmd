@@ -80,7 +80,7 @@ shp <- shapviz(fit, X_pred = data.matrix(dia_2000), X = dia_2000)
 sv_importance(shp, show_numbers = TRUE)
 sv_importance(shp, kind = "beeswarm")  # kind = "both" combines bar and bee
 ```
-```{r, fig.width=8.5, fig.height=5.5}
+```{r, fig.width=9, fig.height=5.5}
 sv_dependence(shp, v = x)  # patchwork object
 ```
 

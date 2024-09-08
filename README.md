@@ -69,7 +69,7 @@ sv_dependence(shp, v = x)  # patchwork
 
 <img src="man/figures/README-bee.png" alt="beeswarm" width="50%"/>
 
-<img src="man/figures/README-dep.png" alt="scatter" width="70%"/>
+<img src="man/figures/README-dep.png" alt="scatter" width="90%"/>
 
 
 Decompositions of individual predictions can be visualized as waterfall or force plot:

@@ -1,14 +1,20 @@
-# shapviz 0.9.5
+# shapviz 0.10.0
 
-### User-visible changes
+### Visible changes in plots
 
+- `sv_dependence()`: The color bar title has been moved from top (horizontal) to left (vertical), and the color bar is less wide (and slightly less high). Furthermore, spacings around color bar have been reduced.
+- `sv_dependence2D(): The color bar is less wide (and slightly less high).
 - `sv_waterfall()` and `sv_force()`: The x label has been changed from "SHAP value" to "Prediction".
 
 ### Documentation
 
 - Add vignette for Tidymodels.
-- Update "basic_use" vignette.
-- Update README.
+- Update of "basic_use" vignette.
+- Update of README.
+
+### Other changes
+
+- Bumped minimal {ggplot2} version from 3.4 to 3.5
 
 # shapviz 0.9.4
 

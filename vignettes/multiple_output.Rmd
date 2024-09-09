@@ -14,8 +14,8 @@ knitr::opts_chunk$set(
   comment = "#>",
   warning = FALSE,
   message = FALSE,
-  fig.height = 5, 
-  fig.width = 6,
+  fig.width = 5.5, 
+  fig.height = 3.5,
   fig.align = "center"
 )
 ```
@@ -65,7 +65,7 @@ sv_importance(x)
 sv_importance(x, bar_type = "stack")  # Same but stacked
 
 sv_dependence(x, v = "Petal.Length") +
-  plot_layout(ncol = 1) &
+  plot_layout(ncol = 2) &
   ylim(-3, 4)  # Same y scale to get impression on strength
 ```
 
@@ -136,7 +136,7 @@ x_subgroups <- split(shap_xgb, f = iris$Species)
 sv_importance(x_subgroups, bar_type = "stack")
 
 sv_dependence(x_subgroups, v = "Petal.Length") +
-  plot_layout(ncol = 1) & 
+  plot_layout(ncol = 2) & 
   xlim(1, 7) &
   ylim(-1.4, 2.2)
 ```
@@ -151,7 +151,7 @@ In the last example, we used a regression model fitted via XGBoost. How does it 
 library(kernelshap)
 
 fit_lm <- lm(Sepal.Length ~ ., data = iris)
-shap_lm <- shapviz(kernelshap(fit_lm, iris[-1], bg_X = iris))
+shap_lm <- shapviz(additive_shap(fit_lm, iris[-1], bg_X = iris))
 
 # Combine "shapviz" objects
 mshap <- c(lm = shap_lm, xgb = shap_xgb)

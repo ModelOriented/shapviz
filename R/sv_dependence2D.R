@@ -33,6 +33,7 @@
 #'   data.matrix(iris[, -1]), label = iris[, 1], nthread = 1
 #' )
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
+#'
 #' sv <- shapviz(fit, X_pred = dtrain, X = iris)
 #' sv_dependence2D(sv, x = "Petal.Length", y = "Species")
 #' sv_dependence2D(sv, x = c("Petal.Length", "Species"), y = "Sepal.Width")
@@ -130,11 +131,7 @@ sv_dependence2D.shapviz <- function(object, x, y,
   ggplot2::ggplot(dat, ggplot2::aes(x = .data[[x]], y = .data[[y]], color = SHAP)) +
     ggplot2::geom_jitter(width = jitter_width, height = jitter_height, ...) +
     do.call(vir, viridis_args) +
-    ggplot2::theme(
-      legend.box.spacing = grid::unit(0, "pt"),
-      legend.key.width = grid::unit(0.5, "lines"),
-      legend.key.height = grid::unit(1, "lines")
-    )
+    .slim_colorbar()
 }
 
 #' @describeIn sv_dependence2D

@@ -2,8 +2,7 @@
 
 ### Visible changes in plots
 
-- `sv_dependence()`: The color bar title has been moved from top (horizontal) to left (vertical), and the color bar is less wide (and slightly less high). Furthermore, spacings around color bar have been reduced.
-- `sv_dependence2D(): The color bar is less wide (and slightly less high).
+- Color bars take less space: The ggplot theme for color bars has been carefully adapted to save space. The changes are best visible for `sv_dependence()`, where also the color bar title has been rotated.
 - `sv_waterfall()` and `sv_force()`: The x label has been changed from "SHAP value" to "Prediction".
 
 ### Documentation

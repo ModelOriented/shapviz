@@ -7,7 +7,6 @@
 # 2) Increase package version in "use_description" below.
 # 3) Go through this script and carefully answer "no" if a "use_*" function
 #    asks to overwrite the existing files. Don't skip that function call.
-# devtools::load_all()
 
 library(usethis)
 
@@ -98,12 +97,16 @@ use_revdep()
 
 library(devtools)
 
+# devtools::load_all()
+
 document()
 test()
 check(manual = TRUE, cran = TRUE, vignettes = FALSE)
 build(vignettes = FALSE)
 # build(binary = TRUE)
 install(upgrade = FALSE)
+
+library(shapviz)
 
 # Run only if package is public(!) and should go to CRAN
 if (FALSE) {

@@ -180,14 +180,8 @@ sv_dependence.shapviz <- function(object, v, color_var = "auto", color = "#3b528
     ggplot2::geom_jitter(width = jitter_width, height = 0, ...) +
     ggplot2::ylab(y_lab) +
     do.call(vir, viridis_args) +
-    ggplot2::theme(
-      legend.box.spacing = grid::unit(0, "pt"),
-      legend.margin = ggplot2::margin(r = 0.1, unit = "lines"),
-      legend.key.width = grid::unit(0.5, "lines"),
-      legend.key.height = grid::unit(1, "lines"),
-      legend.title.position = "left",
-      legend.title = ggplot2::element_text(angle = 90, hjust = 0.5, vjust = 0)
-    )
+    .rotate_colorbar_title() +
+    .slim_colorbar()
 }
 
 #' @describeIn sv_dependence
@@ -222,9 +216,10 @@ sv_dependence.mshapviz <- function(object, v, color_var = "auto", color = "#3b52
   patchwork::wrap_plots(plot_list)
 }
 
-# Helper functions
+# Helper function
 
 # Checks if z is discrete
 .is_discrete <- function(z, n_unique) {
   is.factor(z) || is.character(z) || is.logical(z) || (length(unique(z)) <= n_unique)
 }
+

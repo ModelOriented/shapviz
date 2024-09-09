@@ -22,6 +22,7 @@
 #'   data.matrix(iris[, -1]), label = iris[, 1], nthread = 1
 #' )
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
+#'
 #' x <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 #' sv_interaction(x, kind = "no")
 #' sv_interaction(x, max_display = 2, size = 3)
@@ -100,10 +101,11 @@ sv_interaction.shapviz <- function(object, kind = c("beeswarm", "no"),
     ) +
     ggplot2::theme(
       panel.spacing = grid::unit(0.2, "lines"),
-      legend.box.spacing = grid::unit(0, "pt"),
       axis.ticks.y = ggplot2::element_blank(),
       axis.text.y = ggplot2::element_blank()
-    )
+    ) +
+    .rotate_colorbar_title() +
+    .slim_colorbar(height = 1.6)
 }
 
 #' @describeIn sv_interaction

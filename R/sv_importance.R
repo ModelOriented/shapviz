@@ -50,6 +50,7 @@
 #' X_train <- data.matrix(iris[, -1])
 #' dtrain <- xgboost::xgb.DMatrix(X_train, label = iris[, 1], nthread = 1)
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
+#'
 #' x <- shapviz(fit, X_pred = X_train)
 #' sv_importance(x)
 #' sv_importance(x, kind = "no")
@@ -131,7 +132,8 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
       ggplot2::labs(
         x = "SHAP value", y = ggplot2::element_blank(), color = color_bar_title
       ) +
-      ggplot2::theme(legend.box.spacing = grid::unit(0, "pt"))
+      .rotate_colorbar_title() +
+      .slim_colorbar(height = 1.6)
   }
   if (show_numbers) {
     p <- p +
@@ -265,27 +267,6 @@ sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "
   X_scaled <- apply(data.matrix(X), 2L, FUN = .min_max_scale)
   if (nrow(X) == 1L) t(X_scaled) else X_scaled
 }
-
-# ncol < 2 treats the special case of constant feature values (e.g., if n = 1)
-.get_color_scale <- function(viridis_args, bar = TRUE, ncol = 2L) {
-  if (bar) {
-    viridis_args_plus <-
-      list(
-        breaks = if (ncol >= 2L) 0:1 else 0.5,
-        labels = if (ncol >= 2L) c("Low", "High") else "Avg",
-        guide = ggplot2::guide_colorbar(
-          barwidth = 0.4,
-          barheight = 8,
-          title.theme = ggplot2::element_text(angle = 90, hjust = 0.5, vjust = 0),
-          title.position = "left"
-        )
-      )
-  } else {
-    viridis_args_plus <- list(guide = "none")
-  }
-  return(do.call(ggplot2::scale_color_viridis_c, c(viridis_args, viridis_args_plus)))
-}
-
 
 #' Number Formatter
 #'

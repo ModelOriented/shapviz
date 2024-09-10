@@ -1,6 +1,6 @@
 Package: shapviz
 Title: SHAP Visualizations
-Version: 0.9.5
+Version: 0.10.0
 Authors@R: c(
     person("Michael", "Mayer", , "mayermichael79@gmail.com", role = c("aut", "cre")),
     person("Adrian", "Stando", , "adrian.j.stando@gmail.com", role = "ctb")

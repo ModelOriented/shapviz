@@ -24,11 +24,11 @@
 }
 
 # Slimmer colorbars with less space
-.slim_colorbar <- function(height = 1.2) {
+.slim_colorbar <- function(height = 1.2, width = 0.5) {
   ggplot2::theme(
     legend.box.spacing = grid::unit(0, "lines"),
     legend.key.spacing = grid::unit(0.3, "lines"),
-    legend.key.width = grid::unit(0.5, "lines"),
+    legend.key.width = grid::unit(width, "lines"),
     legend.key.height = grid::unit(height, "lines"),
     legend.ticks.length = ggplot2::rel(0.3)
   )

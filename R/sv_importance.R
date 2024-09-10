@@ -198,7 +198,8 @@ sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "
         ) +
         ggplot2::labs(fill = ggplot2::element_blank()) +
         do.call(ggplot2::scale_fill_viridis_d, viridis_args) +
-        ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE))
+        ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE)) +
+        .slim_colorbar(width = 1)
     } else {  # facets
       p <- ggplot2::ggplot(imp_df, ggplot2::aes(x = values, y = feature)) +
         ggplot2::geom_bar(fill = fill, width = bar_width, stat = "identity", ...) +

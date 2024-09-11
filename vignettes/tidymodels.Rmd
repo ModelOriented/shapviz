@@ -183,7 +183,7 @@ splits <- diamonds |>
 df_train <- training(splits)
 
 dia_recipe <- df_train |>
-  recipe(price ~ log_carat + color + clarity + cut) |> 
+  recipe(log_price ~ log_carat + color + clarity + cut) |> 
   step_integer(color, clarity)  # we keep cut a factor (for illustration only)
 
 # Should be tuned in practice

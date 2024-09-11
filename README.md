@@ -49,20 +49,27 @@ library(shapviz)
 library(ggplot2)
 library(xgboost)
 
-set.seed(10)
+set.seed(1)
 
-# Build model
-x <- c("carat", "cut", "color", "clarity")
-dtrain <- xgb.DMatrix(data.matrix(diamonds[x]), label = diamonds$price)
-fit <- xgb.train(params = list(learning_rate = 0.1), data = dtrain, nrounds = 65)
+xvars <- c("log_carat", "cut", "color", "clarity")
+X <- diamonds |> 
+  transform(log_carat = log(carat)) |> 
+  subset(select = xvars)
+
+# Fit (untuned) model
+fit <- xgb.train(
+  params = list(learning_rate = 0.1), 
+  data = xgb.DMatrix(data.matrix(X), label = log(diamonds$price)),
+  nrounds = 65
+)
 
 # SHAP analysis: X can even contain factors
-dia_2000 <- diamonds[sample(nrow(diamonds), 2000), x]
-shp <- shapviz(fit, X_pred = data.matrix(dia_2000), X = dia_2000)
+X_explain <- X[sample(nrow(X), 2000), ]
+shp <- shapviz(fit, X_pred = data.matrix(X_explain), X = X_explain)
 
 sv_importance(shp, show_numbers = TRUE)
 sv_importance(shp, kind = "bee")
-sv_dependence(shp, v = x)  # patchwork
+sv_dependence(shp, v = xvars)  # patchwork
 ```
 
 ![](man/figures/README-imp.svg)

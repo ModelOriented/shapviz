@@ -122,11 +122,16 @@ can get. But is takes a little bit of time.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">splits</span> <span class="op">&lt;-</span> <span class="fu">initial_split</span><span class="op">(</span><span class="va">diamonds</span><span class="op">)</span></span>
+<span><span class="va">splits</span> <span class="op">&lt;-</span> <span class="va">diamonds</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span></span>
+<span>    log_price <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/h2o/man/H2OFrame.html" class="external-link">log</a></span><span class="op">(</span><span class="va">price</span><span class="op">)</span>,</span>
+<span>    log_carat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/h2o/man/H2OFrame.html" class="external-link">log</a></span><span class="op">(</span><span class="va">carat</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">initial_split</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">df_train</span> <span class="op">&lt;-</span> <span class="fu">training</span><span class="op">(</span><span class="va">splits</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">dia_recipe</span> <span class="op">&lt;-</span> <span class="va">df_train</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">recipe</span><span class="op">(</span><span class="va">price</span> <span class="op">~</span> <span class="va">carat</span> <span class="op">+</span> <span class="va">color</span> <span class="op">+</span> <span class="va">clarity</span> <span class="op">+</span> <span class="va">cut</span><span class="op">)</span></span>
+<span>  <span class="fu">recipe</span><span class="op">(</span><span class="va">log_price</span> <span class="op">~</span> <span class="va">log_carat</span> <span class="op">+</span> <span class="va">color</span> <span class="op">+</span> <span class="va">clarity</span> <span class="op">+</span> <span class="va">cut</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">rf</span> <span class="op">&lt;-</span> <span class="fu">rand_forest</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"regression"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">set_engine</span><span class="op">(</span><span class="st">"ranger"</span><span class="op">)</span></span>
@@ -139,10 +144,10 @@ can get. But is takes a little bit of time.</p>
 <span>  <span class="fu">fit</span><span class="op">(</span><span class="va">df_train</span><span class="op">)</span></span>
 <span>  </span>
 <span><span class="co"># SHAP analysis</span></span>
-<span><span class="va">xvars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"carat"</span>, <span class="st">"color"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span><span class="op">)</span></span>
+<span><span class="va">xvars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"log_carat"</span>, <span class="st">"color"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span><span class="op">)</span></span>
 <span><span class="va">X_explain</span> <span class="op">&lt;-</span> <span class="va">df_train</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="va">xvars</span><span class="op">]</span>  <span class="co"># Use only feature columns</span></span>
 <span></span>
-<span><span class="co"># 90 seconds on laptop</span></span>
+<span><span class="co"># 1.5 minutes on laptop</span></span>
 <span><span class="co"># Note: If you have more than p=8 features, use kernelshap() instead of permshap()</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span></span>
 <span>  <span class="va">shap_values</span> <span class="op">&lt;-</span> <span class="va">fit</span> <span class="op">|&gt;</span> </span>
@@ -185,17 +190,23 @@ predictors.</p>
 One-Hot-Encodings. They are usually not necessary and make the workflow
 more complicated. If you can’t avoid this, check the
 <code>collapse</code> argument in <code><a href="../reference/shapviz.html">shapviz()</a></code>.</p>
-<pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org" class="external-link">tidymodels</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org" class="external-link">tidymodels</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ModelOriented/shapviz" class="external-link">shapviz</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">splits</span> <span class="op">&lt;-</span> <span class="fu">initial_split</span><span class="op">(</span><span class="va">diamonds</span><span class="op">)</span></span>
+<span><span class="va">splits</span> <span class="op">&lt;-</span> <span class="va">diamonds</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span></span>
+<span>    log_price <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/h2o/man/H2OFrame.html" class="external-link">log</a></span><span class="op">(</span><span class="va">price</span><span class="op">)</span>,</span>
+<span>    log_carat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/h2o/man/H2OFrame.html" class="external-link">log</a></span><span class="op">(</span><span class="va">carat</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">initial_split</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">df_train</span> <span class="op">&lt;-</span> <span class="fu">training</span><span class="op">(</span><span class="va">splits</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">dia_recipe</span> <span class="op">&lt;-</span> <span class="va">df_train</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">recipe</span><span class="op">(</span><span class="va">price</span> <span class="op">~</span> <span class="va">carat</span> <span class="op">+</span> <span class="va">color</span> <span class="op">+</span> <span class="va">clarity</span> <span class="op">+</span> <span class="va">cut</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">recipe</span><span class="op">(</span><span class="va">log_price</span> <span class="op">~</span> <span class="va">log_carat</span> <span class="op">+</span> <span class="va">color</span> <span class="op">+</span> <span class="va">clarity</span> <span class="op">+</span> <span class="va">cut</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">step_integer</span><span class="op">(</span><span class="fu">all_ordered</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Should be tuned in practice</span></span>
@@ -232,14 +243,14 @@ more complicated. If you can’t avoid this, check the
 <span><span class="co"># Absolute average SHAP interactions (off-diagonals already multiplied by 2)</span></span>
 <span><span class="va">shap_values</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/sv_interaction.html">sv_interaction</a></span><span class="op">(</span>kind <span class="op">=</span> <span class="st">"no"</span><span class="op">)</span></span>
-<span><span class="co">#              carat  clarity     color       cut</span></span>
-<span><span class="co"># carat   2998.30769 591.8859 425.63902  99.11383</span></span>
-<span><span class="co"># clarity  591.88589 632.2544 192.14847  25.47713</span></span>
-<span><span class="co"># color    425.63906 192.1484 424.91991  20.15823</span></span>
-<span><span class="co"># cut       99.11392  25.4771  20.15823 109.26374</span></span>
+<span><span class="co">#            log_carat     clarity       color         cut</span></span>
+<span><span class="co"># log_carat 0.87400688 0.067567245 0.032599394 0.024273852</span></span>
+<span><span class="co"># clarity   0.06756720 0.143393109 0.028236784 0.004910905</span></span>
+<span><span class="co"># color     0.03259941 0.028236796 0.095656042 0.004804729</span></span>
+<span><span class="co"># cut       0.02427382 0.004910904 0.004804732 0.031114735</span></span>
 <span></span>
 <span><span class="co"># Usual dependence plot</span></span>
-<span><span class="va">xvars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"carat"</span>, <span class="st">"color"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span><span class="op">)</span></span>
+<span><span class="va">xvars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"log_carat"</span>, <span class="st">"color"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">shap_values</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">xvars</span><span class="op">)</span> <span class="op">&amp;</span></span>
@@ -247,8 +258,8 @@ more complicated. If you can’t avoid this, check the
 <span></span>
 <span><span class="co"># SHAP interactions for carat</span></span>
 <span><span class="va">shap_values</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="st">"carat"</span>, color_var <span class="op">=</span> <span class="va">xvars</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&amp;</span></span>
-<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span><span class="st">"SHAP interactions for carat"</span><span class="op">)</span></span></code></pre>
+<span>  <span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="st">"log_carat"</span>, color_var <span class="op">=</span> <span class="va">xvars</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span><span class="st">"SHAP interactions for carat"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="../reference/figures/VIGNETTE-tidy-xgb-imp.png"><img src="../reference/figures/VIGNETTE-tidy-xgb-dep.png"></p>
 <p><img src="../reference/figures/VIGNETTE-tidy-xgb-inter.png"></p>
 </div>
@@ -273,11 +284,16 @@ internal encodings.</li>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">splits</span> <span class="op">&lt;-</span> <span class="fu">initial_split</span><span class="op">(</span><span class="va">diamonds</span><span class="op">)</span></span>
+<span><span class="va">splits</span> <span class="op">&lt;-</span> <span class="va">diamonds</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span></span>
+<span>    log_price <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/h2o/man/H2OFrame.html" class="external-link">log</a></span><span class="op">(</span><span class="va">price</span><span class="op">)</span>,</span>
+<span>    log_carat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/h2o/man/H2OFrame.html" class="external-link">log</a></span><span class="op">(</span><span class="va">carat</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">initial_split</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">df_train</span> <span class="op">&lt;-</span> <span class="fu">training</span><span class="op">(</span><span class="va">splits</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">dia_recipe</span> <span class="op">&lt;-</span> <span class="va">df_train</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">recipe</span><span class="op">(</span><span class="va">price</span> <span class="op">~</span> <span class="va">carat</span> <span class="op">+</span> <span class="va">color</span> <span class="op">+</span> <span class="va">clarity</span> <span class="op">+</span> <span class="va">cut</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">recipe</span><span class="op">(</span><span class="va">price</span> <span class="op">~</span> <span class="va">log_carat</span> <span class="op">+</span> <span class="va">color</span> <span class="op">+</span> <span class="va">clarity</span> <span class="op">+</span> <span class="va">cut</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">step_integer</span><span class="op">(</span><span class="va">color</span>, <span class="va">clarity</span><span class="op">)</span>  <span class="co"># we keep cut a factor (for illustration only)</span></span>
 <span></span>
 <span><span class="co"># Should be tuned in practice</span></span>
@@ -302,9 +318,9 @@ internal encodings.</li>
 <span>  <span class="fu">bonsai</span><span class="fu">:::</span><span class="fu">prepare_df_lgbm</span><span class="op">(</span><span class="op">)</span></span>
 <span>  </span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">X_pred</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="co">#      carat color clarity cut</span></span>
-<span><span class="co"># [1,]  1.37     5       5   3</span></span>
-<span><span class="co"># [2,]  0.55     2       3   4</span></span>
+<span><span class="co">#       log_carat color clarity cut</span></span>
+<span><span class="co"># [1,]  0.3148107     5       5   3</span></span>
+<span><span class="co"># [2,] -0.5978370     2       3   4</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/h2o/man/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">X_pred</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/h2o/man/h2o.match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/h2o/man/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">df_explain</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -315,7 +331,7 @@ internal encodings.</li>
 <span>  <span class="fu"><a href="../reference/sv_importance.html">sv_importance</a></span><span class="op">(</span>show_numbers <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">shap_values</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"carat"</span>, <span class="st">"color"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"log_carat"</span>, <span class="st">"color"</span>, <span class="st">"clarity"</span>, <span class="st">"cut"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="../reference/figures/VIGNETTE-tidy-lgb-imp.png"><img src="../reference/figures/VIGNETTE-tidy-lgb-dep.png"></p>
 </div>
 <div class="section level2">

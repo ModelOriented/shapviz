@@ -24,11 +24,16 @@ library(shapviz)
 
 set.seed(10)
 
-splits <- initial_split(diamonds)
+splits <- diamonds |> 
+  transform(
+    log_price = log(price),
+    log_carat = log(carat)
+) |> 
+  initial_split()
 df_train <- training(splits)
 
 dia_recipe <- df_train |>
-  recipe(price ~ carat + color + clarity + cut)
+  recipe(log_price ~ log_carat + color + clarity + cut)
 
 rf <- rand_forest(mode = "regression") |>
   set_engine("ranger")
@@ -41,10 +46,10 @@ fit <- rf_wf |>
   fit(df_train)
   
 # SHAP analysis
-xvars <- c("carat", "color", "clarity", "cut")
+xvars <- c("log_carat", "color", "clarity", "cut")
 X_explain <- df_train[1:1000, xvars]  # Use only feature columns
 
-# 90 seconds on laptop
+# 1.5 minutes on laptop
 # Note: If you have more than p=8 features, use kernelshap() instead of permshap()
 system.time(
   shap_values <- fit |> 
@@ -78,18 +83,23 @@ of course, you don't *have* to work with SHAP interactions, especially if your m
 
 **Remark:** Don't use 1:m transforms such as One-Hot-Encodings. They are usually not necessary and make the workflow more complicated. If you can't avoid this, check the `collapse` argument in `shapviz()`.
 
-```
+```r
 library(tidymodels)
 library(shapviz)
 library(patchwork)
 
 set.seed(10)
 
-splits <- initial_split(diamonds)
+splits <- diamonds |> 
+  transform(
+    log_price = log(price),
+    log_carat = log(carat)
+) |> 
+  initial_split()
 df_train <- training(splits)
 
 dia_recipe <- df_train |>
-  recipe(price ~ carat + color + clarity + cut) |> 
+  recipe(log_price ~ log_carat + color + clarity + cut) |> 
   step_integer(all_ordered())
 
 # Should be tuned in practice
@@ -126,14 +136,14 @@ shap_values |>
 # Absolute average SHAP interactions (off-diagonals already multiplied by 2)
 shap_values |> 
   sv_interaction(kind = "no")
-#              carat  clarity     color       cut
-# carat   2998.30769 591.8859 425.63902  99.11383
-# clarity  591.88589 632.2544 192.14847  25.47713
-# color    425.63906 192.1484 424.91991  20.15823
-# cut       99.11392  25.4771  20.15823 109.26374
+#            log_carat     clarity       color         cut
+# log_carat 0.87400688 0.067567245 0.032599394 0.024273852
+# clarity   0.06756720 0.143393109 0.028236784 0.004910905
+# color     0.03259941 0.028236796 0.095656042 0.004804729
+# cut       0.02427382 0.004910904 0.004804732 0.031114735
 
 # Usual dependence plot
-xvars <- c("carat", "color", "clarity", "cut")
+xvars <- c("log_carat", "color", "clarity", "cut")
 
 shap_values |> 
   sv_dependence(xvars) &
@@ -141,7 +151,7 @@ shap_values |>
 
 # SHAP interactions for carat
 shap_values |> 
-  sv_dependence("carat", color_var = xvars, interactions = TRUE) &
+  sv_dependence("log_carat", color_var = xvars, interactions = TRUE) &
   plot_annotation("SHAP interactions for carat")
 ```
 ![](../man/figures/VIGNETTE-tidy-xgb-imp.png)
@@ -164,11 +174,16 @@ library(shapviz)
 
 set.seed(10)
 
-splits <- initial_split(diamonds)
+splits <- diamonds |> 
+  transform(
+    log_price = log(price),
+    log_carat = log(carat)
+) |> 
+  initial_split()
 df_train <- training(splits)
 
 dia_recipe <- df_train |>
-  recipe(price ~ carat + color + clarity + cut) |> 
+  recipe(price ~ log_carat + color + clarity + cut) |> 
   step_integer(color, clarity)  # we keep cut a factor (for illustration only)
 
 # Should be tuned in practice
@@ -193,9 +208,9 @@ X_pred <- bake(   # Goes to lightgbm:::predict.lgb.Booster()
   bonsai:::prepare_df_lgbm()
   
 head(X_pred, 2)
-#      carat color clarity cut
-# [1,]  1.37     5       5   3
-# [2,]  0.55     2       3   4
+#       log_carat color clarity cut
+# [1,]  0.3148107     5       5   3
+# [2,] -0.5978370     2       3   4
 
 stopifnot(colnames(X_pred) %in% colnames(df_explain))
 
@@ -206,7 +221,7 @@ shap_values |>
   sv_importance(show_numbers = TRUE)
 
 shap_values |> 
-  sv_dependence(c("carat", "color", "clarity", "cut"))
+  sv_dependence(c("log_carat", "color", "clarity", "cut"))
 ```
 ![](../man/figures/VIGNETTE-tidy-lgb-imp.png)
 ![](../man/figures/VIGNETTE-tidy-lgb-dep.png)

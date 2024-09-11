@@ -168,14 +168,17 @@
 <span></span>
 <span><span class="fu"><a href="reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">shp</span>, show_numbers <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">shp</span>, kind <span class="op">=</span> <span class="st">"bee"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp</span>, v <span class="op">=</span> <span class="va">xvars</span><span class="op">)</span>  <span class="co"># patchwork</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp</span>, v <span class="op">=</span> <span class="va">xvars</span><span class="op">)</span>  <span class="co"># multiple plots -&gt; patchwork</span></span></code></pre></div>
 <p><img src="reference/figures/README-imp.svg"></p>
-<p><img src="reference/figures/README-bee.png" alt="beeswarm" width="50%"></p>
-<p><img src="reference/figures/README-dep.png" alt="scatter" width="70%"></p>
+<p><img src="reference/figures/README-bee.svg"></p>
+<p><img src="reference/figures/README-dep.svg"></p>
 <p>Decompositions of individual predictions can be visualized as waterfall or force plot:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/sv_waterfall.html">sv_waterfall</a></span><span class="op">(</span><span class="va">shp</span>, row_id <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/sv_force.html">sv_force</a></span><span class="op">(</span><span class="va">shp</span>, row_id <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/sv_waterfall.html">sv_waterfall</a></span><span class="op">(</span><span class="va">shp</span>, row_id <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Waterfall plot for second prediction"</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="fu"><a href="reference/sv_force.html">sv_force</a></span><span class="op">(</span><span class="va">shp</span>, row_id <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Force plot for second prediction"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-waterfall.svg"></p>
 <p><img src="reference/figures/README-force.svg"></p>
 </div>

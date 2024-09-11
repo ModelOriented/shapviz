@@ -293,7 +293,7 @@ internal encodings.</li>
 <span><span class="va">df_train</span> <span class="op">&lt;-</span> <span class="fu">training</span><span class="op">(</span><span class="va">splits</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">dia_recipe</span> <span class="op">&lt;-</span> <span class="va">df_train</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">recipe</span><span class="op">(</span><span class="va">price</span> <span class="op">~</span> <span class="va">log_carat</span> <span class="op">+</span> <span class="va">color</span> <span class="op">+</span> <span class="va">clarity</span> <span class="op">+</span> <span class="va">cut</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">recipe</span><span class="op">(</span><span class="va">log_price</span> <span class="op">~</span> <span class="va">log_carat</span> <span class="op">+</span> <span class="va">color</span> <span class="op">+</span> <span class="va">clarity</span> <span class="op">+</span> <span class="va">cut</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">step_integer</span><span class="op">(</span><span class="va">color</span>, <span class="va">clarity</span><span class="op">)</span>  <span class="co"># we keep cut a factor (for illustration only)</span></span>
 <span></span>
 <span><span class="co"># Should be tuned in practice</span></span>

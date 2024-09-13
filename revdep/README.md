@@ -1,35 +1,35 @@
 # Platform
 
-|field    |value                                                    |
-|:--------|:--------------------------------------------------------|
-|version  |R version 4.4.1 (2024-06-14 ucrt)                        |
-|os       |Windows 11 x64 (build 22631)                             |
-|system   |x86_64, mingw32                                          |
-|ui       |RStudio                                                  |
-|language |(EN)                                                     |
-|collate  |German_Switzerland.utf8                                  |
-|ctype    |German_Switzerland.utf8                                  |
-|tz       |Europe/Zurich                                            |
-|date     |2024-08-20                                               |
-|rstudio  |2024.04.2+764 Chocolate Cosmos (desktop)                 |
-|pandoc   |3.1.6 @ C:\Users\Michael\AppData\Local\Pandoc\pandoc.exe |
+|field    |value                                    |
+|:--------|:----------------------------------------|
+|version  |R version 4.4.1 (2024-06-14 ucrt)        |
+|os       |Windows 11 x64 (build 22631)             |
+|system   |x86_64, mingw32                          |
+|ui       |RStudio                                  |
+|language |(EN)                                     |
+|collate  |English_Switzerland.utf8                 |
+|ctype    |English_Switzerland.utf8                 |
+|tz       |Europe/Zurich                            |
+|date     |2024-09-13                               |
+|rstudio  |2024.04.2+764 Chocolate Cosmos (desktop) |
+|pandoc   |NA                                       |
 
 # Dependencies
 
 |package      |old     |new     |Δ  |
 |:------------|:-------|:-------|:--|
-|shapviz      |0.9.3   |0.9.4   |*  |
+|shapviz      |0.9.4   |0.9.5   |*  |
 |cli          |3.6.3   |3.6.3   |   |
 |colorspace   |2.1-1   |2.1-1   |   |
 |commonmark   |1.9.1   |1.9.1   |   |
-|curl         |5.2.1   |5.2.1   |   |
-|data.table   |1.15.4  |1.15.4  |   |
+|curl         |5.2.2   |5.2.2   |   |
+|data.table   |1.16.0  |1.16.0  |   |
 |fansi        |1.0.6   |1.0.6   |   |
 |farver       |2.1.2   |2.1.2   |   |
 |ggfittext    |0.10.2  |0.10.2  |   |
 |gggenes      |0.5.1   |0.5.1   |   |
 |ggplot2      |3.5.1   |3.5.1   |   |
-|ggrepel      |0.9.5   |0.9.5   |   |
+|ggrepel      |0.9.6   |0.9.6   |   |
 |glue         |1.7.0   |1.7.0   |   |
 |gridtext     |0.1.5   |0.1.5   |   |
 |gtable       |0.3.5   |0.3.5   |   |
@@ -63,4 +63,11 @@
 |xml2         |1.3.6   |1.3.6   |   |
 
 # Revdeps
+
+## Failed to check (2)
+
+|package  |version |error |warning |note |
+|:--------|:-------|:-----|:-------|:----|
+|fastshap |0.1.1   |1     |        |2    |
+|flowml   |?       |      |        |     |
 

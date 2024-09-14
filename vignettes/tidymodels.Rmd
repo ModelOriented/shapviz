@@ -4,7 +4,7 @@ bibliography: "biblio.bib"
 link-citations: true
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Geographic Components}
+  %\VignetteIndexEntry{Tidymodels and SHAP}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---

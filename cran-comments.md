@@ -1,4 +1,8 @@
-# shapviz 0.9.5
+# shapviz 0.9.5 (RESUBMISSION)
+
+Fixed duplicated vignette entry, as pointed out by the automatic checks by CRAN.
+
+## Original message
 
 Dear CRAN team
 

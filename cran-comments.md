@@ -12,4 +12,4 @@ Status: OK
 
 ## Reverse dependencies (2)
 
-2 OK
+Not checked because the change affects only a vignette.

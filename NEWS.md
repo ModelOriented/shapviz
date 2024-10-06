@@ -1,3 +1,9 @@
+# shapviz 0.9.6
+
+### Documentation
+
+- Fixed wrong link vignette [#158](https://github.com/ModelOriented/shapviz/pull/158).
+
 # shapviz 0.9.5
 
 ### User-visible changes

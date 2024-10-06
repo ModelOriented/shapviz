@@ -1,12 +1,6 @@
-# shapviz 0.9.5 (RESUBMISSION)
+# shapviz 0.9.6 (Fix CRAN errors)
 
-Fixed duplicated vignette entry, as pointed out by the automatic checks by CRAN.
-
-## Original message
-
-Dear CRAN team
-
-This update brings a new vignette, and improvements of the existing documentation.
+One vignette points to a missing figure, leading errors or notes in different builds.
 
 ### Local checks
 
@@ -18,4 +12,4 @@ Status: OK
 
 ## Reverse dependencies (2)
 
-2 OK
+Not checked because the change affects only a vignette.

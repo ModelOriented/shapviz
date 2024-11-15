@@ -410,10 +410,10 @@ shapviz.predict_parts <- function(object, ...) {
 #' @describeIn shapviz
 #'   Creates a "shapviz" object from `shapr::explain()`.
 #' @export
-shapviz.shapr <- function(object, X = object[["x_test"]], collapse = NULL, ...) {
-  dt <- as.matrix(object[["dt"]])
-  shapviz.matrix(
-    object = dt[, setdiff(colnames(dt), "none"), drop = FALSE],
+shapviz.shapr <- function(object, X = as.data.frame(object$internal$data$x_explain), collapse = NULL, ...) {
+  dt <- as.matrix(object[["shapley_values_est"]])
+  shapviz:::shapviz.matrix(
+    object = dt[, setdiff(colnames(dt), c("none","explain_id")), drop = FALSE],
     X = X,
     baseline = dt[1L, "none"],
     collapse = collapse

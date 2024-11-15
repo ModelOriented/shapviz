@@ -163,10 +163,13 @@ library(shapviz)
 library(shapr)
 
 fit <- lm(Sepal.Length ~ ., data = iris)
-x <- shapr(iris, fit)
-explanation <- shapr::explain(
-  iris, approach = "ctree", explainer = x, prediction_zero = mean(iris$Sepal.Length)
+explanation <- shapr::explain(model = fit,
+                              x_train = iris[-1],
+                              x_explain = iris[-1],
+                              approach = "ctree",
+                              phi0 = mean(iris$Sepal.Length)
 )
+
 shp <- shapviz(explanation)
 sv_importance(shp)
 sv_dependence(shp, "Sepal.Width")

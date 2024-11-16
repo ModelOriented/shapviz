@@ -46,7 +46,12 @@ shapviz(object, ...)
 
 \method{shapviz}{predict_parts}(object, ...)
 
-\method{shapviz}{shapr}(object, X = object[["x_test"]], collapse = NULL, ...)
+\method{shapviz}{shapr}(
+  object,
+  X = as.data.frame(object$internal$data$x_explain),
+  collapse = NULL,
+  ...
+)
 
 \method{shapviz}{kernelshap}(object, X = object[["X"]], which_class = NULL, collapse = NULL, ...)
 

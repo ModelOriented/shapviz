@@ -23,7 +23,7 @@
 
 SHAP and feature values are stored in a "shapviz" object that is built from:
 
-1. Models that know how to calculate SHAP values: XGBoost, LightGBM, H2O (boosted trees).
+1. Models that know how to calculate SHAP values: XGBoost, LightGBM, H2O (tree-based models).
 2. SHAP crunchers like {fastshap}, {kernelshap}, {treeshap}, {fastr}, and {DALEX}.
 3. SHAP matrix and corresponding feature values.
 

@@ -15,7 +15,7 @@ library(usethis)
 use_description(
   fields = list(
     Title = "SHAP Visualizations",
-    Version = "0.9.6",
+    Version = "0.9.7",
     Description = "Visualizations for SHAP (SHapley Additive exPlanations),
     such as waterfall plots, force plots, various types of importance plots,
     dependence plots, and interaction plots.

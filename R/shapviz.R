@@ -5,7 +5,7 @@
 #' from a fitted model of type
 #' - XGBoost,
 #' - LightGBM, or
-#' - H2O (tree-based regression or binary classification model).
+#' - H2O (tree-based models).
 #'
 #' Furthermore, [shapviz()] can digest the results of
 #' - `fastshap::explain()`,

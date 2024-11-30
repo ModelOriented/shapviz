@@ -1,3 +1,13 @@
+# shapviz 0.9.7
+
+### Documentation
+
+- H2O random forests (regression and binary classification) are now supported as well (fast TreeSHAP) [#163](https://github.com/ModelOriented/shapviz/pull/163).
+
+### Compatibility
+
+- Adapt for upcoming {shapr} version, thanks @martinju for the fix [#162](https://github.com/ModelOriented/shapviz/pull/162).
+
 # shapviz 0.9.6
 
 ### Documentation

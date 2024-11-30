@@ -115,7 +115,7 @@ from a fitted model of type
 \itemize{
 \item XGBoost,
 \item LightGBM, or
-\item H2O (tree-based regression or binary classification model).
+\item H2O (tree-based models).
 }
 
 Furthermore, \code{\link[=shapviz]{shapviz()}} can digest the results of

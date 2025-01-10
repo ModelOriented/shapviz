@@ -35,7 +35,7 @@ In particular, the following plots are available:
 
 SHAP and feature values are stored in a "shapviz" object that is built from:
 
-1. Models that know how to calculate SHAP values: XGBoost, LightGBM, h2o (boosted trees).
+1. Models that know how to calculate SHAP values: XGBoost, LightGBM, and h2o.
 2. SHAP crunchers like {fastshap}, {kernelshap}, {treeshap}, {fastr}, and {DALEX}.
 3. SHAP matrix and corresponding feature values.
 
@@ -178,7 +178,7 @@ sv_dependence(shp, "Sepal.Width")
 
 ### H2O
 
-If you work with a boosted trees H2O model:
+H2O supports TreeSHAP for boosted trees and random forests. For other models, model agnostic method based on marginal expectations are used, requiring a background dataset.
 
 ```r
 library(shapviz)
@@ -187,10 +187,18 @@ library(h2o)
 h2o.init()
 
 iris2 <- as.h2o(iris)
-fit <- h2o.gbm(colnames(iris[-1]), "Sepal.Length", training_frame = iris2)
-shp <- shapviz(fit, X_pred = iris)
-sv_force(shp, row_id = 1)
-sv_dependence(shp, "Species")
+
+# Random forest
+fit_rf <- h2o.randomForest(colnames(iris[-1]), "Sepal.Length", training_frame = iris2)
+shp_rf <- shapviz(fit_rf, X_pred = iris)
+sv_force(shp_rf, row_id = 1)
+sv_dependence(shp_rf, "Species")
+
+# Linear model
+fit_lm <- h2o.glm(colnames(iris[-1]), "Sepal.Length", training_frame = iris2)
+shp_lm <- shapviz(fit_lm, X_pred = iris, background_frame = iris2)
+sv_force(shp_lm, row_id = 1)
+sv_dependence(shp_lm, "Species")
 ```
 
 ### treeshap

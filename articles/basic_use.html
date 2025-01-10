@@ -133,7 +133,7 @@ plot.</li>
 built from:</p>
 <ol style="list-style-type: decimal">
 <li>Models that know how to calculate SHAP values: XGBoost, LightGBM,
-h2o (boosted trees).</li>
+and h2o.</li>
 <li>SHAP crunchers like {fastshap}, {kernelshap}, {treeshap}, {fastr},
 and {DALEX}.</li>
 <li>SHAP matrix and corresponding feature values.</li>
@@ -297,7 +297,9 @@ other packages?</p>
 <div class="section level3">
 <h3 id="h2o">H2O<a class="anchor" aria-label="anchor" href="#h2o"></a>
 </h3>
-<p>If you work with a boosted trees H2O model:</p>
+<p>H2O supports TreeSHAP for boosted trees and random forests. For other
+models, model agnostic method based on marginal expectations are used,
+requiring a background dataset.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ModelOriented/shapviz" class="external-link">shapviz</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/h2oai/h2o-3" class="external-link">h2o</a></span><span class="op">)</span></span>
@@ -305,10 +307,18 @@ other packages?</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/h2o/man/h2o.init.html" class="external-link">h2o.init</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">iris2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/h2o/man/as.h2o.html" class="external-link">as.h2o</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span>
-<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/h2o/man/h2o.gbm.html" class="external-link">h2o.gbm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/h2o/man/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, <span class="st">"Sepal.Length"</span>, training_frame <span class="op">=</span> <span class="va">iris2</span><span class="op">)</span></span>
-<span><span class="va">shp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">fit</span>, X_pred <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/sv_force.html">sv_force</a></span><span class="op">(</span><span class="va">shp</span>, row_id <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp</span>, <span class="st">"Species"</span><span class="op">)</span></span></code></pre></div>
+<span></span>
+<span><span class="co"># Random forest</span></span>
+<span><span class="va">fit_rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/h2o/man/h2o.randomForest.html" class="external-link">h2o.randomForest</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/h2o/man/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, <span class="st">"Sepal.Length"</span>, training_frame <span class="op">=</span> <span class="va">iris2</span><span class="op">)</span></span>
+<span><span class="va">shp_rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">fit_rf</span>, X_pred <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/sv_force.html">sv_force</a></span><span class="op">(</span><span class="va">shp_rf</span>, row_id <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp_rf</span>, <span class="st">"Species"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Linear model</span></span>
+<span><span class="va">fit_lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/h2o/man/h2o.glm.html" class="external-link">h2o.glm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/h2o/man/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, <span class="st">"Sepal.Length"</span>, training_frame <span class="op">=</span> <span class="va">iris2</span><span class="op">)</span></span>
+<span><span class="va">shp_lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">fit_lm</span>, X_pred <span class="op">=</span> <span class="va">iris</span>, background_frame <span class="op">=</span> <span class="va">iris2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/sv_force.html">sv_force</a></span><span class="op">(</span><span class="va">shp_lm</span>, row_id <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">shp_lm</span>, <span class="st">"Species"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="treeshap">treeshap<a class="anchor" aria-label="anchor" href="#treeshap"></a>

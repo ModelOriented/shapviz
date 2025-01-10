@@ -3,7 +3,7 @@
 from a fitted model of type
 XGBoost,
 LightGBM, or
-H2O (tree-based models).
+H2O.
 
 
 Furthermore, shapviz() can digest the results of
@@ -96,7 +96,7 @@ check the vignettes for examples.'><meta property="og:image" content="/logo.png"
     <p>This function creates an object of class "shapviz" from a matrix of SHAP values, or
 from a fitted model of type</p><ul><li><p>XGBoost,</p></li>
 <li><p>LightGBM, or</p></li>
-<li><p>H2O (tree-based models).</p></li>
+<li><p>H2O.</p></li>
 </ul><p>Furthermore, <code>shapviz()</code> can digest the results of</p><ul><li><p><code><a href="https://bgreenwell.github.io/fastshap/reference/explain.html" class="external-link">fastshap::explain()</a></code>,</p></li>
 <li><p><code>shapr::explain()</code>,</p></li>
 <li><p><code>treeshap::treeshap()</code>,</p></li>
@@ -156,14 +156,17 @@ from a fitted model of type</p><ul><li><p>XGBoost,</p></li>
 <span><span class="co"># S3 method for class 'kernelshap'</span></span>
 <span><span class="fu">shapviz</span><span class="op">(</span><span class="va">object</span>, X <span class="op">=</span> <span class="va">object</span><span class="op">[[</span><span class="st">"X"</span><span class="op">]</span><span class="op">]</span>, which_class <span class="op">=</span> <span class="cn">NULL</span>, collapse <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># S3 method for class 'H2ORegressionModel'</span></span>
-<span><span class="fu">shapviz</span><span class="op">(</span><span class="va">object</span>, <span class="va">X_pred</span>, X <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">X_pred</span><span class="op">)</span>, collapse <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'H2OBinomialModel'</span></span>
-<span><span class="fu">shapviz</span><span class="op">(</span><span class="va">object</span>, <span class="va">X_pred</span>, X <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">X_pred</span><span class="op">)</span>, collapse <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># S3 method for class 'H2OModel'</span></span>
-<span><span class="fu">shapviz</span><span class="op">(</span><span class="va">object</span>, <span class="va">X_pred</span>, X <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">X_pred</span><span class="op">)</span>, collapse <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">shapviz</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  <span class="va">X_pred</span>,</span>
+<span>  X <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">X_pred</span><span class="op">)</span>,</span>
+<span>  collapse <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  background_frame <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  output_space <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  output_per_reference <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -224,6 +227,24 @@ kernelshap, and permshap.</p></dd>
 <dd><p>Should SHAP interactions be calculated (default is <code>FALSE</code>)?
 Only available for XGBoost.</p></dd>
 
+
+<dt id="arg-background-frame">background_frame<a class="anchor" aria-label="anchor" href="#arg-background-frame"></a></dt>
+<dd><p>Background dataset for baseline SHAP or marginal SHAP.
+Only for H2O models.</p></dd>
+
+
+<dt id="arg-output-space">output_space<a class="anchor" aria-label="anchor" href="#arg-output-space"></a></dt>
+<dd><p>If model has link function, this argument controls whether the
+SHAP values should be linearly (= approximately) transformed to the original scale
+(if <code>TRUE</code>). The default is to return the values on link scale.
+Only for H2O models.</p></dd>
+
+
+<dt id="arg-output-per-reference">output_per_reference<a class="anchor" aria-label="anchor" href="#arg-output-per-reference"></a></dt>
+<dd><p>Switches between different algorithms, see
+<code><a href="https://rdrr.io/pkg/h2o/man/predict_contributions.H2OModel.html" class="external-link">?h2o::h2o.predict_contributions</a></code> for details.
+Only for H2O models.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -259,9 +280,7 @@ return a "mshapviz" object, containing a "shapviz" object per output.</p>
 <li><p><code>shapviz(shapr)</code>: Creates a "shapviz" object from <code>shapr::explain()</code>.</p></li>
 <li><p><code>shapviz(kernelshap)</code>: Creates a "shapviz" object from an object of class 'kernelshap'. This includes
 results of <code>kernelshap()</code>, <code>permshap()</code>, and <code>additive_shap()</code>.</p></li>
-<li><p><code>shapviz(H2ORegressionModel)</code>: Creates a "shapviz" object from a (tree-based) H2O regression model.</p></li>
-<li><p><code>shapviz(H2OBinomialModel)</code>: Creates a "shapviz" object from a (tree-based) H2O binary classification model.</p></li>
-<li><p><code>shapviz(H2OModel)</code>: Creates a "shapviz" object from a (tree-based) H2O model (base class).</p></li>
+<li><p><code>shapviz(H2OModel)</code>: Creates a "shapviz" object from an H2O model.</p></li>
 </ul></div>
     <div id="see-also">
     <h2>See also</h2>
@@ -382,7 +401,7 @@ results of <code>kernelshap()</code>, <code>permshap()</code>, and <code>additiv
 <span class="r-in"><span>  <span class="va">mx</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">mx</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>, <span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000018 seconds.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.000021 seconds.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> You can set `force_col_wise=true` to remove the overhead.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [LightGBM] [Info] Total Bins 98</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [LightGBM] [Info] Number of data points in the train set: 150, number of used features: 4</span>

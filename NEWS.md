@@ -2,7 +2,8 @@
 
 ### Documentation
 
-- H2O random forests (regression and binary classification) are now supported as well (fast TreeSHAP) [#163](https://github.com/ModelOriented/shapviz/pull/163).
+- H2O now supports passing background data for model agnostic SHAP. This is now easier visible in {shapviz}, see https://github.com/h2oai/h2o-3/issues/16463.
+- H2O random forests (regression and binary classification) now support TreeSHAP as well [#163](https://github.com/ModelOriented/shapviz/pull/163).
 
 ### Compatibility
 

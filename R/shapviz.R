@@ -5,7 +5,7 @@
 #' from a fitted model of type
 #' - XGBoost,
 #' - LightGBM, or
-#' - H2O (tree-based models).
+#' - H2O.
 #'
 #' Furthermore, [shapviz()] can digest the results of
 #' - `fastshap::explain()`,
@@ -454,28 +454,26 @@ shapviz.kernelshap <- function(
 }
 
 #' @describeIn shapviz
-#'   Creates a "shapviz" object from a (tree-based) H2O regression model.
-#' @export
-shapviz.H2ORegressionModel = function(
-    object, X_pred, X = as.data.frame(X_pred), collapse = NULL, ...
-  ) {
-  shapviz.H2OModel(object = object, X_pred = X_pred, X = X, collapse = collapse, ...)
-}
-
-#' @describeIn shapviz
-#'   Creates a "shapviz" object from a (tree-based) H2O binary classification model.
-#' @export
-shapviz.H2OBinomialModel = function(
-    object, X_pred, X = as.data.frame(X_pred), collapse = NULL, ...
-  ) {
-  shapviz.H2OModel(object = object, X_pred = X_pred, X = X, collapse = collapse, ...)
-}
-
-#' @describeIn shapviz
-#'   Creates a "shapviz" object from a (tree-based) H2O model (base class).
+#'   Creates a "shapviz" object from an H2O model.
+#' @param background_frame Background dataset for baseline SHAP or marginal SHAP.
+#'    Only for H2O models.
+#' @param output_space If model has link function, this argument controls whether the
+#'   SHAP values should be linearly (= approximately) transformed to the original scale
+#'   (if `TRUE`). The default is to return the values on link scale.
+#'   Only for H2O models.
+#' @param output_per_reference Switches between different algorithms, see
+#'   `?h2o::h2o.predict_contributions` for details.
+#'   Only for H2O models.
 #' @export
 shapviz.H2OModel = function(
-    object, X_pred, X = as.data.frame(X_pred), collapse = NULL, ...
+    object,
+    X_pred,
+    X = as.data.frame(X_pred),
+    collapse = NULL,
+    background_frame = NULL,
+    output_space = FALSE,
+    output_per_reference = FALSE,
+    ...
   ) {
   if (!requireNamespace("h2o", quietly = TRUE)) {
     stop("Package 'h2o' not installed")
@@ -488,7 +486,16 @@ shapviz.H2OModel = function(
   if (!inherits(X_pred, "H2OFrame")) {
     X_pred <- h2o::as.h2o(X_pred)
   }
-  S <- as.matrix(h2o::h2o.predict_contributions(object, newdata = X_pred, ...))
+  S <- as.matrix(
+    h2o::h2o.predict_contributions(
+      object,
+      newdata = X_pred,
+      background_frame = background_frame,
+      output_space = output_space,
+      output_per_reference = output_per_reference,
+      ...
+    )
+  )
   shapviz.matrix(
     object = S[, setdiff(colnames(S), "BiasTerm"), drop = FALSE],
     X = X,

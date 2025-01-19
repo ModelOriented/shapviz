@@ -1,6 +1,6 @@
-# shapviz 0.9.6 (Fix CRAN errors)
+# shapviz 0.9.7
 
-One vignette points to a missing figure, leading errors or notes in different builds.
+Slight adaptions to comply with upcoming XGBoost version.
 
 ### Local checks
 
@@ -12,4 +12,5 @@ Status: OK
 
 ## Reverse dependencies (2)
 
-Not checked because the change affects only a vignette.
+OK: 2
+BROKEN: 0

@@ -1,6 +1,6 @@
-#=============================================================================
+# =============================================================================
 # Put together the package
-#=============================================================================
+# =============================================================================
 
 # WORKFLOW: UPDATE EXISTING PACKAGE
 # 1) Modify package content and documentation.
@@ -15,7 +15,7 @@ library(usethis)
 use_description(
   fields = list(
     Title = "SHAP Visualizations",
-    Version = "0.9.7",
+    Version = "0.9.8",
     Description = "Visualizations for SHAP (SHapley Additive exPlanations),
     such as waterfall plots, force plots, various types of importance plots,
     dependence plots, and interaction plots.
@@ -28,7 +28,7 @@ use_description(
     that requires numerical features. The plots are inspired by those provided by
     the 'shap' package in Python, but there is no dependency on it.",
     `Authors@R` =
-    "c(person('Michael', family = 'Mayer', role = c('aut', 'cre'), email = 'mayermichael79@gmail.com'),
+      "c(person('Michael', family = 'Mayer', role = c('aut', 'cre'), email = 'mayermichael79@gmail.com'),
        person('Adrian', family = 'Stando', role = 'ctb', email = 'adrian.j.stando@gmail.com'))",
     Depends = "R (>= 3.6.0)"
   ),
@@ -92,9 +92,9 @@ use_github_links(overwrite = TRUE) # use this if this project is on github
 # Revdep
 use_revdep()
 
-#=============================================================================
+# =============================================================================
 # Finish package building (can use fresh session)
-#=============================================================================
+# =============================================================================
 
 library(devtools)
 

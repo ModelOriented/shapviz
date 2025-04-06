@@ -3,7 +3,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/ModelOriented/shapviz/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ModelOriented/shapviz/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/ModelOriented/shapviz/graph/badge.svg)](https://app.codecov.io/gh/ModelOriented/shapviz?branch=main)
+[![Codecov test coverage](https://codecov.io/gh/ModelOriented/shapviz/graph/badge.svg)](https://app.codecov.io/gh/ModelOriented/shapviz)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/shapviz)](https://cran.r-project.org/package=shapviz)
 
 [![](https://cranlogs.r-pkg.org/badges/shapviz)](https://cran.r-project.org/package=shapviz) 

@@ -1,3 +1,9 @@
+# shapviz 0.9.8
+
+### Maintenance
+
+- Update code coverage version [#168](https://github.com/ModelOriented/shapviz/pull/168).
+
 # shapviz 0.9.7
 
 ### Documentation

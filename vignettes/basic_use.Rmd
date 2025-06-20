@@ -29,7 +29,7 @@ In particular, the following plots are available:
 
 - `sv_importance()`: Importance plot (bar/beeswarm).
 - `sv_dependence()` and `sv_dependence2D()`: Dependence plots to study feature effects and interactions.
-- `sv_interaction()`: Interaction plot (beeswarm).
+- `sv_interaction()`: Interaction plot (beeswarm/bar).
 - `sv_waterfall()`: Waterfall plot to study single or average predictions.
 - `sv_force()`: Force plot as alternative to waterfall plot.
 

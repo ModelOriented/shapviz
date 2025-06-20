@@ -30,7 +30,8 @@
 #' @returns An object of class "ggplot" (or "patchwork") representing a dependence plot.
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(
-#'   data.matrix(iris[, -1]), label = iris[, 1], nthread = 1
+#'   data.matrix(iris[, -1]),
+#'   label = iris[, 1], nthread = 1
 #' )
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 #' sv <- shapviz(fit, X_pred = dtrain, X = iris)
@@ -41,7 +42,8 @@
 #' sv2 <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 #' sv_dependence2D(sv2, x = "Petal.Length", y = "Species", interactions = TRUE)
 #' sv_dependence2D(
-#'   sv2, x = "Petal.Length", y = c("Species", "Petal.Width"), interactions = TRUE
+#'   sv2,
+#'   x = "Petal.Length", y = c("Species", "Petal.Width"), interactions = TRUE
 #' )
 #'
 #' # mshapviz object
@@ -63,10 +65,16 @@ sv_dependence2D.default <- function(object, ...) {
 #' @describeIn sv_dependence2D
 #'   2D SHAP dependence plot for "shapviz" object.
 #' @export
-sv_dependence2D.shapviz <- function(object, x, y,
-                                    viridis_args = getOption("shapviz.viridis_args"),
-                                    jitter_width = NULL, jitter_height = NULL,
-                                    interactions = FALSE, add_vars = NULL, ...) {
+sv_dependence2D.shapviz <- function(
+    object,
+    x,
+    y,
+    viridis_args = getOption("shapviz.viridis_args"),
+    jitter_width = NULL,
+    jitter_height = NULL,
+    interactions = FALSE,
+    add_vars = NULL,
+    ...) {
   p <- max(length(x), length(y))
   if (p > 1L) {
     if (is.null(jitter_width)) {
@@ -115,11 +123,11 @@ sv_dependence2D.shapviz <- function(object, x, y,
 
   # Color variable
   if (!interactions) {
-    s <- rowSums(S[, unique(c(x, y, add_vars))])  # unique() if add_vars contains x or y
+    s <- rowSums(S[, unique(c(x, y, add_vars))]) # unique() if add_vars contains x or y
   } else {
     s <- S_inter[, x, y]
     if (x != y) {
-      s <- 2 * s  # Off-diagonals need to be multiplied by 2 for symmetry reasons
+      s <- 2 * s # Off-diagonals need to be multiplied by 2 for symmetry reasons
     }
   }
   dat <- data.frame(SHAP = s, X[, c(x, y)], check.names = FALSE)
@@ -136,10 +144,16 @@ sv_dependence2D.shapviz <- function(object, x, y,
 #' @describeIn sv_dependence2D
 #'   2D SHAP dependence plot for "mshapviz" object.
 #' @export
-sv_dependence2D.mshapviz <- function(object, x, y,
-                                     viridis_args = getOption("shapviz.viridis_args"),
-                                     jitter_width = NULL, jitter_height = NULL,
-                                     interactions = FALSE, add_vars = NULL, ...) {
+sv_dependence2D.mshapviz <- function(
+    object,
+    x,
+    y,
+    viridis_args = getOption("shapviz.viridis_args"),
+    jitter_width = NULL,
+    jitter_height = NULL,
+    interactions = FALSE,
+    add_vars = NULL,
+    ...) {
   stopifnot(
     length(x) == 1L,
     length(y) == 1L
@@ -157,7 +171,6 @@ sv_dependence2D.mshapviz <- function(object, x, y,
     add_vars = add_vars,
     ...
   )
-  plot_list <- add_titles(plot_list, nms = names(object))  # see sv_waterfall()
+  plot_list <- add_titles(plot_list, nms = names(object)) # see sv_waterfall()
   patchwork::wrap_plots(plot_list)
 }
-

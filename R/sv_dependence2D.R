@@ -75,13 +75,13 @@ sv_dependence2D.shapviz <- function(
     interactions = FALSE,
     add_vars = NULL,
     ...) {
-  p <- max(length(x), length(y))
-  if (p > 1L) {
+  nvars <- max(length(x), length(y))
+  if (nvars > 1L) {
     if (is.null(jitter_width)) {
-      jitter_width <- replicate(p, NULL)
+      jitter_width <- replicate(nvars, NULL)
     }
     if (is.null(jitter_height)) {
-      jitter_height <- replicate(p, NULL)
+      jitter_height <- replicate(nvars, NULL)
     }
     plot_list <- mapply(
       FUN = sv_dependence2D,

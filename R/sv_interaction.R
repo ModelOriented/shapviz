@@ -1,10 +1,17 @@
 #' SHAP Interaction Plot
 #'
-#' Plots a beeswarm plot for each feature pair. Diagonals represent the main effects,
-#' while off-diagonals show interactions (multiplied by two due to symmetry).
-#' The colors on the beeswarm plots represent min-max scaled feature values.
+#' @description
+#' Creates a beeswarm plot or a barplot of SHAP interaction values/main effects.
+#'
+#' In the beeswarm plot (`kind = "beeswarm"`), diagonals represent the main effects,
+#' while off-diagonals show SHAP interactions (multiplied by two due to symmetry).
+#' The color axis represent min-max scaled feature values.
 #' Non-numeric features are transformed to numeric by calling [data.matrix()] first.
 #' The features are sorted in decreasing order of usual SHAP importance.
+#'
+#' The barplot (`kind = "bar"`) shows average absolute SHAP interaction values
+#' and main effects for each feature pair.
+#' Again, due to symmetry, the interaction values are multiplied by two.
 #'
 #' @param object An object of class "(m)shapviz" containing element `S_inter`.
 #' @param kind Set to "no" to return the matrix of average absolute SHAP
@@ -26,6 +33,7 @@
 #' x <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 #' sv_interaction(x, kind = "no")
 #' sv_interaction(x, max_display = 2, size = 3)
+#' sv_interaction(x, kind = "bar")
 #' @seealso [sv_importance()]
 #' @export
 sv_interaction <- function(object, ...) {

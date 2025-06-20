@@ -70,13 +70,21 @@ sv_importance.default <- function(object, ...) {
 #' @describeIn sv_importance
 #'   SHAP importance plot for an object of class "shapviz".
 #' @export
-sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "no"),
-                                  max_display = 15L, fill = "#fca50a", bar_width = 2/3,
-                                  bee_width = 0.4, bee_adjust = 0.5,
-                                  viridis_args = getOption("shapviz.viridis_args"),
-                                  color_bar_title = "Feature value",
-                                  show_numbers = FALSE, format_fun = format_max,
-                                  number_size = 3.2, sort_features = TRUE, ...) {
+sv_importance.shapviz <- function(
+    object,
+    kind = c("bar", "beeswarm", "both", "no"),
+    max_display = 15L,
+    fill = "#fca50a",
+    bar_width = 2 / 3,
+    bee_width = 0.4,
+    bee_adjust = 0.5,
+    viridis_args = getOption("shapviz.viridis_args"),
+    color_bar_title = "Feature value",
+    show_numbers = FALSE,
+    format_fun = format_max,
+    number_size = 3.2,
+    sort_features = TRUE,
+    ...) {
   stopifnot("format_fun must be a function" = is.function(format_fun))
   kind <- match.arg(kind)
   imp <- .get_imp(get_shap_values(object), sort_features = sort_features)
@@ -90,7 +98,7 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
     imp <- imp[seq_len(max_display)]
   }
   ord <- names(imp)
-  object <- object[, ord]  # not required for kind = "bar"
+  object <- object[, ord] # not required for kind = "bar"
 
   # ggplot will need to work with data.frame
   imp_df <- data.frame(feature = factor(ord, rev(ord)), value = imp)
@@ -126,7 +134,7 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
       .get_color_scale(
         viridis_args = viridis_args,
         bar = !is.null(color_bar_title),
-        ncol = length(unique(df$color))   # Special case of constant feature values
+        ncol = length(unique(df$color)) # Special case of constant feature values
       ) +
       ggplot2::labs(
         x = "SHAP value", y = ggplot2::element_blank(), color = color_bar_title
@@ -138,15 +146,18 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
       ggplot2::geom_text(
         data = imp_df,
         ggplot2::aes(
-          x = if (is_bar) value + max(value) / 60 else
-            min(df$value) - diff(range(df$value)) / 20,
+          x = if (is_bar) {
+            value + max(value) / 60
+          } else {
+            min(df$value) - diff(range(df$value)) / 20
+          },
           label = format_fun(value)
         ),
         hjust = !is_bar,
         size = number_size
       ) +
       ggplot2::scale_x_continuous(
-        expand = ggplot2::expansion(mult = 0.05 + c(0.12 *!is_bar, 0.09 * is_bar))
+        expand = ggplot2::expansion(mult = 0.05 + c(0.12 * !is_bar, 0.09 * is_bar))
       )
   }
   p
@@ -155,15 +166,22 @@ sv_importance.shapviz <- function(object, kind = c("bar", "beeswarm", "both", "n
 #' @describeIn sv_importance
 #'   SHAP importance plot for an object of class "mshapviz".
 #' @export
-sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "no"),
-                                   max_display = 15L, fill = "#fca50a",
-                                   bar_width = 2/3,
-                                   bar_type = c("dodge", "stack", "facets", "separate"),
-                                   bee_width = 0.4, bee_adjust = 0.5,
-                                   viridis_args = getOption("shapviz.viridis_args"),
-                                   color_bar_title = "Feature value",
-                                   show_numbers = FALSE, format_fun = format_max,
-                                   number_size = 3.2, sort_features = TRUE, ...) {
+sv_importance.mshapviz <- function(
+    object,
+    kind = c("bar", "beeswarm", "both", "no"),
+    max_display = 15L,
+    fill = "#fca50a",
+    bar_width = 2 / 3,
+    bar_type = c("dodge", "stack", "facets", "separate"),
+    bee_width = 0.4,
+    bee_adjust = 0.5,
+    viridis_args = getOption("shapviz.viridis_args"),
+    color_bar_title = "Feature value",
+    show_numbers = FALSE,
+    format_fun = format_max,
+    number_size = 3.2,
+    sort_features = TRUE,
+    ...) {
   kind <- match.arg(kind)
   bar_type <- match.arg(bar_type)
 
@@ -197,7 +215,7 @@ sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "
         ggplot2::labs(fill = ggplot2::element_blank()) +
         do.call(ggplot2::scale_fill_viridis_d, viridis_args) +
         ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE))
-    } else {  # facets
+    } else { # facets
       p <- ggplot2::ggplot(imp_df, ggplot2::aes(x = values, y = feature)) +
         ggplot2::geom_bar(fill = fill, width = bar_width, stat = "identity", ...) +
         ggplot2::facet_wrap("ind")
@@ -230,8 +248,9 @@ sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "
   if (kind == "no") {
     return(plot_list)
   }
-  plot_list <- add_titles(plot_list, nms = names(object))  # see sv_waterfall()
-  patchwork::wrap_plots(plot_list)
+  plot_list <- add_titles(plot_list, nms = names(object)) # see sv_waterfall()
+  p <- patchwork::wrap_plots(plot_list, guides = "collect", axis_titles = "collect")
+  return(p)
 }
 
 # Helper functions
@@ -242,7 +261,7 @@ sv_importance.mshapviz <- function(object, kind = c("bar", "beeswarm", "both", "
     z[!is.na(z)] <- 0.5
     return(z)
   }
-  (z - r[1L]) /(r[2L] - r[1L])
+  (z - r[1L]) / (r[2L] - r[1L])
 }
 
 .get_imp <- function(z, sort_features = TRUE) {

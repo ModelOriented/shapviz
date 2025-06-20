@@ -172,5 +172,6 @@ sv_dependence2D.mshapviz <- function(
     ...
   )
   plot_list <- add_titles(plot_list, nms = names(object)) # see sv_waterfall()
-  patchwork::wrap_plots(plot_list)
+  p <- patchwork::wrap_plots(plot_list, axis_titles = "collect")
+  return(p)
 }

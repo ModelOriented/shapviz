@@ -7,8 +7,12 @@ Modify via `fill` and `bar_width` arguments [#169](https://github.com/ModelOrien
 
 ### User-visible changes
 
-- `sv_interaction()`: If applied to a "mshapviz" object, we use {patchwork} functionality to collect guides and axis titles.
-
+- Collecting color guides: We now use {patchwork} to collect color guides in 
+  `sv_importance()` and `sv_interaction()` when applied to "mshapviz" objects.
+  This affects the beeswarm plots.
+- Collecting axis titles: We now use {patchwork} to collect axis titles when
+  applying plot functions to an "mshapviz" object, except for `sv_dependence()`
+  (where we need a more sophisticated logic). Currently does not work for `sv_force()`.
 
 ### Maintenance
 

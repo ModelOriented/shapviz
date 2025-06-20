@@ -1,5 +1,6 @@
 dtrain <- xgboost::xgb.DMatrix(
-  data.matrix(iris[, -1L]), label = iris[, 1L], nthread = 1
+  data.matrix(iris[, -1L]),
+  label = iris[, 1L], nthread = 1
 )
 fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 1L)
 x <- shapviz(fit, X_pred = dtrain, X = iris[, -1L])
@@ -32,7 +33,8 @@ test_that("plots work for basic example", {
   )
   expect_s3_class(
     sv_dependence2D(
-      x, x = c("Petal.Length", "Petal.Width"), y = c("Species", "Sepal.Width")
+      x,
+      x = c("Petal.Length", "Petal.Width"), y = c("Species", "Sepal.Width")
     ),
     "patchwork"
   )
@@ -89,13 +91,15 @@ test_that("dependence plots work for interactions = TRUE", {
   )
   expect_s3_class(
     sv_dependence2D(
-      x_inter, x = "Petal.Length", y = c("Species", "Petal.Width"), interactions = TRUE
+      x_inter,
+      x = "Petal.Length", y = c("Species", "Petal.Width"), interactions = TRUE
     ),
     "patchwork"
   )
   expect_s3_class(
     sv_dependence2D(
-      x_inter, x = c("Petal.Length", "Petal.Width"), y = "Species", interactions = TRUE
+      x_inter,
+      x = c("Petal.Length", "Petal.Width"), y = "Species", interactions = TRUE
     ),
     "patchwork"
   )
@@ -114,13 +118,15 @@ test_that("main effect plots equal case color_var = v", {
   expect_equal(
     sv_dependence(x_inter, "Petal.Length", color_var = NULL, interactions = TRUE),
     sv_dependence(
-      x_inter, "Petal.Length", color_var = "Petal.Length", interactions = TRUE
+      x_inter, "Petal.Length",
+      color_var = "Petal.Length", interactions = TRUE
     )
   )
 })
 
 test_that("Interaction plots provide ggplot object", {
-  expect_s3_class(sv_interaction(x_inter), "ggplot")
+  expect_s3_class(sv_interaction(x_inter, kind = "bee"), "ggplot")
+  expect_s3_class(sv_interaction(x_inter, kind = "bar"), "ggplot")
 })
 
 # Non-standard name
@@ -185,4 +191,3 @@ test_that("sv_importance() and sv_interaction() respect sort_features = FALSE", 
   inter <- sv_interaction(x, kind = "no", sort_features = FALSE)
   expect_true(all(names(inter) == colnames(x)))
 })
-

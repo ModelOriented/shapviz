@@ -1,4 +1,14 @@
-# shapviz 0.9.8
+# shapviz 0.10.0
+
+### New feature
+
+`sv_interaction()`: New `kind = "bar"` to show mean absolute SHAP interactions/main effects as barplots.
+Modify via `fill` and `bar_width` arguments [#169](https://github.com/ModelOriented/shapviz/pull/169).
+
+### User-visible changes
+
+- `sv_interaction()`: If applied to a "mshapviz" object, we use {patchwork} functionality to collect guides and axis titles.
+
 
 ### Maintenance
 

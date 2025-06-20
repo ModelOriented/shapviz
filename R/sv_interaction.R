@@ -1,10 +1,17 @@
 #' SHAP Interaction Plot
 #'
-#' Plots a beeswarm plot for each feature pair. Diagonals represent the main effects,
-#' while off-diagonals show interactions (multiplied by two due to symmetry).
-#' The colors on the beeswarm plots represent min-max scaled feature values.
+#' @description
+#' Creates a beeswarm plot or a barplot of SHAP interaction values/main effects.
+#'
+#' In the beeswarm plot (`kind = "beeswarm"`), diagonals represent the main effects,
+#' while off-diagonals show SHAP interactions (multiplied by two due to symmetry).
+#' The color axis represent min-max scaled feature values.
 #' Non-numeric features are transformed to numeric by calling [data.matrix()] first.
 #' The features are sorted in decreasing order of usual SHAP importance.
+#'
+#' The barplot (`kind = "bar"`) shows average absolute SHAP interaction values
+#' and main effects for each feature pair.
+#' Again, due to symmetry, the interaction values are multiplied by two.
 #'
 #' @param object An object of class "(m)shapviz" containing element `S_inter`.
 #' @param kind Set to "no" to return the matrix of average absolute SHAP
@@ -19,12 +26,14 @@
 #'   absolute SHAP values (or a list of such matrices in case of "mshapviz" object).
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(
-#'   data.matrix(iris[, -1]), label = iris[, 1], nthread = 1
+#'   data.matrix(iris[, -1]),
+#'   label = iris[, 1], nthread = 1
 #' )
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 #' x <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 #' sv_interaction(x, kind = "no")
 #' sv_interaction(x, max_display = 2, size = 3)
+#' sv_interaction(x, kind = "bar")
 #' @seealso [sv_importance()]
 #' @export
 sv_interaction <- function(object, ...) {
@@ -41,32 +50,63 @@ sv_interaction.default <- function(object, ...) {
 #' @describeIn sv_interaction
 #'   SHAP interaction plot for an object of class "shapviz".
 #' @export
-sv_interaction.shapviz <- function(object, kind = c("beeswarm", "no"),
-                                   max_display = 7L, alpha = 0.3,
-                                   bee_width = 0.3, bee_adjust = 0.5,
-                                   viridis_args = getOption("shapviz.viridis_args"),
-                                   color_bar_title = "Row feature value",
-                                   sort_features = TRUE, ...) {
+sv_interaction.shapviz <- function(
+    object,
+    kind = c("beeswarm", "bar", "no"),
+    max_display = 15L - 8 * (kind == "beeswarm"),
+    alpha = 0.3,
+    bee_width = 0.3,
+    bee_adjust = 0.5,
+    viridis_args = getOption("shapviz.viridis_args"),
+    color_bar_title = "Row feature value",
+    sort_features = TRUE,
+    fill = "#fca50a",
+    bar_width = 2 / 3,
+    ...) {
   kind <- match.arg(kind)
   if (is.null(get_shap_interactions(object))) {
     stop("No SHAP interaction values available.")
   }
+
+  # Sort features by SHAP importance first (irrelevant for kind = "bee")
   ord <- names(.get_imp(get_shap_values(object), sort_features = sort_features))
   object <- object[, ord]
 
+  # Calculate average absolute SHAP interactions
+  M <- apply(abs(get_shap_interactions(object)), MARGIN = 2:3, FUN = mean)
+  M <- M + t(M) - diag(diag(M)) # Off-diagonals twice
+
   if (kind == "no") {
-    mat <- apply(abs(get_shap_interactions(object)), 2:3, mean)
-    off_diag <- row(mat) != col(mat)
-    mat[off_diag] <- mat[off_diag] * 2  # compensate symmetry
-    return(mat)
+    return(M)
   }
 
+  if (kind == "bar") {
+    # Turn to long format and make feature pair names
+    imp_df <- transform(
+      as.data.frame.table(M, responseName = "value"),
+      feature = ifelse(Var1 == Var2, as.character(Var1), paste(Var1, Var2, sep = ":"))
+    )
+    if (sort_features) {
+      imp_df <- imp_df[order(imp_df$value, decreasing = TRUE), ]
+      imp_df <- transform(imp_df, feature = factor(feature, levels = rev(feature)))
+    }
+    if (nrow(imp_df) > max_display) {
+      imp_df <- imp_df[seq_len(max_display), ]
+    }
+
+    p <- ggplot2::ggplot(imp_df, ggplot2::aes(x = value, y = feature)) +
+      ggplot2::geom_bar(fill = fill, width = bar_width, stat = "identity", ...) +
+      ggplot2::labs(x = "mean(|SHAP interaction value|)", y = ggplot2::element_blank())
+
+    return(p)
+  }
+
+  # kind == "bee"
   if (ncol(object) > max_display) {
     ord <- ord[seq_len(max_display)]
     object <- object[, ord]
   }
 
-  # Prepare data.frame for beeswarm
   S_inter <- get_shap_interactions(object)
   X <- .scale_X(get_feature_values(object))
   X_long <- as.data.frame.table(X)
@@ -74,14 +114,14 @@ sv_interaction.shapviz <- function(object, kind = c("beeswarm", "no"),
     as.data.frame.table(S_inter, responseName = "value"),
     Variable1 = factor(Var2, levels = ord),
     Variable2 = factor(Var3, levels = ord),
-    color = X_long$Freq  #  Correctly recycled along the third dimension of S_inter
+    color = X_long$Freq #  Correctly recycled along the third dimension of S_inter
   )
 
   # Compensate symmetry
   mask <- df[["Variable1"]] != df[["Variable2"]]
   df[mask, "value"] <- 2 * df[mask, "value"]
 
-  ggplot2::ggplot(df, ggplot2::aes(x = value, y = "1")) +
+  p <- ggplot2::ggplot(df, ggplot2::aes(x = value, y = "1")) +
     ggplot2::geom_vline(xintercept = 0, color = "darkgray") +
     ggplot2::geom_point(
       ggplot2::aes(color = color),
@@ -104,17 +144,25 @@ sv_interaction.shapviz <- function(object, kind = c("beeswarm", "no"),
       axis.ticks.y = ggplot2::element_blank(),
       axis.text.y = ggplot2::element_blank()
     )
+  return(p)
 }
 
 #' @describeIn sv_interaction
 #'   SHAP interaction plot for an object of class "mshapviz".
 #' @export
-sv_interaction.mshapviz <- function(object, kind = c("beeswarm", "no"),
-                                    max_display = 7L, alpha = 0.3,
-                                    bee_width = 0.3, bee_adjust = 0.5,
-                                    viridis_args = getOption("shapviz.viridis_args"),
-                                    color_bar_title = "Row feature value",
-                                    sort_features = TRUE, ...) {
+sv_interaction.mshapviz <- function(
+    object,
+    kind = c("beeswarm", "bar", "no"),
+    max_display = 7L,
+    alpha = 0.3,
+    bee_width = 0.3,
+    bee_adjust = 0.5,
+    viridis_args = getOption("shapviz.viridis_args"),
+    color_bar_title = "Row feature value",
+    sort_features = TRUE,
+    fill = "#fca50a",
+    bar_width = 2 / 3,
+    ...) {
   kind <- match.arg(kind)
 
   plot_list <- lapply(
@@ -129,11 +177,15 @@ sv_interaction.mshapviz <- function(object, kind = c("beeswarm", "no"),
     viridis_args = viridis_args,
     color_bar_title = color_bar_title,
     sort_features = sort_features,
+    fill = fill,
+    bar_width = bar_width,
     ...
   )
   if (kind == "no") {
     return(plot_list)
   }
-  plot_list <- add_titles(plot_list, nms = names(object))  # see sv_waterfall()
-  patchwork::wrap_plots(plot_list)
+  plot_list <- add_titles(plot_list, nms = names(object)) # see sv_waterfall()
+  p <- patchwork::wrap_plots(plot_list, axis_titles = "collect", guides = "collect")
+
+  return(p)
 }

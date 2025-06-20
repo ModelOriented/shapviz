@@ -13,20 +13,22 @@ sv_interaction(object, ...)
 
 \method{sv_interaction}{shapviz}(
   object,
-  kind = c("beeswarm", "no"),
-  max_display = 7L,
+  kind = c("beeswarm", "bar", "no"),
+  max_display = 15L - 8 * (kind == "beeswarm"),
   alpha = 0.3,
   bee_width = 0.3,
   bee_adjust = 0.5,
   viridis_args = getOption("shapviz.viridis_args"),
   color_bar_title = "Row feature value",
   sort_features = TRUE,
+  fill = "#fca50a",
+  bar_width = 2/3,
   ...
 )
 
 \method{sv_interaction}{mshapviz}(
   object,
-  kind = c("beeswarm", "no"),
+  kind = c("beeswarm", "bar", "no"),
   max_display = 7L,
   alpha = 0.3,
   bee_width = 0.3,
@@ -34,6 +36,8 @@ sv_interaction(object, ...)
   viridis_args = getOption("shapviz.viridis_args"),
   color_bar_title = "Row feature value",
   sort_features = TRUE,
+  fill = "#fca50a",
+  bar_width = 2/3,
   ...
 )
 }
@@ -68,6 +72,10 @@ either change the default with \code{options(shapviz.viridis_args = list())} or 
 to hide the color bar altogether.}
 
 \item{sort_features}{Should features be sorted or not? The default is \code{TRUE}.}
+
+\item{fill}{Color used to fill the bars (only used if bars are shown).}
+
+\item{bar_width}{Relative width of the bars (only used if bars are shown).}
 }
 \value{
 A "ggplot" (or "patchwork") object, or - if \code{kind = "no"} - a named
@@ -75,11 +83,17 @@ numeric matrix of average absolute SHAP interactions sorted by the average
 absolute SHAP values (or a list of such matrices in case of "mshapviz" object).
 }
 \description{
-Plots a beeswarm plot for each feature pair. Diagonals represent the main effects,
-while off-diagonals show interactions (multiplied by two due to symmetry).
-The colors on the beeswarm plots represent min-max scaled feature values.
+Creates a beeswarm plot or a barplot of SHAP interaction values/main effects.
+
+In the beeswarm plot (\code{kind = "beeswarm"}), diagonals represent the main effects,
+while off-diagonals show SHAP interactions (multiplied by two due to symmetry).
+The color axis represent min-max scaled feature values.
 Non-numeric features are transformed to numeric by calling \code{\link[=data.matrix]{data.matrix()}} first.
 The features are sorted in decreasing order of usual SHAP importance.
+
+The barplot (\code{kind = "bar"}) shows average absolute SHAP interaction values
+and main effects for each feature pair.
+Again, due to symmetry, the interaction values are multiplied by two.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -92,12 +106,14 @@ The features are sorted in decreasing order of usual SHAP importance.
 }}
 \examples{
 dtrain <- xgboost::xgb.DMatrix(
-  data.matrix(iris[, -1]), label = iris[, 1], nthread = 1
+  data.matrix(iris[, -1]),
+  label = iris[, 1], nthread = 1
 )
 fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 x <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 sv_interaction(x, kind = "no")
 sv_interaction(x, max_display = 2, size = 3)
+sv_interaction(x, kind = "bar")
 }
 \seealso{
 \code{\link[=sv_importance]{sv_importance()}}

@@ -1,5 +1,6 @@
 dtrain <- xgboost::xgb.DMatrix(
-  data.matrix(iris[, -1L]), label = iris[, 1L], nthread = 1
+  data.matrix(iris[, -1L]),
+  label = iris[, 1L], nthread = 1
 )
 fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 1L)
 x <- shapviz(fit, X_pred = dtrain, X = iris[, -1L])
@@ -73,13 +74,15 @@ test_that("main effect plots equal case color_var = v", {
   expect_equal(
     sv_dependence(x_inter, "Petal.Length", color_var = NULL, interactions = TRUE),
     sv_dependence(
-      x_inter, "Petal.Length", color_var = "Petal.Length", interactions = TRUE
+      x_inter, "Petal.Length",
+      color_var = "Petal.Length", interactions = TRUE
     )
   )
 })
 
 test_that("Interaction plots provide patchwork object", {
-  expect_s3_class(sv_interaction(x_inter), "patchwork")
+  expect_s3_class(sv_interaction(x_inter, kind = "bee"), "patchwork")
+  expect_s3_class(sv_interaction(x_inter, kind = "bar"), "patchwork")
 })
 
 # Non-standard name
@@ -143,4 +146,3 @@ test_that("sv_dependence() does not work with multiple v", {
   expect_error(sv_dependence2D(x, x = c("Species", "Sepal.Width"), y = "Petal.Width"))
   expect_error(sv_dependence2D(x, x = "Petal.Width", y = c("Species", "Sepal.Width")))
 })
-

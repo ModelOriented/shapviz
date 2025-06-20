@@ -15,7 +15,7 @@ library(usethis)
 use_description(
   fields = list(
     Title = "SHAP Visualizations",
-    Version = "0.9.8",
+    Version = "0.10.0",
     Description = "Visualizations for SHAP (SHapley Additive exPlanations),
     such as waterfall plots, force plots, various types of importance plots,
     dependence plots, and interaction plots.
@@ -43,7 +43,7 @@ use_package("ggplot2", "Imports", min_version = "3.4.0")
 use_package("gggenes", "Imports")
 use_package("ggfittext", "Imports", min_version = "0.8.0")
 use_package("ggrepel", "Imports")
-use_package("patchwork", "Imports")
+use_package("patchwork", "Imports", min_version = "1.3.0")
 use_package("xgboost", "Imports")
 
 use_package("fastshap", "Enhances")

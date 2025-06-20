@@ -76,32 +76,96 @@ sv_dependence2D.shapviz <- function(
     add_vars = NULL,
     ...) {
   nvars <- max(length(x), length(y))
-  if (nvars > 1L) {
-    if (is.null(jitter_width)) {
-      jitter_width <- replicate(nvars, NULL)
-    }
-    if (is.null(jitter_height)) {
-      jitter_height <- replicate(nvars, NULL)
-    }
-    plot_list <- mapply(
-      FUN = sv_dependence2D,
+
+  if (nvars == 1L) {
+    p <- .one_dependence2D_plot(
+      object = object,
       x = x,
       y = y,
+      viridis_args = viridis_args,
       jitter_width = jitter_width,
       jitter_height = jitter_height,
-      MoreArgs = list(
-        object = object,
-        viridis_args = viridis_args,
-        interactions = interactions,
-        ...
-      ),
-      SIMPLIFY = FALSE
+      interactions = interactions,
+      add_vars = add_vars,
+      ...
     )
-    return(patchwork::wrap_plots(plot_list))
+    return(p)
   }
+  if (is.null(jitter_width)) {
+    jitter_width <- replicate(nvars, NULL)
+  }
+  if (is.null(jitter_height)) {
+    jitter_height <- replicate(nvars, NULL)
+  }
+  plot_list <- mapply(
+    FUN = .one_dependence2D_plot,
+    x = x,
+    y = y,
+    jitter_width = jitter_width,
+    jitter_height = jitter_height,
+    MoreArgs = list(
+      object = object,
+      viridis_args = viridis_args,
+      interactions = interactions,
+      add_vars = add_vars,
+      ...
+    ),
+    SIMPLIFY = FALSE
+  )
+  p <- patchwork::wrap_plots(plot_list, axis_titles = "collect", axes = "collect")
 
+  return(p)
+}
+
+#' @describeIn sv_dependence2D
+#'   2D SHAP dependence plot for "mshapviz" object.
+#' @export
+sv_dependence2D.mshapviz <- function(
+    object,
+    x,
+    y,
+    viridis_args = getOption("shapviz.viridis_args"),
+    jitter_width = NULL,
+    jitter_height = NULL,
+    interactions = FALSE,
+    add_vars = NULL,
+    ...) {
+  stopifnot(
+    length(x) == 1L,
+    length(y) == 1L
+  )
+  plot_list <- lapply(
+    object,
+    FUN = .one_dependence2D_plot,
+    # Argument list (simplify via match.call() or some rlang magic?)
+    x = x,
+    y = y,
+    viridis_args = viridis_args,
+    jitter_width = jitter_width,
+    jitter_height = jitter_height,
+    interactions = interactions,
+    add_vars = add_vars,
+    ...
+  )
+  plot_list <- add_titles(plot_list, nms = names(object)) # see sv_waterfall()
+  p <- patchwork::wrap_plots(plot_list, axis_titles = "collect")
+  return(p)
+}
+
+# Helper function
+.one_dependence2D_plot <- function(
+    object,
+    x,
+    y,
+    viridis_args,
+    jitter_width,
+    jitter_height,
+    interactions,
+    add_vars,
+    ...) {
   S <- get_shap_values(object)
   X <- get_feature_values(object)
+
   S_inter <- get_shap_interactions(object)
   nms <- colnames(object)
   stopifnot(
@@ -135,43 +199,10 @@ sv_dependence2D.shapviz <- function(
   if (is.null(viridis_args)) {
     viridis_args <- list()
   }
-  ggplot2::ggplot(dat, ggplot2::aes(x = .data[[x]], y = .data[[y]], color = SHAP)) +
+  p <- ggplot2::ggplot(dat, ggplot2::aes(x = .data[[x]], y = .data[[y]], color = SHAP)) +
     ggplot2::geom_jitter(width = jitter_width, height = jitter_height, ...) +
     do.call(vir, viridis_args) +
     ggplot2::theme(legend.box.spacing = grid::unit(0, "pt"))
-}
 
-#' @describeIn sv_dependence2D
-#'   2D SHAP dependence plot for "mshapviz" object.
-#' @export
-sv_dependence2D.mshapviz <- function(
-    object,
-    x,
-    y,
-    viridis_args = getOption("shapviz.viridis_args"),
-    jitter_width = NULL,
-    jitter_height = NULL,
-    interactions = FALSE,
-    add_vars = NULL,
-    ...) {
-  stopifnot(
-    length(x) == 1L,
-    length(y) == 1L
-  )
-  plot_list <- lapply(
-    object,
-    FUN = sv_dependence2D,
-    # Argument list (simplify via match.call() or some rlang magic?)
-    x = x,
-    y = y,
-    viridis_args = viridis_args,
-    jitter_width = jitter_width,
-    jitter_height = jitter_height,
-    interactions = interactions,
-    add_vars = add_vars,
-    ...
-  )
-  plot_list <- add_titles(plot_list, nms = names(object)) # see sv_waterfall()
-  p <- patchwork::wrap_plots(plot_list, axis_titles = "collect")
   return(p)
 }

@@ -12,7 +12,8 @@
 #' @returns An object of class "ggplot" (or "patchwork") representing a force plot.
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(
-#'   data.matrix(iris[, -1]), label = iris[, 1], nthread = 1
+#'   data.matrix(iris[, -1]),
+#'   label = iris[, 1], nthread = 1
 #' )
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 20, nthread = 1)
 #' x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
@@ -37,12 +38,18 @@ sv_force.default <- function(object, ...) {
 #' @describeIn sv_force
 #'   SHAP force plot for object of class "shapviz".
 #' @export
-sv_force.shapviz <- function(object, row_id = 1L, max_display = 6L,
-                             fill_colors = c("#f7d13d", "#a52c60"),
-                             format_shap = getOption("shapviz.format_shap"),
-                             format_feat = getOption("shapviz.format_feat"),
-                             contrast = TRUE, bar_label_size = 3.2,
-                             show_annotation = TRUE, annotation_size = 3.2, ...) {
+sv_force.shapviz <- function(
+    object,
+    row_id = 1L,
+    max_display = 6L,
+    fill_colors = c("#f7d13d", "#a52c60"),
+    format_shap = getOption("shapviz.format_shap"),
+    format_feat = getOption("shapviz.format_feat"),
+    contrast = TRUE,
+    bar_label_size = 3.2,
+    show_annotation = TRUE,
+    annotation_size = 3.2,
+    ...) {
   stopifnot(
     "Exactly two fill colors must be passed" = length(fill_colors) == 2L,
     "format_shap must be a function" = is.function(format_shap),
@@ -140,12 +147,18 @@ sv_force.shapviz <- function(object, row_id = 1L, max_display = 6L,
 #' @describeIn sv_force
 #'   SHAP force plot for object of class "mshapviz".
 #' @export
-sv_force.mshapviz <- function(object, row_id = 1L, max_display = 6L,
-                              fill_colors = c("#f7d13d", "#a52c60"),
-                              format_shap = getOption("shapviz.format_shap"),
-                              format_feat = getOption("shapviz.format_feat"),
-                              contrast = TRUE, bar_label_size = 3.2,
-                              show_annotation = TRUE, annotation_size = 3.2, ...) {
+sv_force.mshapviz <- function(
+    object,
+    row_id = 1L,
+    max_display = 6L,
+    fill_colors = c("#f7d13d", "#a52c60"),
+    format_shap = getOption("shapviz.format_shap"),
+    format_feat = getOption("shapviz.format_feat"),
+    contrast = TRUE,
+    bar_label_size = 3.2,
+    show_annotation = TRUE,
+    annotation_size = 3.2,
+    ...) {
   plot_list <- lapply(
     object,
     FUN = sv_force,
@@ -161,7 +174,9 @@ sv_force.mshapviz <- function(object, row_id = 1L, max_display = 6L,
     annotation_size = annotation_size,
     ...
   )
-  plot_list <- add_titles(plot_list, nms = names(object))  # see sv_waterfall()
-  patchwork::wrap_plots(plot_list) +
-    patchwork::plot_layout(ncol = 1L)
+  plot_list <- add_titles(plot_list, nms = names(object)) # see sv_waterfall()
+
+  # Currently, collecting x axes titles does not work
+  p <- patchwork::wrap_plots(plot_list, ncol = 1L, axis_titles = "collect")
+  return(p)
 }

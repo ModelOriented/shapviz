@@ -199,10 +199,15 @@ sv_dependence2D.mshapviz <- function(
   if (is.null(viridis_args)) {
     viridis_args <- list()
   }
-  p <- ggplot2::ggplot(dat, ggplot2::aes(x = .data[[x]], y = .data[[y]], color = SHAP)) +
+  p <- ggplot2::ggplot(
+    dat, ggplot2::aes(x = .data[[x]], y = .data[[y]], color = SHAP)
+  ) +
     ggplot2::geom_jitter(width = jitter_width, height = jitter_height, ...) +
     do.call(vir, viridis_args) +
-    ggplot2::theme(legend.box.spacing = grid::unit(0, "pt"))
+    ggplot2::theme(
+      legend.box.spacing = grid::unit(0, "pt"),
+      legend.key.width = grid::unit(12, "pt")
+    )
 
   return(p)
 }

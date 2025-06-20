@@ -13,6 +13,7 @@ Modify via `fill` and `bar_width` arguments [#169](https://github.com/ModelOrien
 - Collecting axis titles: We now use {patchwork} to collect axis titles when
   applying plot functions to an "mshapviz" object, except for `sv_dependence()`
   (where we need a more sophisticated logic). Currently does not work for `sv_force()`.
+- `sv_dependence2D()`: The color guide is less wide.
 
 ### Maintenance
 

@@ -292,10 +292,12 @@ sv_dependence.mshapviz <- function(
     same_shap_range <- .all_identical(lapply(z, `[[`, "shap_range"))
   }
 
-  if (same_shap_range && !same_v_range) {
+  if (same_shap_range && same_v_range) {
+    axes <- "collect"
+  } else if (same_shap_range) {
     axes <- "collect_y"
   } else if (same_v_range) {
-    axes <- if (same_shap_range) "collect" else "collect_x"
+    axes <- "collect_x"
   }
 
   # Determine guides collection info

@@ -23,6 +23,8 @@ sv_dependence(object, ...)
   ih_color_num = TRUE,
   ih_scale = FALSE,
   ih_adjusted = FALSE,
+  share_y = FALSE,
+  ylim = NULL,
   ...
 )
 
@@ -38,6 +40,8 @@ sv_dependence(object, ...)
   ih_color_num = TRUE,
   ih_scale = FALSE,
   ih_adjusted = FALSE,
+  share_y = FALSE,
+  ylim = NULL,
   ...
 )
 }
@@ -79,6 +83,11 @@ values between \code{v} and the \code{color_var} are plotted.}
 \item{ih_nbins, ih_color_num, ih_scale, ih_adjusted}{Interaction heuristic (ih)
 parameters used to select the color variable, see \code{\link[=potential_interactions]{potential_interactions()}}.
 Only used if \code{color_var = "auto"} and if there are no SHAP interaction values.}
+
+\item{share_y}{Should y axis be shared across subplots? The default is FALSE.
+Has no effect if \code{ylim} is passed. Only for multiple plots.}
+
+\item{ylim}{A vector of length 2 with manual y axis limits applied to all plots.}
 }
 \value{
 An object of class "ggplot" (or "patchwork") representing a dependence plot.

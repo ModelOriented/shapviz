@@ -36,6 +36,9 @@
 #' @param ih_nbins,ih_color_num,ih_scale,ih_adjusted Interaction heuristic (ih)
 #'   parameters used to select the color variable, see [potential_interactions()].
 #'   Only used if `color_var = "auto"` and if there are no SHAP interaction values.
+#' @param share_y Should y axis be shared across subplots? The default is FALSE.
+#'   Has no effect if `ylim` is passed. Only for multiple plots.
+#' @param ylim A vector of length 2 with manual y axis limits applied to all plots.
 #' @param ... Arguments passed to [ggplot2::geom_jitter()].
 #' @returns An object of class "ggplot" (or "patchwork") representing a dependence plot.
 #' @examples
@@ -90,8 +93,14 @@ sv_dependence.shapviz <- function(
     ih_color_num = TRUE,
     ih_scale = FALSE,
     ih_adjusted = FALSE,
+    share_y = FALSE,
+    ylim = NULL,
     ...) {
   nv <- length(v)
+  stopifnot(
+    nv >= 1L,
+    is.null(ylim) || (length(ylim) == 2L && is.numeric(ylim))
+  )
   if (nv == 1L && length(color_var) <= 1L) {
     p <- .one_dependence_plot(
       object = object,
@@ -105,6 +114,7 @@ sv_dependence.shapviz <- function(
       ih_color_num = ih_color_num,
       ih_scale = ih_scale,
       ih_adjusted = ih_adjusted,
+      ylim = ylim,
       ...
     )$p
     return(p)
@@ -130,6 +140,7 @@ sv_dependence.shapviz <- function(
       ih_color_num = ih_color_num,
       ih_scale = ih_scale,
       ih_adjusted = ih_adjusted,
+      ylim = ylim,
       ...
     ),
     SIMPLIFY = FALSE
@@ -137,35 +148,21 @@ sv_dependence.shapviz <- function(
 
   # Reorganize output
   plot_list <- lapply(out_list, `[[`, "p")
-  y_labs <- vapply(out_list, `[[`, "y_lab", FUN.VALUE = character(1L))
-  has_keys <- vapply(out_list, `[[`, "color_key", FUN.VALUE = logical(1L))
-  color_vars <- lapply(out_list, `[[`, "color_var") # Elements NULL <=> has_keys = FALSE
 
   # Add titles if v varies
   plot_list <- add_titles(plot_list, nms = if (nv > 1L) v) # see sv_waterfall()
 
-  # Which aspects can be collected?
-  nvu <- length(unique(v))
-  nlab <- length(unique(y_labs))
-
-  axis_titles <- axes <- guides <- "keep"
-  if (nvu == 1L && nlab == 1L) {
-    axis_titles <- "collect"
-  } else if (nvu == 1L) {
-    axis_titles <- "collect_x"
-  } else if (nlab == 1L) {
-    axis_titles <- "collect_y"
-  }
-  if (nvu == 1L) {
-    axes <- if (isFALSE(interactions)) "collect" else "collect_x"
-  }
-  if (isFALSE(interactions) && length(unique(color_vars[has_keys])) <= 1L) {
-    guides <- "collect"
+  # If share_y is TRUE, apply the limits
+  if (isTRUE(share_y) && is.null(ylim)) {
+    ylim <- .share_y(lapply(out_list, `[[`, "shap_range"))
+    plot_list <- .add_ylim(plot_list, ylim = ylim)
   }
 
+  # Collect axis titles, axes and guides
+  collect <- .collect(out_list, v = v, ylim = ylim)
   p <- patchwork::wrap_plots(
     plot_list,
-    axis_titles = axis_titles, axes = axes, guides = guides
+    axis_titles = collect$axis_titles, axes = collect$axes, guides = collect$guides
   )
 
   return(p)
@@ -187,11 +184,15 @@ sv_dependence.mshapviz <- function(
     ih_color_num = TRUE,
     ih_scale = FALSE,
     ih_adjusted = FALSE,
+    share_y = FALSE,
+    ylim = NULL,
     ...) {
   stopifnot(
     length(v) == 1L,
-    length(color_var) <= 1L
+    length(color_var) <= 1L,
+    is.null(ylim) || (length(ylim) == 2L && is.numeric(ylim))
   )
+
   out_list <- lapply(
     object,
     FUN = .one_dependence_plot,
@@ -206,20 +207,106 @@ sv_dependence.mshapviz <- function(
     ih_color_num = ih_color_num,
     ih_scale = ih_scale,
     ih_adjusted = ih_adjusted,
+    ylim = ylim,
     ...
   )
+
   plot_list <- lapply(out_list, `[[`, "p")
   plot_list <- add_titles(plot_list, nms = names(object)) # see sv_waterfall()
-  p <- patchwork::wrap_plots(plot_list, axis_titles = "collect")
+  if (isTRUE(share_y) && is.null(ylim)) {
+    ylim <- .share_y(lapply(out_list, `[[`, "shap_range"))
+    plot_list <- .add_ylim(plot_list, ylim = ylim)
+  }
+
+  # Collect axis titles, axes and guides
+  collect <- .collect(out_list, v = v, ylim = ylim)
+  p <- patchwork::wrap_plots(
+    plot_list,
+    axis_titles = collect$axis_titles, axes = collect$axes, guides = collect$guides
+  )
 
   return(p)
 }
 
 # Helper functions
 
-# Checks if z is discrete
-.is_discrete <- function(z, n_unique) {
+# Checks if z is discrete. The default equals ggplot2:::is.discrete()
+.is_discrete <- function(z, n_unique = 0L) {
   is.factor(z) || is.character(z) || is.logical(z) || (length(unique(z)) <= n_unique)
+}
+
+# Calculates a "range" for discrete or continuos variables
+.general_range <- function(x) {
+  if (.is_discrete(x)) {
+    return(sort(unique(x)))
+  }
+  return(range(x, na.rm = TRUE))
+}
+
+# Check if the elements in z (list or vector) are all identical, ignoring NULLs
+.all_identical <- function(z) {
+  z <- z[!vapply(z, is.null, logical(1L))]
+  n <- length(z)
+  if (n <= 1L) {
+    return(TRUE)
+  }
+  return(all(vapply(z[-1L], FUN = identical, z[[1L]], FUN.VALUE = logical(1L))))
+}
+
+# Based on list of SHAP value ranges, calculate the shared y-axis limits
+# Note that this could be calculated directly from the shapviz object,
+# except when interactions = TRUE.
+.share_y <- function(range_list) {
+  r <- range(unlist(range_list))
+  return(grDevices::extendrange(r, f = 0.02)) # ggplot uses 0.05 by default
+}
+
+# Apply non-NULL ylim to list of ggplots
+.add_ylim <- function(plot_list, ylim) {
+  return(lapply(plot_list, function(p) p + ggplot2::ylim(ylim)))
+}
+
+# Derives info for the axes and guides of the combined plot
+# z equals out_list in the calling function
+.collect <- function(z, v, ylim) {
+  # Determine axis_titles collection info
+  y_labs <- vapply(z, `[[`, "y_lab", FUN.VALUE = character(1L))
+  nlab <- length(unique(y_labs))
+  nvu <- length(unique(v))
+
+  axis_titles <- axes <- guides <- "keep"
+  if (nvu == 1L && nlab == 1L) {
+    axis_titles <- "collect"
+  } else if (nvu == 1L) {
+    axis_titles <- "collect_x"
+  } else if (nlab == 1L) {
+    axis_titles <- "collect_y"
+  }
+
+  # Determine axes collection info
+  same_v_range <- .all_identical(lapply(z, `[[`, "v_range"))
+  if (!is.null(ylim)) {
+    same_shap_range <- TRUE
+  } else {
+    same_shap_range <- .all_identical(lapply(z, `[[`, "shap_range"))
+  }
+
+  if (same_shap_range && !same_v_range) {
+    axes <- "collect_y"
+  } else if (same_v_range) {
+    axes <- if (same_shap_range) "collect" else "collect_x"
+  }
+
+  # Determine guides collection info
+  has_keys <- vapply(z, `[[`, "color_key", FUN.VALUE = logical(1L))
+  color_vars <- lapply(z, `[[`, "color_var")[has_keys]
+  same_color_range <- .all_identical(lapply(z, `[[`, "color_range"))
+
+  if (length(unique(color_vars)) <= 1L && same_color_range) {
+    guides <- "collect"
+  }
+
+  return(list(axis_titles = axis_titles, axes = axes, guides = guides))
 }
 
 # Returns a list with the following elements:
@@ -227,6 +314,9 @@ sv_dependence.mshapviz <- function(
 # - color_var: the feature used for coloring (or NULL)
 # - color_key: whether a color key is present (TRUE/FALSE)
 # - y_lab: the y-axis label
+# - shap_range: The range of the visualized SHAP values
+# - color_range: the range (or unique values) or NULL of the color variable
+# - v_range: The range (or unique values) of the v variable
 .one_dependence_plot <- function(
     object,
     v,
@@ -239,6 +329,8 @@ sv_dependence.mshapviz <- function(
     ih_color_num,
     ih_scale,
     ih_adjusted,
+    # share_y = FALSE, not(!) to be passed
+    ylim = NULL,
     ...) {
   S <- get_shap_values(object)
   X <- get_feature_values(object)
@@ -296,12 +388,14 @@ sv_dependence.mshapviz <- function(
 
   # No color axis if color_var is NULL
   if (!color_key) {
+    color_range <- NULL
     p <- ggplot2::ggplot(dat, ggplot2::aes(x = .data[[v]], y = shap)) +
       ggplot2::geom_jitter(color = color, width = jitter_width, height = 0, ...) +
       ggplot2::ylab(y_lab)
   } else {
     dat[[color_var]] <- X[[color_var]]
-    if (.is_discrete(dat[[color_var]], n_unique = 0L)) { # only if non-numeric
+    color_range <- .general_range(dat[[color_var]])
+    if (.is_discrete(dat[[color_var]])) {
       vir <- ggplot2::scale_color_viridis_d
     } else {
       vir <- ggplot2::scale_color_viridis_c
@@ -317,11 +411,17 @@ sv_dependence.mshapviz <- function(
       do.call(vir, viridis_args) +
       ggplot2::theme(legend.box.spacing = grid::unit(0, "pt"))
   }
+  if (!is.null(ylim)) {
+    p <- p + ggplot2::ylim(ylim)
+  }
   out <- list(
     p = p,
     color_var = color_var,
     color_key = color_key,
-    y_lab = y_lab
+    y_lab = y_lab,
+    shap_range = range(s),
+    color_range = color_range,
+    v_range = .general_range(X[[v]])
   )
 
   return(out)

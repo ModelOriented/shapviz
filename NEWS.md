@@ -1,17 +1,22 @@
 # shapviz 0.10.0
 
-### New visualization
+### Major improvements
 
-`sv_interaction()`: New `kind = "bar"` to show mean absolute SHAP interactions/main effects as barplots.
-Modify via `fill` and `bar_width` arguments [#169](https://github.com/ModelOriented/shapviz/pull/169).
+- `sv_dependence()`: The new arguments `ylim` and `share_y = FALSE` allow to control the y-axis limits.
+  They help to assess the importance in multiple dependence plots ([#172](https://github.com/ModelOriented/shapviz/pull/172)).
+  Later, we might change the default to `share_y = TRUE` (as in Python's SHAP dependence plots) ([#171](https://github.com/ModelOriented/shapviz/pull/171).
+- `sv_interaction()` has received a new visualization: `kind = "bar"` now shows mean absolute SHAP interactions/main effects as a barplot.
+  Its appearance can be modified by the arguments `fill` and `bar_width` [#169](https://github.com/ModelOriented/shapviz/pull/169).
 
 ### User-visible changes
 
-- We are now (cautiously) collecting axes, axis titles, and color guides via {patchwork}. (Currently fails for `sv_force()`.)
+- We are now (cautiously) collecting axes, axis titles, and color guides via {patchwork} [#171](https://github.com/ModelOriented/shapviz/pull/171).
+(Currently fails for `sv_force()`.)
 
 ### Minor API changes
 
-- In `sv_dependence()`, passing the same variable for `v` and `color_var` does not suppress the color axis anymore, except when `interactions = TRUE`.
+- In `sv_dependence()`, passing the same variable for `v` and `color_var` does not suppress the color axis anymore, 
+except when `interactions = TRUE` ([#171](https://github.com/ModelOriented/shapviz/pull/171).
 
 ### Maintenance
 

@@ -2,7 +2,7 @@ dtrain <- xgboost::xgb.DMatrix(
   data.matrix(iris[, -1L]),
   label = iris[, 1L], nthread = 1
 )
-fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 1L)
+fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 50L)
 x <- shapviz(fit, X_pred = dtrain, X = iris[, -1L])
 x <- c(m1 = x, m2 = x)
 
@@ -19,6 +19,8 @@ test_that("plots work for basic example", {
   )
   expect_s3_class(sv_importance(x, kind = "beeswarm"), "patchwork")
   expect_s3_class(sv_dependence(x, "Petal.Length"), "patchwork")
+  expect_s3_class(sv_dependence(x, "Petal.Length", ylim = c(-2, 3)), "patchwork")
+  expect_s3_class(sv_dependence(x, "Petal.Length", share_y = TRUE), "patchwork")
   expect_s3_class(sv_dependence2D(x, x = "Petal.Length", y = "Species"), "patchwork")
 })
 
@@ -42,6 +44,14 @@ x_inter <- c(m1 = x_inter, m2 = x_inter)
 test_that("dependence plots work for interactions = TRUE", {
   expect_s3_class(
     sv_dependence(x_inter, v = "Petal.Length", interactions = TRUE),
+    "patchwork"
+  )
+  expect_s3_class(
+    sv_dependence(x_inter, v = "Petal.Length", interactions = TRUE, share_y = TRUE),
+    "patchwork"
+  )
+  expect_s3_class(
+    sv_dependence(x_inter, v = "Petal.Length", interactions = TRUE, ylim = c(-0.5, 0.5)),
     "patchwork"
   )
   expect_s3_class(

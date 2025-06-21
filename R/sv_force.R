@@ -177,6 +177,6 @@ sv_force.mshapviz <- function(
   plot_list <- add_titles(plot_list, nms = names(object)) # see sv_waterfall()
 
   # Currently, collecting axes titles does not work (but sv_waterfall() is ok)
-  p <- patchwork::wrap_plots(plot_list, ncol = 1L, axis_titles = "collect")
+  p <- patchwork::wrap_plots(plot_list, ncol = 1L, axis_titles = "collect_x")
   return(p)
 }

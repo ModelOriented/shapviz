@@ -185,7 +185,7 @@ sv_interaction.mshapviz <- function(
     return(plot_list)
   }
   plot_list <- add_titles(plot_list, nms = names(object)) # see sv_waterfall()
-  p <- patchwork::wrap_plots(plot_list, axis_titles = "collect", guides = "collect")
+  p <- patchwork::wrap_plots(plot_list, axis_titles = "collect_x", guides = "collect")
 
   return(p)
 }

@@ -204,7 +204,7 @@ sv_waterfall.mshapviz <- function(
     ...
   )
   plot_list <- add_titles(plot_list, nms = names(object))
-  p <- patchwork::wrap_plots(plot_list, axis_titles = "collect")
+  p <- patchwork::wrap_plots(plot_list, axis_titles = "collect_x")
   return(p)
 }
 

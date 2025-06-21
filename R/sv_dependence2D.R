@@ -14,10 +14,8 @@
 #'
 #' @inheritParams sv_dependence
 #' @inheritParams sv_importance
-#' @param x Feature name for x axis. Can be a vector/list if `object` is
-#'   of class "shapviz".
-#' @param y Feature name for y axis. Can be a vector/list if `object` is
-#'   of class "shapviz".
+#' @param x Feature name for x axis. Can be a vector if `object` is of class "shapviz".
+#' @param y Feature name for y axis. Can be a vector if `object` is of class "shapviz".
 #' @param jitter_height Similar to `jitter_width` for vertical scatter.
 #' @param interactions Should SHAP interaction values be plotted? The default (`FALSE`)
 #'   will show the rowwise sum of the SHAP values of `x` and `y`. If `TRUE`, will
@@ -75,9 +73,11 @@ sv_dependence2D.shapviz <- function(
     interactions = FALSE,
     add_vars = NULL,
     ...) {
-  nvars <- max(length(x), length(y))
+  nx <- length(x)
+  ny <- length(y)
+  nplots <- max(nx, ny)
 
-  if (nvars == 1L) {
+  if (nplots == 1L) {
     p <- .one_dependence2D_plot(
       object = object,
       x = x,
@@ -92,10 +92,10 @@ sv_dependence2D.shapviz <- function(
     return(p)
   }
   if (is.null(jitter_width)) {
-    jitter_width <- replicate(nvars, NULL)
+    jitter_width <- replicate(nplots, NULL)
   }
   if (is.null(jitter_height)) {
-    jitter_height <- replicate(nvars, NULL)
+    jitter_height <- replicate(nplots, NULL)
   }
   plot_list <- mapply(
     FUN = .one_dependence2D_plot,
@@ -112,7 +112,17 @@ sv_dependence2D.shapviz <- function(
     ),
     SIMPLIFY = FALSE
   )
-  p <- patchwork::wrap_plots(plot_list, axis_titles = "collect", axes = "collect")
+
+  # if nx == 1 and ny == 1, we can't reach here
+  if (nx == 1L) {
+    strategy <- "collect_x"
+  } else if (ny == 1L) {
+    strategy <- "collect_y"
+  } else {
+    strategy <- "keep"
+  }
+
+  p <- patchwork::wrap_plots(plot_list, axis_titles = strategy, axes = strategy)
 
   return(p)
 }
@@ -186,13 +196,10 @@ sv_dependence2D.mshapviz <- function(
   }
 
   # Color variable
-  if (!interactions) {
-    s <- rowSums(S[, unique(c(x, y, add_vars))]) # unique() if add_vars contains x or y
+  if (isFALSE(interactions)) {
+    s <- rowSums(S[, unique(c(x, y, add_vars))])
   } else {
-    s <- S_inter[, x, y]
-    if (x != y) {
-      s <- 2 * s # Off-diagonals need to be multiplied by 2 for symmetry reasons
-    }
+    s <- S_inter[, x, y] + if (x != y) S_inter[, y, x] else 0 # symmetry
   }
   dat <- data.frame(SHAP = s, X[, c(x, y)], check.names = FALSE)
   vir <- ggplot2::scale_color_viridis_c

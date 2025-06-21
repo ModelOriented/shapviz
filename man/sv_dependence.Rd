@@ -72,7 +72,7 @@ use a value of 0.2 in case \code{v} is discrete, and no jitter otherwise.
 Can be a vector/list if \code{v} is a vector.}
 
 \item{interactions}{Should SHAP interaction values be plotted? Default is \code{FALSE}.
-Requires SHAP interaction values. If \code{color_var = NULL} (or it is equal to \code{v}),
+Requires SHAP interaction values. If \code{color_var = NULL} (or is equal to \code{v}),
 the pure main effect of \code{v} is visualized. Otherwise, twice the SHAP interaction
 values between \code{v} and the \code{color_var} are plotted.}
 
@@ -101,7 +101,8 @@ By default, the feature on the color scale is selected via SHAP interactions
 }}
 \examples{
 dtrain <- xgboost::xgb.DMatrix(
-  data.matrix(iris[, -1]), label = iris[, 1], nthread = 1
+  data.matrix(iris[, -1]),
+  label = iris[, 1], nthread = 1
 )
 fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 x <- shapviz(fit, X_pred = dtrain, X = iris)
@@ -115,7 +116,12 @@ sv_dependence(x, "Petal.Width", color_var = c("Species", "Petal.Length"))
 x2 <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 sv_dependence(x2, "Petal.Length", interactions = TRUE)
 sv_dependence(
-  x2, c("Petal.Length", "Species"), color_var = NULL, interactions = TRUE
+  x2, c("Petal.Length", "Species"),
+  color_var = NULL, interactions = TRUE
+)
+sv_dependence(
+  x2, "Petal.Length",
+  color_var = colnames(iris[-1]), interactions = TRUE
 )
 }
 \seealso{

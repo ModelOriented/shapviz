@@ -69,14 +69,14 @@ shp <- shapviz(fit, X_pred = data.matrix(X_explain), X = X_explain)
 
 sv_importance(shp, show_numbers = TRUE)
 sv_importance(shp, kind = "bee")
-sv_dependence(shp, v = xvars)  # multiple plots -> patchwork
+sv_dependence(shp, v = xvars, share_y = TRUE)
 ```
 
 ![](man/figures/README-imp.svg)
 
 ![](man/figures/README-bee.svg)
 
-![](man/figures/README-dep.svg)
+![](man/figures/README-dep.png)
 
 
 Decompositions of individual predictions can be visualized as waterfall or force plot:

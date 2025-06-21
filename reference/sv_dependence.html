@@ -175,7 +175,7 @@ Can be a vector/list if <code>v</code> is a vector.</p></dd>
 
 <dt id="arg-interactions">interactions<a class="anchor" aria-label="anchor" href="#arg-interactions"></a></dt>
 <dd><p>Should SHAP interaction values be plotted? Default is <code>FALSE</code>.
-Requires SHAP interaction values. If <code>color_var = NULL</code> (or it is equal to <code>v</code>),
+Requires SHAP interaction values. If <code>color_var = NULL</code> (or is equal to <code>v</code>),
 the pure main effect of <code>v</code> is visualized. Otherwise, twice the SHAP interaction
 values between <code>v</code> and the <code>color_var</code> are plotted.</p></dd>
 
@@ -205,7 +205,8 @@ Only used if <code>color_var = "auto"</code> and if there are no SHAP interactio
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dtrain</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html" class="external-link">xgb.DMatrix</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, label <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, nthread <span class="op">=</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  label <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, nthread <span class="op">=</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dtrain</span>, nrounds <span class="op">=</span> <span class="fl">10</span>, nthread <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">fit</span>, X_pred <span class="op">=</span> <span class="va">dtrain</span>, X <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span></span>
@@ -225,9 +226,15 @@ Only used if <code>color_var = "auto"</code> and if there are no SHAP interactio
 <span class="r-in"><span><span class="fu">sv_dependence</span><span class="op">(</span><span class="va">x2</span>, <span class="st">"Petal.Length"</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="sv_dependence-6.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu">sv_dependence</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">x2</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Petal.Length"</span>, <span class="st">"Species"</span><span class="op">)</span>, color_var <span class="op">=</span> <span class="cn">NULL</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span>  <span class="va">x2</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Petal.Length"</span>, <span class="st">"Species"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  color_var <span class="op">=</span> <span class="cn">NULL</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="sv_dependence-7.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">sv_dependence</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">x2</span>, <span class="st">"Petal.Length"</span>,</span></span>
+<span class="r-in"><span>  color_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="sv_dependence-8.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </div>

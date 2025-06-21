@@ -77,13 +77,16 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.10.0" id="shapviz-0100">shapviz 0.10.0<a class="anchor" aria-label="anchor" href="#shapviz-0100"></a></h2>
 <div class="section level4">
-<h4 id="new-feature-0-10-0">New feature<a class="anchor" aria-label="anchor" href="#new-feature-0-10-0"></a></h4>
+<h4 id="new-visualization-0-10-0">New visualization<a class="anchor" aria-label="anchor" href="#new-visualization-0-10-0"></a></h4>
 <p><code><a href="../reference/sv_interaction.html">sv_interaction()</a></code>: New <code>kind = "bar"</code> to show mean absolute SHAP interactions/main effects as barplots. Modify via <code>fill</code> and <code>bar_width</code> arguments <a href="https://github.com/ModelOriented/shapviz/pull/169" class="external-link">#169</a>.</p>
 </div>
 <div class="section level4">
 <h4 id="user-visible-changes-0-10-0">User-visible changes<a class="anchor" aria-label="anchor" href="#user-visible-changes-0-10-0"></a></h4>
-<ul><li>
-<code><a href="../reference/sv_interaction.html">sv_interaction()</a></code>: If applied to a “mshapviz” object, we use {patchwork} functionality to collect guides and axis titles.</li>
+<ul><li>We are now (cautiously) collecting axes, axis titles, and color guides via {patchwork}. (Currently fails for <code><a href="../reference/sv_force.html">sv_force()</a></code>.)</li>
+</ul></div>
+<div class="section level4">
+<h4 id="minor-api-changes-0-10-0">Minor API changes<a class="anchor" aria-label="anchor" href="#minor-api-changes-0-10-0"></a></h4>
+<ul><li>In <code><a href="../reference/sv_dependence.html">sv_dependence()</a></code>, passing the same variable for <code>v</code> and <code>color_var</code> does not suppress the color axis anymore, except when <code>interactions = TRUE</code>.</li>
 </ul></div>
 <div class="section level4">
 <h4 id="maintenance-0-10-0">Maintenance<a class="anchor" aria-label="anchor" href="#maintenance-0-10-0"></a></h4>

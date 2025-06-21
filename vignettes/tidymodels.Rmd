@@ -146,12 +146,12 @@ shap_values |>
 xvars <- c("log_carat", "color", "clarity", "cut")
 
 shap_values |> 
-  sv_dependence(xvars) &
-  plot_annotation("SHAP dependence plots")  # patchwork magic
+  sv_dependence(xvars, share_y = TRUE) +
+  plot_annotation("SHAP dependence plots")
 
 # SHAP interactions for carat
 shap_values |> 
-  sv_dependence("log_carat", color_var = xvars, interactions = TRUE) &
+  sv_dependence("log_carat", color_var = xvars, interactions = TRUE) +
   plot_annotation("SHAP interactions for carat")
 ```
 ![](../man/figures/VIGNETTE-tidy-xgb-imp.png)
@@ -221,7 +221,7 @@ shap_values |>
   sv_importance(show_numbers = TRUE)
 
 shap_values |> 
-  sv_dependence(c("log_carat", "color", "clarity", "cut"))
+  sv_dependence(c("log_carat", "color", "clarity", "cut"), share_y = TRUE)
 ```
 ![](../man/figures/VIGNETTE-tidy-lgb-imp.png)
 ![](../man/figures/VIGNETTE-tidy-lgb-dep.png)

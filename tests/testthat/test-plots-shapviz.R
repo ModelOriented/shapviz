@@ -2,7 +2,7 @@ dtrain <- xgboost::xgb.DMatrix(
   data.matrix(iris[, -1L]),
   label = iris[, 1L], nthread = 1
 )
-fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 1L)
+fit <- xgboost::xgb.train(params = list(nthread = 1L), data = dtrain, nrounds = 50L)
 x <- shapviz(fit, X_pred = dtrain, X = iris[, -1L])
 
 test_that("plots work for basic example", {
@@ -23,6 +23,16 @@ test_that("plots work for basic example", {
       jitter_width = c(0, 0.1),
     ),
     "patchwork"
+  )
+  expect_s3_class(sv_dependence(x, "Petal.Length", ylim = c(-1, 1)), "ggplot")
+  expect_s3_class(
+    sv_dependence(x, c("Petal.Length", "Species"), ylim = c(-1, 1)), "patchwork"
+  )
+  expect_s3_class(
+    sv_dependence(x, c("Petal.Length", "Species"), ylim = c(-1, 1), share_y = TRUE), "patchwork"
+  )
+  expect_s3_class(
+    sv_dependence(x, c("Petal.Length", "Species"), share_y = TRUE), "patchwork"
   )
   expect_s3_class(sv_dependence2D(x, x = "Petal.Length", y = "Species"), "ggplot")
   expect_s3_class(
@@ -59,6 +69,30 @@ test_that("dependence plots work for interactions = TRUE", {
   )
   expect_s3_class(
     sv_dependence(x_inter, v = c("Petal.Length", "Species"), interactions = TRUE),
+    "patchwork"
+  )
+  expect_s3_class(
+    sv_dependence(
+      x_inter,
+      v = c("Petal.Length", "Species"), interactions = TRUE, share_y = TRUE
+    ),
+    "patchwork"
+  )
+  expect_s3_class(
+    sv_dependence(
+      x_inter,
+      v = c("Petal.Length", "Species"), interactions = TRUE, ylim = c(-0.5, 0.5)
+    ),
+    "patchwork"
+  )
+  expect_s3_class(
+    sv_dependence(
+      x_inter,
+      v = c("Petal.Length", "Species"),
+      interactions = TRUE,
+      ylim = c(-0.5, 0.5),
+      share_y = TRUE
+    ),
     "patchwork"
   )
   expect_s3_class(

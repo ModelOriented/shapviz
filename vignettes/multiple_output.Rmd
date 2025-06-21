@@ -64,9 +64,8 @@ x
 sv_importance(x)
 sv_importance(x, bar_type = "stack")  # Same but stacked
 
-sv_dependence(x, v = "Petal.Length") +
-  plot_layout(ncol = 1) &
-  ylim(-3, 4)  # Same y scale to get impression on strength
+sv_dependence(x, v = "Petal.Length", share_y = TRUE) +
+  plot_layout(ncol = 1)
 ```
 
 ### Similar for LightGBM (only code)
@@ -107,9 +106,8 @@ shp <- setNames(shapviz(x), levels(iris$Species))
 
 sv_importance(shp)
 
-sv_dependence(shp, v = "Sepal.Width") +
-  plot_layout(ncol = 2) &
-  ylim(-0.06, 0.06)
+sv_dependence(shp, v = "Sepal.Width", share_y = TRUE) +
+  plot_layout(ncol = 2)
 ```
 
 ![](../man/figures/VIGNETTE-dep-ranger.png)
@@ -135,10 +133,9 @@ x_subgroups <- split(shap_xgb, f = iris$Species)
 # SHAP analysis
 sv_importance(x_subgroups, bar_type = "stack")
 
-sv_dependence(x_subgroups, v = "Petal.Length") +
+sv_dependence(x_subgroups, v = "Petal.Length", share_y = TRUE) +
   plot_layout(ncol = 1) & 
-  xlim(1, 7) &
-  ylim(-1.4, 2.2)
+  xlim(1, 7)
 ```
 
 ## Example: Different models
@@ -164,8 +161,7 @@ mshap
 # SHAP analysis
 sv_importance(mshap)
 
-sv_dependence(mshap, v = "Species") &
-  ylim(-0.5, 0.6)
+sv_dependence(mshap, v = "Species", share_y = TRUE)
 ```
 
 ![](../man/figures/VIGNETTE-dep.png)

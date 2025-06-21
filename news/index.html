@@ -77,16 +77,20 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.10.0" id="shapviz-0100">shapviz 0.10.0<a class="anchor" aria-label="anchor" href="#shapviz-0100"></a></h2>
 <div class="section level4">
-<h4 id="new-visualization-0-10-0">New visualization<a class="anchor" aria-label="anchor" href="#new-visualization-0-10-0"></a></h4>
-<p><code><a href="../reference/sv_interaction.html">sv_interaction()</a></code>: New <code>kind = "bar"</code> to show mean absolute SHAP interactions/main effects as barplots. Modify via <code>fill</code> and <code>bar_width</code> arguments <a href="https://github.com/ModelOriented/shapviz/pull/169" class="external-link">#169</a>.</p>
-</div>
+<h4 id="major-improvements-0-10-0">Major improvements<a class="anchor" aria-label="anchor" href="#major-improvements-0-10-0"></a></h4>
+<ul><li>
+<code><a href="../reference/sv_dependence.html">sv_dependence()</a></code>: The new arguments <code>ylim</code> and <code>share_y = FALSE</code> allow to control the y-axis limits. They help to assess the importance in multiple dependence plots (<a href="https://github.com/ModelOriented/shapviz/pull/172" class="external-link">#172</a>). Later, we might change the default to <code>share_y = TRUE</code> (as in Python’s SHAP dependence plots) (<a href="https://github.com/ModelOriented/shapviz/pull/171" class="external-link">#171</a>.</li>
+<li>
+<code><a href="../reference/sv_interaction.html">sv_interaction()</a></code> has received a new visualization: <code>kind = "bar"</code> now shows mean absolute SHAP interactions/main effects as a barplot. Its appearance can be modified by the arguments <code>fill</code> and <code>bar_width</code> <a href="https://github.com/ModelOriented/shapviz/pull/169" class="external-link">#169</a>.</li>
+</ul></div>
 <div class="section level4">
 <h4 id="user-visible-changes-0-10-0">User-visible changes<a class="anchor" aria-label="anchor" href="#user-visible-changes-0-10-0"></a></h4>
-<ul><li>We are now (cautiously) collecting axes, axis titles, and color guides via {patchwork}. (Currently fails for <code><a href="../reference/sv_force.html">sv_force()</a></code>.)</li>
+<ul><li>We are now (cautiously) collecting axes, axis titles, and color guides via {patchwork} <a href="https://github.com/ModelOriented/shapviz/pull/171" class="external-link">#171</a>. (Currently fails for <code><a href="../reference/sv_force.html">sv_force()</a></code>.)</li>
+<li>The color bars in <code><a href="../reference/sv_dependence2D.html">sv_dependence2D()</a></code> are less wide <a href="https://github.com/ModelOriented/shapviz/pull/169" class="external-link">#169</a>.</li>
 </ul></div>
 <div class="section level4">
 <h4 id="minor-api-changes-0-10-0">Minor API changes<a class="anchor" aria-label="anchor" href="#minor-api-changes-0-10-0"></a></h4>
-<ul><li>In <code><a href="../reference/sv_dependence.html">sv_dependence()</a></code>, passing the same variable for <code>v</code> and <code>color_var</code> does not suppress the color axis anymore, except when <code>interactions = TRUE</code>.</li>
+<ul><li>In <code><a href="../reference/sv_dependence.html">sv_dependence()</a></code>, passing the same variable for <code>v</code> and <code>color_var</code> does not suppress the color axis anymore, except when <code>interactions = TRUE</code> (<a href="https://github.com/ModelOriented/shapviz/pull/171" class="external-link">#171</a>.</li>
 </ul></div>
 <div class="section level4">
 <h4 id="maintenance-0-10-0">Maintenance<a class="anchor" aria-label="anchor" href="#maintenance-0-10-0"></a></h4>

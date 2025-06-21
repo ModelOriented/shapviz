@@ -334,7 +334,7 @@ shap_values |>
 
 shap_values |> 
   sv_dependence(v = "Sepal.Length", color_var = "Sepal.Width") +
-  plot_layout(ncol = 1, guides = "collect")
+  plot_layout(ncol = 1)
 ```
 
 ![](../man/figures/VIGNETTE-tidy-class-xgb-imp.png)
@@ -349,7 +349,6 @@ Let's complete this vignette by running a binary LightGBM model.
 library(tidymodels)
 library(bonsai)
 library(shapviz)
-library(patchwork)
 
 set.seed(1)
 

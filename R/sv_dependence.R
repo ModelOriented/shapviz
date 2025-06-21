@@ -154,7 +154,7 @@ sv_dependence.shapviz <- function(
 
   # If share_y is TRUE, apply the limits
   if (isTRUE(share_y) && is.null(ylim)) {
-    ylim <- .share_y(lapply(out_list, `[[`, "shap_range"))
+    ylim <- range(unlist(lapply(out_list, `[[`, "shap_range")))
     plot_list <- .add_ylim(plot_list, ylim = ylim)
   }
 
@@ -214,7 +214,7 @@ sv_dependence.mshapviz <- function(
   plot_list <- lapply(out_list, `[[`, "p")
   plot_list <- add_titles(plot_list, nms = names(object)) # see sv_waterfall()
   if (isTRUE(share_y) && is.null(ylim)) {
-    ylim <- .share_y(lapply(out_list, `[[`, "shap_range"))
+    ylim <- range(unlist(lapply(out_list, `[[`, "shap_range")))
     plot_list <- .add_ylim(plot_list, ylim = ylim)
   }
 
@@ -251,14 +251,6 @@ sv_dependence.mshapviz <- function(
     return(TRUE)
   }
   return(all(vapply(z[-1L], FUN = identical, z[[1L]], FUN.VALUE = logical(1L))))
-}
-
-# Based on list of SHAP value ranges, calculate the shared y-axis limits
-# Note that this could be calculated directly from the shapviz object,
-# except when interactions = TRUE.
-.share_y <- function(range_list) {
-  r <- range(unlist(range_list))
-  return(grDevices::extendrange(r, f = 0.02)) # ggplot uses 0.05 by default
 }
 
 # Apply non-NULL ylim to list of ggplots

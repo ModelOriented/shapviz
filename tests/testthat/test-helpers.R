@@ -15,10 +15,6 @@ test_that(".general_range() works", {
   expect_equal(.general_range(factor(c("a", "b", "a"))), factor(c("a", "b")))
 })
 
-test_that(".share_y() works", {
-  expect_equal(.share_y(list(0:1, 9:10)), c(-0.2, 10.2))
-})
-
 test_that(".all_identical() works", {
   expect_true(.all_identical(list(1, 1, 1)))
   expect_true(.all_identical(c(1, 1, 1)))

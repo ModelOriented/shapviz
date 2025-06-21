@@ -36,7 +36,8 @@
 #' @returns An object of class "ggplot" (or "patchwork") representing a waterfall plot.
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(
-#'   data.matrix(iris[, -1]), label = iris[, 1], nthread = 1
+#'   data.matrix(iris[, -1]),
+#'   label = iris[, 1], nthread = 1
 #' )
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 20, nthread = 1)
 #' x <- shapviz(fit, X_pred = dtrain, X = iris[, -1])
@@ -45,7 +46,8 @@
 #'
 #' # Ordered by colnames(x), combined with max_display
 #' sv_waterfall(
-#'   x[, sort(colnames(x))], order_fun = function(s) length(s):1, max_display = 3
+#'   x[, sort(colnames(x))],
+#'   order_fun = function(s) length(s):1, max_display = 3
 #' )
 #'
 #' # Aggregate over all observations with Petal.Length == 1.4
@@ -66,13 +68,19 @@ sv_waterfall.default <- function(object, ...) {
 #' @describeIn sv_waterfall
 #'   SHAP waterfall plot for an object of class "shapviz".
 #' @export
-sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
-                                 order_fun = function(s) order(abs(s)),
-                                 fill_colors = c("#f7d13d", "#a52c60"),
-                                 format_shap = getOption("shapviz.format_shap"),
-                                 format_feat = getOption("shapviz.format_feat"),
-                                 contrast = TRUE, show_connection = TRUE,
-                                 show_annotation = TRUE, annotation_size = 3.2, ...) {
+sv_waterfall.shapviz <- function(
+    object,
+    row_id = 1L,
+    max_display = 10L,
+    order_fun = function(s) order(abs(s)),
+    fill_colors = c("#f7d13d", "#a52c60"),
+    format_shap = getOption("shapviz.format_shap"),
+    format_feat = getOption("shapviz.format_feat"),
+    contrast = TRUE,
+    show_connection = TRUE,
+    show_annotation = TRUE,
+    annotation_size = 3.2,
+    ...) {
   stopifnot(
     "Exactly two fill colors must be passed" = length(fill_colors) == 2L,
     "format_shap must be a function" = is.function(format_shap),
@@ -166,13 +174,19 @@ sv_waterfall.shapviz <- function(object, row_id = 1L, max_display = 10L,
 #' @describeIn sv_waterfall
 #'   SHAP waterfall plot for an object of class "mshapviz".
 #' @export
-sv_waterfall.mshapviz <- function(object, row_id = 1L, max_display = 10L,
-                                  order_fun = function(s) order(abs(s)),
-                                  fill_colors = c("#f7d13d", "#a52c60"),
-                                  format_shap = getOption("shapviz.format_shap"),
-                                  format_feat = getOption("shapviz.format_feat"),
-                                  contrast = TRUE, show_connection = TRUE,
-                                  show_annotation = TRUE, annotation_size = 3.2, ...) {
+sv_waterfall.mshapviz <- function(
+    object,
+    row_id = 1L,
+    max_display = 10L,
+    order_fun = function(s) order(abs(s)),
+    fill_colors = c("#f7d13d", "#a52c60"),
+    format_shap = getOption("shapviz.format_shap"),
+    format_feat = getOption("shapviz.format_feat"),
+    contrast = TRUE,
+    show_connection = TRUE,
+    show_annotation = TRUE,
+    annotation_size = 3.2,
+    ...) {
   plot_list <- lapply(
     object,
     FUN = sv_waterfall,
@@ -190,7 +204,8 @@ sv_waterfall.mshapviz <- function(object, row_id = 1L, max_display = 10L,
     ...
   )
   plot_list <- add_titles(plot_list, nms = names(object))
-  patchwork::wrap_plots(plot_list)
+  p <- patchwork::wrap_plots(plot_list, axis_titles = "collect_x")
+  return(p)
 }
 
 # Helper functions for sv_waterfall() and sv_force()

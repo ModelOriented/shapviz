@@ -14,10 +14,8 @@
 #'
 #' @inheritParams sv_dependence
 #' @inheritParams sv_importance
-#' @param x Feature name for x axis. Can be a vector/list if `object` is
-#'   of class "shapviz".
-#' @param y Feature name for y axis. Can be a vector/list if `object` is
-#'   of class "shapviz".
+#' @param x Feature name for x axis. Can be a vector if `object` is of class "shapviz".
+#' @param y Feature name for y axis. Can be a vector if `object` is of class "shapviz".
 #' @param jitter_height Similar to `jitter_width` for vertical scatter.
 #' @param interactions Should SHAP interaction values be plotted? The default (`FALSE`)
 #'   will show the rowwise sum of the SHAP values of `x` and `y`. If `TRUE`, will
@@ -30,7 +28,8 @@
 #' @returns An object of class "ggplot" (or "patchwork") representing a dependence plot.
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(
-#'   data.matrix(iris[, -1]), label = iris[, 1], nthread = 1
+#'   data.matrix(iris[, -1]),
+#'   label = iris[, 1], nthread = 1
 #' )
 #' fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
 #' sv <- shapviz(fit, X_pred = dtrain, X = iris)
@@ -41,7 +40,8 @@
 #' sv2 <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 #' sv_dependence2D(sv2, x = "Petal.Length", y = "Species", interactions = TRUE)
 #' sv_dependence2D(
-#'   sv2, x = "Petal.Length", y = c("Species", "Petal.Width"), interactions = TRUE
+#'   sv2,
+#'   x = "Petal.Length", y = c("Species", "Petal.Width"), interactions = TRUE
 #' )
 #'
 #' # mshapviz object
@@ -63,37 +63,119 @@ sv_dependence2D.default <- function(object, ...) {
 #' @describeIn sv_dependence2D
 #'   2D SHAP dependence plot for "shapviz" object.
 #' @export
-sv_dependence2D.shapviz <- function(object, x, y,
-                                    viridis_args = getOption("shapviz.viridis_args"),
-                                    jitter_width = NULL, jitter_height = NULL,
-                                    interactions = FALSE, add_vars = NULL, ...) {
-  p <- max(length(x), length(y))
-  if (p > 1L) {
-    if (is.null(jitter_width)) {
-      jitter_width <- replicate(p, NULL)
-    }
-    if (is.null(jitter_height)) {
-      jitter_height <- replicate(p, NULL)
-    }
-    plot_list <- mapply(
-      FUN = sv_dependence2D,
+sv_dependence2D.shapviz <- function(
+    object,
+    x,
+    y,
+    viridis_args = getOption("shapviz.viridis_args"),
+    jitter_width = NULL,
+    jitter_height = NULL,
+    interactions = FALSE,
+    add_vars = NULL,
+    ...) {
+  nx <- length(x)
+  ny <- length(y)
+  nplots <- max(nx, ny)
+
+  if (nplots == 1L) {
+    p <- .one_dependence2D_plot(
+      object = object,
       x = x,
       y = y,
+      viridis_args = viridis_args,
       jitter_width = jitter_width,
       jitter_height = jitter_height,
-      MoreArgs = list(
-        object = object,
-        viridis_args = viridis_args,
-        interactions = interactions,
-        ...
-      ),
-      SIMPLIFY = FALSE
+      interactions = interactions,
+      add_vars = add_vars,
+      ...
     )
-    return(patchwork::wrap_plots(plot_list))
+    return(p)
+  }
+  if (is.null(jitter_width)) {
+    jitter_width <- replicate(nplots, NULL)
+  }
+  if (is.null(jitter_height)) {
+    jitter_height <- replicate(nplots, NULL)
+  }
+  plot_list <- mapply(
+    FUN = .one_dependence2D_plot,
+    x = x,
+    y = y,
+    jitter_width = jitter_width,
+    jitter_height = jitter_height,
+    MoreArgs = list(
+      object = object,
+      viridis_args = viridis_args,
+      interactions = interactions,
+      add_vars = add_vars,
+      ...
+    ),
+    SIMPLIFY = FALSE
+  )
+
+  # if nx == 1 and ny == 1, we can't reach here
+  if (nx == 1L) {
+    strategy <- "collect_x"
+  } else if (ny == 1L) {
+    strategy <- "collect_y"
+  } else {
+    strategy <- "keep"
   }
 
+  p <- patchwork::wrap_plots(plot_list, axis_titles = strategy, axes = strategy)
+
+  return(p)
+}
+
+#' @describeIn sv_dependence2D
+#'   2D SHAP dependence plot for "mshapviz" object.
+#' @export
+sv_dependence2D.mshapviz <- function(
+    object,
+    x,
+    y,
+    viridis_args = getOption("shapviz.viridis_args"),
+    jitter_width = NULL,
+    jitter_height = NULL,
+    interactions = FALSE,
+    add_vars = NULL,
+    ...) {
+  stopifnot(
+    length(x) == 1L,
+    length(y) == 1L
+  )
+  plot_list <- lapply(
+    object,
+    FUN = .one_dependence2D_plot,
+    # Argument list (simplify via match.call() or some rlang magic?)
+    x = x,
+    y = y,
+    viridis_args = viridis_args,
+    jitter_width = jitter_width,
+    jitter_height = jitter_height,
+    interactions = interactions,
+    add_vars = add_vars,
+    ...
+  )
+  plot_list <- add_titles(plot_list, nms = names(object)) # see sv_waterfall()
+  p <- patchwork::wrap_plots(plot_list, axis_titles = "collect")
+  return(p)
+}
+
+# Helper function
+.one_dependence2D_plot <- function(
+    object,
+    x,
+    y,
+    viridis_args,
+    jitter_width,
+    jitter_height,
+    interactions,
+    add_vars,
+    ...) {
   S <- get_shap_values(object)
   X <- get_feature_values(object)
+
   S_inter <- get_shap_interactions(object)
   nms <- colnames(object)
   stopifnot(
@@ -114,50 +196,25 @@ sv_dependence2D.shapviz <- function(object, x, y,
   }
 
   # Color variable
-  if (!interactions) {
-    s <- rowSums(S[, unique(c(x, y, add_vars))])  # unique() if add_vars contains x or y
+  if (isFALSE(interactions)) {
+    s <- rowSums(S[, unique(c(x, y, add_vars))])
   } else {
-    s <- S_inter[, x, y]
-    if (x != y) {
-      s <- 2 * s  # Off-diagonals need to be multiplied by 2 for symmetry reasons
-    }
+    s <- S_inter[, x, y] + if (x != y) S_inter[, y, x] else 0 # symmetry
   }
   dat <- data.frame(SHAP = s, X[, c(x, y)], check.names = FALSE)
   vir <- ggplot2::scale_color_viridis_c
   if (is.null(viridis_args)) {
     viridis_args <- list()
   }
-  ggplot2::ggplot(dat, ggplot2::aes(x = .data[[x]], y = .data[[y]], color = SHAP)) +
+  p <- ggplot2::ggplot(
+    dat, ggplot2::aes(x = .data[[x]], y = .data[[y]], color = SHAP)
+  ) +
     ggplot2::geom_jitter(width = jitter_width, height = jitter_height, ...) +
     do.call(vir, viridis_args) +
-    ggplot2::theme(legend.box.spacing = grid::unit(0, "pt"))
-}
+    ggplot2::theme(
+      legend.box.spacing = grid::unit(0, "pt"),
+      legend.key.width = grid::unit(12, "pt")
+    )
 
-#' @describeIn sv_dependence2D
-#'   2D SHAP dependence plot for "mshapviz" object.
-#' @export
-sv_dependence2D.mshapviz <- function(object, x, y,
-                                     viridis_args = getOption("shapviz.viridis_args"),
-                                     jitter_width = NULL, jitter_height = NULL,
-                                     interactions = FALSE, add_vars = NULL, ...) {
-  stopifnot(
-    length(x) == 1L,
-    length(y) == 1L
-  )
-  plot_list <- lapply(
-    object,
-    FUN = sv_dependence2D,
-    # Argument list (simplify via match.call() or some rlang magic?)
-    x = x,
-    y = y,
-    viridis_args = viridis_args,
-    jitter_width = jitter_width,
-    jitter_height = jitter_height,
-    interactions = interactions,
-    add_vars = add_vars,
-    ...
-  )
-  plot_list <- add_titles(plot_list, nms = names(object))  # see sv_waterfall()
-  patchwork::wrap_plots(plot_list)
+  return(p)
 }
-

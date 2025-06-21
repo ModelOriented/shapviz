@@ -1,14 +1,17 @@
 # shapviz 0.10.0
 
-### New feature
+### New visualization
 
 `sv_interaction()`: New `kind = "bar"` to show mean absolute SHAP interactions/main effects as barplots.
 Modify via `fill` and `bar_width` arguments [#169](https://github.com/ModelOriented/shapviz/pull/169).
 
 ### User-visible changes
 
-- `sv_interaction()`: If applied to a "mshapviz" object, we use {patchwork} functionality to collect guides and axis titles.
+- We are now (cautiously) collecting axes, axis titles, and color guides via {patchwork}. (Currently fails for `sv_force()`.)
 
+### Minor API changes
+
+- In `sv_dependence()`, passing the same variable for `v` and `color_var` does not suppress the color axis anymore, except when `interactions = TRUE`.
 
 ### Maintenance
 

@@ -12,6 +12,7 @@
 
 - We are now (cautiously) collecting axes, axis titles, and color guides via {patchwork} [#171](https://github.com/ModelOriented/shapviz/pull/171).
 (Currently fails for `sv_force()`.)
+- The color bars in `sv_dependence2D()` are less wide [#169](https://github.com/ModelOriented/shapviz/pull/169).
 
 ### Minor API changes
 

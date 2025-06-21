@@ -51,7 +51,7 @@
 #' sv_dependence(x, "Petal.Length")
 #' sv_dependence(x, "Petal.Length", color_var = "Species")
 #' sv_dependence(x, "Petal.Length", color_var = NULL)
-#' sv_dependence(x, c("Species", "Petal.Length"))
+#' sv_dependence(x, c("Species", "Petal.Length"), share_y = TRUE)
 #' sv_dependence(x, "Petal.Width", color_var = c("Species", "Petal.Length"))
 #'
 #' # SHAP interaction values/main effects
@@ -63,7 +63,8 @@
 #' )
 #' sv_dependence(
 #'   x2, "Petal.Length",
-#'   color_var = colnames(iris[-1]), interactions = TRUE
+#'   color_var = colnames(iris[-1]), interactions = TRUE,
+#'   share_y = TRUE
 #' )
 #' @export
 #' @seealso [potential_interactions()]
@@ -146,7 +147,6 @@ sv_dependence.shapviz <- function(
     SIMPLIFY = FALSE
   )
 
-  # Reorganize output
   plot_list <- lapply(out_list, `[[`, "p")
 
   # Add titles if v varies
@@ -235,7 +235,7 @@ sv_dependence.mshapviz <- function(
   is.factor(z) || is.character(z) || is.logical(z) || (length(unique(z)) <= n_unique)
 }
 
-# Calculates a "range" for discrete or continuos variables
+# Calculates a "range" for discrete or continuous variables
 .general_range <- function(x) {
   if (.is_discrete(x)) {
     return(sort(unique(x)))
@@ -269,12 +269,13 @@ sv_dependence.mshapviz <- function(
 # Derives info for the axes and guides of the combined plot
 # z equals out_list in the calling function
 .collect <- function(z, v, ylim) {
+  axis_titles <- axes <- guides <- "keep"
+
   # Determine axis_titles collection info
   y_labs <- vapply(z, `[[`, "y_lab", FUN.VALUE = character(1L))
   nlab <- length(unique(y_labs))
   nvu <- length(unique(v))
 
-  axis_titles <- axes <- guides <- "keep"
   if (nvu == 1L && nlab == 1L) {
     axis_titles <- "collect"
   } else if (nvu == 1L) {

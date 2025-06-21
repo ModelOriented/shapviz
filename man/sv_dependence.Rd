@@ -118,7 +118,7 @@ x <- shapviz(fit, X_pred = dtrain, X = iris)
 sv_dependence(x, "Petal.Length")
 sv_dependence(x, "Petal.Length", color_var = "Species")
 sv_dependence(x, "Petal.Length", color_var = NULL)
-sv_dependence(x, c("Species", "Petal.Length"))
+sv_dependence(x, c("Species", "Petal.Length"), share_y = TRUE)
 sv_dependence(x, "Petal.Width", color_var = c("Species", "Petal.Length"))
 
 # SHAP interaction values/main effects
@@ -130,7 +130,8 @@ sv_dependence(
 )
 sv_dependence(
   x2, "Petal.Length",
-  color_var = colnames(iris[-1]), interactions = TRUE
+  color_var = colnames(iris[-1]), interactions = TRUE,
+  share_y = TRUE
 )
 }
 \seealso{

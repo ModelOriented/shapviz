@@ -72,6 +72,7 @@ sv_dependence2D.shapviz <- function(
     jitter_height = NULL,
     interactions = FALSE,
     add_vars = NULL,
+    seed = 1L,
     ...) {
   nplots <- max(length(x), length(y))
 
@@ -85,6 +86,7 @@ sv_dependence2D.shapviz <- function(
       jitter_height = jitter_height,
       interactions = interactions,
       add_vars = add_vars,
+      seed = seed,
       ...
     )
     return(p)
@@ -106,6 +108,7 @@ sv_dependence2D.shapviz <- function(
       viridis_args = viridis_args,
       interactions = interactions,
       add_vars = add_vars,
+      seed = seed,
       ...
     ),
     SIMPLIFY = FALSE
@@ -133,6 +136,7 @@ sv_dependence2D.mshapviz <- function(
     jitter_height = NULL,
     interactions = FALSE,
     add_vars = NULL,
+    seed = 1L,
     ...) {
   stopifnot(
     length(x) == 1L,
@@ -149,6 +153,7 @@ sv_dependence2D.mshapviz <- function(
     jitter_height = jitter_height,
     interactions = interactions,
     add_vars = add_vars,
+    seed = seed,
     ...
   )
   plot_list <- add_titles(plot_list, nms = names(object)) # see sv_waterfall()
@@ -173,6 +178,7 @@ sv_dependence2D.mshapviz <- function(
     jitter_height,
     interactions,
     add_vars,
+    seed,
     ...) {
   S <- get_shap_values(object)
   X <- get_feature_values(object)
@@ -210,7 +216,12 @@ sv_dependence2D.mshapviz <- function(
   p <- ggplot2::ggplot(
     dat, ggplot2::aes(x = .data[[x]], y = .data[[y]], color = SHAP)
   ) +
-    ggplot2::geom_jitter(width = jitter_width, height = jitter_height, ...) +
+    ggplot2::geom_point(
+      position = ggplot2::position_jitter(
+        width = jitter_width, height = jitter_height, seed = seed
+      ),
+      ...
+    ) +
     do.call(vir, viridis_args) +
     ggplot2::theme(
       legend.box.spacing = grid::unit(0, "pt"),

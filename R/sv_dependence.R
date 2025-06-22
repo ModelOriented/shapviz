@@ -39,6 +39,8 @@
 #' @param share_y Should y axis be shared across subplots? The default is FALSE.
 #'   Has no effect if `ylim` is passed. Only for multiple plots.
 #' @param ylim A vector of length 2 with manual y axis limits applied to all plots.
+#' @param seed Random seed for jittering. Default is 1L. Note that this does not
+#'   modify the global seed.
 #' @param ... Arguments passed to [ggplot2::geom_jitter()].
 #' @returns An object of class "ggplot" (or "patchwork") representing a dependence plot.
 #' @examples
@@ -96,6 +98,7 @@ sv_dependence.shapviz <- function(
     ih_adjusted = FALSE,
     share_y = FALSE,
     ylim = NULL,
+    seed = 1L,
     ...) {
   nv <- length(v)
   stopifnot(
@@ -117,6 +120,7 @@ sv_dependence.shapviz <- function(
       ih_adjusted = ih_adjusted,
       ylim = ylim,
       title = NULL,
+      seed = seed,
       ...
     )$p
     return(p)
@@ -147,6 +151,7 @@ sv_dependence.shapviz <- function(
       ih_scale = ih_scale,
       ih_adjusted = ih_adjusted,
       ylim = ylim,
+      seed = seed,
       ...
     ),
     SIMPLIFY = FALSE
@@ -187,6 +192,7 @@ sv_dependence.mshapviz <- function(
     ih_adjusted = FALSE,
     share_y = FALSE,
     ylim = NULL,
+    seed = 1L,
     ...) {
   stopifnot(
     length(v) == 1L,
@@ -213,6 +219,7 @@ sv_dependence.mshapviz <- function(
       ih_scale = ih_scale,
       ih_adjusted = ih_adjusted,
       ylim = ylim,
+      seed = seed,
       ...
     ),
     SIMPLIFY = FALSE
@@ -264,6 +271,7 @@ sv_dependence.mshapviz <- function(
     # share_y = FALSE, not(!) to be passed
     ylim,
     title,
+    seed,
     ...) {
   S <- get_shap_values(object)
   X <- get_feature_values(object)
@@ -320,7 +328,13 @@ sv_dependence.mshapviz <- function(
   # No color axis if color_var is NULL
   if (is.null(color_var)) {
     p <- ggplot2::ggplot(dat, ggplot2::aes(x = .data[[v]], y = shap)) +
-      ggplot2::geom_jitter(color = color, width = jitter_width, height = 0, ...) +
+      ggplot2::geom_point(
+        color = color,
+        position = ggplot2::position_jitter(
+          width = jitter_width, height = 0, seed = seed
+        ),
+        ...
+      ) +
       ggplot2::ylab(y_lab)
   } else {
     dat[[color_var]] <- X[[color_var]]
@@ -335,7 +349,12 @@ sv_dependence.mshapviz <- function(
     p <- ggplot2::ggplot(
       dat, ggplot2::aes(x = .data[[v]], y = shap, color = .data[[color_var]])
     ) +
-      ggplot2::geom_jitter(width = jitter_width, height = 0, ...) +
+      ggplot2::geom_point(
+        position = ggplot2::position_jitter(
+          width = jitter_width, height = 0, seed = seed
+        ),
+        ...
+      ) +
       ggplot2::ylab(y_lab) +
       do.call(vir, viridis_args) +
       ggplot2::theme(legend.box.spacing = grid::unit(0, "pt"))

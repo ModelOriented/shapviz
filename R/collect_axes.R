@@ -22,6 +22,10 @@
   titles_unique <- axes_unique <- list()
   for (z in c("x", "y", "colour")) {
     temp <- lapply(plot_list, ggplot2::get_guide_data, aesthetic = z)
+    if (z %in% c("x", "y")) {
+      # we should not test for equality of x when interested in y and vice versa
+      temp <- lapply(temp, `[`, c(z, ".value", ".label"))
+    }
     axes_unique[[z]] <- .all_identical(temp, ignore_null = TRUE)
 
     titles_unique[[z]] <- .all_identical(

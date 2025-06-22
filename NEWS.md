@@ -4,24 +4,29 @@
 
 - `sv_dependence()`: The new arguments `ylim` and `share_y = FALSE` allow to control the y-axis limits.
   They help to assess the importance in multiple dependence plots ([#172](https://github.com/ModelOriented/shapviz/pull/172)).
-  Later, we might change the default to `share_y = TRUE` (as in Python's SHAP dependence plots) ([#171](https://github.com/ModelOriented/shapviz/pull/171).
+  Later, we might change the default to `share_y = TRUE` (as in Python's SHAP dependence plots) ([#171](https://github.com/ModelOriented/shapviz/pull/171)).
 - `sv_interaction()` has received a new visualization: `kind = "bar"` now shows mean absolute SHAP interactions/main effects as a barplot.
-  Its appearance can be modified by the arguments `fill` and `bar_width` [#169](https://github.com/ModelOriented/shapviz/pull/169).
+  Its appearance can be modified by the arguments `fill` and `bar_width` ([#169](https://github.com/ModelOriented/shapviz/pull/169)).
+- We are now (cautiously) collecting axes, axis titles, and color guides via {patchwork} ([#171](https://github.com/ModelOriented/shapviz/pull/171)).
+Currently fails for `sv_force()`.
 
-### User-visible changes
+### Minor user-visible changes
 
-- We are now (cautiously) collecting axes, axis titles, and color guides via {patchwork} [#171](https://github.com/ModelOriented/shapviz/pull/171).
-(Currently fails for `sv_force()`.)
-- The color bars in `sv_dependence2D()` are less wide [#169](https://github.com/ModelOriented/shapviz/pull/169).
+- The color bars in `sv_dependence2D()` are less wide ([#169](https://github.com/ModelOriented/shapviz/pull/169)).
+- Jittering now uses a seed ([#174](https://github.com/ModelOriented/shapviz/pull/174)).
 
 ### Minor API changes
 
 - In `sv_dependence()`, passing the same variable for `v` and `color_var` does not suppress the color axis anymore, 
-except when `interactions = TRUE` ([#171](https://github.com/ModelOriented/shapviz/pull/171).
+except when `interactions = TRUE` ([#171](https://github.com/ModelOriented/shapviz/pull/171)).
+- `sv_dependence()` and `sv_dependence2D()` has received a `seed = 1` argument used for jittering.
+  This does not modify the global seed ([#174](https://github.com/ModelOriented/shapviz/pull/174)).
 
 ### Maintenance
 
-- Update code coverage version [#168](https://github.com/ModelOriented/shapviz/pull/168).
+- Update code coverage version ([#168](https://github.com/ModelOriented/shapviz/pull/168)).
+- More unit tests ([#173](https://github.com/ModelOriented/shapviz/pull/173)).
+- Bump minimal version of {ggplot2} ([#174](https://github.com/ModelOriented/shapviz/pull/174)).
 
 # shapviz 0.9.7
 

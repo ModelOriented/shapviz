@@ -32,31 +32,35 @@ test_that(".collect_xy() works", {
 test_that(".collect() works", {
   set.seed(1)
 
-  p1 <- ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
-    geom_point()
-  p2 <- ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Petal.Width)) +
-    geom_jitter()
+  p1 <- ggplot2::ggplot(
+    iris, ggplot2::aes(x = Sepal.Length, y = Sepal.Width, color = Species)
+  ) +
+    ggplot2::geom_point()
+  p2 <- ggplot2::ggplot(
+    iris, ggplot2::aes(x = Sepal.Length, y = Sepal.Width, color = Petal.Width)
+  ) +
+    ggplot2::geom_jitter()
   expect_equal(
     .collect(list(p1, p2)),
     list(axis_titles = "collect", axes = "keep", guides = "keep")
   )
 
-  p2 <- ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) +
-    geom_point()
+  p2 <- ggplot2::ggplot(iris, ggplot2::aes(x = Sepal.Length, y = Sepal.Width)) +
+    ggplot2::geom_point()
   expect_equal(
     .collect(list(p1, p2)),
     list(axis_titles = "collect", axes = "collect", guides = "collect")
   )
 
-  p2 <- ggplot(iris, aes(x = Petal.Length, y = Sepal.Width)) +
-    geom_point()
+  p2 <- ggplot2::ggplot(iris, ggplot2::aes(x = Petal.Length, y = Sepal.Width)) +
+    ggplot2::geom_point()
   expect_equal(
     .collect(list(p1, p2)),
     list(axis_titles = "collect_y", axes = "collect_y", guides = "collect")
   )
 
-  p2 <- ggplot(iris, aes(x = Sepal.Length, y = Petal.Width)) +
-    geom_point()
+  p2 <- ggplot2::ggplot(iris, ggplot2::aes(x = Sepal.Length, y = Petal.Width)) +
+    ggplot2::geom_point()
   expect_equal(
     .collect(list(p1, p2)),
     list(axis_titles = "collect_x", axes = "collect_x", guides = "collect")

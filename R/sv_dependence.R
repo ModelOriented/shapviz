@@ -133,7 +133,7 @@ sv_dependence.shapviz <- function(
   if (is.null(jitter_width)) {
     jitter_width <- list(NULL)
   }
-  title <- if (nv > 1L) v else list(NULL)
+  titles <- if (nv > 1L) v else list(NULL)
 
   out_list <- mapply(
     FUN = .one_dependence_plot,
@@ -141,7 +141,7 @@ sv_dependence.shapviz <- function(
     color_var = color_var,
     color = color,
     jitter_width = jitter_width,
-    title = title,
+    title = titles,
     MoreArgs = list(
       object = object,
       viridis_args = viridis_args,

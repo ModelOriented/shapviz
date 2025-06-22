@@ -97,7 +97,7 @@ We can visualize decompositions of single predictions via waterfall or force plo
 sv_waterfall(shp, row_id = 1) +
   theme(axis.text = element_text(size = 11))
 ```
-```{r, fig.height=2}
+```{r, fig.height=3}
 sv_force(shp, row_id = 1)
 ```
 
@@ -189,16 +189,17 @@ h2o.init()
 iris2 <- as.h2o(iris)
 
 # Random forest
-fit_rf <- h2o.randomForest(colnames(iris[-1]), "Sepal.Length", training_frame = iris2)
+xvars <- colnames(iris[-1])
+fit_rf <- h2o.randomForest(xvars, "Sepal.Length", training_frame = iris2)
 shp_rf <- shapviz(fit_rf, X_pred = iris)
 sv_force(shp_rf, row_id = 1)
-sv_dependence(shp_rf, "Species")
+sv_dependence(shp_rf, xvars)
 
 # Linear model
-fit_lm <- h2o.glm(colnames(iris[-1]), "Sepal.Length", training_frame = iris2)
+fit_lm <- h2o.glm(, "Sepal.Length", training_frame = iris2)
 shp_lm <- shapviz(fit_lm, X_pred = iris, background_frame = iris2)
 sv_force(shp_lm, row_id = 1)
-sv_dependence(shp_lm, "Species")
+sv_dependence(shp_lm, xvars)
 ```
 
 ### treeshap

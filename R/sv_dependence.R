@@ -206,7 +206,7 @@ sv_dependence.mshapviz <- function(
   out_list <- mapply(
     FUN = .one_dependence_plot,
     object = object,
-    title = names(object),
+    title = titles,
     MoreArgs = list(
       v = v,
       color_var = color_var,

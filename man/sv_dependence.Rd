@@ -25,6 +25,7 @@ sv_dependence(object, ...)
   ih_adjusted = FALSE,
   share_y = FALSE,
   ylim = NULL,
+  seed = 1L,
   ...
 )
 
@@ -42,6 +43,7 @@ sv_dependence(object, ...)
   ih_adjusted = FALSE,
   share_y = FALSE,
   ylim = NULL,
+  seed = 1L,
   ...
 )
 }
@@ -88,6 +90,9 @@ Only used if \code{color_var = "auto"} and if there are no SHAP interaction valu
 Has no effect if \code{ylim} is passed. Only for multiple plots.}
 
 \item{ylim}{A vector of length 2 with manual y axis limits applied to all plots.}
+
+\item{seed}{Random seed for jittering. Default is 1L. Note that this does not
+modify the global seed.}
 }
 \value{
 An object of class "ggplot" (or "patchwork") representing a dependence plot.

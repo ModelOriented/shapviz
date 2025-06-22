@@ -20,6 +20,7 @@ sv_dependence2D(object, ...)
   jitter_height = NULL,
   interactions = FALSE,
   add_vars = NULL,
+  seed = 1L,
   ...
 )
 
@@ -32,6 +33,7 @@ sv_dependence2D(object, ...)
   jitter_height = NULL,
   interactions = FALSE,
   add_vars = NULL,
+  seed = 1L,
   ...
 )
 }
@@ -68,6 +70,9 @@ use twice the SHAP interaction value (requires SHAP interactions).}
 to the sum of the SHAP values of \code{x} and \code{y} (only if \code{interactions = FALSE}).
 A use case would be a model with geographic x and y coordinates, along with some
 additional locational features like distance to the next train station.}
+
+\item{seed}{Random seed for jittering. Default is 1L. Note that this does not
+modify the global seed.}
 }
 \value{
 An object of class "ggplot" (or "patchwork") representing a dependence plot.

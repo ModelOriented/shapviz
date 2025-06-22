@@ -116,23 +116,28 @@ sv_dependence.shapviz <- function(
       ih_scale = ih_scale,
       ih_adjusted = ih_adjusted,
       ylim = ylim,
+      title = NULL,
       ...
     )$p
     return(p)
   }
 
+  # mapply requires varying arguments with length > 0 -> NULL packed into list
   if (is.null(color_var)) {
-    color_var <- replicate(nv, NULL)
+    color_var <- list(NULL)
   }
   if (is.null(jitter_width)) {
-    jitter_width <- replicate(nv, NULL)
+    jitter_width <- list(NULL)
   }
+  title <- if (nv > 1L) v else list(NULL)
+
   out_list <- mapply(
     FUN = .one_dependence_plot,
     v = v,
     color_var = color_var,
     color = color,
     jitter_width = jitter_width,
+    title = title,
     MoreArgs = list(
       object = object,
       viridis_args = viridis_args,
@@ -149,9 +154,6 @@ sv_dependence.shapviz <- function(
 
   plot_list <- lapply(out_list, `[[`, "p")
 
-  # Add titles if v varies
-  plot_list <- add_titles(plot_list, nms = if (nv > 1L) v) # see sv_waterfall()
-
   # If share_y is TRUE, apply the limits
   if (isTRUE(share_y) && is.null(ylim)) {
     ylim <- range(unlist(lapply(out_list, `[[`, "shap_range")))
@@ -159,15 +161,14 @@ sv_dependence.shapviz <- function(
   }
 
   # Collect axis titles, axes and guides
-  collect <- .collect(out_list, v = v, ylim = ylim)
+  coll <- .collect(plot_list)
   p <- patchwork::wrap_plots(
     plot_list,
-    axis_titles = collect$axis_titles, axes = collect$axes, guides = collect$guides
+    axis_titles = coll$axis_titles, axes = coll$axes, guides = coll$guides
   )
 
   return(p)
 }
-
 
 #' @describeIn sv_dependence
 #'   SHAP dependence plot for "mshapviz" object.
@@ -193,36 +194,41 @@ sv_dependence.mshapviz <- function(
     is.null(ylim) || (length(ylim) == 2L && is.numeric(ylim))
   )
 
-  out_list <- lapply(
-    object,
+  # mapply() does not allow varying arguments of length 0, thus we enclose NULL
+  titles <- if (!is.null(names(object))) names(object) else list(NULL)
+
+  out_list <- mapply(
     FUN = .one_dependence_plot,
-    # Argument list (simplify via match.call() or some rlang magic?)
-    v = v,
-    color_var = color_var,
-    color = color,
-    viridis_args = viridis_args,
-    jitter_width = jitter_width,
-    interactions = interactions,
-    ih_nbins = ih_nbins,
-    ih_color_num = ih_color_num,
-    ih_scale = ih_scale,
-    ih_adjusted = ih_adjusted,
-    ylim = ylim,
-    ...
+    object = object,
+    title = names(object),
+    MoreArgs = list(
+      v = v,
+      color_var = color_var,
+      color = color,
+      viridis_args = viridis_args,
+      jitter_width = jitter_width,
+      interactions = interactions,
+      ih_nbins = ih_nbins,
+      ih_color_num = ih_color_num,
+      ih_scale = ih_scale,
+      ih_adjusted = ih_adjusted,
+      ylim = ylim,
+      ...
+    ),
+    SIMPLIFY = FALSE
   )
 
   plot_list <- lapply(out_list, `[[`, "p")
-  plot_list <- add_titles(plot_list, nms = names(object)) # see sv_waterfall()
   if (isTRUE(share_y) && is.null(ylim)) {
     ylim <- range(unlist(lapply(out_list, `[[`, "shap_range")))
     plot_list <- .add_ylim(plot_list, ylim = ylim)
   }
 
   # Collect axis titles, axes and guides
-  collect <- .collect(out_list, v = v, ylim = ylim)
+  coll <- .collect(plot_list)
   p <- patchwork::wrap_plots(
     plot_list,
-    axis_titles = collect$axis_titles, axes = collect$axes, guides = collect$guides
+    axis_titles = coll$axis_titles, axes = coll$axes, guides = coll$guides
   )
 
   return(p)
@@ -235,83 +241,14 @@ sv_dependence.mshapviz <- function(
   is.factor(z) || is.character(z) || is.logical(z) || (length(unique(z)) <= n_unique)
 }
 
-# Calculates a "range" for discrete or continuous variables
-.general_range <- function(x) {
-  if (.is_discrete(x)) {
-    return(sort(unique(x)))
-  }
-  return(range(x, na.rm = TRUE))
-}
-
-# Check if the elements in z (list or vector) are all identical, ignoring NULLs
-.all_identical <- function(z) {
-  z <- z[!vapply(z, is.null, logical(1L))]
-  n <- length(z)
-  if (n <= 1L) {
-    return(TRUE)
-  }
-  return(all(vapply(z[-1L], FUN = identical, z[[1L]], FUN.VALUE = logical(1L))))
-}
-
 # Apply non-NULL ylim to list of ggplots
 .add_ylim <- function(plot_list, ylim) {
   return(lapply(plot_list, function(p) p + ggplot2::ylim(ylim)))
 }
 
-# Derives info for the axes and guides of the combined plot
-# z equals out_list in the calling function
-.collect <- function(z, v, ylim) {
-  axis_titles <- axes <- guides <- "keep"
-
-  # Determine axis_titles collection info
-  y_labs <- vapply(z, `[[`, "y_lab", FUN.VALUE = character(1L))
-  nlab <- length(unique(y_labs))
-  nvu <- length(unique(v))
-
-  if (nvu == 1L && nlab == 1L) {
-    axis_titles <- "collect"
-  } else if (nvu == 1L) {
-    axis_titles <- "collect_x"
-  } else if (nlab == 1L) {
-    axis_titles <- "collect_y"
-  }
-
-  # Determine axes collection info
-  same_v_range <- .all_identical(lapply(z, `[[`, "v_range"))
-  if (!is.null(ylim)) {
-    same_shap_range <- TRUE
-  } else {
-    same_shap_range <- .all_identical(lapply(z, `[[`, "shap_range"))
-  }
-
-  if (same_shap_range && same_v_range) {
-    axes <- "collect"
-  } else if (same_shap_range) {
-    axes <- "collect_y"
-  } else if (same_v_range) {
-    axes <- "collect_x"
-  }
-
-  # Determine guides collection info
-  has_keys <- vapply(z, `[[`, "color_key", FUN.VALUE = logical(1L))
-  color_vars <- lapply(z, `[[`, "color_var")[has_keys]
-  same_color_range <- .all_identical(lapply(z, `[[`, "color_range"))
-
-  if (length(unique(color_vars)) <= 1L && same_color_range) {
-    guides <- "collect"
-  }
-
-  return(list(axis_titles = axis_titles, axes = axes, guides = guides))
-}
-
 # Returns a list with the following elements:
 # - p: the ggplot object
-# - color_var: the feature used for coloring (or NULL)
-# - color_key: whether a color key is present (TRUE/FALSE)
-# - y_lab: the y-axis label
-# - shap_range: The range of the visualized SHAP values
-# - color_range: the range (or unique values) or NULL of the color variable
-# - v_range: The range (or unique values) of the v variable
+# - shap_range: range of shap values. Needed for post-hoc share_y
 .one_dependence_plot <- function(
     object,
     v,
@@ -325,7 +262,8 @@ sv_dependence.mshapviz <- function(
     ih_scale,
     ih_adjusted,
     # share_y = FALSE, not(!) to be passed
-    ylim = NULL,
+    ylim,
+    title,
     ...) {
   S <- get_shap_values(object)
   X <- get_feature_values(object)
@@ -379,17 +317,13 @@ sv_dependence.mshapviz <- function(
   dat <- data.frame(s, X[[v]])
   colnames(dat) <- c("shap", v)
 
-  color_key <- !is.null(color_var)
-
   # No color axis if color_var is NULL
-  if (!color_key) {
-    color_range <- NULL
+  if (is.null(color_var)) {
     p <- ggplot2::ggplot(dat, ggplot2::aes(x = .data[[v]], y = shap)) +
       ggplot2::geom_jitter(color = color, width = jitter_width, height = 0, ...) +
       ggplot2::ylab(y_lab)
   } else {
     dat[[color_var]] <- X[[color_var]]
-    color_range <- .general_range(dat[[color_var]])
     if (.is_discrete(dat[[color_var]])) {
       vir <- ggplot2::scale_color_viridis_d
     } else {
@@ -409,15 +343,8 @@ sv_dependence.mshapviz <- function(
   if (!is.null(ylim)) {
     p <- p + ggplot2::ylim(ylim)
   }
-  out <- list(
-    p = p,
-    color_var = color_var,
-    color_key = color_key,
-    y_lab = y_lab,
-    shap_range = range(s),
-    color_range = color_range,
-    v_range = .general_range(X[[v]])
-  )
-
-  return(out)
+  if (!is.null(title)) {
+    p <- p + ggplot2::ggtitle(title)
+  }
+  return(list(p = p, shap_range = range(s)))
 }

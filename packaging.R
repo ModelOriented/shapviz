@@ -37,10 +37,9 @@ use_description(
 
 use_package("stats", "Imports")
 use_package("utils", "Imports")
-use_package("grDevices", "Imports")
 use_package("rlang", "Imports", min_version = "0.3.0")
 use_package("grid", "Imports")
-use_package("ggplot2", "Imports", min_version = "3.4.0")
+use_package("ggplot2", "Imports", min_version = "3.5.2")
 use_package("gggenes", "Imports")
 use_package("ggfittext", "Imports", min_version = "0.8.0")
 use_package("ggrepel", "Imports")

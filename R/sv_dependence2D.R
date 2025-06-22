@@ -73,9 +73,7 @@ sv_dependence2D.shapviz <- function(
     interactions = FALSE,
     add_vars = NULL,
     ...) {
-  nx <- length(x)
-  ny <- length(y)
-  nplots <- max(nx, ny)
+  nplots <- max(length(x), length(y))
 
   if (nplots == 1L) {
     p <- .one_dependence2D_plot(
@@ -113,16 +111,12 @@ sv_dependence2D.shapviz <- function(
     SIMPLIFY = FALSE
   )
 
-  # if nx == 1 and ny == 1, we can't reach here
-  if (nx == 1L) {
-    strategy <- "collect_x"
-  } else if (ny == 1L) {
-    strategy <- "collect_y"
-  } else {
-    strategy <- "keep"
-  }
-
-  p <- patchwork::wrap_plots(plot_list, axis_titles = strategy, axes = strategy)
+  # Collect axis titles, axes and guides
+  coll <- .collect(plot_list)
+  p <- patchwork::wrap_plots(
+    plot_list,
+    axis_titles = coll$axis_titles, axes = coll$axes, guides = coll$guides
+  )
 
   return(p)
 }
@@ -158,7 +152,14 @@ sv_dependence2D.mshapviz <- function(
     ...
   )
   plot_list <- add_titles(plot_list, nms = names(object)) # see sv_waterfall()
-  p <- patchwork::wrap_plots(plot_list, axis_titles = "collect")
+
+  # Collect axis titles, axes and guides
+  coll <- .collect(plot_list)
+  p <- patchwork::wrap_plots(
+    plot_list,
+    axis_titles = coll$axis_titles, axes = coll$axes, guides = coll$guides
+  )
+
   return(p)
 }
 

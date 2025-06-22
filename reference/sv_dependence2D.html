@@ -107,6 +107,7 @@ has no effect.</p>
 <span>  jitter_height <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  interactions <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  add_vars <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -120,6 +121,7 @@ has no effect.</p>
 <span>  jitter_height <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  interactions <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  add_vars <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -177,6 +179,11 @@ use twice the SHAP interaction value (requires SHAP interactions).</p></dd>
 to the sum of the SHAP values of <code>x</code> and <code>y</code> (only if <code>interactions = FALSE</code>).
 A use case would be a model with geographic x and y coordinates, along with some
 additional locational features like distance to the next train station.</p></dd>
+
+
+<dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
+<dd><p>Random seed for jittering. Default is 1L. Note that this does not
+modify the global seed.</p></dd>
 
 </dl></div>
     <div id="value">

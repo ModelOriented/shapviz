@@ -108,6 +108,7 @@ By default, the feature on the color scale is selected via SHAP interactions
 <span>  ih_adjusted <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  share_y <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  ylim <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -126,6 +127,7 @@ By default, the feature on the color scale is selected via SHAP interactions
 <span>  ih_adjusted <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  share_y <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  ylim <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -198,6 +200,11 @@ Has no effect if <code>ylim</code> is passed. Only for multiple plots.</p></dd>
 <dt id="arg-ylim">ylim<a class="anchor" aria-label="anchor" href="#arg-ylim"></a></dt>
 <dd><p>A vector of length 2 with manual y axis limits applied to all plots.</p></dd>
 
+
+<dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
+<dd><p>Random seed for jittering. Default is 1L. Note that this does not
+modify the global seed.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -231,7 +238,8 @@ Has no effect if <code>ylim</code> is passed. Only for multiple plots.</p></dd>
 <span class="r-plt img"><img src="sv_dependence-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu">sv_dependence</span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"Petal.Length"</span><span class="op">)</span>, share_y <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="sv_dependence-4.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">sv_dependence</span><span class="op">(</span><span class="va">x</span>, <span class="st">"Petal.Width"</span>, color_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"Petal.Length"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">sv_dependence</span><span class="op">(</span><span class="va">x</span>, <span class="st">"Petal.Width"</span>, color_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"Petal.Length"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="sv_dependence-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># SHAP interaction values/main effects</span></span></span>

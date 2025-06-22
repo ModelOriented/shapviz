@@ -119,6 +119,10 @@ sv_waterfall(
 
 # Aggregate over all observations with Petal.Length == 1.4
 sv_waterfall(x, row_id = x$X$Petal.Length == 1.4)
+
+# Two observations separately
+sv_waterfall(c(x[1, ], x[2, ])) +
+  patchwork::plot_layout(ncol = 1)
 }
 \seealso{
 \code{\link[=sv_force]{sv_force()}}

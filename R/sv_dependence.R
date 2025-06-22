@@ -54,7 +54,8 @@
 #' sv_dependence(x, "Petal.Length", color_var = "Species")
 #' sv_dependence(x, "Petal.Length", color_var = NULL)
 #' sv_dependence(x, c("Species", "Petal.Length"), share_y = TRUE)
-#' sv_dependence(x, "Petal.Width", color_var = c("Species", "Petal.Length"))
+#' sv_dependence(x, "Petal.Width", color_var = c("Species", "Petal.Length")) +
+#'   patchwork::plot_layout(ncol = 1)
 #'
 #' # SHAP interaction values/main effects
 #' x2 <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)

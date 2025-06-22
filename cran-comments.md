@@ -10,7 +10,7 @@ Slight adaptions to comply with upcoming XGBoost version.
 
 Status: OK
 
-## Reverse dependencies (2)
+## Reverse dependencies (3)
 
-OK: 2
+OK: 3 
 BROKEN: 0

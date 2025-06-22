@@ -74,9 +74,7 @@ sv_dependence2D.shapviz <- function(
     add_vars = NULL,
     seed = 1L,
     ...) {
-  nplots <- max(length(x), length(y))
-
-  if (nplots == 1L) {
+  if (max(length(x), length(y)) == 1L) {
     p <- .one_dependence2D_plot(
       object = object,
       x = x,
@@ -86,16 +84,18 @@ sv_dependence2D.shapviz <- function(
       jitter_height = jitter_height,
       interactions = interactions,
       add_vars = add_vars,
+      title = NULL,
       seed = seed,
       ...
     )
     return(p)
   }
+  # mapply requires varying arguments with length > 0 -> NULL packed into list
   if (is.null(jitter_width)) {
-    jitter_width <- replicate(nplots, NULL)
+    jitter_width <- list(NULL)
   }
   if (is.null(jitter_height)) {
-    jitter_height <- replicate(nplots, NULL)
+    jitter_height <- list(NULL)
   }
   plot_list <- mapply(
     FUN = .one_dependence2D_plot,
@@ -109,6 +109,7 @@ sv_dependence2D.shapviz <- function(
       interactions = interactions,
       add_vars = add_vars,
       seed = seed,
+      title = NULL, # not needed
       ...
     ),
     SIMPLIFY = FALSE
@@ -142,21 +143,26 @@ sv_dependence2D.mshapviz <- function(
     length(x) == 1L,
     length(y) == 1L
   )
-  plot_list <- lapply(
-    object,
+  # mapply() does not allow varying arguments of length 0, thus we enclose NULL
+  titles <- if (!is.null(names(object))) names(object) else list(NULL)
+
+  plot_list <- mapply(
     FUN = .one_dependence2D_plot,
-    # Argument list (simplify via match.call() or some rlang magic?)
-    x = x,
-    y = y,
-    viridis_args = viridis_args,
-    jitter_width = jitter_width,
-    jitter_height = jitter_height,
-    interactions = interactions,
-    add_vars = add_vars,
-    seed = seed,
-    ...
+    object,
+    title = titles,
+    MoreArgs = list(
+      x = x,
+      y = y,
+      viridis_args = viridis_args,
+      jitter_width = jitter_width,
+      jitter_height = jitter_height,
+      interactions = interactions,
+      add_vars = add_vars,
+      seed = seed,
+      ...
+    ),
+    SIMPLIFY = FALSE
   )
-  plot_list <- add_titles(plot_list, nms = names(object)) # see sv_waterfall()
 
   # Collect axis titles, axes and guides
   coll <- .collect(plot_list)
@@ -178,6 +184,7 @@ sv_dependence2D.mshapviz <- function(
     jitter_height,
     interactions,
     add_vars,
+    title,
     seed,
     ...) {
   S <- get_shap_values(object)
@@ -227,6 +234,8 @@ sv_dependence2D.mshapviz <- function(
       legend.box.spacing = grid::unit(0, "pt"),
       legend.key.width = grid::unit(12, "pt")
     )
-
+  if (!is.null(title)) {
+    p <- p + ggplot2::ggtitle(title)
+  }
   return(p)
 }

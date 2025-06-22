@@ -1,3 +1,9 @@
+# shapviz 0.10.1
+
+### Maintenance
+
+- Bump ggplot2 and patchwork dependencies.
+
 # shapviz 0.10.0
 
 ### Major improvements

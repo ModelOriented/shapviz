@@ -107,7 +107,7 @@ shp <- setNames(shapviz(x), levels(iris$Species))
 sv_importance(shp)
 
 sv_dependence(shp, v = "Sepal.Width", share_y = TRUE) +
-  plot_layout(ncol = 2)
+  plot_layout(ncol = 1)
 ```
 
 ![](../man/figures/VIGNETTE-dep-ranger.png)

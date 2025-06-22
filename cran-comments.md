@@ -1,6 +1,12 @@
-# shapviz 0.9.7
+# shapviz 0.10.0
 
-Slight adaptions to comply with upcoming XGBoost version.
+Hello CRAN team
+
+This update has three main improvements:
+
+1. Collect common axes/axis titles/color guides in patchwork plots
+2. New argument `share_y = FALSE` in `sv_dependence()` to highlight feature importance
+3. New plot for SHAP interactions
 
 ### Local checks
 

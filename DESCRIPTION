@@ -25,10 +25,10 @@ RoxygenNote: 7.3.2
 Imports: 
     ggfittext (>= 0.8.0),
     gggenes,
-    ggplot2 (>= 3.4.0),
+    ggplot2 (>= 3.5.2),
     ggrepel,
     grid,
-    patchwork,
+    patchwork (>= 1.3.0),
     rlang (>= 0.3.0),
     stats,
     utils,

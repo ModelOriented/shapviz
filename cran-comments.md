@@ -1,12 +1,11 @@
-# shapviz 0.10.0
+# shapviz 0.10.1
 
 Hello CRAN team
 
-This update has three main improvements:
+Today, I have pushed 0.10.0 to CRAN. Unfortunately, I have not correctly adapted the minimal version of its
+ggplot2 dependency in the DESCRIPTION, which is very important. This small update fixes this.
 
-1. Collect common axes/axis titles/color guides in patchwork plots
-2. New argument `share_y = FALSE` in `sv_dependence()` to highlight feature importance
-3. New plot for SHAP interactions
+Thank you for your understanding (and flexibility!).
 
 ### Local checks
 

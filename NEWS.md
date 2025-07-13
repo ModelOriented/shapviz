@@ -1,3 +1,9 @@
+# shapviz 0.10.2
+
+### Bug fixes
+
+- `sv_interaction(..., type = "bar")`: Bars of feature pairs appeared twice, see [#178]([https://github.com/ModelOriented/shapviz/issues/178]).
+
 # shapviz 0.10.1
 
 ### Maintenance

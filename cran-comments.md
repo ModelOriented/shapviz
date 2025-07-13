@@ -1,11 +1,8 @@
-# shapviz 0.10.1
+# shapviz 0.10.2
 
 Hello CRAN team
 
-Today, I have pushed 0.10.0 to CRAN. Unfortunately, I have not correctly adapted the minimal version of its
-ggplot2 dependency in the DESCRIPTION, which is very important. This small update fixes this.
-
-Thank you for your understanding (and flexibility!).
+This small update fixes a mistake in a new visualization, where feature pairs appeared twice (a:b and b:a).
 
 ### Local checks
 
@@ -15,7 +12,11 @@ Thank you for your understanding (and flexibility!).
 
 Status: OK
 
-## Reverse dependencies (3)
+## Reverse dependencies (4)
 
-OK: 3 
-BROKEN: 0
+fastshap 0.1.1                         ── E: 0     | W: 0     | N: 2                                              
+midr 0.5.0                             ── E: 0     | W: 0     | N: 0                                              
+flowml 0.1.3                           ── E: 0     | W: 0     | N: 0                                              
+ubair 1.1.0                            ── E: 0     | W: 0     | N: 0                                              
+
+OK: 4    

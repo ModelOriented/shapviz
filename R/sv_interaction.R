@@ -81,11 +81,15 @@ sv_interaction.shapviz <- function(
   }
 
   if (kind == "bar") {
+    # Drop symmetric part for plotting
+    M[row(M) > col(M)] <- NA
+
     # Turn to long format and make feature pair names
     imp_df <- transform(
       as.data.frame.table(M, responseName = "value"),
       feature = ifelse(Var1 == Var2, as.character(Var1), paste(Var1, Var2, sep = ":"))
     )
+    imp_df <- imp_df[!is.na(imp_df$value), ]
     if (sort_features) {
       imp_df <- imp_df[order(imp_df$value, decreasing = TRUE), ]
       imp_df <- transform(imp_df, feature = factor(feature, levels = rev(feature)))

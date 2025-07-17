@@ -1,5 +1,13 @@
 # shapviz 0.10.2
 
+## Resubmission due to error in link in NEWS
+
+There where squared brackets instead of parentheses in the NEWS file, which is now fixed.
+
+Thanks for pointing this out, CRAN team!
+
+## Original message
+
 Hello CRAN team
 
 This small update fixes a mistake in a new visualization, where feature pairs appeared twice (a:b and b:a).

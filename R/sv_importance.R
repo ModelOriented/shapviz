@@ -106,7 +106,7 @@ sv_importance.shapviz <- function(
   if (is_bar) {
     p <- ggplot2::ggplot(imp_df, ggplot2::aes(x = value, y = feature)) +
       ggplot2::geom_bar(fill = fill, width = bar_width, stat = "identity", ...) +
-      ggplot2::labs(x = "mean(|SHAP value|)", y = ggplot2::element_blank())
+      ggplot2::labs(x = "mean(|SHAP value|)", y = NULL)
   } else {
     # Prepare data.frame for beeswarm plot
     S <- get_shap_values(object)
@@ -136,9 +136,7 @@ sv_importance.shapviz <- function(
         bar = !is.null(color_bar_title),
         ncol = length(unique(df$color)) # Special case of constant feature values
       ) +
-      ggplot2::labs(
-        x = "SHAP value", y = ggplot2::element_blank(), color = color_bar_title
-      ) +
+      ggplot2::labs(x = "SHAP value", y = NULL, color = color_bar_title) +
       ggplot2::theme(legend.box.spacing = grid::unit(0, "pt"))
   }
   if (show_numbers) {
@@ -212,7 +210,7 @@ sv_importance.mshapviz <- function(
           position = bar_type,
           ...
         ) +
-        ggplot2::labs(fill = ggplot2::element_blank()) +
+        ggplot2::labs(fill = NULL) +
         do.call(ggplot2::scale_fill_viridis_d, viridis_args) +
         ggplot2::guides(fill = ggplot2::guide_legend(reverse = TRUE))
     } else { # facets
@@ -222,7 +220,7 @@ sv_importance.mshapviz <- function(
     }
     p <- p +
       ggplot2::xlab("mean(|SHAP value|)") +
-      ggplot2::ylab(ggplot2::element_blank())
+      ggplot2::ylab(NULL)
     return(p)
   }
 

@@ -124,7 +124,7 @@ sv_force.shapviz <- function(
       axis.ticks.y = ggplot2::element_blank(),
       axis.text.y = ggplot2::element_blank()
     ) +
-    ggplot2::labs(y = ggplot2::element_blank(), x = "Prediction")
+    ggplot2::labs(y = NULL, x = "Prediction")
 
   if (show_annotation) {
     p <- p +

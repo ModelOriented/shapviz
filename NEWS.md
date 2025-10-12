@@ -1,3 +1,9 @@
+# shapviz 0.10.3
+
+### Bug fixes
+
+- Solves compatibility warning with ggplot 4.0.
+
 # shapviz 0.10.2
 
 ### Bug fixes

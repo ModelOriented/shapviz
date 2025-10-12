@@ -138,7 +138,7 @@ sv_waterfall.shapviz <- function(
       axis.line.x = ggplot2::element_line(),
       axis.ticks.y = ggplot2::element_blank()
     ) +
-    ggplot2::labs(y = ggplot2::element_blank(), x = "Prediction")
+    ggplot2::labs(y = NULL, x = "Prediction")
 
   if (show_connection) {
     p <- p +

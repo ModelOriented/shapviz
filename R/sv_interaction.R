@@ -100,7 +100,7 @@ sv_interaction.shapviz <- function(
 
     p <- ggplot2::ggplot(imp_df, ggplot2::aes(x = value, y = feature)) +
       ggplot2::geom_bar(fill = fill, width = bar_width, stat = "identity", ...) +
-      ggplot2::labs(x = "mean(|SHAP interaction value|)", y = ggplot2::element_blank())
+      ggplot2::labs(x = "mean(|SHAP interaction value|)", y = NULL)
 
     return(p)
   }
@@ -134,9 +134,7 @@ sv_interaction.shapviz <- function(
       ...
     ) +
     ggplot2::facet_grid(Variable1 ~ Variable2, switch = "y") +
-    ggplot2::labs(
-      x = "SHAP value", y = ggplot2::element_blank(), color = color_bar_title
-    ) +
+    ggplot2::labs(x = "SHAP value", y = NULL, color = color_bar_title) +
     .get_color_scale(
       viridis_args = viridis_args,
       bar = !is.null(color_bar_title),

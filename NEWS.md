@@ -2,7 +2,7 @@
 
 ### Bug fixes
 
-- Solves compatibility warning with ggplot 4.0.
+- Solves compatibility warning with ggplot 4.0 ([#181](https://github.com/ModelOriented/shapviz/pull/181)).
 
 # shapviz 0.10.2
 

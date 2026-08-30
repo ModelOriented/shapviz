@@ -30,7 +30,8 @@ use_description(
     `Authors@R` =
       "c(person('Michael', family = 'Mayer', role = c('aut', 'cre'), email = 'mayermichael79@gmail.com'),
        person('Adrian', family = 'Stando', role = 'ctb', email = 'adrian.j.stando@gmail.com'))",
-    Depends = "R (>= 3.6.0)"
+    Depends = "R (>= 3.6.0)",
+    Additional_repositories = "https://bgreenwell.r-universe.dev"
   ),
   roxygen = TRUE
 )

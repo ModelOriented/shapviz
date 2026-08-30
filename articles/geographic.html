@@ -43,7 +43,7 @@
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">0.10.3</span>
+          <span class="version version-default">0.10.4</span>
         </div>
       </div>
     </div>
@@ -98,7 +98,7 @@
       <h1 data-toc-skip>Geographic Components</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/ModelOriented/shapviz/blob/0.10.3/vignettes/geographic.Rmd" class="external-link"><code>vignettes/geographic.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ModelOriented/shapviz/blob/main/vignettes/geographic.Rmd" class="external-link"><code>vignettes/geographic.Rmd</code></a></small>
       <div class="hidden name"><code>geographic.Rmd</code></div>
 
     </div>
@@ -117,7 +117,7 @@ as a function
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
 of a set of geographic features (latitude/longitude and/or postal code
 and/or other features varying with location), and other features:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>Y</mi><mo>∣</mo><msup><mi>X</mi><mtext mathvariant="normal">geo</mtext></msup><mo>,</mo><msup><mi>X</mi><mtext mathvariant="normal">other</mtext></msup><mo stretchy="true" form="postfix">)</mo></mrow><mo>≈</mo><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>X</mi><mtext mathvariant="normal">geo</mtext></msup><mo>,</mo><msup><mi>X</mi><mtext mathvariant="normal">other</mtext></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo stretchy="false" form="prefix">(</mo><mi>Y</mi><mo>∣</mo><msup><mi>X</mi><mtext mathvariant="normal">geo</mtext></msup><mo>,</mo><msup><mi>X</mi><mtext mathvariant="normal">other</mtext></msup><mo stretchy="false" form="postfix">)</mo><mo>≈</mo><mi>f</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>X</mi><mtext mathvariant="normal">geo</mtext></msup><mo>,</mo><msup><mi>X</mi><mtext mathvariant="normal">other</mtext></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
   T(Y \mid X^\textrm{geo}, X^\textrm{other}) \approx f(X^\textrm{geo}, X^\textrm{other})
 </annotation></semantics></math> Like any feature, the effect of a
 single geographic feature
@@ -200,13 +200,13 @@ dataset of size 2000.</p>
 <span>  v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"log_living"</span>, <span class="st">"structure_quality"</span>, <span class="st">"LONGITUDE"</span>, <span class="st">"LATITUDE"</span><span class="op">)</span>, </span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.2</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="geographic_files/figure-html/unnamed-chunk-3-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="geographic_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="768" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># And now the two-dimensional plot of the sum of SHAP values</span></span>
 <span><span class="fu"><a href="../reference/sv_dependence2D.html">sv_dependence2D</a></span><span class="op">(</span><span class="va">sv</span>, x <span class="op">=</span> <span class="st">"LONGITUDE"</span>, y <span class="op">=</span> <span class="st">"LATITUDE"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_equal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="geographic_files/figure-html/unnamed-chunk-3-2.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="geographic_files/figure-html/unnamed-chunk-3-2.png" class="r-plt" alt="" width="768" style="display: block; margin: auto;"></p>
 <p>The last plot gives a good impression on price levels.</p>
 <p>Notes:</p>
 <ol style="list-style-type: decimal">
@@ -260,13 +260,13 @@ interpretation of SHAP dependence plots of corresponding components.</p>
 <span><span class="co"># Two selected features: Thanks to additivity, structure_quality can be read as </span></span>
 <span><span class="co"># Ceteris Paribus</span></span>
 <span><span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">sv</span>, v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"structure_quality"</span>, <span class="st">"LONGITUDE"</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="geographic_files/figure-html/unnamed-chunk-4-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="geographic_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="768" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Total geographic effect (Ceteris Paribus thanks to additivity)</span></span>
 <span><span class="fu"><a href="../reference/sv_dependence2D.html">sv_dependence2D</a></span><span class="op">(</span><span class="va">sv</span>, x <span class="op">=</span> <span class="st">"LONGITUDE"</span>, y <span class="op">=</span> <span class="st">"LATITUDE"</span>, add_vars <span class="op">=</span> <span class="va">more_geo</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_equal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="geographic_files/figure-html/unnamed-chunk-4-2.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="geographic_files/figure-html/unnamed-chunk-4-2.png" class="r-plt" alt="" width="768" style="display: block; margin: auto;"></p>
 <p>Again, the resulting total geographic effect looks reasonable. Note
 that, unlike in the first example, there are no interactions to
 non-geographic components, leading to a Ceteris Paribus interpretation.
@@ -275,10 +275,10 @@ Furthermore, it contains the effect of the other regional features.</p>
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-mayer2022shap" class="csl-entry">
-Mayer, Michael. 2022. <span>“SHAP for Additively Modeled Features in a
-Boosted Trees Model.”</span> <a href="https://arxiv.org/abs/2207.14490" class="external-link">https://arxiv.org/abs/2207.14490</a>.
+Mayer, Michael. 2022. <em>SHAP for Additively Modeled Features in a
+Boosted Trees Model</em>. <a href="https://arxiv.org/abs/2207.14490" class="external-link">https://arxiv.org/abs/2207.14490</a>.
 </div>
 <div id="ref-Mayer2022MachineLA" class="csl-entry">
 Mayer, Michael, Steven C. Bourassa, Martin Hoesli, and Donato Flavio
@@ -305,7 +305,7 @@ Management</em>.
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer>

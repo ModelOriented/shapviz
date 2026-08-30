@@ -43,7 +43,7 @@
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">0.10.3</span>
+          <span class="version version-default">0.10.4</span>
         </div>
       </div>
     </div>
@@ -98,7 +98,7 @@
       <h1 data-toc-skip>Multiple ‘shapviz’ objects</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/ModelOriented/shapviz/blob/0.10.3/vignettes/multiple_output.Rmd" class="external-link"><code>vignettes/multiple_output.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ModelOriented/shapviz/blob/main/vignettes/multiple_output.Rmd" class="external-link"><code>vignettes/multiple_output.Rmd</code></a></small>
       <div class="hidden name"><code>multiple_output.Rmd</code></div>
 
     </div>
@@ -168,21 +168,21 @@ barplot via {ggplot2}, by default.</p>
 <span></span>
 <span><span class="co"># SHAP plots</span></span>
 <span><span class="fu"><a href="../reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
-<p><img src="multiple_output_files/figure-html/unnamed-chunk-2-1.png" width="576" style="display: block; margin: auto;"></p>
+<p><img src="multiple_output_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="576" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">x</span>, bar_type <span class="op">=</span> <span class="st">"stack"</span><span class="op">)</span>  <span class="co"># Same but stacked</span></span></code></pre></div>
-<p><img src="multiple_output_files/figure-html/unnamed-chunk-2-2.png" width="576" style="display: block; margin: auto;"></p>
+<p><img src="multiple_output_files/figure-html/unnamed-chunk-2-2.png" class="r-plt" alt="" width="576" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">x</span>, v <span class="op">=</span> <span class="st">"Petal.Length"</span>, share_y <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="multiple_output_files/figure-html/unnamed-chunk-2-3.png" width="576" style="display: block; margin: auto;"></p>
+<p><img src="multiple_output_files/figure-html/unnamed-chunk-2-3.png" class="r-plt" alt="" width="576" style="display: block; margin: auto;"></p>
 <div class="section level3">
 <h3 id="similar-for-lightgbm-only-code">Similar for LightGBM (only code)<a class="anchor" aria-label="anchor" href="#similar-for-lightgbm-only-code"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ModelOriented/shapviz" class="external-link">shapviz</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Microsoft/LightGBM" class="external-link">lightgbm</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lightgbm-org/LightGBM" class="external-link">lightgbm</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Model</span></span>
 <span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>objective <span class="op">=</span> <span class="st">"multiclass"</span>, num_class <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
@@ -242,13 +242,13 @@ predict function to <code>kernelshap()</code>.</p>
 <span></span>
 <span><span class="co"># SHAP analysis</span></span>
 <span><span class="fu"><a href="../reference/sv_importance.html">sv_importance</a></span><span class="op">(</span><span class="va">x_subgroups</span>, bar_type <span class="op">=</span> <span class="st">"stack"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="multiple_output_files/figure-html/unnamed-chunk-3-1.png" width="576" style="display: block; margin: auto;"></p>
+<p><img src="multiple_output_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="576" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="../reference/sv_dependence.html">sv_dependence</a></span><span class="op">(</span><span class="va">x_subgroups</span>, v <span class="op">=</span> <span class="st">"Petal.Length"</span>, share_y <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">&amp;</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">7</span><span class="op">)</span></span></code></pre></div>
-<p><img src="multiple_output_files/figure-html/unnamed-chunk-3-2.png" width="576" style="display: block; margin: auto;"></p>
+<p><img src="multiple_output_files/figure-html/unnamed-chunk-3-2.png" class="r-plt" alt="" width="576" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="example-different-models">Example: Different models<a class="anchor" aria-label="anchor" href="#example-different-models"></a>
@@ -296,7 +296,7 @@ How does it compare with a linear regression?</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer>

@@ -33,7 +33,7 @@ Again, due to symmetry, the interaction values are multiplied by two.'><meta pro
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy" class="external-link">DrWhy.AI</a>
            developed by the <a href="https://mi2.ai/" class="external-link">MI².AI</a> </span>
-          <span class="version version-default">0.10.3</span>
+          <span class="version version-default">0.10.4</span>
         </div>
       </div>
     </div>
@@ -79,7 +79,7 @@ Again, due to symmetry, the interaction values are multiplied by two.'><meta pro
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>SHAP Interaction Plot</h1>
-    <small class="dont-index">Source: <a href="https://github.com/ModelOriented/shapviz/blob/0.10.3/R/sv_interaction.R" class="external-link"><code>R/sv_interaction.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/ModelOriented/shapviz/blob/main/R/sv_interaction.R" class="external-link"><code>R/sv_interaction.R</code></a></small>
     <div class="hidden name"><code>sv_interaction.Rd</code></div>
     </div>
 
@@ -219,16 +219,17 @@ absolute SHAP values (or a list of such matrices in case of "mshapviz" object).<
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dtrain</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html" class="external-link">xgb.DMatrix</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  label <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, nthread <span class="op">=</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span>  label <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>  nthread <span class="op">=</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dtrain</span>, nrounds <span class="op">=</span> <span class="fl">10</span>, nthread <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">xgboost</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dtrain</span>, nrounds <span class="op">=</span> <span class="fl">10</span>, params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nthread <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="shapviz.html">shapviz</a></span><span class="op">(</span><span class="va">fit</span>, X_pred <span class="op">=</span> <span class="va">dtrain</span>, X <span class="op">=</span> <span class="va">iris</span>, interactions <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">sv_interaction</span><span class="op">(</span><span class="va">x</span>, kind <span class="op">=</span> <span class="st">"no"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              Petal.Length Sepal.Width  Petal.Width      Species</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Length   0.61216324  0.07647426 0.0439800712 0.0241938755</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Width    0.07647426  0.07895533 0.0381466589 0.0103276313</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Width    0.04398007  0.03814666 0.0428673263 0.0006772994</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Species        0.02419388  0.01032763 0.0006772994 0.0190167296</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              Petal.Length Sepal.Width Petal.Width     Species</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Length   0.61411287  0.11262531  0.06202538 0.026109360</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Width    0.11262531  0.08755222  0.02975667 0.012054441</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Width    0.06202538  0.02975667  0.03727685 0.005079460</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Species        0.02610936  0.01205444  0.00507946 0.008306311</span>
 <span class="r-in"><span><span class="fu">sv_interaction</span><span class="op">(</span><span class="va">x</span>, max_display <span class="op">=</span> <span class="fl">2</span>, size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="sv_interaction-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu">sv_interaction</span><span class="op">(</span><span class="va">x</span>, kind <span class="op">=</span> <span class="st">"bar"</span><span class="op">)</span></span></span>
@@ -247,7 +248,7 @@ absolute SHAP values (or a list of such matrices in case of "mshapviz" object).<
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>

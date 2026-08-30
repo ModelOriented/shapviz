@@ -1,8 +1,9 @@
-# shapviz 0.10.3
+# shapviz 0.10.4
 
 Hello CRAN team
 
-I am fixing a compatibility issue with ggplot2 version 4.0.
+This is a maintenance update that cares about changes in XGBoost as well as a package (fastshap)
+vanishing to r-universe.
 
 ### Local checks
 
@@ -14,10 +15,10 @@ Status: OK
 
 ## Reverse dependencies (6)
 
-✔ midr 0.5.2                             ── E: 0     | W: 0     | N: 0                   
-✔ fastshap 0.1.1                         ── E: 0     | W: 0     | N: 0                   
-✔ flowml 0.1.3                           ── E: 0     | W: 0     | N: 0                   
-✔ E2E 0.1.0                              ── E: 0     | W: 0     | N: 0                   
-✔ ubair 1.1.0                            ── E: 0     | W: 0     | N: 0                   
-✔ mrIML 2.1.0                            ── E: 0     | W: 0     | N: 0                   
-OK: 6
+## revdepcheck results
+
+We checked 5 reverse dependencies (1 from CRAN + 4 from Bioconductor), comparing R CMD check results across CRAN and dev versions of this package.
+
+ * We saw 0 new problems
+ * We failed to check 0 packages
+

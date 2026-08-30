@@ -29,9 +29,10 @@
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(
 #'   data.matrix(iris[, -1]),
-#'   label = iris[, 1], nthread = 1
+#'   label = iris[, 1],
+#'   nthread = 1
 #' )
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, params = list(nthread = 1))
 #' sv <- shapviz(fit, X_pred = dtrain, X = iris)
 #' sv_dependence2D(sv, x = "Petal.Length", y = "Species")
 #' sv_dependence2D(sv, x = c("Petal.Length", "Species"), y = "Sepal.Width")
@@ -41,7 +42,9 @@
 #' sv_dependence2D(sv2, x = "Petal.Length", y = "Species", interactions = TRUE)
 #' sv_dependence2D(
 #'   sv2,
-#'   x = "Petal.Length", y = c("Species", "Petal.Width"), interactions = TRUE
+#'   x = "Petal.Length",
+#'   y = c("Species", "Petal.Width"),
+#'   interactions = TRUE
 #' )
 #'
 #' # mshapviz object

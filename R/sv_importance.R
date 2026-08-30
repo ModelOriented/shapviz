@@ -49,7 +49,7 @@
 #' @examples
 #' X_train <- data.matrix(iris[, -1])
 #' dtrain <- xgboost::xgb.DMatrix(X_train, label = iris[, 1], nthread = 1)
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, params = list(nthread = 1))
 #' x <- shapviz(fit, X_pred = X_train)
 #' sv_importance(x)
 #' sv_importance(x, kind = "no")

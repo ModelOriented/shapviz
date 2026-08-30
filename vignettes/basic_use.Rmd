@@ -144,6 +144,14 @@ sv_importance(shp)
 
 ### fastshap
 
+fastshap is no longer on CRAN. Install it from R-universe:
+
+```r
+install.packages(
+  "fastshap",
+  repos = c("https://bgreenwell.r-universe.dev", "https://cloud.r-project.org")
+)
+
 ```r
 library(shapviz)
 library(fastshap)
@@ -152,7 +160,7 @@ fit <- lm(Sepal.Length ~ . + Species:Petal.Width, data = iris)
 shap <- fastshap::explain(
   fit, X = iris[-1], nsim = 100, pred_wrapper = predict, shap_only = FALSE
 )
-sv <- shapviz(shap)
+sv <- shapviz(shap, baseline = 0)
 sv_dependence(sv, "Species")
 ```
 

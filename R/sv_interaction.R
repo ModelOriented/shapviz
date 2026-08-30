@@ -27,9 +27,10 @@
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(
 #'   data.matrix(iris[, -1]),
-#'   label = iris[, 1], nthread = 1
+#'   label = iris[, 1],
+#'   nthread = 1
 #' )
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
+#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, params = list(nthread = 1))
 #' x <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 #' sv_interaction(x, kind = "no")
 #' sv_interaction(x, max_display = 2, size = 3)

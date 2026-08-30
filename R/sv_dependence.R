@@ -46,9 +46,14 @@
 #' @examples
 #' dtrain <- xgboost::xgb.DMatrix(
 #'   data.matrix(iris[, -1]),
-#'   label = iris[, 1], nthread = 1
+#'   label = iris[, 1],
+#'   nthread = 1
 #' )
-#' fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
+#' fit <- xgboost::xgb.train(
+#'   data = dtrain,
+#'   nrounds = 10,
+#'   params = list(nthread = 1)
+#' )
 #' x <- shapviz(fit, X_pred = dtrain, X = iris)
 #' sv_dependence(x, "Petal.Length")
 #' sv_dependence(x, "Petal.Length", color_var = "Species")
@@ -61,12 +66,16 @@
 #' x2 <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 #' sv_dependence(x2, "Petal.Length", interactions = TRUE)
 #' sv_dependence(
-#'   x2, c("Petal.Length", "Species"),
-#'   color_var = NULL, interactions = TRUE
+#'   x2,
+#'   v = c("Petal.Length", "Species"),
+#'   color_var = NULL,
+#'   interactions = TRUE
 #' )
 #' sv_dependence(
-#'   x2, "Petal.Length",
-#'   color_var = colnames(iris[-1]), interactions = TRUE,
+#'   x2,
+#'   v = "Petal.Length",
+#'   color_var = colnames(iris[-1]),
+#'   interactions = TRUE,
 #'   share_y = TRUE
 #' )
 #' @export

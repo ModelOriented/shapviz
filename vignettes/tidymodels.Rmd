@@ -136,11 +136,10 @@ shap_values |>
 # Absolute average SHAP interactions (off-diagonals already multiplied by 2)
 shap_values |> 
   sv_interaction(kind = "no")
-#            log_carat     clarity       color         cut
-# log_carat 0.87400688 0.067567245 0.032599394 0.024273852
-# clarity   0.06756720 0.143393109 0.028236784 0.004910905
-# color     0.03259941 0.028236796 0.095656042 0.004804729
-# cut       0.02427382 0.004910904 0.004804732 0.031114735
+# log_carat 0.87266291 0.068915228 0.032930203 0.023940648
+# clarity   0.06891523 0.143338160 0.028988690 0.005315794
+# color     0.03293020 0.028988690 0.097381065 0.004901559
+# cut       0.02394065 0.005315794 0.004901559 0.029984704
 
 # Usual dependence plot
 xvars <- c("log_carat", "color", "clarity", "cut")

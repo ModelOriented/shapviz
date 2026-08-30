@@ -24,7 +24,11 @@
 #' collapse_shap(S, collapse)
 #'
 #' # Arrays (as with SHAP interactions)
-#' S_inter <- array(1, dim = c(2, 4, 4), dimnames = list(NULL, letters[1:4], letters[1:4]))
+#' S_inter <- array(
+#'   1,
+#'   dim = c(2, 4, 4),
+#'   dimnames = list(NULL, letters[1:4], letters[1:4])
+#' )
 #' collapse_shap(S_inter, collapse = list(cd = c("c", "d"), ab = c("a", "b")))
 collapse_shap <- function(S, collapse = NULL, ...) {
   if (is.null(collapse) || length(collapse) == 0L) {

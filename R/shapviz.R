@@ -154,7 +154,9 @@ shapviz.matrix = function(
 #'   fit,
 #'   X_pred = X_pred,
 #'   X = iris,
-#'   collapse = list(Species = c("Speciessetosa", "Speciesversicolor", "Speciesvirginica"))
+#'   collapse = list(
+#'     Species = c("Speciessetosa", "Speciesversicolor", "Speciesvirginica")
+#'   )
 #' )
 #' summary(x)
 #'

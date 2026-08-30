@@ -64,7 +64,7 @@ estimating the density of the beeswarms.}
 \item{viridis_args}{List of viridis color scale arguments. The default points to the
 global option \code{shapviz.viridis_args}, which corresponds to
 \code{list(begin = 0.25, end = 0.85, option = "inferno")}. These values are passed to
-\code{\link[ggplot2:scale_viridis]{ggplot2::scale_color_viridis_c()}}. For example, to switch to standard viridis,
+\code{\link[ggplot2:scale_color_viridis_c]{ggplot2::scale_color_viridis_c()}}. For example, to switch to standard viridis,
 either change the default with \code{options(shapviz.viridis_args = list())} or set
 \code{viridis_args = list()}.}
 
@@ -107,9 +107,10 @@ Again, due to symmetry, the interaction values are multiplied by two.
 \examples{
 dtrain <- xgboost::xgb.DMatrix(
   data.matrix(iris[, -1]),
-  label = iris[, 1], nthread = 1
+  label = iris[, 1],
+  nthread = 1
 )
-fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, nthread = 1)
+fit <- xgboost::xgb.train(data = dtrain, nrounds = 10, params = list(nthread = 1))
 x <- shapviz(fit, X_pred = dtrain, X = iris, interactions = TRUE)
 sv_interaction(x, kind = "no")
 sv_interaction(x, max_display = 2, size = 3)

@@ -1,3 +1,13 @@
+# shapviz 0.10.4
+
+### Maintenance
+
+- XGBoost related changes in the documentation ([#186](https://github.com/ModelOriented/shapviz/pull/186)):
+  - `nthread` is now part of `xgb.train(params = list(...))`
+  - Due to updates in both the fit algorithm and the TreeSHAP implementation,
+  some pictures look different now, e.g., in the README.
+- fastshap is now on R-universe, so we have updated the dependency ([#186](https://github.com/ModelOriented/shapviz/pull/186)).
+
 # shapviz 0.10.3
 
 ### Bug fixes

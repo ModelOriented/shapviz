@@ -19,7 +19,6 @@ Description: Visualizations for SHAP (SHapley Additive exPlanations), such
 License: GPL (>= 2)
 Depends: 
     R (>= 3.6.0)
-Additional_repositories: https://bgreenwell.r-universe.dev
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 8.1.0
@@ -35,7 +34,6 @@ Imports:
     utils,
     xgboost
 Enhances: 
-    fastshap,
     h2o,
     lightgbm
 LazyData: true

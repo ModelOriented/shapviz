@@ -30,8 +30,7 @@ use_description(
     `Authors@R` =
       "c(person('Michael', family = 'Mayer', role = c('aut', 'cre'), email = 'mayermichael79@gmail.com'),
        person('Adrian', family = 'Stando', role = 'ctb', email = 'adrian.j.stando@gmail.com'))",
-    Depends = "R (>= 3.6.0)",
-    Additional_repositories = "https://bgreenwell.r-universe.dev"
+    Depends = "R (>= 3.6.0)"
   ),
   roxygen = TRUE
 )
@@ -47,7 +46,7 @@ use_package("ggrepel", "Imports")
 use_package("patchwork", "Imports", min_version = "1.3.0")
 use_package("xgboost", "Imports")
 
-use_package("fastshap", "Enhances")
+# use_package("fastshap", "Enhances")
 use_package("h2o", "Enhances")
 use_package("lightgbm", "Enhances")
 

@@ -116,5 +116,5 @@ if (FALSE) {
 
   # Wait until above checks are passed without relevant notes/warnings
   # then submit to CRAN
-  devtools::release()
+  usethis::use_release_issue()
 }
